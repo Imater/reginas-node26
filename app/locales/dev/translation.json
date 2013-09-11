@@ -1,0 +1,13 @@
+{
+  "app": {
+    "name": "4tree.ru"
+  },
+  "header": {
+    "notes": "Notes",
+    "notes_title": "All selected notes",
+    "editor": "Editor",
+    "editor_title": "Editor for selected notes",
+    "calendar": "Calendar",
+    "calendar_title": "Calendar"
+  }
+}

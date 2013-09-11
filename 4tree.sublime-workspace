@@ -1,0 +1,1136 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"pa",
+				"padding-top"
+			],
+			[
+				"ma",
+				"margin-bottom"
+			],
+			[
+				"ini",
+				"inline-block"
+			],
+			[
+				"font",
+				"font-size"
+			],
+			[
+				"fo",
+				"font-size"
+			],
+			[
+				"ba",
+				"background"
+			],
+			[
+				"m",
+				"margin-left"
+			],
+			[
+				"background-",
+				"background-attachment"
+			],
+			[
+				"max",
+				"max-width"
+			],
+			[
+				"fon",
+				"font-size"
+			],
+			[
+				"$rout",
+				"$routeParams"
+			],
+			[
+				"min",
+				"min-height"
+			],
+			[
+				"search",
+				"search_text"
+			],
+			[
+				"se",
+				"search_string"
+			],
+			[
+				"last",
+				"lastRoute"
+			],
+			[
+				"$lo",
+				"$locationProvider"
+			],
+			[
+				"backgr",
+				"background-position"
+			],
+			[
+				"ng-bi",
+				"ng-bind-html	AngularJS"
+			],
+			[
+				"add_",
+				"add_text_items"
+			],
+			[
+				"ng-",
+				"ng-change	AngularJS"
+			],
+			[
+				"fons",
+				"font-size"
+			],
+			[
+				"bor",
+				"border-bottom"
+			],
+			[
+				"border-",
+				"border-radius"
+			],
+			[
+				"bac",
+				"background-repeat"
+			],
+			[
+				"ng-re",
+				"ng-repeat	AngularJS"
+			],
+			[
+				"padd",
+				"padding"
+			],
+			[
+				"te",
+				"text-align"
+			],
+			[
+				"panel_",
+				"panel_background"
+			],
+			[
+				"eve",
+				"eventName"
+			],
+			[
+				"this_",
+				"this_to_user_id"
+			],
+			[
+				"res",
+				"response"
+			],
+			[
+				"tab",
+				"table-cell"
+			],
+			[
+				"mar",
+				"margin"
+			],
+			[
+				"ex",
+				"exports"
+			],
+			[
+				"data",
+				"database"
+			],
+			[
+				"he",
+				"header	Tag"
+			],
+			[
+				"fun",
+				"function"
+			],
+			[
+				"pad",
+				"padding-top"
+			],
+			[
+				"ser",
+				"serviceB"
+			],
+			[
+				"serv",
+				"serviceA"
+			],
+			[
+				"fu",
+				"function"
+			],
+			[
+				"paddin",
+				"padding-left"
+			],
+			[
+				"text",
+				"text-align"
+			],
+			[
+				"password",
+				"password_lock_now"
+			],
+			[
+				"disp",
+				"disp_time"
+			],
+			[
+				"answerme",
+				"answerme_readonly"
+			],
+			[
+				"str_re",
+				"str_replace"
+			],
+			[
+				"filter",
+				"filtered_elements"
+			],
+			[
+				"show_",
+				"show_hidden"
+			],
+			[
+				"jsFindBy",
+				"jsFindByParent"
+			],
+			[
+				"all",
+				"allmynotes"
+			],
+			[
+				"my_all",
+				"js_my_all_data2"
+			],
+			[
+				"my_all_",
+				"my_all_data2"
+			],
+			[
+				"show",
+				"showCalendar"
+			],
+			[
+				"sco",
+				"scrollTop"
+			],
+			[
+				"cle",
+				"clearTimeout"
+			],
+			[
+				"co",
+				"color"
+			],
+			[
+				"bord",
+				"border-top"
+			],
+			[
+				"inline",
+				"inline-block"
+			],
+			[
+				"wid",
+				"width"
+			],
+			[
+				"setTie",
+				"setTimeout"
+			],
+			[
+				"men",
+				"menuContent"
+			],
+			[
+				"menu",
+				"menuPanel"
+			],
+			[
+				"c",
+				"color"
+			],
+			[
+				"no",
+				"nowrap"
+			],
+			[
+				"s",
+				"white-space"
+			],
+			[
+				"cat",
+				"categoryName"
+			],
+			[
+				"mi",
+				"min-width"
+			],
+			[
+				"old",
+				"old_title"
+			],
+			[
+				"border-r",
+				"border-radius"
+			],
+			[
+				"li",
+				"line-height"
+			],
+			[
+				"inli",
+				"inline-block"
+			],
+			[
+				"di",
+				"display"
+			],
+			[
+				"jsFind",
+				"jsFindFilesLinkFromTexts"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "app/index.html",
+			"settings":
+			{
+				"buffer_size": 4602,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/scripts/controllers/main.js",
+			"settings":
+			{
+				"buffer_size": 12251,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/scripts/app.js",
+			"settings":
+			{
+				"buffer_size": 1658,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Applications/MAMP/htdocs/fpk/4tree/index_tree.php",
+			"settings":
+			{
+				"buffer_size": 30362,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/views/main.html",
+			"settings":
+			{
+				"buffer_size": 9361,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/locales/ru/translation.json",
+			"settings":
+			{
+				"buffer_size": 301,
+				"line_ending": "Unix",
+				"name": "{"
+			}
+		},
+		{
+			"file": "app/locales/dev/translation.json",
+			"settings":
+			{
+				"buffer_size": 257,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/styles/main.scss",
+			"settings":
+			{
+				"buffer_size": 22637,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "index.js",
+			"settings":
+			{
+				"buffer_size": 5237,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/bower_components/tinymce/tinymce.angular.js",
+			"settings":
+			{
+				"buffer_size": 2396,
+				"line_ending": "Unix",
+				"name": "/**"
+			}
+		},
+		{
+			"file": "app/bower_components/redactor913/redactor/redactor.angular.js",
+			"settings":
+			{
+				"buffer_size": 1950,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Applications/MAMP/htdocs/fpk/4tree/js/api4tree.js",
+			"settings":
+			{
+				"buffer_size": 279994,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 287.0,
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"Snippet: ",
+				"Snippet: html"
+			],
+			[
+				"pa",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 153.0,
+		"history":
+		[
+			"https://sublime.wbond.net/alpha/packages.json",
+			"https://sublime.wbond.net/testing/packages.json",
+			"import urllib2,os; pf='Package Control.sublime-package'; ipp=sublime.installed_packages_path(); os.makedirs(ipp) if not os.path.exists(ipp) else None; urllib2.install_opener(urllib2.build_opener(urllib2.ProxyHandler())); open(os.path.join(ipp,pf),'wb').write(urllib2.urlopen('http://sublime.wbond.net/'+pf.replace(' ','%20')).read()); print('Please restart Sublime Text to finish installation')"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Applications/MAMP/htdocs/fpk/4tree/css/4tree-styles.css",
+		"/Applications/MAMP/htdocs/fpk/4tree/css/test-design.css",
+		"/Applications/MAMP/htdocs/fpk/4tree/js/all_new.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/js/testdesign.js",
+		"/Users/iBook/4tree/app/bower_components/redactor913/redactor.angular.js",
+		"/Users/iBook/4tree/app/views/editor.html",
+		"/Applications/MAMP/htdocs/fpk/4tree/js/js_regallkeys.js",
+		"/Users/iBook/4tree/app/bower_components/angular-slider/angular-slider.js",
+		"/Users/iBook/yo/app/scripts/app.js",
+		"/Users/iBook/yo/app/scripts/controllers/main.js",
+		"/Users/iBook/4tree/app/bower_components/angular/angular.js",
+		"/Users/iBook/4tree/app/index.js",
+		"/Users/iBook/yo/app/index.html",
+		"/Users/iBook/yo/app/index.js",
+		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/Users/iBook/4tree/app/i18n/index.html",
+		"/Users/iBook/4tree/app/locales/resources.json",
+		"/Users/iBook/4tree/app/i18nextWT-0.1.1/index.html",
+		"/Users/iBook/4tree/test/spec/controllers/main.js",
+		"/Users/iBook/yo/Gruntfile.js",
+		"/Users/iBook/4tree/Gruntfile.js",
+		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
+		"/Users/iBook/4tree/app/styles/main1.scss",
+		"/Users/iBook/4tree/app/styles/import/_editor.scss",
+		"/Users/iBook/4tree/app/styles/main.scss",
+		"/Users/iBook/4tree/app/styles/main.css",
+		"/Users/iBook/4tree/app/sass/screen.scss",
+		"/Users/iBook/4tree/app/styles/_editor.scss",
+		"/Users/iBook/4tree/app/styles/scss/main.scss",
+		"/Users/iBook/4tree/package.json",
+		"/Users/iBook/4tree/app/robots.txt",
+		"/Applications/MAMP/htdocs/fpk/4tree/node/angularjs-collab-board/public/index.html",
+		"/Users/iBook/yo/app/package.json",
+		"/Users/iBook/yo/app/bower_components/dotdotdot-1.6.3/index.html",
+		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/User/snipet1",
+		"/Applications/MAMP/htdocs/fpk/4tree/index.php",
+		"/Applications/MAMP/htdocs/fpk/4tree/my_first_page.php",
+		"/Applications/MAMP/htdocs/fpk/4tree/node/angularjs-collab-board/app.js",
+		"/Users/iBook/yo/app/favicon.ico",
+		"/Applications/MAMP/htdocs/fpk/4tree/index_tree.php",
+		"/Users/iBook/yo/dist/index.html",
+		"/Applications/MAMP/htdocs/fpk/4tree/node/angularjs-collab-board/public/js/collab-board.js",
+		"/Users/iBook/yo/app/views/main.html",
+		"/Users/iBook/yo/app/styles/main.css",
+		"/Users/iBook/yo/test/spec/controllers/main.js",
+		"/Users/iBook/yo/app/bower_components/angular-tree/angular-tree.js",
+		"/Users/iBook/yo/test/carma/karma.conf.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/test/package.json",
+		"/Applications/MAMP/htdocs/fpk/4tree/test/test1.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/fullcalendar-1.6.1/fullcalendar/fullcalendar.css",
+		"/Applications/MAMP/htdocs/fpk/4tree/db2.php",
+		"/Applications/MAMP/htdocs/fpk/4tree/db.php",
+		"/Applications/MAMP/htdocs/fpk/4tree/redactor900/redactor/redactor.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/mm.php",
+		"/Applications/MAMP/htdocs/fpk/4tree/js/mindmap.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/js/4tree-web.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/!version.txt",
+		"/Applications/MAMP/htdocs/fpk/4tree/!versions.html",
+		"/Applications/MAMP/htdocs/fpk/4tree/js/jquery.mobile-1.3.1.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/css/4tree.css",
+		"/Applications/MAMP/htdocs/fpk/4tree/redactor900/redactor/redactor.css",
+		"/Applications/MAMP/htdocs/fpk/4tree/redactor/redactor/redactor.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/favicon-mobile.png",
+		"/Applications/MAMP/htdocs/fpk/4tree/favicon1.png",
+		"/Users/iBook/Downloads/images/icons-18-black.png",
+		"/Users/iBook/Downloads/images/ajax-loader.gif",
+		"/Users/iBook/Downloads/images/icons-18-white.png",
+		"/Users/iBook/Downloads/images/icons-36-black.png",
+		"/Users/iBook/Downloads/images/icons-36-white.png",
+		"/Applications/MAMP/htdocs/fpk/4tree/fullcalendar-1.6.1/fullcalendar/fullcalendar.js"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"seleced",
+			"card_footer",
+			"card_big",
+			"#888",
+			"card_folder",
+			"nosele",
+			"_footer",
+			"card_foot",
+			"card_folder",
+			"$card_footer_height",
+			"footer",
+			"myr =",
+			"editor",
+			"card_icon",
+			"(5deg)",
+			"-5deg",
+			"hide",
+			"editor",
+			"card_div",
+			"_icon",
+			"card_div",
+			"card_folder",
+			"_icon",
+			"itemClicked",
+			"card_icon",
+			"search_notes",
+			"р6",
+			"card_footer",
+			"гкд(",
+			"card_text",
+			"card_footer_height",
+			"card_footer",
+			"transition",
+			"card",
+			"transit",
+			"content",
+			"_center",
+			"_title",
+			"_ешеду",
+			"path",
+			"fav_hide",
+			"fav_",
+			"scroll",
+			"-50px",
+			"search_string",
+			"искать",
+			"add_",
+			"add",
+			"socket",
+			"panel_width",
+			"$panel_width",
+			"center_footer",
+			"path",
+			"ng-rep",
+			"текущей",
+			"path",
+			"зфер",
+			"divider",
+			"overf",
+			"watch",
+			"boots",
+			"boot",
+			"7px",
+			"$width",
+			"body",
+			"io",
+			"socket",
+			"-1",
+			"cb",
+			"getArray",
+			"<script src=\"bower_components/bootstrap-sass/js/bootstrap-affix.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-alert.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-dropdown.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-tooltip.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-modal.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-transition.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-button.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-popover.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-typeahead.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-carousel.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-scrollspy.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-collapse.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-tab.js\"></script>\n        ",
+			"MainCtrl",
+			"karma",
+			"angular",
+			"m",
+			"local0",
+			"дщсфд",
+			"cof",
+			"test",
+			"controller",
+			"ngmin",
+			"tree_add_new_element",
+			"plumb",
+			"jsPlumb",
+			"context",
+			"sortable",
+			"path_tree",
+			"trash",
+			"jsMakeUnDid",
+			"избранные",
+			"home",
+			"sortable",
+			"jsShowTreePanel",
+			"check_hash_add_do",
+			"hash",
+			"вход",
+			"reg_please",
+			"проверьте email",
+			"jsReg",
+			".click",
+			"jsReg",
+			"reg_or_login",
+			"h1",
+			"р1",
+			"прове",
+			"проверьте",
+			"Проверьте",
+			"войти",
+			"forget",
+			"social",
+			"jsClearCurrentBase",
+			"#password",
+			"input",
+			"login",
+			"jsDoFirst",
+			"jsLogin",
+			"index.php",
+			"'fav'",
+			"\"fav\"",
+			"get_new",
+			"get_all_data2",
+			".fav",
+			"encrypted",
+			"мастер",
+			"path_tree",
+			"path_line",
+			"path_tree",
+			"padding-bott"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"(4deg)",
+			"-4deg",
+			"$panel_width",
+			"if($disp_time) echo \"<hr>",
+			"crc32(",
+			"$.quickEach",
+			"api4tree.jsMakeIconText",
+			"api4tree.jsFindPath",
+			"data-theme=\"b\"",
+			"data-theme=\"a\"",
+			"rgb(177,177,177)",
+			"data-theme=\"a\"",
+			"data-theme=\"f\"",
+			"data-theme=\"e\"",
+			"data-theme=\"d\"",
+			"data-theme=\"c\"",
+			"data-theme=\"b\"",
+			"tmp_childrens"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "app/index.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4602,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1223,
+								1233
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 294.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "app/scripts/controllers/main.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 12251,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6596,
+								6596
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
+						},
+						"translation.x": 0.0,
+						"translation.y": 4159.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "app/scripts/app.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1658,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								81,
+								81
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true,
+							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/Applications/MAMP/htdocs/fpk/4tree/index_tree.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 30362,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5890,
+								6045
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "app/views/main.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9361,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7509,
+								7520
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 3612.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "app/locales/ru/translation.json",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 301,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								301,
+								301
+							]
+						],
+						"settings":
+						{
+							"auto_name": "{",
+							"syntax": "Packages/JavaScript/JSON.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "app/locales/dev/translation.json",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 257,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								190,
+								190
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 7,
+					"file": "app/styles/main.scss",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 22637,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								16930,
+								16930
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 9817.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "index.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5237,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1358,
+								1358
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 710.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "app/bower_components/tinymce/tinymce.angular.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2396,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1241,
+								1254
+							]
+						],
+						"settings":
+						{
+							"auto_name": "/**",
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 260.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "app/bower_components/redactor913/redactor/redactor.angular.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1950,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								958,
+								958
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true,
+							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
+						},
+						"translation.x": 0.0,
+						"translation.y": 85.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "/Applications/MAMP/htdocs/fpk/4tree/js/api4tree.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 279994,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								263795,
+								263819
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 158584.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 25.0
+	},
+	"input":
+	{
+		"height": 35.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.552981228299,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.unsaved_changes":
+	{
+		"height": 112.0
+	},
+	"project": "4tree.sublime-project",
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 155.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+		"max_columns": 1
+	}
+}
