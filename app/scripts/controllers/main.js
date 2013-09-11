@@ -41,16 +41,11 @@ myApp.directive('syncOnChange', function() {
                     });
 
 
-
                     if(changefield.length>old_length) {
                       console.info("changed "+newValue.id,changefield);
 
                       scope.$apply(function(){
-                        //if(!scope.note._changefield) scope.note._changefield = [];
-
-                        // Merges both arrays and gets unique items
-                        //scope.note._changefield = arrayUnique(scope.note._changefield.concat(changefield));
-                        scope.note._changefield = changefield;
+                        scope.note._changefield = arrayUnique(changefield);
                         scope.note._changetime = jsNow();
                         scope.sync.did = false;
                       });
@@ -152,42 +147,39 @@ myApp.directive('contenteditable', ['$timeout', function($timeout) { return {
 
 
 
-
-myApp.directive('easedInput', function($timeout) {
-        return {
-            restrict: 'E',
-
-
-            template: '<div><input type="text" ng-model="currentInputValue" class="form-control input-sm my-eased-input" ng-change="update()" placeholder="{{placeholder}}"/></div>',
-            scope: {
-                value: '=',
-                timeout: '@',
-                placeholder: '@'
-            },
-            transclude: true,
-            link: function ($scope) {
-                $scope.timeout = parseInt($scope.timeout);
-                $scope.update = function() {
-                    if ($scope.pendingPromise) { $timeout.cancel($scope.pendingPromise); }
-                    $scope.pendingPromise = $timeout(function () { 
-                        $scope.value = $scope.currentInputValue
-                    }, $scope.timeout);
-                };
-            }
-        }
-    });
-
 myApp.factory('socket', function($rootScope) {
 	var socket = io.connect();
+
+/*  var globalEvent = "*";
+  socket.$emit = function (name) {
+      if(!this.$events) return false;
+      for(var i=0;i<2;++i){
+          if(i==0 && name==globalEvent) continue;
+          var args = Array.prototype.slice.call(arguments, 1-i);
+          var handler = this.$events[i==0?name:globalEvent];
+          if(!handler) handler = [];
+          if ('function' == typeof handler) handler.apply(this, args);
+          else if (io.util.isArray(handler)) {
+              var listeners = handler.slice();
+              for (var i=0, l=listeners.length; i<l; i++)
+                  listeners[i].apply(this, args);
+          } else return false;
+      }
+      return true;
+  };
+  socket.on(globalEvent,function(event){
+      var args = Array.prototype.slice.call(arguments, 1);
+      console.log("Global Event = "+event+"; Arguments = "+JSON.stringify(args));
+  });
+*/
 	return {
 		on: function(eventName, callback) {
-			console.info("s=",socket);
 			socket.on('disconect', function(){
 				console.info("server off");
 			});
 			socket.on(eventName, function() {
 				var args = arguments;
-				console.info("on=",socket, eventName);
+				//console.info("on=",socket, eventName);
 				$rootScope.$apply(function() {
 					callback.apply(socket, args);
 				});
@@ -239,29 +231,39 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
 
   ///функция синхронизации с сервером
   $scope.jsSync = function(){
+      socket.emit("createNote", {d:1, x:"test"});
       console.time("Синхронизация заняла");
       //1. Подбираем элементы для синхронизации
       var sync_elements = [];
+      var sync_dry = [], dry_element;
+
       $.each($scope.notes, function(i,el){
-        if(el._changetime>el.lsync) sync_elements.push(el);
+        if(el._changetime>el.lsync) {
+         
+          sync_elements.push(el);
+          dry_element = {id:el.id, changetime: el._changetime?el._changetime:jsNow()};
+          $.each( el._changefield, function(j, fieldname){
+            dry_element[fieldname] = el[fieldname];
+          });
+          sync_dry.push(dry_element);
+
+        }
       });    
       console.info("Буду синхронизировать: ",sync_elements);
+      console.info("Высушил данные:", JSON.stringify(sync_dry) );
 
-      var sync_dry = [], dry_element;
-      $.each(sync_elements, function(i,el){
-        dry_element = {id:el.id, changetime: el._changetime?el._changetime:jsNow()};
-        $.each( el._changefield, function(j, fieldname){
-          dry_element[fieldname] = el[fieldname];
-        });
-        sync_dry.push(dry_element);
-      });
-      console.info("Высушил данные:", sync_dry);
+      socket.emit("sync", { notes: sync_dry} );
 
-      $scope.sync.did = true;
-      console.timeEnd("Синхронизация заняла");
+      //отправили данные по сокету и ждём ответа в функции sync_answer
 
   };
 
+  //Сервер сообщил, что синхронизация завершилась
+  socket.on('sync_answer',function(data) {
+      console.info("answer = ", data);
+      $scope.sync.did = true;
+      console.timeEnd("Синхронизация заняла");
+  });
 
   var tm_start_sync;
   $scope.jsStartSync = function() {

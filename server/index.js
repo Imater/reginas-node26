@@ -2,7 +2,7 @@ var express = require('express'),
 	app = express(),
 	server = require('http').createServer(app),
 	qs = require('querystring'),
-	io = require('socket.io').listen(server);
+	io = require('socket.io').listen(server, {log:true});
 
 var mysql      = require('mysql');
 
@@ -15,13 +15,55 @@ var connection = mysql.createConnection({
   database : 'h116'
 });
 
+var $ = require('jquery');
+
 app.configure(function() {
     app.use(express.static(__dirname + '/public'));
 });
 
+
+function Report(socket) {
+	//Обрабатываем данные синхронизации
+	this.sync_answer = function(data) {
+
+		var dfdArray = [];
+		var rows = [];
+		$.each(data.notes, function(i,el) {
+			dfdArray.push( jsFindById(el.id).done(function(row){
+				rows.push(row);
+			}) );
+		});
+		
+		var the_socket = socket;
+		$.when.apply( null, dfdArray ).then(function(){
+			the_socket.emit( 'sync_answer', {data: rows} );
+		});
+
+	} //sync_answer
+}
+
+//нахожу одну заметку в базе
+function jsFindById(id) {
+	var dfd = $.Deferred();
+
+	connection.query('SELECT * FROM `tree` WHERE id = ? LIMIT 1', [id], function (err, rows, fields) {
+		dfd.resolve(rows);
+  	});	
+
+	return dfd.promise();
+}
+
 io.sockets.on('connection', function(socket) {
+
+	report = new Report(socket);
+
 	socket.on('createNote', function(data) {
 		socket.broadcast.emit('onNoteCreated', data);
+	});
+
+
+	socket.on('sync', function(data) {
+		report.sync_answer(data);		
 	});
 
 	socket.on('updateNote', function(data) {
@@ -36,6 +78,9 @@ io.sockets.on('connection', function(socket) {
 		socket.broadcast.emit('onNoteDeleted', data);
 	});
 });
+
+io.set('log level', 3); // reduce logging
+
 
 database = exports;
 
@@ -105,7 +150,7 @@ app.delete('/api/v1/message/:id', database.findMessageById );
 
 
 app.configure(function() {
-    app.use(express.static(__dirname + '/app'));
+    app.use(express.static(__dirname + '/../app'));
 });
 
 
