@@ -2,7 +2,7 @@ var express = require('express'),
 	app = express(),
 	server = require('http').createServer(app),
 	qs = require('querystring'),
-	io = require('socket.io').listen(server, {log:true});
+	io = require('socket.io').listen(server, {log:false});
 
 var mysql      = require('mysql');
 
@@ -22,20 +22,77 @@ app.configure(function() {
 });
 
 
+var AWS = require('aws-sdk');
+AWS.config.loadFromPath('./config-s3.json');
+
+var s3 = new AWS.S3();
+
+
+s3.createBucket({Bucket: 'upload.4tree.ru'}, function() {
+  var params = {Bucket: 'upload.4tree.ru', Key: 'myKey', Body: 'Hello!'};
+  s3.putObject(params, function(err, data) {
+    if (err)
+      console.log(err)
+    else
+      console.log("Successfully uploaded data to myBucket/myKey");
+  });
+});
+
 function Report(socket) {
 	//Обрабатываем данные синхронизации
 	this.sync_answer = function(data) {
 
 		var dfdArray = [];
-		var rows = [];
+		var rows = {};
 		$.each(data.notes, function(i,el) {
 			dfdArray.push( jsFindById(el.id).done(function(row){
-				rows.push(row);
+				rows[el.id] = row;
 			}) );
 		});
-		
+
 		var the_socket = socket;
 		$.when.apply( null, dfdArray ).then(function(){
+			//в rows теперь все данные из базы для изменённых заметок
+			//перебираем элементы, которые изменились позже базы
+			var dfdArray = [];
+			$.each(data.notes, function(i, el_client){
+				var el_server = rows[el_client.id][0];
+				
+				if(el_client.changetime > el_server.changetime) {
+					//сохраняем данные в базе сервера
+					console.info("Сохраняю в базе: ", el_server.id);
+
+					var mysql_insert = "";
+					var mysql_values = [];
+					var first = true;
+
+					$.each(el_client, function(fieldname, new_value){
+						//не забудем защиту от длинных полей, т.е. инъекций
+						if( (fieldname.length<20) && !(/;/ig.test(fieldname)) ) {
+							mysql_insert += fieldname + " = ?, "; 
+						}
+						mysql_values.push( new_value );
+					});
+
+					mysql_insert += " id = id";
+					mysql_values.push(el_server.id);					
+
+					var sql_query = "UPDATE `tree` SET " + mysql_insert + " WHERE id = ? LIMIT 1";
+
+
+					connection.query(sql_query, mysql_values, function (err, rows, fields) {
+						if(rows && rows.affectedRows>0) console.info("Сохранил!");
+  					});	
+
+
+
+				} else {
+					//сохранять нельзя, данные уже изменились другим клиентом. Только бекап.
+					console.info("Данные в базе свежее, чем присланные: ", el_server.id);
+		
+				}
+
+			});
 			the_socket.emit( 'sync_answer', {data: rows} );
 		});
 

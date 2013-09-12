@@ -31,7 +31,9 @@ myApp.directive('syncOnChange', function() {
             var tm_watch;
             scope.$watch('note', function(newValue, oldValue) {
                 clearTimeout(tm_watch);
+                clearTimeout(scope.tm_start_sync);
                 tm_watch = setTimeout(function(){
+                scope.sync.did = false;
                 if (newValue!=oldValue) {
                     
                     var changefield = scope.note._changefield?scope.note._changefield:[];
@@ -42,12 +44,11 @@ myApp.directive('syncOnChange', function() {
 
 
                     if(changefield.length>old_length) {
-                      console.info("changed "+newValue.id,changefield);
 
                       scope.$apply(function(){
                         scope.note._changefield = arrayUnique(changefield);
                         scope.note._changetime = jsNow();
-                        scope.sync.did = false;
+                        
                       });
 
                       scope.jsStartSync();
@@ -62,16 +63,41 @@ myApp.directive('syncOnChange', function() {
 });
 
 
+myApp.directive('sortable', function() { return {
+    //restrict: 'A',
+    require: '?ngModel',
+    link: function($scope, $element, attrs, ngModel) {
+      // view -> model
+      $element.sortable({
+        tolerance: 'pointer',
+        handle: ".card_footer",
+        //helper: "clone",
+//        placeholder: "sortable-placeholder",
+
+
+      });
+
+
+      $element.on('sortstop', function(event, ui) {
+        //console.info("sort_stop", event, ui.item.index());
+        $scope.$apply(function() {
+            $.each($element.find(".li_card"), function(i,el){
+              var id = $(el).attr("myid");
+              $scope.jsFind(id).position = i;
+            });
+
+        });
+      })
+    }
+}
+});
+
 
 myApp.directive('contenteditable', ['$timeout', function($timeout) { return {
     restrict: 'A',
     require: '?ngModel',
     link: function($scope, $element, attrs, ngModel) {
       // don't do anything unless this is actually bound to a model
-      if (!ngModel) {
-        return
-      }
-
       // view -> model
       $element.bind('input', function(e) {
         $scope.$apply(function() {
@@ -216,22 +242,46 @@ myApp.directive('eatClick', function() {
 })
 
 function onResize(){
-	var body_height = $("#panel_center").height() - 200;
-	$(".redactor_editor").height(body_height);
+	
+
+  var body_height = $("#panel_center").height() - 230;
+  if( $("#editor_cont").hasClass("fullscreen") ) {
+    body_height = $(window).height() - $("#editor_cont .redactor_editor").offset().top-14;
+  }
+
+	$("#main_editor .redactor_editor").height(body_height);
+
+  
+
+    $("#editor_cont:not(.ui-resizable)").resizable({
+      handles: 'e',
+      minWidth: 500
+    }).draggable({
+      handle: ".redactor_toolbar"
+    });
+
+
 };
 
 ///////////////////////////////////////////////////////////////////////
 myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams, $route) {
 
 	$scope.editor = $routeParams.edit;
-  $scope.sync = {did: false};
+  $scope.sync = {did: true, syncing: false};
 
 	$scope.redactorOptions = {
-    };
+      autoresize: false
+  };
+
+  $scope.redactorOptionsMini  = {
+    autoresize: false,
+    air: true
+  }
 
   ///функция синхронизации с сервером
   $scope.jsSync = function(){
-      socket.emit("createNote", {d:1, x:"test"});
+      $scope.sync.syncing = true;  
+      
       console.time("Синхронизация заняла");
       //1. Подбираем элементы для синхронизации
       var sync_elements = [];
@@ -261,16 +311,21 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
   //Сервер сообщил, что синхронизация завершилась
   socket.on('sync_answer',function(data) {
       console.info("answer = ", data);
-      $scope.sync.did = true;
       console.timeEnd("Синхронизация заняла");
+      $scope.sync.did = true;
+      setTimeout(function(){
+      $scope.$apply(function() { $scope.sync.syncing = false; },200 );
+      },150);
+      
+
   });
 
-  var tm_start_sync;
+  
   $scope.jsStartSync = function() {
-    clearTimeout(tm_start_sync);
-    tm_start_sync = setTimeout(function(){
+    clearTimeout($scope.tm_start_sync);
+    $scope.tm_start_sync = setTimeout(function(){
       $scope.jsSync();
-    },500000);
+    },1000);
   };
 
 	$scope.jsFind = function(id) {
@@ -316,8 +371,13 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
 	}
 //	$location.path('/1')
 
+  $scope.fullScreen = function() {
+    $("#editor_cont").toggleClass("fullscreen");
+    onResize();
+  }
+
 	$scope.closeEditor = function(event) {
-		if(event && $(event.target).attr("id") == "main_editor") {
+		if(event && ( ($(event.target).attr("id") == "main_editor") || ($(event.target).parents("button").hasClass("btn")) || ($(event.target).hasClass("btn"))  ) ) {
 			$location.search("edit",null);
 			$scope.editor = null;
 		}
@@ -359,14 +419,24 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
 		}
 	}
 
-	$scope.goToParent = function() {
-		console.info("goToParent");
-		var parent_id = $scope.parent_id;
-		if(parent_id!=1) {
-			var id = $scope.jsFind(parent_id).parent_id;
-			if(id) $scope.openParentId(id);
-		}
+	$scope.goToParent = function(event) {
+    var target = $(event.target);
+
+    if(event && ( (target.attr("id") == "cards_scrollable") || ((target.attr("id") == "cards_container")) || (target.hasClass("cards_list")) ) ) {
+    		var parent_id = $scope.parent_id;
+    		if(parent_id!=1) {
+    			var id = $scope.jsFind(parent_id).parent_id;
+    			if(id) $scope.openParentId(id);
+    		}
+    }
 	}
+
+  $scope.jsDeselect = function(event) {
+      var target = $(event.target);
+      if(event && ( (target.attr("id") == "cards_scrollable") || ((target.attr("id") == "cards_container")) || (target.hasClass("cards_list")) ) ) {
+        $scope.selectedIndex = -1;
+      }
+  }
 
 	$scope.openEditor = function(element) {
 		$location.search({edit:element});
@@ -418,6 +488,12 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
 	    return item.parent_id == parent_id;
 	  };
 	};	
+
+  $scope.sortByPosition = function() {
+    return function( item ) {
+      return item.position;
+    }
+  }
 
 
 	$scope.searchFilter = function() {
