@@ -146,6 +146,7 @@ body {
             li {
                     height: 24px;
                     margin-top: -3px;
+                    color:#444;
 
                 span{
                     text-align: center;
@@ -157,12 +158,12 @@ body {
                     border-bottom-left-radius: 15px;
                     border-bottom-right-radius: 15px;
                     border-bottom: 1px solid rgba(0,0,0,0.5);
-                    box-shadow: 0px 1px 2px rgba(0,0,0,0.3);
+                    box-shadow: 0px 1px 1px rgba(0,0,0,0.3);
                     cursor: pointer;
                 }
             }
             li:hover {
-                font-weight: bold;
+                color: #000;
             }
             li:last-child span {
                 border-radius: 0px !important;
@@ -173,52 +174,108 @@ body {
     #panel_left_content ul {
         list-style: none;
         margin: 0px;
-        font-size: 12px;
-        padding-left: 1em;
-        li.li_left {
+        font-size: 13px;
+        padding-left:0.75em;
+/*        border-left: 1px solid #CCC;
+        border-bottom-left-radius: 10px;
+*/
+        .li_left {
             position: relative;            
-            padding: 2px 2px 2px 2em;
+            padding: 0px 0px 0px 1em;
             cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+              .li_icons {
+                display: inline-block;
+                position: absolute;
+                left: 0.5em;
+                width: 3.0em;
+                top:-0.2em;
+                text-align: right;
+                .triangle {
+                    display: none;
+                }
                 .card_icon {
                     width: 1em;
                     height: 1em;
-                    font-size: 1em;
-                    top:2px;
-                    left: 5px;
+                    font-size: 1.2em;
                     display: inline-block;
-                    position: absolute;
+                    text-align: right;
+                    padding-right: 2px;
+                    position: relative;
                     i {
                         display: inline-block;
+                        font-size: 1.2em;
+                        margin-top: -0.2em;
                     }
                     .the_count {
-                        display: inline-block;
+                        display: block;
                         position: absolute;
-                        top:0px;
+                        top:1.1em;
                         left: 0px;
-                        font-size: 0.3em;
+                        bottom: 0px;
+                        right: 0px;
+                        text-align: center;
+                        line-height: 1em;
+                        vertical-align: middle;
+                        font-size: 0.5em;
                         color: #FFF;
                         z-index: 2;
                     }
                 }
+              }
+              .left_tree_title {
+                  display: inline;
+                  margin-left: 3.22em;
+              }
 
         }
+        .card_folder > .li_icons .card_icon i:before{
+            content: "\e802";
+            margin-right: 2px;
+        }
+        .card_folder > .li_icons .triangle {
+                    display: inline-block;
+                    font-size: 1.4em;
+                    padding-right: 0.5em;
+                    padding-left: 0.4em;
+                    padding-top: 0.01em;
+                    vertical-align: middle;
+        }
+        .card_folder > .li_icons .triangle:before {
+                    content: "\25b8";
+                    font-family: "fontello";
+                    font-size: 1em;
+        }
+        .li_left.selected > .left_tree_title{
+            background: green;
+        }
+
+
+
     }
     #panel_left_content {
         overflow-y:scroll;
         position: absolute;
         top:40px;
         bottom:120px;
-        
+        left:0px;
+        right: 0px;
+
+
     }
 
     #panel_left_content > ul {
+        border: none !important;
         padding-left: 0px;
     }
 
 }
 
 #panel_center {
-    @include transition;
+    /*@include transition;*/
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     background: $editor_background;
@@ -363,7 +420,8 @@ body {
 }
 
 .left_hide #panel_center {
-    left:0px;
+    @include transition;
+    left:0px !important;
 }
 
 .right_hide #panel_center {
@@ -696,13 +754,14 @@ body {
                 content: "\e751";
             }
         }
+        .card_folder .card_icon i:before{
+            content: "\e802";
+        }
+
     }
 
 }
 
-.card_folder .card_icon i:before{
-    content: "\e802";
-}
 
 
     .fav_hide #cards_scrollable {

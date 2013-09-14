@@ -62,6 +62,30 @@ myApp.directive('syncOnChange', function() {
     }
 });
 
+myApp.directive('resizable', function() { return {
+    //restrict: 'A',
+    require: '?ngModel',
+    link: function($scope, $element, attrs, ngModel) {
+      // view -> model
+      $element.resizable({ handles: "e" });
+
+      var tm_resize;
+      $element.on('resize', function(event, ui) {
+        console.info("rezize", event, ui);
+        clearTimeout(tm_resize);
+        tm_resize = setTimeout(function(){
+            $scope.$apply(function() {
+              $scope.left_panel_width = ui.size.width;
+              localStorage.setItem("left_panel_width", ui.size.width);
+            });
+
+        },1);
+      })
+    }
+}
+});
+
+
 
 myApp.directive('sortable', function() { return {
     //restrict: 'A',
@@ -172,15 +196,50 @@ myApp.directive('contenteditable', ['$timeout', function($timeout) { return {
   }}]);
 
 
+
 myApp.directive("ngPortlet", function ($compile) {
   return {
     template: '',
     restrict: 'E',
         link: function (scope, elm, attrs) {
-            scope.add = function(){
-                console.log(elm, attrs);
-                elm.after( $compile('<ul><li ng-repeat="note in findByParent('+attrs.parent+')"><div class="left_tree_title" ng-click="add()">{{note.title}}</div><ng-portlet parent="{{note.id}}"></ng-portlet></li></ul>')(scope) );
+            var jsOpenFolder = function(){
+                //console.log(elm, attrs);
+
+                if(attrs.open) {
+
+                  $(elm).next("ul").slideToggle(100);
+
+                  return true;
+                } 
+                attrs.$set("open","true");
+
+                var tmp_html = '<ul style="display:none">'+
+                  '<li ng-repeat="note in findByParent('+attrs.parent+')"><div class="left_tree_title" compile="note.title"></div><ng-portlet parent="{{note.id}}"></ng-portlet></li></ul>';
+
+
+var tmp_html = '<ul style="display:none">'+
+                    '<li class="li_left" ng-repeat="note in findByParent('+attrs.parent+') | orderBy: sortByPosition()" ng-class="{ \'selected\': note.id == selectedIndexLeft,\'card_big\': $index == zoomIndex,\'card_folder\': note.count>0 }">'+
+                      '<div class="li_icons">'+
+                      '<div class="triangle" ng-click="add()"></div>'+
+                      '<div class="card_icon">'+
+                            '<i class="icon-doc-2"></i>'+
+                            '<div class="the_count" ng-bind="note.count=findByParent(note.id,\'count\')">'+
+                            '</div>'+
+                          '</div>'+     
+                      '</div>'+        
+
+                      '<div class="left_tree_title" ng-click="liClickedLeft(note.id);" contenteditable="false" ng-model="note.title">'+
+                      '</div>'+
+                    '<ng-portlet parent="{{note.id}}"></ng-portlet>'+  
+                    '</li>'+
+                  '</ul>';
+                elm.after( $compile(tmp_html)(scope) );
+                setTimeout(function(){ $(elm).next("ul").slideDown(100) }, 1);
             }
+
+            scope.add = jsOpenFolder;
+
+
         }
   };
 });
@@ -313,6 +372,9 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
 	$scope.editor = $routeParams.edit;
   $scope.sync = {did: true, syncing: false};
 
+  $scope.left_panel_width = localStorage.getItem("left_panel_width");
+  if(!$scope.left_panel_width) $scope.left_panel_width = 250;
+
 	$scope.redactorOptions = {
       autoresize: false,
       imageUpload: './api/v1/save_file/?save_file='+this_user_id
@@ -423,6 +485,7 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
 	} else {
 		$scope.parent_id = 1;
 	}
+  $scope.left_parent_id = 1;
 //	$location.path('/1')
 
 
@@ -518,6 +581,15 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
   $scope.liClicked = function ($index) {
     $scope.selectedIndex = $index;
   };	
+
+  $scope.liClickedLeft = function ($index) {
+    $scope.selectedIndexLeft = $index;
+    $scope.openParentId($index);
+
+  };  
+
+
+
 
 	$scope.openParentId = function(element, $event) {
 		if($event) {
@@ -643,6 +715,7 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
          if(!tmp_parents[el.parent_id]) tmp_parents[el.parent_id] = [];
          tmp_parents[el.parent_id].push(el);
       });
+      $scope.add();
       $scope.parents = tmp_parents;
 		$scope.jsGetPath($scope.parent_id);
     });

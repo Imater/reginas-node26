@@ -1,13 +1,15 @@
 <div id="panel_top">	
 </div>
 
-<div id="panel_left">
+<div id="panel_left" resizable style="width:{{left_panel_width}}px">
+
 
 	<div id="panel_left_header">
+		
 	</div>
 
 	<div id="panel_left_content">
-		<collection collection='locations'></collection>
+		<ng-portlet parent="{{left_parent_id}}"></ng-portlet>
 	</div>
 
 	<div id="panel_left_footer">
@@ -19,7 +21,7 @@
 
 </div>
 
-<div id="panel_center">
+<div id="panel_center" style="left:{{left_panel_width}}px">
 	<div id="panel_center_header">
 
 	   <div class="make_center">
