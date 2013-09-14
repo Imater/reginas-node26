@@ -122,7 +122,8 @@ body {
       font-family: "fontello";
       font-size: 1em; }
     #panel_left #panel_left_content ul .li_left.selected > .left_tree_title {
-      background: green; }
+      background: green;
+      color: #FFF; }
   #panel_left #panel_left_content {
     overflow-y: scroll;
     position: absolute;
