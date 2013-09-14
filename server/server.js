@@ -1,5 +1,6 @@
 var express = require('express'),
 	app = express(),
+	fs = require("fs"),
 	server = require('http').createServer(app),
 	qs = require('querystring'),
 	io = require('socket.io').listen(server, {log:false});
@@ -17,9 +18,23 @@ var connection = mysql.createConnection({
 
 var $ = require('jquery');
 
+var mdb, collection;
+var MongoClient = require('mongodb').MongoClient, format = require('util').format;    
+
+  MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
+    if(err) throw err;
+
+    mdb = db;
+    collection = mdb.collection('myalldata');
+    collection_mail = mdb.collection('mymail');
+  });
+
+
 app.configure(function() {
     app.use(express.static(__dirname + '/public'));
 });
+
+app.use(express.bodyParser());
 
 
 var AWS = require('aws-sdk');
@@ -38,6 +53,9 @@ s3.createBucket({Bucket: 'upload.4tree.ru'}, function() {
   });
 });
 
+var the_socket;
+
+
 function Report(socket) {
 	//Обрабатываем данные синхронизации
 	this.sync_answer = function(data) {
@@ -50,7 +68,7 @@ function Report(socket) {
 			}) );
 		});
 
-		var the_socket = socket;
+		the_socket = socket;
 		$.when.apply( null, dfdArray ).then(function(){
 			//в rows теперь все данные из базы для изменённых заметок
 			//перебираем элементы, которые изменились позже базы
@@ -60,29 +78,9 @@ function Report(socket) {
 				
 				if(el_client.changetime > el_server.changetime) {
 					//сохраняем данные в базе сервера
-					console.info("Сохраняю в базе: ", el_server.id);
-
-					var mysql_insert = "";
-					var mysql_values = [];
-					var first = true;
-
-					$.each(el_client, function(fieldname, new_value){
-						//не забудем защиту от длинных полей, т.е. инъекций
-						if( (fieldname.length<20) && !(/;/ig.test(fieldname)) ) {
-							mysql_insert += fieldname + " = ?, "; 
-						}
-						mysql_values.push( new_value );
-					});
-
-					mysql_insert += " id = id";
-					mysql_values.push(el_server.id);					
-
-					var sql_query = "UPDATE `tree` SET " + mysql_insert + " WHERE id = ? LIMIT 1";
-
-
-					connection.query(sql_query, mysql_values, function (err, rows, fields) {
-						if(rows && rows.affectedRows>0) console.info("Сохранил!");
-  					});	
+					collection.update({id: el_server.id},{ $set: el_client }, function(err,rows){
+						if(rows) console.info("Сохранил - "+el_server.id);
+					});	
 
 
 
@@ -103,10 +101,15 @@ function Report(socket) {
 function jsFindById(id) {
 	var dfd = $.Deferred();
 
-	connection.query('SELECT * FROM `tree` WHERE id = ? LIMIT 1', [id], function (err, rows, fields) {
+    collection.find({id:id}).toArray(function (err, rows, fields) {
+		//response.send(rows);
 		dfd.resolve(rows);
   	});	
 
+/*	connection.query('SELECT * FROM `tree` WHERE id = ? LIMIT 1', [id], function (err, rows, fields) {
+		dfd.resolve(rows);
+  	});	
+*/
 	return dfd.promise();
 }
 
@@ -152,12 +155,28 @@ app.get("/api/v1/user_:user_id/time_:lasttime/:action", function(request, respon
   });
 });
 
-exports.findAllMessages = function(request,response) {
+/*exports.findAllMessages = function(request,response) {
 	var user_id = request.query.user_id;
+    var tm = ( (new Date()).getTime() );
     connection.query('SELECT * FROM `tree` WHERE user_id = ? AND del="" LIMIT 60000', [user_id] , function (err, rows, fields) {
+		    console.info( ( (new Date()).getTime() ) -tm);
 		    response.send(rows);
   	});	
 }
+*/
+
+exports.findAllMessages = function(request,response) {
+	var user_id = parseInt( request.query.user_id );
+    var collection = mdb.collection('myalldata');
+
+    var tm = ( (new Date()).getTime() );
+    collection.find({user_id:user_id, del:0}).toArray(function (err, rows, fields) {
+	    console.info( ( (new Date()).getTime() ) -tm);
+		response.send(rows);
+  	});	
+}
+
+
 
 exports.findMessageById = function(request,response) {
 	var user_id = request.query.user_id;
@@ -194,10 +213,75 @@ exports.newMessage = function(request,response) {
 }
 
 
+
+
+exports.saveFile = function(request, response) {
+
+	console.info(request.files);
+
+        var path = request.files.file.path;
+        fs.readFile(path, function(err, file_buffer){
+        	var expire_date = ( new Date() );
+        	expire_date.setDate( (new Date()).getDate() + 365*2 );
+
+        	var file_name = "myKey1234.png";
+
+            var params = {
+            	ACL: 'public-read',
+                Bucket: 'upload.4tree.ru',
+                Key: file_name,
+                ContentType: request.files.file.type,
+                Expires: expire_date,
+                Body: file_buffer
+            };
+
+            s3.putObject(params, function (perr, pres) {
+                if (perr) {
+                    console.log("Error uploading data: ", perr);
+                } else {
+                    console.log("Successfully uploaded data to myBucket/myKey");
+                }
+            });
+        });
+
+
+	var answer = {"filelink":"http://z6.d.sdska.ru/2-z6-7d6a8c21-213d-494b-a6b8-f71e9f761512.jpg",
+				  "filename":"File.jpg"};
+
+
+
+
+	response.send(answer);
+}
+
+
+exports.loadAllFromMySQL = function(request, response) {
+
+    
+
+    connection.query('SELECT * FROM `tree`', function (err, rows, fields) {
+
+		$.each(rows, function(i, el){
+			console.info(el);
+		    collection.insert(el, function(err, docs) {
+			response.send(docs);	
+		});
+	  	//response.send(r);
+  	});	
+
+
+});
+}
+
+
+app.get('/migrate', database.loadAllFromMySQL)
+
 app.get('/api/v1/message', database.findAllMessages );
 app.get('/api/v1/message/:id', database.findMessageById );
 
 app.post('/api/v1/message', database.newMessage );
+
+app.post('/api/v1/save_file', database.saveFile )
 
 app.put('/api/v1/message/:id', database.findMessageById );
 
@@ -275,5 +359,55 @@ exports.findAllContinents = function(request,cb) {
 };
 
 server.listen(1337);
+
+var Imap = require('imap'),
+    inspect = require('util').inspect;
+var MailParser = require("mailparser").MailParser;
+
+
+var MailListener = require("mail-listener");
+
+var mailListener = new MailListener({
+  username: "4tree",
+  password: "uuS4foos_VE",
+  host: "mail.4tree.ru",
+  port: 993, // imap port
+  secure: false, // use secure connection
+  mailbox: "INBOX", // mailbox to monitor
+  markSeen: false, // all fetched email willbe marked as seen and not fetched next time
+  fetchUnreadOnStart: true // use it only if you want to get all unread email on lib start. Default is `false`
+});
+
+var notifier = require('mail-notifier');
+
+var imap = {
+  username: "4tree@4tree.ru",
+  password: "uuS4foos_VE",
+  host: "mail.4tree.ru",
+  port: 993, // imap port
+  secure: true // use secure connection
+};
+
+notifier(imap).on('mail',function(mail){
+
+	console.info(mail, mail.attachments[0].content);
+
+s3.createBucket({Bucket: 'upload.4tree.ru'}, function() {
+  $.each(mail.attachments, function(i,el){
+	  var params = {Bucket: 'upload.4tree.ru', Key: el.fileName, Body: el.content,ContentType: el.contentType, ACL: 'public-read'};
+	  s3.putObject(params, function(err, data) {
+	  	//the_socket.broadcast.emit('EMAIL', data);
+	    if (err)
+	      console.log(err)
+	    else 
+	      console.log("Successfully uploaded data: "+el.fileName);
+	  });
+
+  });
+});
+
+	console.info("------------");
+	collection_mail.insert({mail: mail}, function(){});
+}).start();
 
 

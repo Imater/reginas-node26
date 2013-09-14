@@ -1,0 +1,15 @@
+		<ul sortable>
+			<li class="li_left" ng-repeat="note in findByParent(parent_id) | orderBy: sortByPosition()" ng-class="{ 'selected': $index == selectedIndex,'card_big': $index == zoomIndex,'card_folder': note.count>0 }">
+					<!-- openParentId(note.id, $event); -->
+				<div class="card_icon">
+	    				<i class="icon-doc-2"></i>
+	 	    			<div class="the_count" ng-bind="note.count=findByParent(note.id,'count')">
+	 	    			</div>
+	  	    	</div>
+
+				<div class="left_tree_title" ng-click="add()" contenteditable="false" ng-model="note.title">
+				</div>
+				<ng-portlet parent="{{note.id}}"></ng-portlet>
+
+			</li>
+		</ul>

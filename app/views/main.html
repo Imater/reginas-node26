@@ -2,6 +2,21 @@
 </div>
 
 <div id="panel_left">
+
+	<div id="panel_left_header">
+	</div>
+
+	<div id="panel_left_content">
+		<collection collection='locations'></collection>
+	</div>
+
+	<div id="panel_left_footer">
+		<ul>
+			<li ng-repeat="left_tab in left_tabs"><span style="background:{{left_tab.color}};z-index:{{5 - $index}}">{{left_tab.title}}</span></li>
+		</ul>
+	</div>
+
+
 </div>
 
 <div id="panel_center">
@@ -150,7 +165,9 @@
 	  	    	<div style="clear:both;"></div>
 		  	    <ul class="cards_list clearfix noselectable" sortable>
 
-	  	    		<li ng-repeat="note in notes | filter:parentIdMatch() | orderBy: sortByPosition()" class="li_card" style="width:{{(settings.cardWidth/1 + 10)}}px;min-height:{{settings.cardWidth/1.4+10}}px;font-size:{{settings.cardWidth/20}}px" ng-class="{ 'selected': $index == selectedIndex,'card_big': $index == zoomIndex,'card_folder': note.count>0 }" ng-click="liClicked($index)" theindex = "{{$index}}" myid="{{note.id}}">
+	  	    		<li ng-repeat="note in findByParent(parent_id) | filter:parentIdMatch(parent_id) | orderBy: sortByPosition()" class="li_card" style="width:{{(settings.cardWidth/1 + 10)}}px;min-height:{{settings.cardWidth/1.4+10}}px;font-size:{{settings.cardWidth/20}}px" ng-class="{ 'selected': $index == selectedIndex,'card_big': $index == zoomIndex,'card_folder': note.count>0 }" ng-click="liClicked($index)" theindex = "{{$index}}" myid="{{note.id}}">
+
+
 
 	  	    			<div class="card_div" sync-on-change>
 		  	    			<div class="card_title" ng-dblclick="openParentId(note.id, $event); $event.stopPropagation();">
@@ -166,6 +183,7 @@
 		  	    			
 		  	    			</div>
 
+
 <div class="card_text thin_scroll" ui-redactor="redactorOptionsMini" ng-model="note.text"
 	        ng-click="$event.stopPropagation();" style="height:{{settings.cardWidth/1.4-35}}px;">
 
@@ -174,6 +192,8 @@
 		  	    			</div>
 		  	    			<div class="card_footer">	  	    				
 		  	    				<i title="Увеличить размер карточки" ng-click="itemClicked($index); $event.stopPropagation();" class="icon-zoom-in left"></i>
+
+
 		  	    				
 		  	    				<i title="Открыть в редакторе" ng-click="openEditor(note.id); $event.stopPropagation();" class="icon-edit-1 right"></i>
 		  	    			</div>
@@ -237,7 +257,6 @@
 			  <button ng-click="fullScreen(); $event.stopPropagation();" type="button" class="btn btn-default"><i class="icon-resize-full"></i></button>
 			  <button ng-click="closeEditor($event);$event.stopPropagation();" type="button" class="btn btn-default"><i class="icon-cancel"></i></button>
 			</div>
-
 	<div ui-redactor="redactorOptions" ng-model="note.text"></div>
 </div>
 
@@ -246,17 +265,6 @@
         select-non-editable="false" contenteditable="true" ng-click="$event.stopPropagation();">
 </div>
  -->
-<div id="editor_left_arrow" class="hidden-sm hidden-xs">
-	<div class="arrow_middle">
-		<i class="icon-left-dir"></i>
-	</div>
-</div>
-
-<div id="editor_right_arrow" class="hidden-sm hidden-xs">
-	<div class="arrow_middle">
-		<i class="icon-right-dir"></i>
-	</div>
-</div>
 
 
 </div>

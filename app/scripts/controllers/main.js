@@ -172,6 +172,19 @@ myApp.directive('contenteditable', ['$timeout', function($timeout) { return {
   }}]);
 
 
+myApp.directive("ngPortlet", function ($compile) {
+  return {
+    template: '',
+    restrict: 'E',
+        link: function (scope, elm, attrs) {
+            scope.add = function(){
+                console.log(elm, attrs);
+                elm.after( $compile('<ul><li ng-repeat="note in findByParent('+attrs.parent+')"><div class="left_tree_title" ng-click="add()">{{note.title}}</div><ng-portlet parent="{{note.id}}"></ng-portlet></li></ul>')(scope) );
+            }
+        }
+  };
+});
+
 
 myApp.factory('socket', function($rootScope) {
 	var socket = io.connect();
@@ -203,6 +216,14 @@ myApp.factory('socket', function($rootScope) {
 			socket.on('disconect', function(){
 				console.info("server off");
 			});
+      socket.on('connect', function(){
+        if($rootScope.jsStartSync) $rootScope.jsStartSync();
+        console.info("Server connected.");
+      });
+      socket.on('EMAIL', function(){
+        alert("NEW MAIL");
+        console.info("NEW EMAIL.");
+      });
 			socket.on(eventName, function() {
 				var args = arguments;
 				//console.info("on=",socket, eventName);
@@ -263,20 +284,53 @@ function onResize(){
 
 };
 
+myApp.directive('collection', function () {
+  return {
+      restrict: "E",
+      replace: true,
+      templateUrl: "views/tree_li.html"
+    };
+
+  });
+
+
+
 ///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+
+
 myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams, $route) {
 
 	$scope.editor = $routeParams.edit;
   $scope.sync = {did: true, syncing: false};
 
 	$scope.redactorOptions = {
-      autoresize: false
+      autoresize: false,
+      imageUpload: './api/v1/save_file/?save_file='+this_user_id
+
   };
 
   $scope.redactorOptionsMini  = {
     autoresize: false,
     air: true
   }
+
+  $scope.left_tabs = [
+    {title: "Дерево", color: "#eeeeee"},
+    {title: "Поиск", color: "#e3ffff"},
+    {title: "Теги", color: "#fff1ff"},
+    {title: "Контакты", color: "#ffffdd"},
+    {title: "GTD", color: "#dbffe4"}
+  ];
 
   ///функция синхронизации с сервером
   $scope.jsSync = function(){
@@ -314,8 +368,8 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
       console.timeEnd("Синхронизация заняла");
       $scope.sync.did = true;
       setTimeout(function(){
-      $scope.$apply(function() { $scope.sync.syncing = false; },200 );
-      },150);
+      $scope.$apply(function() { $scope.sync.syncing = false; },300 );
+      },10);
       
 
   });
@@ -325,14 +379,14 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
     clearTimeout($scope.tm_start_sync);
     $scope.tm_start_sync = setTimeout(function(){
       $scope.jsSync();
-    },1000);
+    },500);
   };
 
 	$scope.jsFind = function(id) {
 		var answer = {};
 		if(id==1) return { id:1, title: "4tree", parent_id:0 };
 		$.each($scope.notes, function(i,el){
-			if(el.id == id) { answer = el; }
+			if(el.id == id) { answer = el; return false; }
 		});
 		return answer;
 	}
@@ -371,13 +425,14 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
 	}
 //	$location.path('/1')
 
+
   $scope.fullScreen = function() {
     $("#editor_cont").toggleClass("fullscreen");
     onResize();
   }
 
 	$scope.closeEditor = function(event) {
-		if(event && ( ($(event.target).attr("id") == "main_editor") || ($(event.target).parents("button").hasClass("btn")) || ($(event.target).hasClass("btn"))  ) ) {
+		if( (event && ( ($(event.target).attr("id") == "main_editor") || ($(event.target).parents("button").hasClass("btn")) || ($(event.target).hasClass("btn"))  ) ) || (!event)){
 			$location.search("edit",null);
 			$scope.editor = null;
 		}
@@ -399,7 +454,7 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
 
 	$scope.findByParent = function(parent_id, only_count) {
 
-		var answer = only_count? 0:[];
+/*		var answer = only_count? 0:[];
 		$.each($scope.notes, function(i, el){
 			if(el.parent_id == parent_id) {
 				if(only_count) {
@@ -410,7 +465,14 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
 			}
 		});
 		return answer?answer:"";
-	}
+*/	
+  if(!$scope.parents) return "";
+
+  var answer = $scope.parents[parent_id];
+  if(!answer) return "";
+  if(only_count) return answer.length;
+  else return answer;
+  }
 
 	$scope.filterEdit = function() {
 		return function(item) {
@@ -483,7 +545,11 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
 	  if(($scope.search_string) && ($scope.search_string.length>2)) return $scope.searchFilter();
 
 	  var parent_id = $routeParams.parent_id;
-	  parent_id = $scope.parent_id;
+    if(criteria) {
+      parent_id = criteria; 
+    } else {
+      parent_id = $scope.parent_id;
+    }
 	  return function( item ) {
 	    return item.parent_id == parent_id;
 	  };
@@ -568,8 +634,16 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
       {title: 'HTML5 Boilerplate', text: 'Вова, Аполлион и Таня пролетают кротовую нору и после небольших поисков, находят планету пригодную для жизни. Эта планета очень похожа на землю, тоже есть спутник похожий на луну. Но все континенты соединены вместе. (Земля до заселения человеком). Планета очень похожа на тот остров Суртсей в том состоянии, когда они там были.'}
       ];
 
+    console.time("Загружаю все данные с сервера");
     $rootScope.messages.query( {lastTime: 0, myAction:"message", idController:"" }, function( data ){
+      console.timeEnd("Загружаю все данные с сервера");
     	$scope.notes = data;
+      var tmp_parents = {};
+      $.each($scope.notes, function(i,el){
+         if(!tmp_parents[el.parent_id]) tmp_parents[el.parent_id] = [];
+         tmp_parents[el.parent_id].push(el);
+      });
+      $scope.parents = tmp_parents;
 		$scope.jsGetPath($scope.parent_id);
     });
 
