@@ -117,6 +117,9 @@ myApp.directive('sortable', function() { return {
 });
 
 
+
+
+
 myApp.directive('contenteditable', ['$timeout', function($timeout) { return {
     restrict: 'A',
     require: '?ngModel',
@@ -221,7 +224,7 @@ var tmp_html = '<ul style="display:none">'+
                     '<li class="li_left" ng-repeat="note in findByParent('+attrs.parent+') | orderBy: sortByPosition()" ng-class="{ \'selected\': note.id == selectedIndexLeft,\'card_big\': $index == zoomIndex,\'card_folder\': note.count>0 }">'+
                       '<div class="li_icons">'+
                       '<div class="triangle" ng-click="add()"></div>'+
-                      '<div class="card_icon">'+
+                      '<div class="card_icon" ng-click="add()">'+
                             '<i class="icon-doc-2"></i>'+
                             '<div class="the_count" ng-bind="note.count=findByParent(note.id,\'count\')">'+
                             '</div>'+
@@ -324,13 +327,15 @@ myApp.directive('eatClick', function() {
 function onResize(){
 	
 
-  var body_height = $("#panel_center").height() - 230;
+  var body_height = $("#panel_center").height() - 73;
   if( $("#editor_cont").hasClass("fullscreen") ) {
     body_height = $(window).height() - $("#editor_cont .redactor_editor").offset().top-14;
   }
 
-	$("#main_editor .redactor_editor").height(body_height);
 
+
+	$("#main_editor .redactor_editor").height(body_height);
+  $("#me .redactor_editor").height(body_height-59);
   
 
     $("#editor_cont:not(.ui-resizable)").resizable({
@@ -351,6 +356,9 @@ myApp.directive('collection', function () {
     };
 
   });
+
+
+
 
 
 
@@ -394,8 +402,22 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
     {title: "GTD", color: "#dbffe4"}
   ];
 
+  $scope.user_name = "eugene.leonar@gmail.com";
+  $scope.user_password = "990990";
+
+  $scope.jsLogin = function() {
+
+    jsLogin(hex_md5($scope.user_name+'990990'), hex_md5($scope.user_password) ).done( function(answer){ 
+      if(!answer) alert("Логин или пароль с ошибкой");
+      console.info(answer);
+    });
+  }
+
   ///функция синхронизации с сервером
   $scope.jsSync = function(){
+
+    jsGetToken().done(function(token){
+
       $scope.sync.syncing = true;  
       
       console.time("Синхронизация заняла");
@@ -418,14 +440,21 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
       console.info("Буду синхронизировать: ",sync_elements);
       console.info("Высушил данные:", JSON.stringify(sync_dry) );
 
-      socket.emit("sync", { notes: sync_dry} );
+      socket.emit("sync", { notes: sync_dry, token: token } );
 
       //отправили данные по сокету и ждём ответа в функции sync_answer
+    });
 
   };
 
   //Сервер сообщил, что синхронизация завершилась
   socket.on('sync_answer',function(data) {
+      if(data.err) {
+        jsRefreshToken().done(function(){
+          $scope.jsStartSync();
+          console.info("Обновил token и синхронизировался снова");
+        });
+      };
       console.info("answer = ", data);
       console.timeEnd("Синхронизация заняла");
       $scope.sync.did = true;
@@ -459,7 +488,10 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
 		var element = $scope.jsFind(id);
 		var parent_id = element?element.parent_id:1;
 
+    var loop_prevent = 50;
 		while(parent_id != 0) {
+      if(loop_prevent < 0) break;
+      loop_prevent-=1;
 			path.push({id: element.id, title: element.title});
 
 			element = $scope.jsFind(parent_id);
@@ -544,6 +576,14 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
 		}
 	}
 
+  $scope.filterEditMulti = function() {
+    return function(item) {
+      if(item.id == 5638 || item.id == 13825 || item.id == 4613 ) return true;
+      else return false;
+    }
+  }
+
+
 	$scope.goToParent = function(event) {
     var target = $(event.target);
 
@@ -583,8 +623,10 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
   };	
 
   $scope.liClickedLeft = function ($index) {
-    $scope.selectedIndexLeft = $index;
-    $scope.openParentId($index);
+    var open_id = $index;
+    $scope.selectedIndexLeft = open_id;
+    $scope.openParentId($index);  
+    
 
   };  
 
@@ -652,6 +694,7 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
             user_id: this_user_id,
             lastTime: "@lastTime",
             change_time: jsNow(),
+            token: "@token",
             myAction: "@myAction"
             
         },
@@ -707,18 +750,25 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
       ];
 
     console.time("Загружаю все данные с сервера");
-    $rootScope.messages.query( {lastTime: 0, myAction:"message", idController:"" }, function( data ){
-      console.timeEnd("Загружаю все данные с сервера");
-    	$scope.notes = data;
-      var tmp_parents = {};
-      $.each($scope.notes, function(i,el){
-         if(!tmp_parents[el.parent_id]) tmp_parents[el.parent_id] = [];
-         tmp_parents[el.parent_id].push(el);
-      });
-      $scope.add();
-      $scope.parents = tmp_parents;
-		$scope.jsGetPath($scope.parent_id);
+
+jsRefreshToken().done(function(){
+    jsGetToken().done(function(token){
+
+        $rootScope.messages.query( {lastTime: 0, token: token, myAction:"message", idController:"" }, function( data ){
+              console.timeEnd("Загружаю все данные с сервера");
+            	$scope.notes = data;
+              var tmp_parents = {};
+              $.each($scope.notes, function(i,el){
+                    if(!tmp_parents[el.parent_id]) tmp_parents[el.parent_id] = [];
+                    tmp_parents[el.parent_id].push(el);
+              });
+              $scope.add();
+              $scope.parents = tmp_parents;
+        		$scope.jsGetPath($scope.parent_id);
+        });
     });
+});
+
 
   	  $scope.openPanel = function(which_panel) {
   	  	$("body").toggleClass(which_panel+"_hide");
@@ -795,3 +845,5 @@ function arrayUnique(array) {
 
     return a;
 };
+
+

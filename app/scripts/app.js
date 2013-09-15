@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('4treeApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor'])
+angular.module('4treeApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor','ui.redactor.multi'])
   .config(function ($routeProvider, $locationProvider,$compileProvider) {
     $locationProvider.html5Mode(false).hashPrefix('!');
 

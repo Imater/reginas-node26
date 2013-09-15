@@ -30,9 +30,20 @@ var MongoClient = require('mongodb').MongoClient, format = require('util').forma
   });
 
 
-app.configure(function() {
-    app.use(express.static(__dirname + '/public'));
+/*app.configure(function() {*/
+
+app.configure(function(){
+  app.use(function(req, res, next) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    return next();
+  });
+  app.use(express.static(__dirname + '/public'));
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
+
+/*    app.use(express.static(__dirname + '/public'));
+    app.header("Access-Control-Allow-Origin", "*");
+});*/
 
 app.use(express.bodyParser());
 
@@ -58,10 +69,13 @@ var the_socket;
 
 function Report(socket) {
 	//Обрабатываем данные синхронизации
-	this.sync_answer = function(data) {
-
+	this.sync_answer = function(data, user_id) {
 		var dfdArray = [];
 		var rows = {};
+		if(!user_id) {
+			socket.emit( 'sync_answer', {err: "Token invalid..."} );
+			return false;
+		};
 		$.each(data.notes, function(i,el) {
 			dfdArray.push( jsFindById(el.id).done(function(row){
 				rows[el.id] = row;
@@ -75,12 +89,16 @@ function Report(socket) {
 			var dfdArray = [];
 			$.each(data.notes, function(i, el_client){
 				var el_server = rows[el_client.id][0];
-				
 				if(el_client.changetime > el_server.changetime) {
 					//сохраняем данные в базе сервера
-					collection.update({id: el_server.id},{ $set: el_client }, function(err,rows){
-						if(rows) console.info("Сохранил - "+el_server.id);
-					});	
+					if (el_server.user_id == user_id) {
+						collection.update({id: el_server.id, user_id: user_id },{ $set: el_client }, function(err,rows){
+							if(rows) console.info("Сохранил - "+el_server.id);
+						});	
+					} else {
+						console.info("Чужая запись, не сохраняю. Пользователь: "+el_server.user_id);
+
+					}
 
 
 
@@ -123,7 +141,10 @@ io.sockets.on('connection', function(socket) {
 
 
 	socket.on('sync', function(data) {
-		report.sync_answer(data);		
+		jsCheckToken(data.token).done(function(user_id){
+				report.sync_answer(data, user_id);
+		});
+		
 	});
 
 	socket.on('updateNote', function(data) {
@@ -165,15 +186,35 @@ app.get("/api/v1/user_:user_id/time_:lasttime/:action", function(request, respon
 }
 */
 
-exports.findAllMessages = function(request,response) {
-	var user_id = parseInt( request.query.user_id );
-    var collection = mdb.collection('myalldata');
-
-    var tm = ( (new Date()).getTime() );
-    collection.find({user_id:user_id, del:0}).toArray(function (err, rows, fields) {
-	    console.info( ( (new Date()).getTime() ) -tm);
-		response.send(rows);
+function jsCheckToken(token) {
+	var dfd = new $.Deferred();
+    connection.query('SELECT *, NOW() FROM `oauth_access_tokens` WHERE access_token = ? AND expires>=NOW()', [token] , function (err, rows, fields) {
+		    if(rows && rows[0] && rows[0].user_id) {
+		    	dfd.resolve( parseInt( rows[0].user_id ) );
+		    } else {
+		    	dfd.resolve(false);
+		    }
   	});	
+  	return dfd.promise();
+
+}
+
+exports.findAllMessages = function(request,response) {
+	jsCheckToken(request.query.token).done(function(user_id){
+		if(user_id) {
+		    var collection = mdb.collection('myalldata');		
+
+		    var tm = ( (new Date()).getTime() );
+			
+		    collection.find({user_id:user_id, del:0}).toArray(function (err, rows, fields) {
+			    console.info( ( (new Date()).getTime() ) -tm);
+				response.send(rows);
+		  	});	
+
+		} else {
+			response.send("Error. Token is not valid...");	
+		}
+	});
 }
 
 
