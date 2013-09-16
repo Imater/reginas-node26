@@ -297,21 +297,35 @@ exports.saveFile = function(request, response) {
 
 
 exports.loadAllFromMySQL = function(request, response) {
+//дописывает ноль к цифре
+function twoDigits(d) {
+    if(0 <= d && d < 10) return "0" + d.toString();
+    if(-10 < d && d < 0) return "-0" + (-1*d).toString();
+    return d.toString();
+}
+//Перевожу дату new Date в mySQL формат
+function toMysql(dat) {
+	if(dat == "0000-00-00 00:00:00") return dat;
+    return dat.getFullYear() + "-" + twoDigits(1 + dat.getMonth()) + "-" + twoDigits(dat.getDate()) + " " + twoDigits(dat.getHours()) + ":" + twoDigits(dat.getMinutes()) + ":" + twoDigits(dat.getSeconds());
+};
 
     
 
     connection.query('SELECT * FROM `tree`', function (err, rows, fields) {
 
 		$.each(rows, function(i, el){
-			console.info(el);
+			console.info("d",toMysql(el.date1));
+			el.start = toMysql( el.date1 );
+			el.end = toMysql( el.date2 );
+			el.did = toMysql( el.did );
+			el.adddate = toMysql( el.adddate );
+			//el.date1
 		    collection.insert(el, function(err, docs) {
-			response.send(docs);	
+				response.send(docs);	
+			});
 		});
 	  	//response.send(r);
   	});	
-
-
-});
 }
 
 

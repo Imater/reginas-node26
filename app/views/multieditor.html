@@ -1,0 +1,21 @@
+
+
+<div id="me">
+<div id="multi_editor" ui-redactor-multi>
+
+  <div class="multi_editor_part" ng-repeat="note in findByParent(parent_id) | orderBy: sortByPosition()" ng-class="{ 'selected': $index == selectedIndex,'card_big': $index == zoomIndex,'card_folder': note.count>0 }">
+
+  	<div class="me_title_header" ng-model="note.title" contenteditable="true"></div>
+
+  <div contenteditable="false">
+	<div class="me_part_editor" ng-model="note.text" contenteditable="true">
+	</div>
+  </div>
+
+  	<div class="me_title_footer" contenteditable="false">2 комментария</div>
+
+
+  </div>
+
+</div>
+</div>

@@ -1,6 +1,10 @@
 'use strict';
 
-angular.module('4treeApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor','ui.redactor.multi'])
+function Fuck() {
+  alert(1);
+}
+
+angular.module('4treeApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor','ui.redactor.multi','ui.calendar'])
   .config(function ($routeProvider, $locationProvider,$compileProvider) {
     $locationProvider.html5Mode(false).hashPrefix('!');
 
@@ -8,6 +12,11 @@ angular.module('4treeApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor'
     $routeProvider
       .when('/cards/:parent_id', {
         templateUrl: 'views/main.html',
+        controller: 'MainCtrl',
+        reloadOnSearch: false
+      })
+      .when('/editor/:parent_id', {
+        templateUrl: 'views/multieditor.html',
         controller: 'MainCtrl',
         reloadOnSearch: false
       })

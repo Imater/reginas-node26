@@ -18,7 +18,7 @@ setTimeout(function(){
 
 i18n.init({lng:"ru"},function(t) {
   // translate nav
-  //$("body").i18n();
+  $("body").i18n();
   // programatical access
   // var appName = t("4tree");
 });
@@ -126,6 +126,7 @@ myApp.directive('contenteditable', ['$timeout', function($timeout) { return {
     link: function($scope, $element, attrs, ngModel) {
       // don't do anything unless this is actually bound to a model
       // view -> model
+      if(!ngModel) return true;
       $element.bind('input', function(e) {
         $scope.$apply(function() {
           var html, html2, rerender;
@@ -326,8 +327,11 @@ myApp.directive('eatClick', function() {
 
 function onResize(){
 	
+  var center_height = $("#panel_center").height();
 
-  var body_height = $("#panel_center").height() - 73;
+  $('#myfullcalendar').fullCalendar('option','contentHeight', center_height - 146); //
+
+  var body_height = center_height - 73;
   if( $("#editor_cont").hasClass("fullscreen") ) {
     body_height = $(window).height() - $("#editor_cont .redactor_editor").offset().top-14;
   }
@@ -377,6 +381,10 @@ myApp.directive('collection', function () {
 
 myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams, $route) {
 
+ $scope.tmp = "";
+
+ $scope.view_switch = 3;
+
 	$scope.editor = $routeParams.edit;
   $scope.sync = {did: true, syncing: false};
 
@@ -393,6 +401,53 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
     autoresize: false,
     air: true
   }
+
+  $scope.jsGetEvents = function(start, end, callback) {
+     var caldata = [];
+
+     $.each($scope.notes, function(i,el) {
+            if( el.date1!="0000-00-00 00:00:00" ) {
+            caldata.push(
+               {title: el.title, 
+                start:el.date1, 
+                end:el.date2
+               } 
+               );                
+          } 
+       });
+     console.info(start, caldata);
+     callback(caldata);
+  }
+
+  $scope.uiConfig = {
+      calendar:{
+        height: 450,
+        editable: true,
+        slotMinutes: 15,
+        timeFormat: 'H:mm',
+        axisFormat: 'H:mm',
+        weekends:true,
+        selectable: true,
+        selectHelper: true,
+        defaultView:'basicWeek', //agendaWeek
+        header:{
+          left: 'month basicWeek basicDay agendaWeek agendaDay',
+          center: 'title',
+          right: 'today prev,next'
+        },
+        eventSources: [{ events: function(start, end, callback) {
+            $scope.jsGetEvents(start, end, callback);
+           },
+           className: 'my_event'
+        }],        
+        dayClick: $scope.alertEventOnClick,
+        eventDrop: $scope.alertOnDrop,
+        eventResize: $scope.alertOnResize
+      }
+    };  
+
+  $scope.eventSources = [
+  ];   
 
   $scope.left_tabs = [
     {title: "Дерево", color: "#eeeeee"},
@@ -762,7 +817,7 @@ jsRefreshToken().done(function(){
                     if(!tmp_parents[el.parent_id]) tmp_parents[el.parent_id] = [];
                     tmp_parents[el.parent_id].push(el);
               });
-              $scope.add();
+              if($scope.add) $scope.add();
               $scope.parents = tmp_parents;
         		$scope.jsGetPath($scope.parent_id);
         });
@@ -822,7 +877,8 @@ myApp.directive('i18n', function() {
             //orig = orig.replace(/^\s+|\s+$/g, ''); // trim
             //console.info(attrs.i18n);
 //            elem.html( i18n.t( attrs.i18n ) );
-			$(elem).i18n();
+            $(elem).i18n();
+			  
         }
     };
 });

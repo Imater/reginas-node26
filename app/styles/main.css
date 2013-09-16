@@ -273,6 +273,8 @@ body {
       text-shadow: 0px 1px 0px #000;
       box-shadow: none;
       -webkit-box-shadow: none; }
+      #panel_center #panel_center_header .btn-default a {
+        color: #FFF; }
       #panel_center #panel_center_header .btn-default .caret {
         margin-top: -1px;
         border-top-color: #FFFFFF; }
@@ -390,7 +392,7 @@ body {
       border-bottom: 1px solid #666666;
       border-top: 1px solid #CCC !important; }
   #center_content .cards_list .li_card.selected {
-    background: rgba(34, 48, 255, 0.5);
+    background: rgba(34, 48, 255, 0.8);
     box-shadow: 0px 1px 3px #000;
     border-radius: 3px; }
   #center_content .cards_list .li_card .card_div {
@@ -696,67 +698,92 @@ body {
   left: 0px;
   right: 0px;
   z-index: 6; }
+  #me .redactor_btn_html {
+    display: none !important; }
 
 #me .redactor_editor {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
+  background: url("../images/calm-5.jpg") !important;
+  background-size: 100% !important;
+  background-position: right bottom !important;
+  background-repeat: no-repeat !important;
+  background-attachment: scroll !important;
+  background-color: #04030a !important;
   height: 100%; }
 
 #multi_editor {
-  z-index: 5;
-  background: #eef7ff !important; }
+  z-index: 5; }
   #multi_editor .multi_editor_part {
-    margin: 20px 10px 100px 10px;
+    max-width: 1024px;
+    margin: 50px 2% 100px 2%;
     min-height: 50px !important;
     background: #fff !important;
-    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.9) !important;
-    border-radius: 10px; }
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5) !important;
+    border-radius: 7px; }
     #multi_editor .multi_editor_part .me_title_header {
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
-      min-height: 50px;
+      color: #FFF !important;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      min-height: 40px;
       vertical-align: middle;
       text-align: center;
-      font-size: 16px;
-      line-height: 50px;
+      font-size: 14px;
+      line-height: 40px;
       font-weight: bold;
       background: #FFF;
-      z-index: 6; }
+      z-index: 6;
+      outline: none;
+      background: -moz-linear-gradient(top, rgba(9, 35, 9, 0.95) 0%, rgba(0, 87, 0, 0.95) 5%, #0a6400 100%);
+      /* FF3.6+ */
+      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(9, 35, 9, 0.95)), color-stop(5%, rgba(0, 87, 0, 0.95)), color-stop(100%, #0a6400)) !important;
+      /* Chrome,Safari4+ */
+      background: -webkit-linear-gradient(top, rgba(9, 35, 9, 0.95) 0%, rgba(0, 87, 0, 0.95) 5%, #0a6400 100%);
+      /* Chrome10+,Safari5.1+ */
+      background: -o-linear-gradient(top, rgba(9, 35, 9, 0.95) 0%, rgba(0, 87, 0, 0.95) 5%, #0a6400 100%);
+      /* Opera 11.10+ */
+      background: -ms-linear-gradient(top, rgba(9, 35, 9, 0.95) 0%, rgba(0, 87, 0, 0.95) 5%, #0a6400 100%);
+      /* IE10+ */
+      background: linear-gradient(to bottom, rgba(9, 35, 9, 0.95) 0%, rgba(0, 87, 0, 0.95) 5%, #0a6400 100%);
+      /* W3C */
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f2092309', endColorstr='#0a6400',GradientType=0 );
+      /* IE6-9 */ }
     #multi_editor .multi_editor_part .me_part_editor {
       background: #FFF;
-      padding: 0px 10px;
+      padding: 0px 20px;
       min-height: 60px;
-      margin: 0px !important; }
+      margin: 0px !important;
+      outline: none; }
       #multi_editor .multi_editor_part .me_part_editor .redactor_box {
         height: 500px;
         background: #FFF !important; }
         #multi_editor .multi_editor_part .me_part_editor .redactor_box .redactor_toolbar {
           z-index: 6; }
     #multi_editor .multi_editor_part .me_title_footer {
-      height: 30px;
-      color: #5b7f7d;
-      font-size: 12px;
-      line-height: 30px;
+      height: 20px;
+      color: #83bd70;
+      font-size: 11px;
+      line-height: 20px;
       text-align: right;
       padding-right: 10px;
-      border-bottom-left-radius: 8px;
-      border-bottom-right-radius: 8px;
-      background: #a7c7dc !important;
-      /* Old browsers */
-      background: -moz-linear-gradient(top, #a7c7dc 0%, #85b2d3 100%) !important;
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+      background: -moz-linear-gradient(top, #0a6400 0%, rgba(0, 87, 0, 0.95) 92%, rgba(9, 35, 9, 0.95) 100%) !important;
       /* FF3.6+ */
-      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #a7c7dc), color-stop(100%, #85b2d3)) !important;
+      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #0a6400), color-stop(92%, rgba(0, 87, 0, 0.95)), color-stop(100%, rgba(9, 35, 9, 0.95))) !important;
       /* Chrome,Safari4+ */
-      background: -webkit-linear-gradient(top, #a7c7dc 0%, #85b2d3 100%) !important;
+      background: -webkit-linear-gradient(top, #0a6400 0%, rgba(0, 87, 0, 0.95) 92%, rgba(9, 35, 9, 0.95) 100%) !important;
       /* Chrome10+,Safari5.1+ */
-      background: -o-linear-gradient(top, #a7c7dc 0%, #85b2d3 100%) !important;
+      background: -o-linear-gradient(top, #0a6400 0%, rgba(0, 87, 0, 0.95) 92%, rgba(9, 35, 9, 0.95) 100%) !important;
       /* Opera 11.10+ */
-      background: -ms-linear-gradient(top, #a7c7dc 0%, #85b2d3 100%) !important;
+      background: -ms-linear-gradient(top, #0a6400 0%, rgba(0, 87, 0, 0.95) 92%, rgba(9, 35, 9, 0.95) 100%) !important;
       /* IE10+ */
-      background: linear-gradient(to bottom, #a7c7dc 0%, #85b2d3 100%) !important;
+      background: linear-gradient(to bottom, #0a6400 0%, rgba(0, 87, 0, 0.95) 92%, rgba(9, 35, 9, 0.95) 100%) !important;
       /* W3C */
-      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a7c7dc', endColorstr='#85b2d3',GradientType=0 ) !important;
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0a6400', endColorstr='#f2092309',GradientType=0 ) !important;
       /* IE6-9 */ }
+  #multi_editor .multi_editor_part.selected {
+    box-shadow: 0px 1px 25px rgba(34, 48, 255, 0.8) !important; }
   #multi_editor img {
     max-width: 100px; }
 
@@ -908,3 +935,14 @@ body {
   height: 27px;
   border-radius: 0px;
   box-shadow: 0px 0px 5px #888; }
+
+#contents {
+  background: red;
+  margin-top: 100px; }
+
+.redactor_editor code {
+  background: none !important;
+  background-color: none !important; }
+
+#myfullcalendar {
+  margin-top: 70px; }
