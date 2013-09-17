@@ -62,7 +62,6 @@
 
                     <li ng-repeat="note in findByParent(parent_id) | filter:parentIdMatch(parent_id) | orderBy: sortByPosition()" class="li_card" style="width:{{(settings.cardWidth/1 + 10)}}px;min-height:{{settings.cardWidth/1.4+10}}px;font-size:{{settings.cardWidth/20}}px" ng-class="{ 'selected': $index == selectedIndex,'card_big': $index == zoomIndex,'card_folder': note.count>0 }" ng-click="liClicked($index)" theindex = "{{$index}}" myid="{{note.id}}">
 
-                        {{note.date1}}
 
                         <div class="card_div" sync-on-change>
                             <div class="card_title" ng-dblclick="openParentId(note.id, $event); $event.stopPropagation();">
@@ -78,17 +77,23 @@
                             
                             </div>
 
-
-<div class="card_text thin_scroll" ui-redactor="redactorOptionsMini" ng-model="note.text"
+                          <div class="card">
+                            <div class="figure front">
+                              <div class="card_text thin_scroll" ui-redactor="redactorOptionsMini" ng-model="note.text"
             ng-click="$event.stopPropagation();" style="height:{{settings.cardWidth/1.4-35}}px;">
-
-                        
-
+                              </div >
                             </div>
+
+                            <div class="card_settings figure back">
+                              Другая сторона
+                            </div>
+                          </div>
+
+
                             <div class="card_footer">                           
                                 <i title="Увеличить размер карточки" ng-click="itemClicked($index); $event.stopPropagation();" class="icon-zoom-in left"></i>
 
-
+                                <button class="btn btn-xs card_turn" align="center">перевернуть</button>
                                 
                                 <i title="Открыть в редакторе" ng-click="openEditor(note.id); $event.stopPropagation();" class="icon-edit-1 right"></i>
                             </div>

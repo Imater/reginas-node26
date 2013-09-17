@@ -315,8 +315,8 @@ function toMysql(dat) {
 
 		$.each(rows, function(i, el){
 			console.info("d",toMysql(el.date1));
-			el.start = toMysql( el.date1 );
-			el.end = toMysql( el.date2 );
+			el.date1 = toMysql( el.date1 );
+			el.date2 = toMysql( el.date2 );
 			el.did = toMysql( el.did );
 			el.adddate = toMysql( el.adddate );
 			//el.date1

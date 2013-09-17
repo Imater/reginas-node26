@@ -4,12 +4,92 @@
 		"selected_items":
 		[
 			[
-				"pa",
-				"padding-top"
+				"ma",
+				"margin"
 			],
 			[
-				"ma",
-				"margin-bottom"
+				"pa",
+				"padding"
+			],
+			[
+				"pr",
+				"e.preventDefault"
+			],
+			[
+				"ba",
+				"background-color"
+			],
+			[
+				"fuc",
+				"function"
+			],
+			[
+				"fo",
+				"font-size"
+			],
+			[
+				"m",
+				"min-height"
+			],
+			[
+				"min",
+				"min-height"
+			],
+			[
+				"fon",
+				"font-weight"
+			],
+			[
+				"text",
+				"textarea	Tag"
+			],
+			[
+				"jsGet",
+				"jsGetToken"
+			],
+			[
+				"p",
+				"padding-left"
+			],
+			[
+				"ta",
+				"table"
+			],
+			[
+				"liClicke",
+				"liClickedLeft"
+			],
+			[
+				"body",
+				"body_height"
+			],
+			[
+				"this",
+				"this_editor"
+			],
+			[
+				"mysq",
+				"mysql_values"
+			],
+			[
+				"my",
+				"mysql_values"
+			],
+			[
+				"mysql",
+				"mysql_insert"
+			],
+			[
+				"chan",
+				"el_client.changetime"
+			],
+			[
+				"clear",
+				"clearTimeout"
+			],
+			[
+				"tm",
+				"tm_start_sync"
 			],
 			[
 				"ini",
@@ -20,18 +100,6 @@
 				"font-size"
 			],
 			[
-				"fo",
-				"font-size"
-			],
-			[
-				"ba",
-				"background"
-			],
-			[
-				"m",
-				"margin-left"
-			],
-			[
 				"background-",
 				"background-attachment"
 			],
@@ -40,16 +108,8 @@
 				"max-width"
 			],
 			[
-				"fon",
-				"font-size"
-			],
-			[
 				"$rout",
 				"$routeParams"
-			],
-			[
-				"min",
-				"min-height"
 			],
 			[
 				"search",
@@ -170,10 +230,6 @@
 			[
 				"paddin",
 				"padding-left"
-			],
-			[
-				"text",
-				"text-align"
 			],
 			[
 				"password",
@@ -304,10 +360,10 @@
 	"buffers":
 	[
 		{
-			"file": "app/index.html",
+			"file": "server/server.js",
 			"settings":
 			{
-				"buffer_size": 4602,
+				"buffer_size": 12943,
 				"line_ending": "Unix"
 			}
 		},
@@ -315,7 +371,15 @@
 			"file": "app/scripts/controllers/main.js",
 			"settings":
 			{
-				"buffer_size": 12251,
+				"buffer_size": 26363,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/index.html",
+			"settings":
+			{
+				"buffer_size": 13008,
 				"line_ending": "Unix"
 			}
 		},
@@ -323,15 +387,7 @@
 			"file": "app/scripts/app.js",
 			"settings":
 			{
-				"buffer_size": 1658,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/Applications/MAMP/htdocs/fpk/4tree/index_tree.php",
-			"settings":
-			{
-				"buffer_size": 30362,
+				"buffer_size": 1843,
 				"line_ending": "Unix"
 			}
 		},
@@ -339,24 +395,23 @@
 			"file": "app/views/main.html",
 			"settings":
 			{
-				"buffer_size": 9361,
+				"buffer_size": 6809,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "app/locales/ru/translation.json",
+			"file": "app/views/multieditor.html",
 			"settings":
 			{
-				"buffer_size": 301,
-				"line_ending": "Unix",
-				"name": "{"
+				"buffer_size": 587,
+				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "app/locales/dev/translation.json",
+			"file": "/Applications/MAMP/htdocs/fpk/4tree/redactor911/redactor/redactor.js",
 			"settings":
 			{
-				"buffer_size": 257,
+				"buffer_size": 166579,
 				"line_ending": "Unix"
 			}
 		},
@@ -364,32 +419,15 @@
 			"file": "app/styles/main.scss",
 			"settings":
 			{
-				"buffer_size": 22637,
+				"buffer_size": 38650,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "index.js",
+			"file": "app/bower_components/fullcalendar/fullcalendar.js",
 			"settings":
 			{
-				"buffer_size": 5237,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/bower_components/tinymce/tinymce.angular.js",
-			"settings":
-			{
-				"buffer_size": 2396,
-				"line_ending": "Unix",
-				"name": "/**"
-			}
-		},
-		{
-			"file": "app/bower_components/redactor913/redactor/redactor.angular.js",
-			"settings":
-			{
-				"buffer_size": 1950,
+				"buffer_size": 151516,
 				"line_ending": "Unix"
 			}
 		},
@@ -398,6 +436,14 @@
 			"settings":
 			{
 				"buffer_size": 279994,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Applications/MAMP/htdocs/fpk/4tree/js/js_regallkeys.js",
+			"settings":
+			{
+				"buffer_size": 71466,
 				"line_ending": "Unix"
 			}
 		}
@@ -421,7 +467,7 @@
 				"Package Control: Install Package"
 			]
 		],
-		"width": 449.0
+		"width": 574.0
 	},
 	"console":
 	{
@@ -444,16 +490,46 @@
 	},
 	"file_history":
 	[
-		"/Applications/MAMP/htdocs/fpk/4tree/css/4tree-styles.css",
-		"/Applications/MAMP/htdocs/fpk/4tree/css/test-design.css",
+		"/Users/iBook/4tree/app/bower_components/ui-calendar/src/calendar.js",
 		"/Applications/MAMP/htdocs/fpk/4tree/js/all_new.js",
+		"/Users/iBook/4tree/app/bower_components/redactor913/redactor/redactor-multi.angular.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/do.php",
+		"/Applications/MAMP/htdocs/fpk/4tree/js/api4tree.js",
+		"/Users/iBook/4tree/app/bower_components/redactor913/redactor/redactor.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/js/md5.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/js/login.js",
+		"/Users/iBook/4tree/app/bower_components/redactor913/redactor/redactor.angular.js",
+		"/Users/iBook/Desktop/node/angularjs-collab-board/public/js/collab-board.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/css/4tree-styles.css",
+		"/Users/iBook/4tree/app/angular-route-segment/example/index.html",
+		"/Users/iBook/4tree/app/bower_components/redactor913/redactor/redactor.css",
+		"/Users/iBook/4tree/app/scripts/controllers/login.js",
+		"/Users/iBook/4tree/app/views/tree_li.html",
+		"/Users/iBook/4tree/app/bower_components/jquery-ui/js/jquery.ui.touch-punch.js",
+		"/Users/iBook/4tree/app/locales/dev/translation.json",
+		"/Users/iBook/4tree/app/locales/ru/translation.json",
+		"/Users/iBook/4tree/app/bower_components/angular/new/angular.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/index_tree.php",
+		"/Users/iBook/4tree/app/bower_components/md5fast.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/login.php",
+		"/Users/iBook/4tree/server/oauth2orize-master/examples/express2/app.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/mymail.php",
+		"/Users/iBook/4tree/node_modules/mail-listener/dist/mail.listener.js",
+		"/Users/iBook/4tree/app/bower_components/tinymce/tinymce.angular.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/redactor911/redactor/redactor.js",
+		"/Users/iBook/4tree/server/config-s3.json",
+		"/Applications/MAMP/htdocs/fpk/4tree/AWS_44444/sdk.class.php",
+		"/Applications/MAMP/htdocs/fpk/4tree/AWS_44444/config.inc.php",
+		"/Users/iBook/4tree/server/index.js",
+		"/Users/iBook/yo/app/scripts/controllers/main.js",
+		"/Users/iBook/4tree/index.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/js/js_regallkeys.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/css/test-design.css",
 		"/Applications/MAMP/htdocs/fpk/4tree/js/testdesign.js",
 		"/Users/iBook/4tree/app/bower_components/redactor913/redactor.angular.js",
 		"/Users/iBook/4tree/app/views/editor.html",
-		"/Applications/MAMP/htdocs/fpk/4tree/js/js_regallkeys.js",
 		"/Users/iBook/4tree/app/bower_components/angular-slider/angular-slider.js",
 		"/Users/iBook/yo/app/scripts/app.js",
-		"/Users/iBook/yo/app/scripts/controllers/main.js",
 		"/Users/iBook/4tree/app/bower_components/angular/angular.js",
 		"/Users/iBook/4tree/app/index.js",
 		"/Users/iBook/yo/app/index.html",
@@ -483,7 +559,6 @@
 		"/Applications/MAMP/htdocs/fpk/4tree/my_first_page.php",
 		"/Applications/MAMP/htdocs/fpk/4tree/node/angularjs-collab-board/app.js",
 		"/Users/iBook/yo/app/favicon.ico",
-		"/Applications/MAMP/htdocs/fpk/4tree/index_tree.php",
 		"/Users/iBook/yo/dist/index.html",
 		"/Applications/MAMP/htdocs/fpk/4tree/node/angularjs-collab-board/public/js/collab-board.js",
 		"/Users/iBook/yo/app/views/main.html",
@@ -532,134 +607,134 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"seleced",
 			"card_footer",
-			"card_big",
-			"#888",
-			"card_folder",
-			"nosele",
-			"_footer",
-			"card_foot",
-			"card_folder",
-			"$card_footer_height",
-			"footer",
-			"myr =",
+			".notes",
+			"notes.",
+			"notes",
+			".date1",
+			"onResize",
+			"fullcalen",
+			"setHeig",
+			"getFullYear",
+			"tomysql",
+			"mysql",
+			"format",
+			"title",
+			"loadAllFromMySQL",
+			"n jsGetEvents",
+			"fullcalendar",
+			"events:",
+			"ui-calen",
+			"sun",
+			"sunвс",
+			"sun",
+			"ng-if",
+			"selected",
+			"card_",
+			"contentedit",
+			"insertHtml",
+			"pasteClean",
+			"paste",
+			"pasteClean",
+			"paste",
+			"paste:",
+			"backspa",
+			"keyup",
+			"buildEventKeyup",
+			"'prevent",
+			"prevent'",
+			"prevent",
+			"selectall",
 			"editor",
-			"card_icon",
-			"(5deg)",
-			"-5deg",
-			"hide",
+			"card_footer_background",
+			"131,199,131",
+			"this.sync()",
+			"contenteditable",
+			"i18",
+			"view_switch",
+			"html",
+			"view_switch",
 			"editor",
-			"card_div",
-			"_icon",
-			"card_div",
-			"card_folder",
-			"_icon",
-			"itemClicked",
-			"card_icon",
-			"search_notes",
-			"р6",
-			"card_footer",
-			"гкд(",
-			"card_text",
-			"card_footer_height",
-			"card_footer",
-			"transition",
-			"card",
-			"transit",
-			"content",
-			"_center",
+			"view_switch",
+			"ngVi",
+			"ng-view",
+			"-0",
+			"btn",
+			"editor",
+			"i18n",
+			"login.php",
+			"calc",
+			"login.php",
+			"parent",
+			"contenteditable",
+			".notes",
+			"editor",
+			"contenteditable",
+			"editor",
+			"onResize",
+			"sync_answer",
+			"jsFindById",
+			"sync_answer",
+			"sync",
 			"_title",
-			"_ешеду",
 			"path",
-			"fav_hide",
-			"fav_",
-			"scroll",
-			"-50px",
-			"search_string",
-			"искать",
-			"add_",
-			"add",
-			"socket",
+			"findAllMessages",
+			"$resource",
+			"jsRefreshToken",
+			"jsLogin",
+			"$apply",
+			"onResize",
+			"editor",
+			"selected",
+			"select",
+			"card_folder",
+			"localStorage",
+			"resizable",
+			"panel_left_co",
 			"panel_width",
 			"$panel_width",
-			"center_footer",
-			"path",
-			"ng-rep",
-			"текущей",
-			"path",
-			"зфер",
-			"divider",
-			"overf",
-			"watch",
-			"boots",
-			"boot",
-			"7px",
-			"$width",
-			"body",
-			"io",
+			"card_folder",
+			"icon-doc-2",
+			"scope.add",
+			".notes",
+			"compile",
+			"collection",
 			"socket",
-			"-1",
-			"cb",
-			"getArray",
-			"<script src=\"bower_components/bootstrap-sass/js/bootstrap-affix.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-alert.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-dropdown.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-tooltip.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-modal.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-transition.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-button.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-popover.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-typeahead.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-carousel.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-scrollspy.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-collapse.js\"></script>\n        <script src=\"bower_components/bootstrap-sass/js/bootstrap-tab.js\"></script>\n        ",
-			"MainCtrl",
-			"karma",
-			"angular",
-			"m",
-			"local0",
-			"дщсфд",
-			"cof",
-			"test",
-			"controller",
-			"ngmin",
-			"tree_add_new_element",
-			"plumb",
-			"jsPlumb",
-			"context",
-			"sortable",
-			"path_tree",
-			"trash",
-			"jsMakeUnDid",
-			"избранные",
-			"home",
-			"sortable",
-			"jsShowTreePanel",
-			"check_hash_add_do",
-			"hash",
-			"вход",
-			"reg_please",
-			"проверьте email",
-			"jsReg",
-			".click",
-			"jsReg",
-			"reg_or_login",
-			"h1",
-			"р1",
-			"прове",
-			"проверьте",
-			"Проверьте",
-			"войти",
-			"forget",
-			"social",
-			"jsClearCurrentBase",
-			"#password",
-			"input",
-			"login",
-			"jsDoFirst",
-			"jsLogin",
-			"index.php",
-			"'fav'",
-			"\"fav\"",
-			"get_new",
-			"get_all_data2",
-			".fav",
-			"encrypted",
-			"мастер",
-			"path_tree",
-			"path_line",
-			"path_tree",
-			"padding-bott"
+			".on",
+			"on",
+			"put",
+			"note in",
+			"sync",
+			"set",
+			"set:",
+			"$scope.parents",
+			"$scope.notes",
+			"center_footer",
+			"editor",
+			"closeEditor",
+			"openParentId",
+			"card_icon",
+			"center_foo",
+			"left",
+			"api",
+			"/message",
+			"find",
+			"save_file_to_amazone",
+			"req",
+			"newMessage",
+			"this_user_id",
+			"connect",
+			"close",
+			"modalInit",
+			"dropdownShow",
+			"buttons_i",
+			"fropdown",
+			"menu",
+			"position",
+			"selected",
+			":after",
+			"positio",
+			"card_footer"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -667,6 +742,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"10,100,0",
 			"(4deg)",
 			"-4deg",
 			"$panel_width",
@@ -695,34 +771,33 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 4,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "app/index.html",
+					"file": "server/server.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4602,
+						"buffer_size": 12943,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1223,
-								1233
+								8603,
+								8123
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 294.0,
+						"translation.y": 5777.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -733,43 +808,74 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 12251,
+						"buffer_size": 26363,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6596,
-								6596
+								11548,
+								11548
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true,
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 4159.0,
+						"translation.y": 6417.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "app/scripts/app.js",
+					"file": "app/index.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1658,
+						"buffer_size": 13008,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								81,
-								81
+								2777,
+								2777
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/AngularJS/AngularJS.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1334.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "app/scripts/app.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1843,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								162,
+								162
 							]
 						],
 						"settings":
@@ -786,81 +892,54 @@
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "/Applications/MAMP/htdocs/fpk/4tree/index_tree.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 30362,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5890,
-								6045
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
 					"buffer": 4,
 					"file": "app/views/main.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 9361,
+						"buffer_size": 6809,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								7509,
-								7520
+								5583,
+								5583
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3612.0,
+						"translation.y": 1447.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 5,
-					"file": "app/locales/ru/translation.json",
+					"file": "app/views/multieditor.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 301,
+						"buffer_size": 587,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								301,
-								301
+								587,
+								587
 							]
 						],
 						"settings":
 						{
-							"auto_name": "{",
-							"syntax": "Packages/JavaScript/JSON.tmLanguage"
+							"syntax": "Packages/HTML/HTML.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -870,27 +949,28 @@
 				},
 				{
 					"buffer": 6,
-					"file": "app/locales/dev/translation.json",
+					"file": "/Applications/MAMP/htdocs/fpk/4tree/redactor911/redactor/redactor.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 257,
+						"buffer_size": 166579,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								190,
-								190
+								91471,
+								91482
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JSON.tmLanguage"
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 81914.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -907,15 +987,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 22637,
+						"buffer_size": 38650,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								16930,
-								16930
+								18898,
+								18898
 							]
 						],
 						"settings":
@@ -925,100 +1005,42 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 9817.0,
+						"translation.y": 11319.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 8,
-					"file": "index.js",
+					"file": "app/bower_components/fullcalendar/fullcalendar.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5237,
+						"buffer_size": 151516,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1358,
-								1358
+								33795,
+								33801
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false,
+							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 710.0,
+						"translation.y": 32780.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 9,
-					"file": "app/bower_components/tinymce/tinymce.angular.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2396,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1241,
-								1254
-							]
-						],
-						"settings":
-						{
-							"auto_name": "/**",
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 260.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "app/bower_components/redactor913/redactor/redactor.angular.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1950,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								958,
-								958
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true,
-							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
-						},
-						"translation.x": 0.0,
-						"translation.y": 85.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 11,
 					"file": "/Applications/MAMP/htdocs/fpk/4tree/js/api4tree.js",
 					"semi_transient": false,
 					"settings":
@@ -1030,8 +1052,8 @@
 						"selection":
 						[
 							[
-								263795,
-								263819
+								241238,
+								241247
 							]
 						],
 						"settings":
@@ -1040,7 +1062,35 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 158584.0,
+						"translation.y": 169328.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "/Applications/MAMP/htdocs/fpk/4tree/js/js_regallkeys.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 71466,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								43721,
+								43728
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 35214.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1076,7 +1126,7 @@
 		"cols":
 		[
 			0.0,
-			0.552981228299,
+			0.602012793335,
 			1.0
 		],
 		"rows":
@@ -1127,7 +1177,7 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": false,
-	"side_bar_width": 155.0,
+	"side_bar_width": 211.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

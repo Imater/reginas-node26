@@ -329,7 +329,9 @@ function onResize(){
 	
   var center_height = $("#panel_center").height();
 
-  $('#myfullcalendar').fullCalendar('option','contentHeight', center_height - 146); //
+  $('#myfullcalendar').fullCalendar('option','contentHeight', center_height - 147); //
+
+  $("#myfullcalendar .fc-content").height(center_height - 147);
 
   var body_height = center_height - 73;
   if( $("#editor_cont").hasClass("fullscreen") ) {
@@ -383,7 +385,7 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
 
  $scope.tmp = "";
 
- $scope.view_switch = 3;
+ $scope.view_switch = 1;
 
 	$scope.editor = $routeParams.edit;
   $scope.sync = {did: true, syncing: false};
@@ -403,10 +405,15 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
   }
 
   $scope.jsGetEvents = function(start, end, callback) {
+
      var caldata = [];
+     start = toMysql(start);
+     end = toMysql(end);
 
      $.each($scope.notes, function(i,el) {
-            if( el.date1!="0000-00-00 00:00:00" ) {
+        if( ((el.date1!="0000-00-00 00:00:00") || (el.date2!="0000-00-00 00:00:00") ) && 
+            ((el.did==0) || (el.did=="0000-00-00 00:00:00")) && 
+            ( ( (el.date1>=start) && (el.date1<=end) ) || ((el.date2>=start) && (el.date2<=end)) )) {
             caldata.push(
                {title: el.title, 
                 start:el.date1, 
@@ -429,7 +436,7 @@ myApp.controller('MainCtrl', function ($scope, $resource, $rootScope, $location,
         weekends:true,
         selectable: true,
         selectHelper: true,
-        defaultView:'basicWeek', //agendaWeek
+        defaultView:'month', //agendaWeek
         header:{
           left: 'month basicWeek basicDay agendaWeek agendaDay',
           center: 'title',
@@ -818,6 +825,8 @@ jsRefreshToken().done(function(){
                     tmp_parents[el.parent_id].push(el);
               });
               if($scope.add) $scope.add();
+              $('#myfullcalendar').fullCalendar( 'refetchEvents' ); 
+
               $scope.parents = tmp_parents;
         		$scope.jsGetPath($scope.parent_id);
         });
@@ -903,3 +912,14 @@ function arrayUnique(array) {
 };
 
 
+
+function twoDigits(d) {
+    if(0 <= d && d < 10) return "0" + d.toString();
+    if(-10 < d && d < 0) return "-0" + (-1*d).toString();
+    return d.toString();
+}
+//Перевожу дату new Date в mySQL формат
+function toMysql(dat) {
+  if(dat == "0000-00-00 00:00:00") return dat;
+    return dat.getFullYear() + "-" + twoDigits(1 + dat.getMonth()) + "-" + twoDigits(dat.getDate()) + " " + twoDigits(dat.getHours()) + ":" + twoDigits(dat.getMinutes()) + ":" + twoDigits(dat.getSeconds());
+};
