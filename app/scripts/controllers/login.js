@@ -1,4 +1,7 @@
-var oauth2server = "http://"+window.location.hostname+"/";
+if( /reginas/.test(window.location.hostname) ) var add = ":8880"
+else add = "";
+
+var oauth2server = "http://"+window.location.hostname+add+"/";
 
 
 function jsLogin(email1, password) {
