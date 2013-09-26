@@ -1,6 +1,7 @@
 $editor_background: #FFF;
-$panel_width: 250px;
+$panel_width: 300px;
 $panel_background: #EEE;
+$left_panel_background: #242d3b;
 $panel_top_height: 0px;
 $panel_top_background: #000;
 /*$header_color: #61c419;*/
@@ -13,7 +14,7 @@ $button_radius: 3px;
 $center_footer_height: 22px;
 
 $path_height: 26px;
-$path_background: #efffd8;
+$path_background: #f3f3f3;
 $path_line_color: #f8ffeb;
 $path_font_size:1em;
 
@@ -26,6 +27,8 @@ $card_radius: 10px;
 $card_line_color: #666;
 
 $selected_color: rgba(34,48,255,0.8);
+
+$cnt_background: #516f8f;
 
 @mixin transition {
         -moz-transition: all 0.2s;
@@ -59,14 +62,14 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 @import "import/_editor";
 
 @mixin header_color {
-background: rgb(35,153,0); /* Old browsers */
-background: -moz-linear-gradient(top,  rgba(35,153,0,1) 0%, rgba(41,154,11,1) 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(35,153,0,1)), color-stop(100%,rgba(41,154,11,1))); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top,  rgba(35,153,0,1) 0%,rgba(41,154,11,1) 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top,  rgba(35,153,0,1) 0%,rgba(41,154,11,1) 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top,  rgba(35,153,0,1) 0%,rgba(41,154,11,1) 100%); /* IE10+ */
-background: linear-gradient(to bottom,  rgba(35,153,0,1) 0%,rgba(41,154,11,1) 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#239900', endColorstr='#299a0b',GradientType=0 ); /* IE6-9 */
+    background: rgb(63,76,107); /* Old browsers */
+background: -moz-linear-gradient(top,  rgba(63,76,107,1) 0%, rgba(63,76,107,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(63,76,107,1)), color-stop(100%,rgba(63,76,107,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  rgba(63,76,107,1) 0%,rgba(63,76,107,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  rgba(63,76,107,1) 0%,rgba(63,76,107,1) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  rgba(63,76,107,1) 0%,rgba(63,76,107,1) 100%); /* IE10+ */
+background: linear-gradient(to bottom,  rgba(63,76,107,1) 0%,rgba(63,76,107,1) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3f4c6b', endColorstr='#3f4c6b',GradientType=0 ); /* IE6-9 */
 
 
 }
@@ -117,6 +120,9 @@ body {
     height: $panel_top_height;
     background: $panel_top_background;
     position: absolute;
+    color: #FFF;
+    text-align: center;
+    font-size: 11px;
     left:0px;
     right: 0px;
     top:0px;
@@ -124,7 +130,8 @@ body {
 }
 
 #panel_left {
-    background: $panel_background;
+    background: $left_panel_background;
+    color: #EEE;
     position: absolute;
     top:$panel_top_height;
     bottom:0px;
@@ -134,6 +141,8 @@ body {
 
     #panel_left_header {
         height: $header_height;
+        text-align: center;
+        margin-top: 12px;
     }
 
     #panel_left_footer {
@@ -342,10 +351,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2c539e', end
 
     }
     #panel_left_content {
-        overflow-y:scroll;
+        overflow-y:auto;
         position: absolute;
         top:40px;
-        bottom:120px;
+        bottom:0px;
         left:0px;
         right: 0px;
 
@@ -361,9 +370,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2c539e', end
 
 #panel_center {
     /*@include transition;*/
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    background: $editor_background;
+    background: url('../images/backgrounds/textile2.jpg');
     position: absolute;
     top:$panel_top_height;
     bottom:$center_footer_height;
@@ -371,7 +378,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2c539e', end
     right:$panel_width;
     z-index:1;
     min-width: 300px;
-    @include shadow;
+    box-shadow: -1px 0px 7px #000;
 
     #panel_center_header {
         border-top-left-radius: 5px;
@@ -396,8 +403,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2c539e', end
                     color: #FFF;
                 }
                 .btn-box {
-                    padding: 2px 5px;                    
-                    width:28px;
+                    padding: 2px 10px;                    
+                    width:auto;
+                    font-size: 12px;
+                    height: 2.2em;
+
                 }
                 .btn-cloud.syncing {
                     color: #c5ceff !important;
@@ -451,7 +461,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2c539e', end
                 text-shadow: none;
                 border-color: #FFF;
                 a {
-                    background: #FFF;                
+                    color: #000;                
                     background-image: none;
                 }
                 
@@ -463,8 +473,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2c539e', end
         bottom:-$center_footer_height;
         height: $center_footer_height;
         border-top: 1px solid #555;
-        border-bottom: 1px solid #555;
-        @include shadow;
+        box-shadow: -1px 0px 7px #000;
         left:0px;
         right: 0px;
         font-size: 0.8em;
@@ -516,9 +525,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2c539e', end
 }
 
 #center_content {
+    overflow-x: auto;
     #cards_header {
         z-index: 2;
-        margin-left: 2px;
+        margin-left: 15px;
         clear: right;
         .btn-group {
             margin-right: 10px;
@@ -543,14 +553,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2c539e', end
         position: absolute;
         left:0px;
         right:0px;
-        top:$header_height+$path_height*2;
+        top:$header_height;
         bottom:0px;
+        padding-bottom: 300px;
 
         #cards_container {
             position: relative;
-            background: url('../images/cork.jpg');
-            background-size: 200px;
-            background-attachment: scroll;
             padding: 5px;
             min-height: 100%;
 
@@ -1254,14 +1262,12 @@ height: 100%;
 
 
 #cards_search {
-    margin-top: 5px;
-    margin-top: 0px;
-    margin-left: 15px;
-    margin-right: 15px;
-    float: right;
-    padding: 0px;
+    position: absolute;
+    top: 15px;
+    right: 0px;
+    width: 20em;
     input {
-        background: #ffefe6;
+        background: #FFF;
         border-right: none;
     }
 }
@@ -1353,10 +1359,579 @@ background-color: none !important;
 }
 
 #myfullcalendar {
-    margin-top: 70px;
+    margin-top: 0px;
+    background: #FFF;
 }
 
 #myfullcalendar .fc-content {
     height: 100%;
     overflow: auto;
 }
+
+#panel_left_content {
+    .left_menu {
+        li {
+            height: 2.2em;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(0,0,0,0.2);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-left: 20px;
+            line-height:2em;
+            position: relative;
+            background-image: url('../images/backgrounds/grain2.png');
+            .div_count {
+                position: absolute;
+                right: 5px;
+                top: 5px;
+                margin-right: 5px;
+                padding: 0px 5px;
+                min-width: 4em;
+                text-align: center;
+                background: #374669;
+                color: #CCC;
+                border-radius: 15px;
+                height: 1.65em;
+                line-height: 1.5em;
+                font-size: 12px;
+                border-bottom: 1px solid rgba(255,255,255,0.3);
+                border-top: 1px solid darken($panel_background,70%) !important;
+            }
+        }
+        li.active {
+            border-top: 1px solid darken($left_panel_background,90%);
+            border-top: 1px solid lighter($left_panel_background,10%);
+            background: rgba(0,0,0,0.1) !important;
+            background-image: url('../images/backgrounds/grain.png');
+        }
+    }
+}
+
+
+.clients_list {
+    margin: 0px;
+    padding-left: 35px;
+    margin-right: 10px;
+    .client_card {
+        cursor: pointer;
+        color: rgba(0,0,0,0.5);
+        .client_container {
+            border-top: 1px solid #FFF;
+            border-bottom: 1px solid #CCC;
+            background: $panel_background;
+            background-image: url('../images/backgrounds/grain2.png');
+
+            padding: 3px 10px;
+            color: #000 !important;
+            .client_fio {
+                font-size: 1.4em;
+                font-weight: bold;
+                display: inline;
+                margin-left: 5px;
+
+            }
+            .out_reason {
+                text-align: right;
+                clear: both;
+            }
+            .client_car {
+                float: right;
+                clear:right;
+                display: inline-block; 
+                line-height: 1em;
+                font-size: 12px;
+                padding: 3px 3px 4px 3px;
+                color: #FFF;
+                text-align: center;
+                min-width: 6em;
+                background: darken($cnt_background, 20%);
+                border-radius: 5px;
+                border-top: 1px solid darken($panel_background,80%);
+                border-bottom: 1px solid #FFF;
+
+            }
+            .do_buttons {
+                display: none;
+                float: right;
+                .do_btn {
+                    display: inline;
+                    opacity: 0.3;
+                    margin: 3px 4px;
+                }
+                .do_btn:hover {
+                    opacity: 0.6;
+                }
+            }
+        }
+        .client_container:hover {
+            .do_buttons {
+                display: inline-block;
+            }
+        }
+
+        .client_inside {
+            color: #000 !important;
+            margin-left:15px;
+            margin-right:15px;
+            margin-bottom: 15px;
+            .client_info {
+                box-shadow: inset 0px 0px 5px #000;
+                background: #e4e1e2;
+                background-image: url('../images/backgrounds/grain.png');
+                padding: 5px 10px;
+                font-size: 13px;
+
+            }
+            ul {
+                list-style: none;
+                padding: 0px;
+                li.client_do_li {
+                    font-size: 13px;
+                    min-height: 2em;
+                    .do_line {
+                        border-top: 1px solid #DDD;
+                        border-bottom: 1px solid #AAA;
+                        padding:3px 5px 3px 10px;
+                        background: darken($panel_background,10%) !important;
+                        .do_text {
+                            font-weight:bold;
+                            display: inline;
+                            margin-left: 5px;
+                            max-height: 5em !important;
+                        }
+                        .do_type_icon {
+                            margin-left: 10px;
+                            display: inline;
+                        }
+
+
+                    }
+                    .did .do_type_icon {
+                        opacity: 0.7;
+                    }
+                    .did.do_line .do_text {
+                        text-decoration: line-through;
+                        color: #555;
+                        font-weight: nowrap;
+                    }
+                    .do_edit {
+                        padding: 10px;
+                        margin: 0px 10px 0px 15px;
+                        box-shadow: inset 0px 0px 8px #000;
+                        background: #e9eee8;
+                        .do_text {
+                            margin-top: 7px;
+                            width: 100%;
+                        }
+                        .do_del {
+                            float: right;
+                        }
+                        .do_done {
+                            margin-left: 5px;
+                        }
+                        .do_cancel {
+                            float: right;
+                        }
+                        .do_date2 {
+                            width: 50em;
+                        }
+                    }
+                }
+            }
+        }
+
+
+    }
+    .client_card:first-child .client_container {
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+    .client_card:last-child .client_container {
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+}
+
+
+.group_title {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+        h2 {
+        color: #888;
+        margin-left: 35px;
+        font-size: 2.3em;
+        }
+}
+
+
+.datemini {
+    line-height: 1em;
+    font-size: 11px;
+    padding: 3px 3px 4px 3px;
+    color: #FFF;
+    text-align: center;
+    min-width: 6em;
+    background: $cnt_background;
+    display: inline-block; 
+    border-radius: 15px;
+    border-top: 1px solid darken($panel_background,80%);
+    border-bottom: 1px solid #FFF;
+}
+
+.datepast.datemini {
+    background: #761413;
+}
+
+.datetoday {
+    background: #cf4106;
+}
+
+.datetoday.past {
+    background-image: -webkit-gradient(linear, right top, left top, color-stop(0.85, #da5700), color-stop(0.95, #990000));
+}
+
+
+.date_rastorg {
+    color: yellow !important;
+}
+
+
+.date_out {
+    color: #EEE !important;
+}
+
+.did .datemini {
+    background: none !important;
+    border: none !important;
+    color: #000 !important;
+}
+
+#statistics {
+    color: #EEE;
+    padding: 10px;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+        position: absolute;
+        left:0px;
+        right:0px;
+        top:$header_height;
+        bottom:0px;
+        padding-bottom: 50px;
+
+    .top_tabs {
+        a {
+            height: 2.3em;
+            padding: 3px 10px;
+            cursor: pointer;
+        }
+    }
+    table {
+        margin-top: 0px;
+        width: 100%;
+        max-width: 980px;
+        min-width: 680px;
+        tr {
+            background: $panel_background;
+            color: #000;
+            td {
+                font-size:12px;
+                height: 30px;
+                min-width: 1em;
+                text-align: center;
+                border-bottom: 1px solid #AAA;
+                b {
+                    font-weight: normal;
+                    line-height: 1em;
+                    white-space: nowrap;
+                    padding: 3px 5px 3px 5px;
+                    margin-top: 1px;
+                    margin-left:1px;
+                    color: #FFF;
+                    text-align: center;
+                    min-width: 5em;
+                    background: $cnt_background;
+                    display: inline-block; 
+                    border-radius: 15px;
+                    border-top: 1px solid darken($panel_background,80%);
+                    border-bottom: 1px solid #FFF;
+                    cursor: pointer;
+                }
+                .cup_plan_b {
+                    background: lighten($cnt_background, 30%) !important;
+                    border-top: 1px solid darken($panel_background,30%);
+                    color: #000;
+                    font-size: 11px;
+                }
+            }
+            .cup_icon {
+                text-align: right;
+                padding-left: 10px;
+                width: 2em;
+                img {
+                    width: 14px;
+                    opacity: 0.7;
+                }
+            }
+            .cup_plan {
+                img {
+                    opacity: 0.1;
+                }
+            }
+            .cup_plan_b {
+                font-size: 11px;
+                color: #888;
+                min-width: 3em;
+                text-align: right;
+            }
+            .first_td {
+                padding-left: 5px;
+            }
+            .last_td {
+                padding-right: 5px;
+                b {
+                    text-align: left;
+                    min-width: 14em;
+                    font-size: 11px;
+                }
+            }
+        }
+        tr:last-child {
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            td {
+                border-bottom: 1px solid transparent;
+            }
+            td:first-child {
+                border-bottom-left-radius: 10px;
+            }
+            td:last-child {
+                border-bottom-right-radius: 10px;
+            }
+        }
+
+    }
+}
+
+#main_calendar {
+    position: absolute;
+    bottom: 20px;
+    left: 0px;
+    right: 0px;
+
+    text-align: center;
+    margin-top: 20px;
+    #datetoday {
+        display: inline-block;
+        text-align: center;
+        .ui-datepicker {
+            background: none;
+            text-align: center;
+            width: 18em;
+            border: none;
+            color: #CCC;
+            .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+                background: none;
+                border: none;
+                color: #FFF;
+            }           
+            .ui-datepicker-today a {
+                color: #90ff8c;
+            }
+            .ui-state-active {
+                background: #CCC !important;
+                color: #000 !important;
+            }
+            .ui-datepicker-other-month a {
+                color: #888;
+            }
+            .ui-widget-header {
+                background: none;
+                border: none;
+                border-top: 1px solid #000;
+                border-bottom: 1px solid #000;
+                border-radius: 0px;
+            }
+            .ui-state-hover {
+                background: none;
+                border: none;
+            }
+        }    
+    }
+
+}
+
+a {
+    cursor: pointer;
+}
+
+.select_brand {
+    color: #000;
+}
+
+#login_form {
+    .ok {
+        position: absolute;
+        margin-left: 160px;
+        margin-top: 13px;
+        font-size: 14px;
+        color: green;
+    }
+    .ok2 {
+        position: absolute;
+        margin-left: 475px;
+        margin-top: 7px;
+        font-size: 14px;
+        color: green;        
+    }
+    #login_div {
+        max-width: 300px;
+        #login_email {
+            border-bottom-left-radius: 0px;
+            border-bottom-right-radius: 0px;
+        }
+        #login_password {
+            border-top-left-radius: 0px;
+            border-top-right-radius: 0px;
+            border-top: none;
+        }
+        #login_password2 {
+            border-radius: 0px;
+            border-top: none;
+        }
+        #login_btn {
+            margin-top: 10px;
+            width:300px;
+        }
+    }
+
+}
+
+#info_div {
+    max-width: 550px;
+    .input-group {
+        margin-top: 10px;
+    }
+    .input-group-addon {
+        width: 17em;
+        font-size: 11px;
+    }
+    .dropdown-toggle {
+        width: 466px;
+    }
+    .dropdown-menu {
+        text-align: left;
+    }
+    .form-control {
+        width: 20em;
+    }
+    #reg_btn {
+            margin-top: 0px;
+            width:470px;
+        }
+}
+
+#alert_placeholder {
+    width: 400px;
+    margin: 0 auto;
+    font-size: 16px;
+}
+
+#myfullcalendar {
+    position: absolute;
+        left:0px;
+        right:0px;
+        top:$header_height;
+        bottom:0px;
+    .fc-view-month {
+        overflow-y: auto;
+    }
+    h2 {
+        font-size: 15px;
+    }
+    .fc-header td{
+        padding-top: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
+.client_edit {
+    background: url('../images/textures/10.jpeg');
+    box-shadow: inset 0px -3px 3px rgba(0,0,0,0.5);
+    padding: 10px;
+    padding-left: 25px;
+    padding-right: 25px;
+    input {
+        color: #000;
+    }
+    .input-group {
+        margin: 3px;
+    }
+    .col-md-3 {
+        padding: 0px;
+    }
+    .col-md-6 {
+        margin-top: 10px;
+        padding: 0px;
+    }
+    .but {
+        margin-top: 3px;
+        padding-left: 50px;
+    }
+    .top10 {
+        margin-top: 12px;
+    }
+    .btn-group, .dropdown-toggle {
+        width: 100%;
+        text-align: left;
+    }
+    .client_text {
+        width: 100%;
+        border: 1px solid #CCC;
+        padding: 3px 10px;
+        font-size: 14px;
+        margin: 3px;
+        min-height: 4em;
+    }
+    .client_adress {
+        width: 100%;
+        border: 1px solid #CCC;
+        padding: 3px 10px;
+        font-size: 13px;
+        margin: 3px;
+        min-height: 2em;
+    }
+    .col-md-12 {
+        padding:0px;
+        padding-right: 3px;
+    }
+    .car_cost {
+        margin-left: 47px;
+    }
+    .client_fio_input {
+        margin-right: -4px;
+        input {
+            font-weight: bold;
+            font-size: 15px;
+        }
+    }
+    .btn-success {
+        margin-left: 3px;
+    }
+}
+
+.client_status {
+    color: #FFF;
+    padding: 2px 50px;
+    border-radius: 5px;
+    text-shadow: 0px 0px 3px #000;
+}
+
+
+
+
+
+
+
+
+

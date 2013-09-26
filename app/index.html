@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>4tree.ru</title>
+    <title>ФПК - Регинас</title>
     <meta name="description" content="">
 <meta name="viewport" content="width=device-width, initial-scale=1">    
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -25,10 +25,9 @@
 
         <!-- endbuild -->
 </head>
-<html ng-app="4treeApp">
+<html ng-app="fpkApp">
   <body class="right_hide" onResize="onResize()" ng-controller="MainCtrl">
-<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
-
+  <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
 
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
@@ -44,203 +43,8 @@
  -->
 
 
+    <div class="" app-view-segment="0"></div>
 
-<div id="panel_top">    
-</div>
-
-<div id="panel_left" resizable style="width:{{left_panel_width}}px">
-
-
-    <div id="panel_left_header">
-        <input ng-model="user_name" placeholder="Имя"><br>
-        <input ng-model="user_password" placeholder="Пароль">
-        <button ng-click="jsLogin()">Login</button>
-    </div>
-
-    <div id="panel_left_content">
-        <ng-portlet parent="{{left_parent_id}}"></ng-portlet>
-    </div>
-
-    <div id="panel_left_footer">
-        <ul>
-            <li ng-repeat="left_tab in left_tabs"><span style="background:{{left_tab.color}};z-index:{{5 - $index}}">{{left_tab.title}}</span></li>
-        </ul>
-    </div>
-
-
-</div>
-
-<div id="panel_center" style="left:{{left_panel_width}}px">
-    <div id="panel_center_header">
-
-       <div class="make_center">
-            <div class="menu_mini">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-cloud btn-default dropdown-toggle" data-toggle="dropdown" ng-class="{ 'synced': sync.did, 'syncing': sync.syncing }">
-                      <i class="icon-cloud"></i>
-                      <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                      <li role="presentation" class="dropdown-header">Сервер</li>                   
-                      <li ng-click="jsSync()"><a href >Синхронизация</a></li>
-                      <li role="presentation" class="divider"></li>                 
-                      <li role="presentation" class="dropdown-header">Редактор</li>                 
-                      <li><a href="#">Распечатать заметку</a></li>
-                      <li><a href="#">Поделиться</a></li>
-                    </ul>
-                  </div>
-                </div>
-            </div>  
-    
-
-            <div class="hidden-xs">
-                <div class="btn-group btn-group-sm">
-                  <button ng-class="{active:view_switch==1}" ng-click="view_switch=1" type="button" class="btn btn-default" data-i18n="header.notes;[title]header.notes_title"></button>
-
-                  <button ng-class="{active:view_switch==2}" ng-click="view_switch=2" type="button" class="btn btn-default" data-i18n="header.editor;[title]header.editor_title"></button>
-
-                  <button ng-class="{active:view_switch==3}"  ng-click="view_switch=3" type="button" class="btn btn-default" data-i18n="header.calendar;[title]header.calendar_title"></button>
-                </div>
-            </div>
-            <div class="visible-xs">
-                <div class="btn-group btn-group-sm">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                      Заметки
-                      <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                      <li><a href="#">Синхронизация</a></li>
-                      <li><a href="#">Редактор</a></li>
-                      <li><a href="#">Календарь</a></li>
-                    </ul>
-                  </div>
-                </div>
-
-            <div class="menu_mini right">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-box btn-default dropdown-toggle" data-toggle="dropdown">
-                      <i class="icon-plus"></i>
-                    </button>
-                    <ul class="dropdown-menu pull-right">
-                      <li><a href="#">Добавить заметку</a></li>
-                      <li><a href="#">Дневник на сегодня</a></li>
-                      <li><a href="#">Выполненное дело в календарь</a></li>
-                    </ul>
-                  </div>
-            </div>
-
-        </div><!-- header -->   
-
-            <div id="panel_path">    
-                <div class="history_buttons">
-                    <i class="icon-left-dir hist_back"></i>
-                    <i class="icon-right-dir hist_forward"></i>
-                </div>
-                <ul>
-                    <li class="first_path"><a ng-click="openParentId(1)">&nbsp;<i class="icon-home"></i></a></li>
-                    <li ng-repeat="path in current_path"><a ng-click="openParentId(path.id)" compile="path.title" ></a></li>
-                </ul>
-            </div>
-
-
-            <div id="panel_fav">                
-                <ul>
-                    <li ng-repeat="favorit in favorits">
-                    <i class="{{favorit.icon}}"></i>
-                    {{favorit.title}}
-                    </li>
-                </ul>
-            </div>
-
-            
-            <div id="center_content">
-
-
-<div ng-show="view_switch==1">
-    <ng-include src="'views/main.html'"></ng-include>
-</div>
-<div ng-show="view_switch==2">
-    <ng-include ng-show="view_switch==2" src="'views/multieditor.html'"></ng-include>
-</div>
-<div ng-show="view_switch==3">
-    <div id="myfullcalendar" ui-calendar="uiConfig.calendar" ng-model="notes"></div>
-</div>
-<!-- <div class="view_container" ng-view=""></div> -->
-
-
-            </div>
-
-
-
-
-
-
-    <div id="center_footer">
-
-        <div id="panel_opener_left" ng-click="openPanel('left')">
-            <i class="icon-right-open-1"></i>
-        </div>
-        
-        <div id="panel_opener_right" ng-click="openPanel('right')">
-            <i class="icon-left-open-1"></i>
-        </div>
-
-
-    </div> <!-- footer -->
-
-
-
-<div id="main_editor" ng-show="editor" ng-click="closeEditor($event)"  ng-repeat="note in notes | filter:filterEdit()">
-<div id="editor_cont">
-    <div class="editor_title" contenteditable="true" strip-br="false"
-        select-non-editable="false" ng-model="note.title"></div>
-
-            <div class="menu_mini left">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-box btn-default dropdown-toggle" data-toggle="dropdown">
-                      <i class="icon-down-dir"></i>
-                    </button>
-                    <ul class="dropdown-menu">
-                      <li role="presentation" class="dropdown-header">Вставить</li>         
-                      <li><a href="#">Вставить текущую дату</a></li>
-                      <li><a href="#">Вставить галочку</a></li>
-                      <li role="presentation" class="divider"></li>                 
-                      <li role="presentation" class="dropdown-header">Сервис</li>           
-                      <li><a href="#">История изменений</a></li>
-                      <li><a href="#">Печать</a></li>
-                    </ul>
-                  </div>
-            </div>
-
-
-            <div class="btn-group btn-group-sm right_buttons">
-              <button ng-click="fullScreen(); $event.stopPropagation();" type="button" class="btn btn-default"><i class="icon-resize-full"></i></button>
-              <button ng-click="closeEditor($event);$event.stopPropagation();" type="button" class="btn btn-default"><i class="icon-cancel"></i></button>
-            </div>
-    <div ui-redactor="redactorOptions" ng-model="note.text"></div>
-</div>
-
-<!-- <div class="div_editor" ng-repeat="note in notes | filter:filterEdit()" ng-model="note.text"
-        strip-br="false"
-        select-non-editable="false" contenteditable="true" ng-click="$event.stopPropagation();">
-</div>
- -->
-
-
-</div>
-
-
-</div> <!-- Panel Center -->
-
-
-       </div> 
-
-
-
-    </div>
-
-<div id="panel_right">
-</div>
 
 
 
@@ -260,6 +64,15 @@
     <script src="bower_components/angular/new/angular-route.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 
+    <script src="bower_components/angular/new/angular-scroll.js"></script>
+    <script src="bower_components/angular/new/angular-elastic.js"></script>
+    <script src="bower_components/angular/new/restangular.js"></script>
+    <script src="bower_components/angular/new/underscore-1.5.2.js"></script>
+
+
+    <script src="bower_components/jquery.datetimeentry/jquery.datetimeentry.js"></script>
+    <script src="bower_components/jquery.datetimeentry/jquery.datetimeentry-ru.js"></script>
+
     <script src="bower_components/tinymce/tinymce.min.js"></script>
     <script src="bower_components/tinymce/tinymce.angular.js"></script>
     <script src="bower_components/tinymce/langs/ru.js"></script>
@@ -267,8 +80,11 @@
     <script src="bower_components/redactor913/redactor/redactor.angular.js"></script>
     <script src="bower_components/redactor913/redactor/redactor-multi.angular.js"></script>
     <script src="bower_components/md5fast.js"></script>
-    <script src="bower_components/angular-route-segment/src/route-segment.js"></script>
-    <script src="bower_components/angular-route-segment/src/view-segment.js"></script>
+<!--    <script src="bower_components/angular-route-segment/src/route-segment.js"></script>
+    <script src="bower_components/angular-route-segment/src/view-segment.js"></script> -->
+
+    <script src="angular-route-segment/build/angular-route-segment.min.js"></script>
+
 
 
         <!-- build:js scripts/plugins.js -->
@@ -285,7 +101,7 @@
         <script src="bower_components/bootstrap-3/js/collapse.js"></script>
         <script src="bower_components/bootstrap-3/js/tab.js"></script>
 
-        <script src="bower_components/jquery-ui/js/jquery-ui-1.10.3.custom.min.js"></script>
+        <script src="bower_components/jquery-ui/js/jquery-ui-1.10.3.custom.js"></script>
         <script src="bower_components/jquery-ui/js/jquery.ui.touch-punch.js"></script>
 
 
@@ -304,8 +120,12 @@
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/main.js"></script>
+        <script src="scripts/controllers/fpk.js"></script>
         <script src="scripts/controllers/login.js"></script>
+        <script src="scripts/controllers/login-ctrl.js"></script>
+        <script src="scripts/controllers/calendar.js"></script>
+        <script src="scripts/controllers/clients.js"></script>
+        <script src="scripts/controllers/fpk-stat.js"></script>
         <!-- endbuild -->
 </body>
 </html>

@@ -1,0 +1,251 @@
+
+        <ol class="clients_list clearfix noselectable">
+                  <li ng-repeat="client in f_clients = (local_clients | filter: jsFilterClients(distinct))" class="client_card" myid="{{client.id}}">
+
+                        <div class="client_container" ng-click="jsOpenClient(client);">
+                           <div class="client_car" title="{{client.status}}" style="background:-webkit-gradient(linear, right top, left top, color-stop({{car_status[client.status].procent}}, #2b365a), color-stop({{car_status[client.status].procent}}, #516F8F)) !important;">
+                           {{models[client.model].short?models[client.model].short:'&nbsp;'}}
+                           </div>
+
+                           <div class="do_buttons">
+                            <div class="do_btn" ng-repeat="do_type in do_types" ng-click="jsAddDo(do_type,client);$event.stopPropagation();"><img title="{{do_type.title}}" ng-src="images/do_type/{{do_type.img}}"></div>
+                           </div>
+
+                           <div class="datemini" ng-model="client.na_date" title="{{client.na_date}}"></div> 
+                           <div class="client_fio">{{client.fio}}</div>
+                           <div class="out_reason">{{client.out_reason}}</div>
+                        </div>      
+                        <div ng-if="client._visible == true" class="client_inside selectable" jq-show-effect="client._visible == true" jq-options="{type:'slide', duration:200, delay:200, hideImmediately: true}" style="display:none;">
+                          <div class="client_info" ng-click="client._edit = !client._edit">
+                            <i class='icon-phone'></i>{{client.phone1}} {{client.phone11}}<span ng-if="client.phone2">, </span>{{client.phone2}} {{client.phone22}}<span ng-if="client.phone3">,</span> {{client.phone3}} {{client.phone33}} {{client.phone4}} {{client.phone44}}<br>
+                            {{client.adress}}
+                            <span ng-if="client.cost"><i class='icon-dollar'></i> {{client.cost | currency}}</span>
+                            <br>
+                            <span ng-if="client.creditmanager">[оплата: <b>{{client.creditmanager}}</b>]<br></span>
+                            <span ng-if="client.commercial">[откуда узнали: <b>{{client.commercial}}</b>]<br></span>
+                            <span ng-if="client.vin">[VIN: <b>{{client.vin}}</b>]<br></span>
+                            <span ng-if="client.email">[Email: <b>{{client.email}}</b>]<br></span>
+                            {{client.text}}
+                          </div>
+                          <div class="client_edit" jq-show-effect="client._edit == true" jq-options="{type:'slide', duration:200, delay:200, hideImmediately: true}">
+                            
+                            <div class="row">
+                            
+                              <div class="col-md-12">
+                                <div class="input-group input-group-sm client_fio_input">
+                                  <span class="input-group-addon"><i class="icon-user"></i></span>
+                                  <input ui-keypress="{enter: 'foo()'}" type="text" class="form-control" ng-model="client.fio"  placeholder="Самойлов Анатолий Петрович">
+                                </div>
+                              </div>
+
+                            </div>
+
+                            <div class="row">
+
+                              <div class="col-md-3">
+                                <div class="input-group input-group-sm">
+                                  <span class="input-group-addon"><i class="icon-phone"></i></span>
+                                  <input type="text" class="form-control" ng-model="client.phone1" placeholder="89221234567">
+                                </div>
+                              </div>
+
+                              <div class="col-md-3">
+                                <div class="input-group input-group-sm">
+                                  <input type="text" class="form-control" ng-model="client.phone11" placeholder="кто">
+                                  <span class="input-group-addon"><i class="icon-user"></i></span>
+                                </div>
+                              </div>
+
+                              <div class="col-md-3 car_cost">
+                                <div class="input-group input-group-sm">
+                                  <input type="text" class="form-control" ng-model="client.cost" placeholder="цена авто">
+                                  <span class="input-group-addon" title="Цена автомобиля"><i class="icon-dollar"></i></span>
+                                </div>
+                              </div>
+
+                            </div>
+
+                            <div class="row">
+                            
+                              <div class="col-md-3">
+                                <div class="input-group input-group-sm">
+                                  <span class="input-group-addon"><i class="icon-phone"></i></span>
+                                  <input type="text" class="form-control" ng-model="client.phone2" placeholder="">
+                                </div>
+                              </div>
+
+                              <div class="col-md-3">
+                                <div class="input-group input-group-sm">
+                                  <input type="text" class="form-control" ng-model="client.phone22" placeholder="">
+                                  <span class="input-group-addon"><i class="icon-user"></i></span>
+                                </div>
+                              </div>
+
+                              <div class="col-md-6 but">
+                                    <div class="btn-group">
+                                      <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                                        Откуда узнали: <b>Телевидение</b> <span class="caret"></span>
+                                      </button>
+                                      <ul class="dropdown-menu" role="menu">
+                                        <li><a href="#">Action</a></li>
+                                        <li><a href="#">Another action</a></li>
+                                        <li><a href="#">Something else here</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">Separated link</a></li>
+                                      </ul>
+                                    </div>                              
+                              </div>
+
+
+                            </div>
+
+                            <div class="row">
+                            
+                              <div class="col-md-3">
+                                <div class="input-group input-group-sm">
+                                  <span class="input-group-addon"><i class="icon-phone"></i></span>
+                                  <input type="text" class="form-control" ng-model="client.phone3" placeholder="">
+                                </div>
+                              </div>
+
+                              <div class="col-md-3">
+                                <div class="input-group input-group-sm">
+                                  <input type="text" class="form-control" ng-model="client.phone33" placeholder="">
+                                  <span class="input-group-addon"><i class="icon-user"></i></span>
+                                </div>
+                              </div>
+
+                              <div class="col-md-6 but">
+                                    <div class="btn-group">
+                                      <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                                        Вид оплаты: <b>Кредит</b> <span class="caret"></span>
+                                      </button>
+                                      <ul class="dropdown-menu" role="menu">
+                                        <li><a href="#">Action</a></li>
+                                        <li><a href="#">Another action</a></li>
+                                        <li><a href="#">Something else here</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">Separated link</a></li>
+                                      </ul>
+                                    </div>                              
+                              </div>
+
+
+                            </div>
+
+                            <div class="row">
+                            
+                              <div class="col-md-3">
+                                <div class="input-group input-group-sm">
+                                  <span class="input-group-addon"><i class="icon-phone"></i></span>
+                                  <input type="text" class="form-control" ng-model="client.phone4" placeholder="">
+                                </div>
+                              </div>
+
+                              <div class="col-md-3">
+                                <div class="input-group input-group-sm">
+                                  <input type="text" class="form-control" ng-model="client.phone44" placeholder="">
+                                  <span class="input-group-addon"><i class="icon-user"></i></span>
+                                </div>
+                              </div>
+
+                              <div class="col-md-6 but">
+                                    <div class="btn-group">
+                                      <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                                        Модель: <b>{{models[client.model].model?models[client.model].model:'&nbsp;'}}</b> <span class="caret"></span>
+                                      </button>
+                                      
+                                      <ul class="dropdown-menu" role="menu">
+                                        <li ng-repeat="model in models_array_show" ng-click="client.model = model.id"><a>{{model.model}}</a></li>
+                                        <li class="divider"></li>
+                                        <li><a>Неизвестно</a></li>
+                                      </ul>
+                                    </div>                              
+                              </div>
+
+
+                            </div>
+
+                            <div class="row">
+                            
+                              <div class="col-md-6">
+                                <div class="input-group input-group-sm">
+                                  <span class="input-group-addon">@</span>
+                                  <input type="text" class="form-control" ng-model="client.email" placeholder="эл.почта">
+                                </div>
+                              </div>
+
+                              <div class="col-md-6 but top10">
+                                    <div class="btn-group">
+                                      <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                                        Где авто: <b>{{client.status}}</b> <span class="caret"></span>
+                                      </button>
+                                      <ul class="dropdown-menu" role="menu">
+                                        <li ng-repeat="car_stat in car_status_array" ng-click="client.status = car_stat.title"><a> 
+                                        <div class="client_status" style="background:-webkit-gradient(linear, right top, left top, color-stop({{car_stat.procent}}, #2b365a), color-stop({{car_stat.procent}}, #516F8F)) !important;">{{car_stat.title}}</div>
+                                        </a></li>
+                                      </ul>
+                                    </div>                              
+                              </div>
+
+
+                            </div>
+
+                            <div class="row">
+                            
+                              <div class="col-md-12">
+                                <textarea class="client_adress" ng-model="client.adress" msd-elastic placeholder="паспортные данные и адрес"></textarea>
+                              </div>
+
+                            </div>
+
+                            <div class="row">
+                            
+                              <div class="col-md-12">
+                                <textarea class="client_text" ng-model="client.text" msd-elastic placeholder="Подробности..."></textarea>
+                              </div>
+
+                            </div>
+
+                            <div class="row">
+                              <div class="col-md-6">
+                                <button class="btn btn-success btn-sm" ng-click="jsClientSave(client)">Сохранить</button>
+                              </div>
+                            </div>
+
+                          </div>
+
+
+                          <ul>
+                            <li ng-repeat="do in client.do | orderBy: 'date2': true" class="client_do_li" ng-controller="DoCtrl" myindex={{$index}} mydoid="{{do.id}}">
+                              <div class="do_line" ng-click="do._visible = !do._visible" ng-class="{'did':do.checked!='0000-00-00 00:00:00'}">
+                                <div class="datemini" ng-model="do.date2" title="{{do.date2}}"></div>
+                                <div class="do_type_icon"><img ng-src="/images/do_type/{{do_types_array[do.type].img}}" width="20px" height="20px" title="Тип дела: {{do.type}}"></div>
+                                <div class="do_text">{{do.text}}</div>
+                              </div>
+                              
+                              <div jq-show-effect="do._visible == true" jq-options="{type:'slide', duration:150, delay:200, hideImmediately: true}" class="do_edit" style="display:none;">
+                                <div>
+                                    <button ng-click="jsDoSave(); do._visible=false;" class="do_save">Сохранить</button>
+                                    <button ng-click="jsDoDone();jsDoSave();do._visible=false;" class="do_done">{{do.checked!='0000-00-00 00:00:00' && "Снять выполнение" || "Выполнить"}}</button>   
+
+                                    <button class="do_del">Удалить</button>
+                                    <button ng-click="jsDoCancel()" class="do_cancel">Отменить</button>
+                                    <textarea placeholder="Введите описание дела..." class="do_text" msd-elastic ng-model="do.text" ></textarea>
+                                    <input ng-model="do.manager"></input><br>
+                                    <input date-time-entry="do.date2" class="do_date2"></input>
+                                </div>
+
+                              </div>
+
+                            </div>
+                            </li>
+                          </ul>
+                        </div>
+
+
+            </li>
+        </ol>
+
+</li>
+</ul>

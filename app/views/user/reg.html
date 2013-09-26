@@ -1,0 +1,52 @@
+<center id="login_form">
+
+<h3>Регистрация нового пользователя</h3>
+
+<br>
+<img src="images/logo.png">
+<br>
+<br>
+<br>
+
+<div id="login_div">
+  <i ng-if="reg_user.email_ok" class="icon-ok ok"></i><input id="login_email" type="text" ng-model="reg_user.email" autofocus class="form-control input-lg" placeholder="эл.почта@reginas.ru">
+  <i ng-if="reg_user.password_ok" class="icon-ok ok"></i><input id="login_password2" type="password" ng-model="reg_user.password2" class="form-control input-lg" placeholder="Пароль">
+  <i ng-if="reg_user.password2_ok" class="icon-ok ok"></i></i><input id="login_password" type="password" ng-model="reg_user.password" class="form-control input-lg" placeholder="Пароль повторно">
+  <br>
+</div>
+
+
+<div id="info_div">
+<hr>
+
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Ваш бренд: <b><img height="20px" style="margin-right:10px;" ng-src="images/logos/{{brands[reg_user.brand].logo}}"></img>{{brands[reg_user.brand].title}}</b> <span class="caret"></span></button>
+        <ul class="dropdown-menu pull-right">
+                      <li ng-repeat="the_brand in brands | orderBy:'brandname'" ng-click="reg_user.brand = the_brand.id"><a><img height="16px" width="25.6px" style="margin-right:3px;" ng-src="images/logos/{{the_brand.logo}}"></img>{{the_brand.title}}</a></li>
+        </ul>
+      </div><!-- /btn-group -->
+      <br>
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Ваша должность: <b>{{users_group[reg_user.users_group].title}}</b> <span class="caret"></span></button>
+        <ul class="dropdown-menu pull-right">
+                      <li ng-repeat="user_group in users_groups | filter:jsFilterUsersGroup() | orderBy:'title'" ng-click="reg_user.users_group = user_group.id"><a>{{user_group.title}}</a></li>
+        </ul>
+      </div><!-- /btn-group -->
+
+
+  <div class="input-group">
+    <i ng-if="reg_user.fio_ok" class="icon-ok ok2"></i><span class="input-group-addon" title="Фамилия Имя Отчество полностью">ФИО полностью:</span>
+    <input type="text" class="form-control" ng-model="reg_user.fio" placeholder="Петров Иван Алексеевич">
+  </div>
+
+  <div class="input-group">
+    <i ng-if="reg_user.phone_ok" class="icon-ok ok2"></i><span class="input-group-addon" title="На этот мобильный телефон будут приходить назначенные Вами SMS напоминания">Телефон для SMS напом.:</span>
+    <input type="text" class="form-control" ng-model="reg_user.phone" placeholder="89227277772">
+  </div>
+
+  <hr>
+
+  <button id="reg_btn" class="btn btn-success" ng-click="jsRegNew()" ng-class={'disabled':jsRegCheck()}>Зарегистрироваться</button>
+  {{reg_user}}
+
+</center>

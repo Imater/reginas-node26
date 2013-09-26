@@ -1,0 +1,66 @@
+
+              <div id="cards_scrollable"  ng-dblclick="goToParent($event)" ng-click="jsDeselect($event)" infinite-scroll="myPagingFunction()" infinite-scroll-distance="500">
+               <div id="cards_container">
+
+                <div id="cards_header" >                  
+                    <div class="btn-group col-sm-3" style="display:none">
+                        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                          Груп: {{clientsgroupby}}
+                          <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li role="presentation" class="dropdown-header">Группировать:</li>                 
+                          <li ng-click="clientsgroupby = 'manager';"><a href="#"><span class='hot_key'>alt + 1</span>по менеджеру</a></li>
+                          <li ng-click="clientsgroupby = 'model';"><a href="#"><span class='hot_key'>alt + 2</span>по модели</a></li>
+                          <li><a href="#"><span class='hot_key'>alt + 3</span>по дате</a></li>
+                        </ul>
+
+                    </div>
+
+                    <div class="btn-group col-sm-2" style="display:none">
+                        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                          <i class="icon-shuffle"></i>: вручную
+                          <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li role="presentation" class="dropdown-header">Сортировать:</li>                 
+                          <li><a href="#">вручную</a></li>
+                          <li><a href="#">по имени</a></li>
+                          <li><a href="#">по дате события</a></li>
+                          <li><a href="#">по дате создания</a></li>
+                        </ul>
+                    </div>
+
+
+                    <div class="input-group col-sm-3" id="cards_search">
+                          <input id="search_notes" type="text" ng-model="search_string_for_timeout" ng-change="startSearch(search_string_for_timeout)" class="form-control input-sm" placeholder="Искать...">
+                      <!-- <eased-input value="search_string" timeout="500" placeholder="Найти..." class="input-sm"/> -->
+                          <div class="input-group-btn">
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                            <ul class="dropdown-menu pull-right">
+                              <li role="presentation" class="dropdown-header">Где искать:</li>                  
+                              <li><a >Среди всех менеджеров</a></li>
+                              <li><a >Среди моих клиентов</a></li>
+                            </ul>
+                          </div><!-- /btn-group -->
+                    </div><!-- /input-group -->
+
+                </div>
+                <div style="clear:both;"></div>
+                <!-- <button ng-click="myPagingFunction()">Load More...</button> -->
+
+              <ul class="group_title">
+                <li ng-repeat="distinct in clientsToFilter() | filter:filterDistinct | orderBy:clientsgroupby:jsOrder(clientsgroupby)"><h2>{{jsGetDistinctTitle(distinct)}}</h2>
+
+                  <div client-list="clients" my-attr="clients" my-distinct="distinct"></div>
+
+                </li>
+              </ul>
+
+                </li>
+              </ul>
+
+                </div>
+
+
+               </div> <!-- scrollable --> 

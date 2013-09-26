@@ -1,0 +1,20 @@
+<div id="alert_placeholder"></div>
+
+<center id="login_form">
+
+<h3>Вход в ФПК</h3>
+
+<br>
+<img src="images/logo.png">
+<br>
+<br>
+<br>
+
+<div id="login_div">
+  <input id="login_email" type="text" ng-model="reg_user.email" class="form-control input-lg" placeholder="эл.почта@reginas.ru">
+  <input id="login_password" type="password" autofocus ng-model="reg_user.password_login" class="form-control input-lg" placeholder="Пароль" ng-keypress="jsKeyEnter($event)">
+
+  <button id="login_btn" ng-click="jsLoginNow()" class="btn btn-success">Вход</button>
+</div>
+
+</center>

@@ -1,0 +1,39 @@
+<div id="statistics">
+	<div id="stat_header">
+                <ul class="nav nav-tabs top_tabs">
+                  <li ng-class="{active:stat_view_switch==1}" ng-click="stat_view_switch=1"><a>Бренды</a></li>
+
+                  <li ng-class="{active:stat_view_switch==2}" ng-click="stat_view_switch=2"><a>По моделям</a></li>
+
+                  <li ng-class="{active:stat_view_switch==3}"  ng-click="stat_view_switch=3"><a>По источникам рекламы</a></li>
+
+                  <li ng-class="{active:stat_view_switch==4}" ng-click="stat_view_switch=4"><a>По менеджерам</a></li>
+
+                </ul>	
+
+        <table>
+        <tr ng-repeat="brand in cup | orderBy:'brandname':true">
+        	<td class="first_td"><img style="width:32px;" title="{{brand.title}}" ng-src="images/logos/{{brand.logo}}"></td>
+        	<td class="cup_icon"><img src="images/do_type/1dogovor.png"></td>
+        	<td title="Договора за день (за месяц)" ng-click="loadCupCar(brand.id, 'dg')"><b>{{brand.cup.dogovor}} ({{brand.cup.dogovor_month}})</b></td>
+        	<td class="cup_icon"><img src="images/do_type/1vidacha.png"></td>
+        	<td title="Выдачи за день (за месяц)" ng-click="loadCupCar(brand.id, 'vd')"><b>{{brand.cup.vidacha}} ({{brand.cup.vidacha_month}})</b></td>
+        	<td class="cup_icon"><img src="images/do_type/1out.png"></td>
+        	<td title="Расторжения за день (за месяц)" ng-click="loadCupCar(brand.id, 'out')"><b>{{brand.cup.out}} ({{brand.cup.out_month}})</b></td>
+        	<td class="cup_icon"><img src="images/do_type/1zvonok.png"></td>
+        	<td title="Первичные звонки за день (за месяц)" ng-click="loadCupCar(brand.id, 'zv')"><b>{{brand.cup.zvonok}} ({{brand.cup.zvonok_month}})</b></td>
+        	<td class="cup_icon"><img src="images/do_type/1vizit.png"></td>
+        	<td title="Первичные визиты за день (за месяц)" ng-click="loadCupCar(brand.id, 'vz')"><b>{{brand.cup.vizit}} ({{brand.cup.vizit_month}})</b></td>
+        	<td class="cup_icon"><img src="images/do_type/1test-drive.png"></td>
+        	<td title="Тестдрайвы за день (за месяц)" ng-click="loadCupCar(brand.id, 'tst')"><b>{{brand.cup.test}} ({{brand.cup.test_month}})</b></td>
+        	<td title="План выдач на месяц" class="cup_plan_b">{{brand.cup.plan}}</td>
+        	<td title="Прогноз выдач: выданые + вероятные + средневероятные + маловероятные"  ng-click="loadCupCar(brand.id, 'prognoz')" class="last_td"><b>{{brand.cup.prognoz_5 + brand.cup.prognoz_4 + brand.cup.prognoz_3 + brand.cup.vidacha_month}} = {{brand.cup.vidacha_month}} + {{brand.cup.prognoz_5}} + {{brand.cup.prognoz_4}} + {{brand.cup.prognoz_3}}</b></td>
+        </tr>
+        </table>
+        <hr>
+        <div client-list="cup_clients" my-attr="cup_clients"></div>
+        <hr>
+        <!-- <ng-include src="'views/client_list.html'"></ng-include> -->
+
+    </div>
+</div>

@@ -1,4 +1,4 @@
-var oauth2server = "http://192.168.0.52/fpk/4tree/";
+var oauth2server = "http://"+window.location.hostname+"/";
 
 
 function jsLogin(email1, password) {
@@ -63,18 +63,18 @@ function jsGetToken() {
 		
 		//проверяем, просрочен ли Token
 		if( dif > -10000 ) { 
-			console.info("Token устарел! Получаю новый.");
 			jsRefreshToken().done(function(data){
+				console.info("Token устарел! Получил новый. "+data.access_token);
 				dfd.resolve(data.access_token);
 			});
 		} else {
-			//console.info("Token свежий");
+			//console.info("Token свежий :"+data.access_token);			
 			dfd.resolve( data.access_token );
 		}
 		
 	} else {
 	     //window.location.href = "./login.php?dont_have_token";
-	     alert("Ошибка подключения. Залогиньтесь заново");
+	     window.location.hash = "#/user/login";
 	}
 	return dfd.promise();
 }
