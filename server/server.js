@@ -59,10 +59,6 @@ app.configure(function(){
 app.use(express.bodyParser());
 
 
-var AWS = require('aws-sdk');
-AWS.config.loadFromPath('./config-s3.json');
-
-var s3 = new AWS.S3();
 
 
 /*s3.createBucket({Bucket: 'upload.4tree.ru'}, function() {
@@ -353,13 +349,6 @@ exports.saveFile = function(request, response) {
                 Body: file_buffer
             };
 
-            s3.putObject(params, function (perr, pres) {
-                if (perr) {
-                    console.log("Error uploading data: ", perr);
-                } else {
-                    console.log("Successfully uploaded data to myBucket/myKey");
-                }
-            });
         });
 
 
@@ -1146,7 +1135,7 @@ exports.findAllContinents = function(request,cb) {
 
 };
 
-server.listen(777);
+server.listen(1337);
 
 var Imap = require('imap'),
     inspect = require('util').inspect;
@@ -1176,27 +1165,5 @@ var imap = {
   secure: true // use secure connection
 };
 
-if(false)
-notifier(imap).on('mail',function(mail){
-
-	console.info(mail, mail.attachments[0].content);
-
-s3.createBucket({Bucket: 'upload.4tree.ru'}, function() {
-  $.each(mail.attachments, function(i,el){
-	  var params = {Bucket: 'upload.4tree.ru', Key: el.fileName, Body: el.content,ContentType: el.contentType, ACL: 'public-read'};
-	  s3.putObject(params, function(err, data) {
-	  	//the_socket.broadcast.emit('EMAIL', data);
-	    if (err)
-	      console.log(err)
-	    else 
-	      console.log("Successfully uploaded data: "+el.fileName);
-	  });
-
-  });
-});
-
-	console.info("------------");
-	collection_mail.insert({mail: mail}, function(){});
-}).start();
 
 
