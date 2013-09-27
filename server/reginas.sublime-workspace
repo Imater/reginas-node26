@@ -487,7 +487,7 @@
 			"file": "server.js",
 			"settings":
 			{
-				"buffer_size": 33278,
+				"buffer_size": 32238,
 				"line_ending": "Unix"
 			}
 		},
@@ -583,7 +583,7 @@
 			"file": "/Users/iBook/Reginas-fpk/app/scripts/controllers/login.js",
 			"settings":
 			{
-				"buffer_size": 4164,
+				"buffer_size": 4249,
 				"line_ending": "Unix"
 			}
 		},
@@ -829,6 +829,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"s3",
+			"mdb",
+			"mongo",
 			"msd-elastic",
 			"elast",
 			"textare",
@@ -953,10 +956,7 @@
 			"jsSelec",
 			"В работе",
 			"client",
-			"getCUP",
-			"datetim",
-			"brand",
-			"last"
+			"getCUP"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -995,7 +995,7 @@
 	"groups":
 	[
 		{
-			"selected": 5,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -1004,15 +1004,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 33278,
+						"buffer_size": 32238,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								15760,
-								15760
+								31434,
+								31434
 							]
 						],
 						"settings":
@@ -1021,7 +1021,7 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 10260.0,
+						"translation.y": 20300.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1075,7 +1075,7 @@
 						"settings":
 						{
 							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 2,
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true,
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
@@ -1170,7 +1170,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 5494.0,
+						"translation.y": 5222.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1223,7 +1223,9 @@
 						],
 						"settings":
 						{
-							"syntax": "Packages/HTML/HTML.tmLanguage"
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 210.0,
@@ -1305,7 +1307,9 @@
 						],
 						"settings":
 						{
-							"syntax": "Packages/HTML/HTML.tmLanguage"
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -1346,7 +1350,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4164,
+						"buffer_size": 4249,
 						"regions":
 						{
 						},
@@ -1388,7 +1392,9 @@
 						],
 						"settings":
 						{
-							"syntax": "Packages/HTML/HTML.tmLanguage"
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 741.0,
@@ -1426,7 +1432,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 27016.0,
+						"translation.y": 27152.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1481,6 +1487,8 @@
 						"settings":
 						{
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true,
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
@@ -1509,6 +1517,8 @@
 						"settings":
 						{
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true,
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
