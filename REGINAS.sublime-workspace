@@ -484,7 +484,7 @@
 	"buffers":
 	[
 		{
-			"file": "server.js",
+			"file": "server/server.js",
 			"settings":
 			{
 				"buffer_size": 32238,
@@ -492,7 +492,7 @@
 			}
 		},
 		{
-			"file": "/Users/iBook/Reginas-fpk/node_modules/mysql-simple-pool/lib/pool.js",
+			"file": "node_modules/mysql-simple-pool/lib/pool.js",
 			"settings":
 			{
 				"buffer_size": 7095,
@@ -500,7 +500,7 @@
 			}
 		},
 		{
-			"file": "/Users/iBook/Reginas-fpk/app/index.html",
+			"file": "app/index.html",
 			"settings":
 			{
 				"buffer_size": 6527,
@@ -508,7 +508,7 @@
 			}
 		},
 		{
-			"file": "/Users/iBook/Reginas-fpk/app/scripts/app.js",
+			"file": "app/scripts/app.js",
 			"settings":
 			{
 				"buffer_size": 5979,
@@ -516,7 +516,7 @@
 			}
 		},
 		{
-			"file": "/Users/iBook/Reginas-fpk/app/scripts/controllers/fpk.js",
+			"file": "app/scripts/controllers/fpk.js",
 			"settings":
 			{
 				"buffer_size": 32175,
@@ -524,7 +524,7 @@
 			}
 		},
 		{
-			"file": "/Users/iBook/Reginas-fpk/app/views/client_list.html",
+			"file": "app/views/client_list.html",
 			"settings":
 			{
 				"buffer_size": 15331,
@@ -532,7 +532,7 @@
 			}
 		},
 		{
-			"file": "/Users/iBook/Reginas-fpk/app/views/fpk.html",
+			"file": "app/views/fpk.html",
 			"settings":
 			{
 				"buffer_size": 7765,
@@ -540,7 +540,7 @@
 			}
 		},
 		{
-			"file": "/Users/iBook/Reginas-fpk/app/views/fpk/clients.html",
+			"file": "app/views/fpk/clients.html",
 			"settings":
 			{
 				"buffer_size": 3697,
@@ -548,7 +548,7 @@
 			}
 		},
 		{
-			"file": "/Users/iBook/Reginas-fpk/app/scripts/controllers/fpk-stat.js",
+			"file": "app/scripts/controllers/fpk-stat.js",
 			"settings":
 			{
 				"buffer_size": 997,
@@ -556,7 +556,7 @@
 			}
 		},
 		{
-			"file": "/Users/iBook/Reginas-fpk/app/views/fpk/calendar.html",
+			"file": "app/views/fpk/calendar.html",
 			"settings":
 			{
 				"buffer_size": 80,
@@ -564,7 +564,7 @@
 			}
 		},
 		{
-			"file": "/Users/iBook/Reginas-fpk/app/views/user.html",
+			"file": "app/views/user.html",
 			"settings":
 			{
 				"buffer_size": 756,
@@ -572,7 +572,7 @@
 			}
 		},
 		{
-			"file": "/Users/iBook/Reginas-fpk/app/views/user/login.html",
+			"file": "app/views/user/login.html",
 			"settings":
 			{
 				"buffer_size": 562,
@@ -580,7 +580,7 @@
 			}
 		},
 		{
-			"file": "/Users/iBook/Reginas-fpk/app/scripts/controllers/login.js",
+			"file": "app/scripts/controllers/login.js",
 			"settings":
 			{
 				"buffer_size": 4249,
@@ -588,7 +588,7 @@
 			}
 		},
 		{
-			"file": "/Users/iBook/Reginas-fpk/app/views/user/reg.html",
+			"file": "app/views/user/reg.html",
 			"settings":
 			{
 				"buffer_size": 2751,
@@ -596,7 +596,7 @@
 			}
 		},
 		{
-			"file": "/Users/iBook/Reginas-fpk/app/styles/main.scss",
+			"file": "app/styles/main.scss",
 			"settings":
 			{
 				"buffer_size": 52830,
@@ -604,7 +604,7 @@
 			}
 		},
 		{
-			"file": "/Users/iBook/Reginas-fpk/app/scripts/controllers/clients.js",
+			"file": "app/scripts/controllers/clients.js",
 			"settings":
 			{
 				"buffer_size": 10550,
@@ -612,7 +612,7 @@
 			}
 		},
 		{
-			"file": "/Users/iBook/Reginas-fpk/app/scripts/controllers/login-ctrl.js",
+			"file": "app/scripts/controllers/login-ctrl.js",
 			"settings":
 			{
 				"buffer_size": 2751,
@@ -620,7 +620,7 @@
 			}
 		},
 		{
-			"file": "/Users/iBook/Reginas-fpk/app/scripts/controllers/calendar.js",
+			"file": "app/scripts/controllers/calendar.js",
 			"settings":
 			{
 				"buffer_size": 1996,
@@ -628,7 +628,7 @@
 			}
 		},
 		{
-			"file": "/Users/iBook/Reginas-fpk/app/bower_components/fullcalendar/fullcalendar.js",
+			"file": "app/bower_components/fullcalendar/fullcalendar.js",
 			"settings":
 			{
 				"buffer_size": 151515,
@@ -636,7 +636,7 @@
 			}
 		},
 		{
-			"file": "/Users/iBook/Reginas-fpk/app/bower_components/ui-calendar/src/calendar.js",
+			"file": "app/bower_components/ui-calendar/src/calendar.js",
 			"settings":
 			{
 				"buffer_size": 6861,
@@ -1000,7 +1000,7 @@
 			[
 				{
 					"buffer": 0,
-					"file": "server.js",
+					"file": "server/server.js",
 					"semi_transient": false,
 					"settings":
 					{
@@ -1028,7 +1028,7 @@
 				},
 				{
 					"buffer": 1,
-					"file": "/Users/iBook/Reginas-fpk/node_modules/mysql-simple-pool/lib/pool.js",
+					"file": "node_modules/mysql-simple-pool/lib/pool.js",
 					"semi_transient": false,
 					"settings":
 					{
@@ -1057,7 +1057,7 @@
 				},
 				{
 					"buffer": 2,
-					"file": "/Users/iBook/Reginas-fpk/app/index.html",
+					"file": "app/index.html",
 					"semi_transient": false,
 					"settings":
 					{
@@ -1087,7 +1087,7 @@
 				},
 				{
 					"buffer": 3,
-					"file": "/Users/iBook/Reginas-fpk/app/scripts/app.js",
+					"file": "app/scripts/app.js",
 					"semi_transient": false,
 					"settings":
 					{
@@ -1117,7 +1117,7 @@
 				},
 				{
 					"buffer": 4,
-					"file": "/Users/iBook/Reginas-fpk/app/scripts/controllers/fpk.js",
+					"file": "app/scripts/controllers/fpk.js",
 					"semi_transient": false,
 					"settings":
 					{
@@ -1147,7 +1147,7 @@
 				},
 				{
 					"buffer": 5,
-					"file": "/Users/iBook/Reginas-fpk/app/views/client_list.html",
+					"file": "app/views/client_list.html",
 					"semi_transient": false,
 					"settings":
 					{
@@ -1177,7 +1177,7 @@
 				},
 				{
 					"buffer": 6,
-					"file": "/Users/iBook/Reginas-fpk/app/views/fpk.html",
+					"file": "app/views/fpk.html",
 					"semi_transient": false,
 					"settings":
 					{
@@ -1206,7 +1206,7 @@
 				},
 				{
 					"buffer": 7,
-					"file": "/Users/iBook/Reginas-fpk/app/views/fpk/clients.html",
+					"file": "app/views/fpk/clients.html",
 					"semi_transient": false,
 					"settings":
 					{
@@ -1235,7 +1235,7 @@
 				},
 				{
 					"buffer": 8,
-					"file": "/Users/iBook/Reginas-fpk/app/scripts/controllers/fpk-stat.js",
+					"file": "app/scripts/controllers/fpk-stat.js",
 					"semi_transient": false,
 					"settings":
 					{
@@ -1263,7 +1263,7 @@
 				},
 				{
 					"buffer": 9,
-					"file": "/Users/iBook/Reginas-fpk/app/views/fpk/calendar.html",
+					"file": "app/views/fpk/calendar.html",
 					"semi_transient": false,
 					"settings":
 					{
@@ -1290,7 +1290,7 @@
 				},
 				{
 					"buffer": 10,
-					"file": "/Users/iBook/Reginas-fpk/app/views/user.html",
+					"file": "app/views/user.html",
 					"semi_transient": false,
 					"settings":
 					{
@@ -1319,7 +1319,7 @@
 				},
 				{
 					"buffer": 11,
-					"file": "/Users/iBook/Reginas-fpk/app/views/user/login.html",
+					"file": "app/views/user/login.html",
 					"semi_transient": false,
 					"settings":
 					{
@@ -1346,7 +1346,7 @@
 				},
 				{
 					"buffer": 12,
-					"file": "/Users/iBook/Reginas-fpk/app/scripts/controllers/login.js",
+					"file": "app/scripts/controllers/login.js",
 					"semi_transient": false,
 					"settings":
 					{
@@ -1375,7 +1375,7 @@
 				},
 				{
 					"buffer": 13,
-					"file": "/Users/iBook/Reginas-fpk/app/views/user/reg.html",
+					"file": "app/views/user/reg.html",
 					"semi_transient": false,
 					"settings":
 					{
@@ -1410,7 +1410,7 @@
 			[
 				{
 					"buffer": 14,
-					"file": "/Users/iBook/Reginas-fpk/app/styles/main.scss",
+					"file": "app/styles/main.scss",
 					"semi_transient": false,
 					"settings":
 					{
@@ -1439,7 +1439,7 @@
 				},
 				{
 					"buffer": 15,
-					"file": "/Users/iBook/Reginas-fpk/app/scripts/controllers/clients.js",
+					"file": "app/scripts/controllers/clients.js",
 					"semi_transient": false,
 					"settings":
 					{
@@ -1469,7 +1469,7 @@
 				},
 				{
 					"buffer": 16,
-					"file": "/Users/iBook/Reginas-fpk/app/scripts/controllers/login-ctrl.js",
+					"file": "app/scripts/controllers/login-ctrl.js",
 					"semi_transient": false,
 					"settings":
 					{
@@ -1499,7 +1499,7 @@
 				},
 				{
 					"buffer": 17,
-					"file": "/Users/iBook/Reginas-fpk/app/scripts/controllers/calendar.js",
+					"file": "app/scripts/controllers/calendar.js",
 					"semi_transient": false,
 					"settings":
 					{
@@ -1529,7 +1529,7 @@
 				},
 				{
 					"buffer": 18,
-					"file": "/Users/iBook/Reginas-fpk/app/bower_components/fullcalendar/fullcalendar.js",
+					"file": "app/bower_components/fullcalendar/fullcalendar.js",
 					"semi_transient": false,
 					"settings":
 					{
@@ -1557,7 +1557,7 @@
 				},
 				{
 					"buffer": 19,
-					"file": "/Users/iBook/Reginas-fpk/app/bower_components/ui-calendar/src/calendar.js",
+					"file": "app/bower_components/ui-calendar/src/calendar.js",
 					"semi_transient": false,
 					"settings":
 					{
@@ -1630,7 +1630,7 @@
 	{
 		"height": 112.0
 	},
-	"project": "reginas.sublime-project",
+	"project": "REGINAS.sublime-project",
 	"replace":
 	{
 		"height": 64.0
