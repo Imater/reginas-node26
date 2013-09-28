@@ -1,9 +1,9 @@
 
-              <div id="cards_scrollable"  ng-dblclick="goToParent($event)" ng-click="jsDeselect($event)" infinite-scroll="myPagingFunction()" infinite-scroll-distance="500">
+              <div id="cards_scrollable" infinite-scroll="myPagingFunction()" infinite-scroll-distance="0">
                <div id="cards_container">
 
                 <div id="cards_header" >                  
-                    <div class="btn-group col-sm-3" style="display:none">
+                    <div class="btn-group col-sm-3" style="display:block">
                         <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
                           Груп: {{clientsgroupby}}
                           <span class="caret"></span>
@@ -50,11 +50,9 @@
                 <!-- <button ng-click="myPagingFunction()">Load More...</button> -->
 
               <ul class="group_title">
-                <li ng-repeat="distinct in clientsToFilter() | filter:filterDistinct | orderBy:clientsgroupby:jsOrder(clientsgroupby)"><h2>{{jsGetDistinctTitle(distinct)}}</h2>
 
                   <div client-list="clients" my-attr="clients" my-distinct="distinct"></div>
 
-                </li>
               </ul>
 
                 </li>

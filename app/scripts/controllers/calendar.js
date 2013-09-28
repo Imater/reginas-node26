@@ -2,6 +2,25 @@
 
 myApp.controller('calendarCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment) {
 
+
+$scope.$parent.leftmenu = { active:1,
+                items : [
+                  {id:0, title:"Календарь отдела", group_by: "manager", 
+                   filter: {no_out: true, no_dg: true, no_vd:true}},
+
+                  {id:1, title:"Мой календарь", group_by: "manager", 
+                   filter: {no_out: true, dg: true, no_vd:true}},
+
+                  {id:2, title:"Журнал выдач", group_by: "vd", 
+                   filter: {no_out: true, no_dg: false, vd:true}},
+
+                  {id:3, title:"Журнал тест-драйвов", group_by: "creditmanager", 
+                   filter: {no_out: true, no_dg: true, no_vd:true, credit: true}}
+
+                  ]
+                };
+
+
 	setTimeout(function(){
 		onResize();
 	},0);

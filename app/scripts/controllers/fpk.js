@@ -271,11 +271,11 @@ myApp.directive('datemini', ['$timeout', function($timeout) { return {
       ngModel.$render = function() {
         var date2 = ngModel.$viewValue;
         var answer = jsDateDiff(date2);
-        if($scope.client.out!=NO_DATE) {
+        if(($scope.client) && ($scope.client.out!=NO_DATE)) {
           answer.text = "OUT";
           answer.class = "date_out";
         }
-        if( ($scope.client.out!=NO_DATE) && ($scope.client.dg!=NO_DATE) ) {
+        if( ($scope.client) && ($scope.client.out!=NO_DATE) && ($scope.client.dg!=NO_DATE) ) {
           answer.text = "РАСТОРГ";
           answer.class = "date_rastorg";
         }
@@ -411,11 +411,35 @@ myApp.factory('socket', function($rootScope) {
 	};
 });
 
+myApp.filter('jsFilterClients', function() {
+    return function(clients, distinct, group_by) {
+
+      var answer = _.filter(clients, function(client){
+
+        if( (group_by=='manager') && (client.manager == distinct.manager) ) return true;
+
+        if( (group_by=='vd') && (client.vd.indexOf(distinct.vd.substr(0,7))!=-1) ) return true;
+
+
+        if( (group_by=='creditmanager') && (client.creditmanager==distinct.creditmanager) ) return true;
+
+        if( (group_by=='model') && (client.model==distinct.model) ) return true;
+        //if ((client.manager == distinct.manager)) return true;
+
+
+      });
+      return answer;
+    }
+});
+
+
+
+
 myApp.filter('parent_id', function() {
     return function(input, uppercase) {
       return input;
     }
-  });
+});
 
 var lastRoute;
 
@@ -533,6 +557,17 @@ myApp.filter('slice', function() {
   };
 });
 
+myApp.filter('onlyManager', function() {
+  return function(managers, isTrue) {
+    var answer =  _.filter(managers, function(el){
+      if( isTrue && (el.user_group == 6 || el.user_group == 5) ) return true;
+      if( !isTrue && el.user_group != 6 && el.user_group != 5 ) return true;
+    })
+    return answer;
+  };
+});
+
+
 myApp.directive('datepicker', function() {
     return {
         restrict: 'A',
@@ -601,11 +636,11 @@ myApp.factory('myApi', function($http, $q){
 
       return dfd.promise;
     },
-    getClient: function(filter) {
+    getClient: function($scope,filter) {
       var dfd = $q.defer();
 
       jsGetToken().done(function(token){
-        $http({url:'/api/v1/client',method: "GET", isArray: true, params: { token: token, filter:filter}}).then(function(result){
+        $http({url:'/api/v1/client',method: "GET", isArray: true, params: { token: token, filter:filter, manager: $scope.manager_filter}}).then(function(result){
           dfd.resolve(result.data);
         });
       });
@@ -756,7 +791,7 @@ myApp.factory('myApi', function($http, $q){
     loadUserInfo:function($scope) {
       var dfd = $q.defer();
       jsGetToken().done(function(token){
-        $http({url:'/api/v1/user/info', method: "GET", isArray: true, params: { token: token }}).then(function(result){
+        $http({url:'/api/v1/user/info', method: "GET", isArray: true, params: { token: token, brand: $scope.brand }}).then(function(result){
             dfd.resolve(result.data);
         });
       });
@@ -799,10 +834,6 @@ var LIST_LENGTH = 100; //кол-во загружаемых клиентов з�
 myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment) {
 
 
-myApi.loadUserInfo($scope).then(function(user){
-  console.info(user,"user Loaded");
-  $scope.the_user = user[0];
-});  
 
 $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
     console.info("list_finish");
@@ -813,9 +844,18 @@ $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
 
  $scope.$routeSegment = $routeSegment;
 
- $scope.brand = 1; //бренд по умолчанию
+ $scope.manager_filter = -1;
 
-
+ $scope.jsShowManagerFilter = function() {
+  if($scope.manager_filter == -1) {
+    return "Все клиенты";
+  } else {
+    var the_manager = _.find($scope.managers, function(manager) {
+      return (manager.id == $scope.manager_filter );
+    });
+    if(the_manager) return the_manager.fio;
+  }
+ }
  
  $scope.do_types = [ //типы дел
     {img: "1zvonok.png", title: "Звонок"},
@@ -857,31 +897,15 @@ $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
  $scope.today_date = toMysql( (new Date()) ).substr(0,10);
 
 
-
-//загружаем таблицу моделей
- myApi.getModels($scope).then(function(data){ 
-    var answer = {};
-    var answer2 = {};
-    var answer3 = {};
-
-    $.each(data.models, function(i, model){
-      answer[model.id] = model;
-    });
-    $.each(data.brands, function(i, brand){
-      answer2[brand.id] = brand;
-    });
-    $.each(data.users_group, function(i, user_group){
-      answer3[user_group.id] = user_group;
-    });
-    $scope.models_array = data.models;
-    $scope.models = answer;
-    $scope.brands = answer2;
-    $scope.users_group = answer3;
-    $scope.users_groups = data.users_group;
- });
-
  $scope.jsSelectBrand = function(id) {
     $scope.brand=id;
+    $scope.jsLoadStat(); 
+    $scope.jsRefreshClients();    
+ }
+
+ $scope.jsSelectManager = function(manager_id) {
+    $scope.manager_filter = manager_id;
+    $scope.jsRefreshClients();
  }
 
  //дефолтные установки выбора даты
@@ -889,22 +913,27 @@ $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
 
  //клик в меню
  $scope.jsSelectLeftMenu = function(menu_item, $index) {
-          $scope.view_switch=1;
-
           $scope.clientsgroupby = menu_item.group_by; 
-          $scope.leftmenu.active = $index;      
+          $scope.leftmenu.active = $index;  
+          $scope.leftmenu.current_filter = menu_item.filter;  
+          console.info("SELECT LEFT MENU=", menu_item, $index);
+          $scope.jsRefreshClients();
 
-          $scope.clients_current_i = 1;
-
-          var query = angular.extend( {brand:$scope.brand, limit: {start:0, end:LIST_LENGTH}}, menu_item.filter);
-          $scope.clients_query = angular.extend( query, {group_by:menu_item.group_by} );
-
-          myApi.getClient( $scope.clients_query ).then(function(result){
-              $scope.clients = result;
-          });
           $('#cards_scrollable').scrollTop(0);
  }
 
+ $scope.jsRefreshClients = function() {
+    if(!$scope.clientsgroupby) return true;
+    $scope.clients_current_i = 1;
+    console.info("jsRefreshClients");
+
+    var query = angular.extend( {brand:$scope.brand, limit: {start:0, end:LIST_LENGTH}}, $scope.leftmenu.current_filter);
+    $scope.clients_query = angular.extend( query, {group_by:$scope.clientsgroupby, manager: $scope.manager_filter} );
+
+    myApi.getClient( $scope, $scope.clients_query ).then(function(result){
+        $scope.clients = result;
+    });
+ }
 
 
  //если таблица выдач, то порядок клиентов обратный

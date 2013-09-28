@@ -1,10 +1,3 @@
-  <li ng-repeat="distinct in clientsToFilter()"><h2>{{distinct.manager}}</h2>
-  <!-- {{jsGetDistinctTitle(distinct)}} -->
-                <!-- | filter:filterDistinct | orderBy:clientsgroupby:jsOrder(clientsgroupby) -->
-
-        <ol class="clients_list clearfix noselectable">
-                  <li ng-repeat="client in local_clients | jsFilterClients:distinct:clientsgroupby" class="client_card" myid="{{client.id}}">
-
                         <div class="client_container" ng-click="jsOpenClient(client);">
                            <div class="client_car" title="{{client.status}}" style="background:-webkit-gradient(linear, right top, left top, color-stop({{car_status[client.status].procent}}, #2b365a), color-stop({{car_status[client.status].procent}}, #516F8F)) !important;">
                            {{models[client.model].short?models[client.model].short:'&nbsp;'}}
@@ -30,7 +23,7 @@
                             <span ng-if="client.email">[Email: <b>{{client.email}}</b>]<br></span>
                             {{client.text}}
                           </div>
-                          <div ng-if="client._edit == true" class="client_edit" jq-show-effect="client._edit == true" jq-options="{type:'slide', duration:200, delay:200, hideImmediately: true}">
+                          <div class="client_edit" jq-show-effect="client._edit == true" jq-options="{type:'slide', duration:200, delay:200, hideImmediately: true}">
                             
                             <div class="row">
                             
@@ -227,7 +220,7 @@
                                 <div class="do_text">{{do.text}}</div>
                               </div>
                               
-                              <div ng-if="do._visible == true" jq-show-effect="do._visible == true" jq-options="{type:'slide', duration:150, delay:200, hideImmediately: true}" class="do_edit" style="display:none;">
+                              <div jq-show-effect="do._visible == true" jq-options="{type:'slide', duration:150, delay:200, hideImmediately: true}" class="do_edit" style="display:none;">
                                 <div>
                                     <button ng-click="jsDoSave(); do._visible=false;" class="do_save">Сохранить</button>
                                     <button ng-click="jsDoDone();jsDoSave();do._visible=false;" class="do_done">{{do.checked!='0000-00-00 00:00:00' && "Снять выполнение" || "Выполнить"}}</button>   
@@ -245,9 +238,3 @@
                             </li>
                           </ul>
                         </div>
-
-
-            </li>
-        </ol>
-
-</li>

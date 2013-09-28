@@ -434,7 +434,7 @@ function jsNow() {
 	return (new Date).getTime();
 }
 
-function jsMakeClientFilter(filter) {
+function jsMakeClientFilter(filter, manager_id) {
 	var f_filter = filter.brand ? "brand = "+parseInt(filter.brand)+" AND ":"";
 
 	f_filter += filter.no_out ? '`out` = "'+NO_DATE+'" AND ' : '';
@@ -446,6 +446,8 @@ function jsMakeClientFilter(filter) {
 	f_filter += filter.no_dg ? '`dg` = "'+NO_DATE+'" AND ' : '';
 	f_filter += filter.dg ? '`dg` != "'+NO_DATE+'" AND ' : '';
 
+	f_filter += (manager_id>0) ? ' manager_id = "'+manager_id+'" AND ' : '';
+
 	f_filter += filter.credit ? '`creditmanager` LIKE "Кредит -%" AND ' : '';
 
 
@@ -456,10 +458,12 @@ function jsMakeClientFilter(filter) {
 exports.findAllClients = function(request, response) {
 
 	var filter = request.query.filter ? JSON.parse(request.query.filter):{};
+	var manager = request.query.manager;
 
-	f_filter = jsMakeClientFilter(filter);
+	f_filter = jsMakeClientFilter(filter, manager);
 
-	var f_limit = filter.limit ? ' LIMIT '+filter.limit.start+','+filter.limit.end : '';
+
+	var f_limit = filter.limit ? ' LIMIT '+filter.limit.start+','+filter.limit.end : ' LIMIT 100';
 
 	var f_order = filter.group_by ? ' ORDER BY '+filter.group_by : '';
 	if(filter.group_by == "vd") f_order+=" DESC";
@@ -467,7 +471,9 @@ exports.findAllClients = function(request, response) {
 
 	var myquery = 'SELECT * FROM `1_clients` WHERE ' + f_filter + " true " + f_order + f_limit;
 
-	//console.info("query = ", myquery);
+//	console.info("MANAGER",manager, f_filter);
+
+	console.info("query = ", myquery);
 
     pool.query(myquery, function (err, rows, fields) {
   		rows = correct_dates( rows );
@@ -995,11 +1001,14 @@ exports.regNewUser = function(request, response) {
 
 exports.loadUserInfo = function(request, response) {
  	console.info("USER_ID?:", request.query.token);
+	var brand = request.query.brand;
 
  jsCheckToken(request.query.token).done(function(user_id){
  	console.info("USER_ID:", user_id);
 	pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone FROM `1_users` WHERE id = ? LIMIT 1',[user_id], function (err, user, fields) {
-		response.send(user);
+		pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone FROM `1_users` WHERE brand=? ORDER BY fio',[user[0].brand], function (err, users, fields) {
+		response.send({user: user, users: users});
+		});
 	});
 
 
@@ -1017,6 +1026,36 @@ exports.loadXLS = function(request, response) {
     	response.send( data );
 	});
 	
+}
+
+exports.parseManagers = function(request, response) {
+
+	pool.query('SELECT id, fio, brand FROM `1_users`', function (err, sql_users, fields) {
+		var users = {};
+		$.each(sql_users, function(i, user){
+			if(!users[user.brand]) users[user.brand] = {};
+			users[user.brand][user.fio] = user;
+		});
+
+
+		pool.query('SELECT id, manager, brand FROM `1_clients`', function (err, clients, fields) {
+			count = 0;
+			$.each(clients, function(i, client){
+				client.brand = parseInt(client.brand);
+
+				if(users[client.brand] && users[client.brand][client.manager]) var manager_id = users[client.brand][client.manager].id;
+				else var manager_id = -1;
+
+				var txt_query = "UPDATE 1_clients SET manager_id = '"+manager_id+"' WHERE id='"+client.id+"'; ";
+				pool.query(txt_query, function (err, rows, fields) {
+						console.info([err, rows]);
+				});
+
+				//console.info("client = ", client.id, client.manager, manager_id );
+			});
+		});	
+
+	});
 }
 
 
@@ -1113,6 +1152,8 @@ exports.loadStatTable = function(request, response) {
 
 
 app.get('/migrate', database.loadAllFromMySQL)
+app.get('/api/v1/parseManagers', database.parseManagers)
+
 
 app.get('/api/v1/bigdata', database.loadAllBig)
 app.get('/api/v1/bigdata2', database.loadAllBig2)

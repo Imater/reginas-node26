@@ -1,4 +1,4 @@
-'use strict';
+
 
 
 angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 'ui.redactor.multi', 'ui.calendar', "ng", "infinite-scroll", "monospaced.elastic", 'route-segment', 'view-segment'])
@@ -98,7 +98,7 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
     });
 
 
-function MainCtrl($scope, $routeSegment) {
+function MainCtrl($scope, $routeSegment, myApi) {
 
     $scope.$routeSegment = $routeSegment;
 
@@ -108,8 +108,42 @@ function MainCtrl($scope, $routeSegment) {
     $scope.user_fio = "Login...";
 
     jsRefreshToken().done(function () {
+        ///////////////////////////////////////////////
+        myApi.loadUserInfo($scope).then(function(user){
+          console.info(user,"user Loaded");
+          $scope.the_user = user.user[0];
+          $scope.brand = user.user[0].brand; //бренд по умолчанию
+          $scope.managers = user.users; //список всех менеджеров
+
+        });  
+        ///////////////////////////////////////////////
         console.info("refresh_token_did");
-    });
+        //загружаем таблицу моделей
+         myApi.getModels($scope).then(function(data){ 
+            var answer = {};
+            var answer2 = {};
+            var answer3 = {};
+
+            $.each(data.models, function(i, model){
+              answer[model.id] = model;
+            });
+            $.each(data.brands, function(i, brand){
+              answer2[brand.id] = brand;
+            });
+            $.each(data.users_group, function(i, user_group){
+              answer3[user_group.id] = user_group;
+            });
+            $scope.models_array = data.models;
+            $scope.models = answer;
+            $scope.brands = answer2;
+            $scope.users_group = answer3;
+            $scope.users_groups = data.users_group;
+         }); //getModels
+         /////////////////////////////////////////////
+
+
+
+    }); //Refresh Token
 
 }
 

@@ -1,4 +1,60 @@
-<div id="panel_top"></div>
+<div id="panel_top">
+
+<nav class="navbar navbar-default navbar-static-top navbar-inverse" role="navigation">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand"><img src="images/logo-mini.png" width="50px" height="18px">Регинас</a>
+  </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class="collapse navbar-collapse navbar-ex1-collapse">
+    <ul class="nav navbar-nav">
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown">Рейтинг <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li role="presentation" class="dropdown-header">Рейтинг за 7 дней:</li>                 
+          <li><a >Action</a></li>
+          <li><a >Another action</a></li>
+          <li role="presentation" class="divider"></li>
+
+          <li role="presentation" class="dropdown-header">Рейтинг за 30 дней:</li>                 
+          <li><a >Something else here</a></li>
+          <li><a >Separated link</a></li>
+          <li role="presentation" class="divider"></li>          
+
+          <li role="presentation" class="dropdown-header">Рейтинг за 365 дней:</li>                 
+          <li><a >One more separated link</a></li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <!-- <li><a >Link</a></li> -->
+      <li class="dropdown">
+        <a  class="dropdown-toggle" data-toggle="dropdown">Фильтр: {{jsShowManagerFilter()}} <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li role="presentation" class="dropdown-header">Фильтровать по:</li>                   
+          <li ng-click="jsSelectManager(-1)"><a><i class="icon-users"></i>Все клиенты</a></li>
+          <li role="presentation" class="dropdown-header">Менеджеры: {{manager_filter}}</li>                   
+          <li ng-click="jsSelectManager(manager.id)" ng-repeat="manager in managers | onlyManager:true"><a><i class="icon-user"></i>{{manager.fio}} {{manager.id}}</a></li>
+          <li class="dropdown-submenu"><a >Остальные</a>
+           <ul class="dropdown-menu">
+            <li ng-click="jsSelectManager(manager.id)" ng-repeat="manager in managers | onlyManager:false"><a >{{manager.fio}}</a></li>
+           </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div><!-- /.navbar-collapse -->
+</nav>
+
+  
+</div>
 
 <div id="panel_left" resizable style="width:{{left_panel_width}}px">
 
@@ -41,7 +97,7 @@
             <div class="menu_mini select_brand">
                 <div class="btn-group">
                     <button type="button" class="btn btn-cloud btn-default dropdown-toggle" data-toggle="dropdown" ng-class="{ 'synced': sync.did, 'syncing': sync.syncing }">
-                      <img height="16px" width="25.6px" ng-src="images/logos/{{brands[brand].logo}}"></img>
+                      <img ng-if="brands[brand]" height="16px" width="25.6px" ng-src="images/logos/{{brands[brand].logo}}"></img>
                       <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
@@ -62,7 +118,7 @@
 
                   <a href="#/fpk/calendar" ng-class="{active: $routeSegment.startsWith('s1.calendar')}" type="button" class="btn btn-default">Календарь</a>
 
-                  <a href="#/fpk/stat" ng-class="{active: $routeSegment.startsWith('s1.stat')}" type="button" class="btn btn-default">Отчёты</a>
+                  <a href="#/fpk/stat" ng-class="{active: $routeSegment.startsWith('s1.stat')}" type="button" class="btn btn-default">Статистика</a>
 
                 </div>
             </div>
@@ -73,9 +129,14 @@
                       <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                      <li><a href="#">Синхронизация</a></li>
-                      <li><a href="#">Редактор</a></li>
-                      <li><a href="#">Календарь</a></li>
+                        <a href="#/fpk/clients" ng-class="{active: $routeSegment.startsWith('s1.clients')}" type="button" class="btn btn-default">Клиенты</a>
+
+
+                        <a href="#/fpk/news" style="display:none;" ng-class="{active: $routeSegment.startsWith('s1.news')}" type="button" class="btn btn-default">Новости</a>
+
+                        <a href="#/fpk/calendar" ng-class="{active: $routeSegment.startsWith('s1.calendar')}" type="button" class="btn btn-default">Календарь</a>
+
+                        <a href="#/fpk/stat" ng-class="{active: $routeSegment.startsWith('s1.stat')}" type="button" class="btn btn-default">Статистика</a>
                     </ul>
                   </div>
                 </div>
@@ -87,17 +148,17 @@
                     </button>
                     <ul class="dropdown-menu pull-right">
                       <li role="presentation" class="dropdown-header">Без действий</li>
-                      <li><a href="#">Новый клиент</a></li>
+                      <li><a >Новый клиент</a></li>
                       <li role="presentation" class="divider"></li>                 
                       <li role="presentation" class="dropdown-header">С действиями</li>
-                      <li><a href="#">Звонок</a></li>
-                      <li><a href="#">Визит</a></li>
-                      <li><a href="#">Тестдрайв</a></li>
+                      <li><a >Звонок</a></li>
+                      <li><a >Визит</a></li>
+                      <li><a >Тестдрайв</a></li>
                       <li role="presentation" class="divider"></li>                 
                       <li role="presentation" class="dropdown-header">Клиент с отказом</li>
-                      <li><a href="#">Звонок</a></li>
-                      <li><a href="#">Визит</a></li>
-                      <li><a href="#">Тестдрайв</a></li>
+                      <li><a >Звонок</a></li>
+                      <li><a >Визит</a></li>
+                      <li><a >Тестдрайв</a></li>
                     </ul>
                   </div>
             </div>
@@ -163,12 +224,12 @@
                     </button>
                     <ul class="dropdown-menu">
                       <li role="presentation" class="dropdown-header">Вставить</li>         
-                      <li><a href="#">Вставить текущую дату</a></li>
-                      <li><a href="#">Вставить галочку</a></li>
+                      <li><a >Вставить текущую дату</a></li>
+                      <li><a >Вставить галочку</a></li>
                       <li role="presentation" class="divider"></li>                 
                       <li role="presentation" class="dropdown-header">Сервис</li>           
-                      <li><a href="#">История изменений</a></li>
-                      <li><a href="#">Печать</a></li>
+                      <li><a >История изменений</a></li>
+                      <li><a >Печать</a></li>
                     </ul>
                   </div>
             </div>

@@ -4,38 +4,6 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
 
 
 
-         var indexedTeams = [];       
-
-         $scope.clientsToFilter = function() {
-                indexedTeams = [];
-                return $scope.clients;
-         }        
-
-//         $scope.clientsgroupby = "manager";       
-
-         $scope.filterDistinct = function(item){
-          var fieldname = $scope.clientsgroupby ? $scope.clientsgroupby:"manager";
-
-          var the_value = item[fieldname];
-          if(fieldname == "vd") the_value = the_value.substr(0,7);
-          var teamIsNew = indexedTeams.indexOf(the_value) == -1;
-          if (teamIsNew) {
-              indexedTeams.push(the_value);
-          }
-          return teamIsNew;
-         }
-
-        //фильтр для выбора уникальных групп менеджеров или дат
-         $scope.jsGetDistinctTitle = function(distinct) {
-            var group_by = $scope.clientsgroupby;
-            var answer = distinct[group_by];
-            if(group_by == "vd") {
-              answer = answer.substr(0,7);
-              var an = answer.split("-");
-              answer = an[1]+"-"+an[0];
-            }
-            return answer;
-         }        
 
 
 
@@ -71,9 +39,9 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
 
   $scope.jsLoadStat();
 
-    if($scope.jsSelectLeftMenu) {
+  if($scope.jsSelectLeftMenu) {
     $scope.jsSelectLeftMenu($scope.leftmenu.items[1], 1);
-    }
+  }
 /*    myApi.getClient({brand:1, no_out: true, no_dg: true, no_vd:true}).then(function(x){
       $scope.clients = x;
     });
@@ -82,15 +50,16 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
    $scope.clients_current_i = 1;
 
  $scope.myPagingFunction = function() {
+          console.info("page_function");
           var query = $scope.clients_query;
           if(!query) return true;
           query.limit.start = LIST_LENGTH*$scope.clients_current_i;
           query.limit.end = LIST_LENGTH;
 
 
-          myApi.getClient( query ).then(function(result){
+          myApi.getClient( $scope, query ).then(function(result){
             angular.forEach(result, function(value, key){
-              $scope.clients.push( value );  
+              if($scope.clients) $scope.clients.push( value );  
             });
             
 
@@ -99,9 +68,6 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
           });
    };
 
-  $scope.$watch('brand', function(newVal) {
-    $scope.jsLoadStat(); 
-    });
 
   var tm_search;
   $scope.startSearch = function(searchstring) {
@@ -137,22 +103,69 @@ myApp.directive("clientList", function ($compile, myApi) {
       local_clients: "=myAttr",
       distinct: "=myDistinct"
     },
-    link: function (scope, elm, attrs, clients) {
-        scope.models = scope.$parent.models;
-        scope.models_array = scope.$parent.models_array;
-        scope.car_status = scope.$parent.car_status;
-        scope.car_status_array = scope.$parent.car_status_array //глобальные статусы
+    link: function ($scope, elm, attrs, clients) {
+        $scope.models = $scope.$parent.models;
+        $scope.models_array = $scope.$parent.models_array;
+        $scope.car_status = $scope.$parent.car_status;
+        $scope.car_status_array = $scope.$parent.car_status_array //глобальные статусы
 
-        scope.do_types = scope.$parent.do_types;
-        scope.do_types_array = scope.$parent.do_types_array;
+        $scope.clientsgroupby = $scope.$parent.clientsgroupby //глобальные статусы
+        console.info("...",$scope.clientsgroupby);
 
-        scope.jsLoadStat = scope.$parent.jsLoadStat;
-        scope.stat = scope.$parent.stat;
+        $scope.do_types = $scope.$parent.do_types;
+        $scope.do_types_array = $scope.$parent.do_types_array;
 
-        scope.models_array_show = _.filter(scope.$parent.models_array, function(el){ return ( (el.brand == scope.$parent.brand) && (el.show == 1)); });
+        $scope.jsLoadStat = $scope.$parent.jsLoadStat;
+        $scope.stat = $scope.$parent.stat;
+
+        $scope.models_array_show = _.filter($scope.$parent.models_array, function(el){ return ( (el.brand == $scope.$parent.brand) && (el.show == 1)); });
 
 
-        scope.jsClientSave = function(client){
+         var indexedTeams = [];       
+
+         $scope.clientsToFilter = function() {
+                indexedTeams = [];
+
+                //console.info("make_group", $scope.clientsgroupby);
+
+                answer = _.filter($scope.local_clients, function(client){
+
+                  if( $scope.clientsgroupby == 'vd' ) {
+                    if(client.vd && indexedTeams.indexOf(client.vd.substr(0,7))==-1) {
+                      indexedTeams.push(client.vd.substr(0,7));
+                      return true;
+                    }
+
+                  } else {
+                    if(indexedTeams.indexOf(client[$scope.clientsgroupby])==-1) {
+                      indexedTeams.push(client[$scope.clientsgroupby]);
+                      return true;
+                    }
+
+                  }
+
+
+                });
+
+                return answer;
+         }        
+
+
+        //фильтр для выбора уникальных групп менеджеров или дат
+         $scope.jsGetDistinctTitle = function(distinct) {
+            var group_by = $scope.clientsgroupby;
+            var answer = distinct[group_by];
+            if(group_by == "vd") {
+              answer = answer.substr(0,7);
+              var an = answer.split("-");
+              answer = an[1]+"-"+an[0];
+            }
+            return answer;
+         }        
+
+
+
+        $scope.jsClientSave = function(client){
           var client_id = client.id;
           var changes = {};
           $.each(client, function(key,value){
@@ -166,26 +179,26 @@ myApp.directive("clientList", function ($compile, myApi) {
           console.info(changes);
 
           
-          myApi.saveClient(scope, changes, client_id).then(function(value){
+          myApi.saveClient($scope, changes, client_id).then(function(value){
             if(value.affectedRows>0) client._edit = false;
             else alert("Не могу отправить данные на сервер");
           });
         }
 
 
-        scope.jsFilterClients = function(distinct) {
+        $scope.jsFilterClients111 = function(distinct) {
           return function(item) {
               
-              var fieldname = scope.clientsgroupby ? scope.clientsgroupby:"manager";
+              var fieldname = $scope.clientsgroupby ? $scope.clientsgroupby:"manager";
 
               var compare
                = true;
-              if( scope.$parent.leftmenu.active == 2) {
+              if( $scope.$parent.leftmenu.active == 2) {
 
                 compare = compare && 
                     (item.vd.substr(0,7)==distinct.vd.substr(0,7));
 
-              } else if( scope.$parent.leftmenu.active == 3) {
+              } else if( $scope.$parent.leftmenu.active == 3) {
                 compare = compare && 
                     (item.creditmanager==distinct.creditmanager);
               } else if(distinct) compare = (item.manager == distinct.manager);
@@ -194,23 +207,24 @@ myApp.directive("clientList", function ($compile, myApi) {
             }
         }
 
-        scope.jsOpenClient = function(client) {
+        $scope.jsOpenClient = function(client) {
           if(!client.do) {
+
             myApi.getDo(client.id).then(function(value){
-              client.do = value;
               client._visible = true;
+              client.do = value;
             });
 
 
           } else {
               client._visible = !client._visible;
 /*            $("li[myid="+client.id+"] .client_inside").slideToggle(200);
-*/          } 
+*/        } 
 
           
         }
 
-        scope.jsAddDo = function(do_type, client) {
+        $scope.jsAddDo = function(do_type, client) {
           var client_id = client.id;
           var do_type_title = do_type.title;
 
@@ -249,9 +263,9 @@ myApp.directive("clientList", function ($compile, myApi) {
 myApp.directive('jqShowEffect', ['$timeout', function($timeout) {
   return {
     restrict: 'A',
-    link: function(scope, element, attrs) {
+    link: function($scope, element, attrs) {
       // configure options
-      var passedOptions = scope.$eval(attrs.jqOptions);
+      var passedOptions = $scope.$eval(attrs.jqOptions);
       
       // defaults
       var options = {
@@ -270,7 +284,7 @@ myApp.directive('jqShowEffect', ['$timeout', function($timeout) {
  
       // watch the trigger
       var jqElm = $(element);
-      scope.$watch(attrs.jqShowEffect, function(value) {
+      $scope.$watch(attrs.jqShowEffect, function(value) {
         if (hideImmediately && !value) {
           jqElm.hide(0, callback);
         } else {
@@ -347,7 +361,7 @@ function DoCtrl($scope, myApi) { //контроллер дел
         myApi.saveDo($scope, changes, $scope.client.id).then(function(client_back){
           $scope.backup_copy = angular.copy( $scope.do );
           $scope.client.na_date = client_back[0].na_date; 
-          setTimeout(function(){ $scope.jsLoadStat(); },500);
+          setTimeout(function(){ if($scope.jsLoadStat) $scope.jsLoadStat(); },500);
           //$scope.setX($scope.client.id, client_back[0]);
 
 
@@ -362,6 +376,7 @@ function DoCtrl($scope, myApi) { //контроллер дел
    }
 
 }
+
 
 
 
