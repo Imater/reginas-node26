@@ -1006,6 +1006,94 @@ exports.loadUserInfo = function(request, response) {
  });
 }
 
+
+exports.loadXLS = function(request, response) {
+	answer = {hi: "hello" };
+	var parseXlsx = require('excel');
+
+	parseXlsx('1.xlsx', function(err, data) {
+    	if(err) throw err;
+    	// data is an array of arrays
+    	response.send( data );
+	});
+	
+}
+
+
+
+exports.loadStatTable = function(request, response) {
+
+	var answer = {};
+
+	pool.query('SELECT * FROM `1_models` WHERE brand=?',[1], function (err, models, fields) {
+
+		var do_type = "vz";
+
+		var col_function = function(car, col){
+			//console.info(car.fio, col.col);
+			var month = (col.length>1)?col.col:'0'+col.col;
+			if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
+				return true;
+			} else {
+				return false;
+			}
+			
+		};		
+
+		var col_function_month = function(car, col){
+			//console.info(car.fio, col.col);
+			var month = (col.length>1)?col.col:'0'+col.col;
+			if( (car[do_type]) && (car[do_type].indexOf("2012-")!=-1) ) {
+				return true;
+			} else {
+				return false;
+			}
+			
+		};		
+
+		$.each(models, function(i, model){
+			var cols = [];
+			var fu;
+			for(var i=1; i<=12; i+=1) {
+				if(i==2) {
+					fu = col_function_month;
+				} else {
+					fu = col_function;
+				}
+				cols.push({
+						   col:i,
+						   value: 0,
+						   func: fu
+						  });
+			}
+			if(!answer[model.id]) answer[ model.id ] = {cols:cols, model: model.model};			
+		});
+
+
+
+		pool.query('SELECT * FROM `1_clients` WHERE brand=? AND dg != "0000-00-00 00:00:00"',[1], function (err, cars, fields) {
+			cars = correct_dates(cars);
+			
+			$.each(cars, function(k, car){
+				if( answer[car.model] ) {
+					console.info("model = ",car.model, answer[car.model].cols);
+					$.each( answer[car.model].cols, function(l, col){
+						if(col.func(car, col)) col.value += 1;
+					});
+				}
+			});	//cars	
+		
+
+				response.send(answer);
+
+			}); //cars
+	}); //model
+
+	
+}
+
+
+
 ////////////////////////////////////////////////////////////////////////////////////////
                                        ////////
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -1032,6 +1120,9 @@ app.get('/api/v1/bigdata2', database.loadAllBig2)
 app.get('/api/v1/client', database.findAllClients );
 app.get('/api/v1/do/:id', database.findDoById );
 app.get('/api/v1/calendar', database.findCalendar );
+
+app.get('/api/v1/stat_table', database.loadStatTable );
+app.get('/api/v1/xls', database.loadXLS );
 
 app.get('/api/v1/search', database.searchString );
 

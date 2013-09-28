@@ -487,23 +487,23 @@
 			"file": "server/server.js",
 			"settings":
 			{
-				"buffer_size": 32238,
+				"buffer_size": 34154,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "node_modules/mysql-simple-pool/lib/pool.js",
+			"file": "/Users/iBook/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
 			"settings":
 			{
-				"buffer_size": 7095,
-				"line_ending": "Windows"
+				"buffer_size": 331,
+				"line_ending": "Unix"
 			}
 		},
 		{
 			"file": "app/index.html",
 			"settings":
 			{
-				"buffer_size": 6527,
+				"buffer_size": 6017,
 				"line_ending": "Unix"
 			}
 		},
@@ -511,7 +511,7 @@
 			"file": "app/scripts/app.js",
 			"settings":
 			{
-				"buffer_size": 5979,
+				"buffer_size": 6687,
 				"line_ending": "Unix"
 			}
 		},
@@ -520,14 +520,6 @@
 			"settings":
 			{
 				"buffer_size": 32175,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/views/client_list.html",
-			"settings":
-			{
-				"buffer_size": 15331,
 				"line_ending": "Unix"
 			}
 		},
@@ -594,60 +586,12 @@
 				"buffer_size": 2751,
 				"line_ending": "Unix"
 			}
-		},
-		{
-			"file": "app/styles/main.scss",
-			"settings":
-			{
-				"buffer_size": 52830,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/scripts/controllers/clients.js",
-			"settings":
-			{
-				"buffer_size": 10550,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/scripts/controllers/login-ctrl.js",
-			"settings":
-			{
-				"buffer_size": 2751,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/scripts/controllers/calendar.js",
-			"settings":
-			{
-				"buffer_size": 1996,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/bower_components/fullcalendar/fullcalendar.js",
-			"settings":
-			{
-				"buffer_size": 151515,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/bower_components/ui-calendar/src/calendar.js",
-			"settings":
-			{
-				"buffer_size": 6861,
-				"line_ending": "Windows"
-			}
 		}
 	],
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 287.0,
+		"height": 289.0,
 		"selected_items":
 		[
 			[
@@ -656,14 +600,14 @@
 			],
 			[
 				"Snippet: ",
-				"Snippet: html"
+				"Snippet: |currency"
 			],
 			[
 				"pa",
 				"Package Control: Install Package"
 			]
 		],
-		"width": 574.0
+		"width": 449.0
 	},
 	"console":
 	{
@@ -686,6 +630,17 @@
 	},
 	"file_history":
 	[
+		"/Users/iBook/Reginas-fpk/app/views/client_list.html",
+		"/Users/iBook/Reginas-fpk/server/server.js",
+		"/Users/iBook/Reginas-fpk/REGINAS.sublime-project",
+		"/Users/iBook/Reginas-fpk/node_modules/mysql-simple-pool/lib/pool.js",
+		"/Users/iBook/Reginas-fpk/app/bower_components/ui-calendar/src/calendar.js",
+		"/Users/iBook/Reginas-fpk/app/bower_components/fullcalendar/fullcalendar.js",
+		"/Users/iBook/Reginas-fpk/app/scripts/controllers/calendar.js",
+		"/Users/iBook/Reginas-fpk/app/scripts/controllers/login-ctrl.js",
+		"/Users/iBook/Reginas-fpk/app/scripts/controllers/clients.js",
+		"/Users/iBook/Reginas-fpk/app/styles/main.scss",
+		"/Applications/MAMP/htdocs/fpk/fpk-reginas/stat.php",
 		"/Users/iBook/Reginas-fpk/app/bower_components/angular/new/angular-ui.min.js",
 		"/Users/iBook/Reginas-fpk/app/bower_components/angular/new/angular.js",
 		"/Users/iBook/Reginas-fpk/node_modules/mysql-simple-pool/index.js",
@@ -802,15 +757,7 @@
 		"/Applications/MAMP/htdocs/fpk/4tree/js/jquery.mobile-1.3.1.js",
 		"/Applications/MAMP/htdocs/fpk/4tree/css/4tree.css",
 		"/Applications/MAMP/htdocs/fpk/4tree/redactor900/redactor/redactor.css",
-		"/Applications/MAMP/htdocs/fpk/4tree/redactor/redactor/redactor.js",
-		"/Applications/MAMP/htdocs/fpk/4tree/favicon-mobile.png",
-		"/Applications/MAMP/htdocs/fpk/4tree/favicon1.png",
-		"/Users/iBook/Downloads/images/icons-18-black.png",
-		"/Users/iBook/Downloads/images/ajax-loader.gif",
-		"/Users/iBook/Downloads/images/icons-18-white.png",
-		"/Users/iBook/Downloads/images/icons-36-black.png",
-		"/Users/iBook/Downloads/images/icons-36-white.png",
-		"/Applications/MAMP/htdocs/fpk/4tree/fullcalendar-1.6.1/fullcalendar/fullcalendar.js"
+		"/Applications/MAMP/htdocs/fpk/4tree/redactor/redactor/redactor.js"
 	],
 	"find":
 	{
@@ -995,7 +942,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -1004,53 +951,62 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 32238,
+						"buffer_size": 34154,
 						"regions":
 						{
+							"mark":
+							{
+								"flags": 144,
+								"icon": "dot",
+								"regions":
+								[
+								],
+								"scope": "mark"
+							}
 						},
 						"selection":
 						[
 							[
-								31434,
-								31434
+								1197,
+								1197
 							]
 						],
 						"settings":
 						{
+							"history_list_is_closing": true,
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 20419.0,
+						"translation.y": 515.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "node_modules/mysql-simple-pool/lib/pool.js",
+					"file": "/Users/iBook/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7095,
+						"buffer_size": 331,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4366,
-								4366
+								169,
+								169
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false,
-							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
+							"syntax": "Packages/JavaScript/JSON.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1789.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1061,15 +1017,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6527,
+						"buffer_size": 6017,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3257,
-								3257
+								2189,
+								2189
 							]
 						],
 						"settings":
@@ -1080,7 +1036,7 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 1244.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1091,21 +1047,21 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5979,
+						"buffer_size": 6687,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								207,
-								207
+								558,
+								558
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true,
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
@@ -1140,43 +1096,13 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 18686.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 5,
-					"file": "app/views/client_list.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 15331,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								14869,
-								14869
-							]
-						],
-						"settings":
-						{
-							"auto_name": "",
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 5222.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
 					"file": "app/views/fpk.html",
 					"semi_transient": false,
 					"settings":
@@ -1188,24 +1114,27 @@
 						"selection":
 						[
 							[
-								7410,
-								7414
+								5822,
+								5822
 							]
 						],
 						"settings":
 						{
+							"rulers":
+							[
+							],
 							"syntax": "Packages/HTML/HTML.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3590.0,
+						"translation.y": 2446.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 6,
 					"file": "app/views/fpk/clients.html",
 					"semi_transient": false,
 					"settings":
@@ -1228,13 +1157,13 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 210.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 7,
 					"file": "app/scripts/controllers/fpk-stat.js",
 					"semi_transient": false,
 					"settings":
@@ -1262,7 +1191,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 9,
+					"buffer": 8,
 					"file": "app/views/fpk/calendar.html",
 					"semi_transient": false,
 					"settings":
@@ -1289,7 +1218,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 9,
 					"file": "app/views/user.html",
 					"semi_transient": false,
 					"settings":
@@ -1318,7 +1247,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 11,
+					"buffer": 10,
 					"file": "app/views/user/login.html",
 					"semi_transient": false,
 					"settings":
@@ -1345,7 +1274,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 12,
+					"buffer": 11,
 					"file": "app/scripts/controllers/login.js",
 					"semi_transient": false,
 					"settings":
@@ -1368,13 +1297,13 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 761.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 13,
+					"buffer": 12,
 					"file": "app/views/user/reg.html",
 					"semi_transient": false,
 					"settings":
@@ -1397,190 +1326,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 741.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 0,
-			"sheets":
-			[
-				{
-					"buffer": 14,
-					"file": "app/styles/main.scss",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 52830,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								42922,
-								42922
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Syntax Highlighting for Sass/Syntaxes/SCSS.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 27288.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 15,
-					"file": "app/scripts/controllers/clients.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 10550,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5040,
-								5040
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true,
-							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
-						},
-						"translation.x": 0.0,
-						"translation.y": 2988.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 16,
-					"file": "app/scripts/controllers/login-ctrl.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2751,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2745,
-								2192
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true,
-							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
-						},
-						"translation.x": 0.0,
-						"translation.y": 1778.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 17,
-					"file": "app/scripts/controllers/calendar.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1996,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								337,
-								337
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true,
-							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
-						},
-						"translation.x": 0.0,
 						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 18,
-					"file": "app/bower_components/fullcalendar/fullcalendar.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 151515,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								59407,
-								59388
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 52939.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 19,
-					"file": "app/bower_components/ui-calendar/src/calendar.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6861,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2290,
-								2290
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true,
-							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
-						},
-						"translation.x": 0.0,
-						"translation.y": 1020.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1605,18 +1351,11 @@
 				0,
 				1,
 				1
-			],
-			[
-				1,
-				0,
-				2,
-				1
 			]
 		],
 		"cols":
 		[
 			0.0,
-			0.558513336015,
 			1.0
 		],
 		"rows":
@@ -1641,16 +1380,20 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"",
+				"~/Reginas-fpk/node_modules/mysql-simple-pool/lib/pool.js"
+			]
 		],
 		"width": 0.0
 	},
 	"select_project":
 	{
-		"height": 0.0,
+		"height": 500.0,
 		"selected_items":
 		[
 		],
-		"width": 0.0
+		"width": 380.0
 	},
 	"select_symbol":
 	{
@@ -1662,12 +1405,21 @@
 	},
 	"settings":
 	{
+		"last_automatic_layout":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		]
 	},
 	"show_minimap": true,
 	"show_open_files": true,
 	"show_tabs": true,
-	"side_bar_visible": false,
-	"side_bar_width": 262.0,
+	"side_bar_visible": true,
+	"side_bar_width": 108.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
