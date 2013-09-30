@@ -892,6 +892,8 @@ body {
 #myfullcalendar {
   margin-top: 0px;
   background: #FFF; }
+  #myfullcalendar .fc-event-inner {
+    font-size: 11px; }
 
 #myfullcalendar .fc-content {
   height: 100%;
@@ -955,9 +957,10 @@ body {
         float: right;
         clear: right;
         display: inline-block;
+        margin-top: 1px;
         line-height: 1em;
         font-size: 12px;
-        padding: 3px 3px 4px 3px;
+        padding: 4px 3px 4px 3px;
         color: #FFF;
         text-align: center;
         min-width: 6em;
@@ -967,7 +970,8 @@ body {
         border-bottom: 1px solid #FFF; }
       .clients_list .client_card .client_container .do_buttons {
         display: none;
-        float: right; }
+        float: right;
+        margin-top: 2px; }
         .clients_list .client_card .client_container .do_buttons .do_btn {
           display: inline;
           opacity: 0.3;
@@ -1047,7 +1051,7 @@ body {
 .datemini {
   line-height: 1em;
   font-size: 11px;
-  padding: 3px 3px 4px 3px;
+  padding: 4px 3px 4px 3px;
   color: #FFF;
   text-align: center;
   min-width: 6em;
@@ -1285,6 +1289,14 @@ a {
   .client_edit .but {
     margin-top: 3px;
     padding-left: 50px; }
+  .client_edit .left_btn {
+    margin-top: 3px; }
+  .client_edit .left_group {
+    margin-left: 3px; }
+    .client_edit .left_group button {
+      width: 99%; }
+  .client_edit .selectmanager button {
+    width: 96%; }
   .client_edit .top10 {
     margin-top: 12px; }
   .client_edit .btn-group, .client_edit .dropdown-toggle {
@@ -1304,6 +1316,8 @@ a {
     font-size: 13px;
     margin: 3px;
     min-height: 2em; }
+  .client_edit .vin_group {
+    margin-left: 50px; }
   .client_edit .col-md-12 {
     padding: 0px;
     padding-right: 3px; }
@@ -1312,8 +1326,7 @@ a {
   .client_edit .client_fio_input {
     margin-right: -4px; }
     .client_edit .client_fio_input input {
-      font-weight: bold;
-      font-size: 15px; }
+      font-weight: bold; }
   .client_edit .btn-success {
     margin-left: 3px; }
 
@@ -1365,3 +1378,47 @@ a {
 .dropdown-submenu a {
   margin: 0px;
   padding: 2px 10px !important; }
+
+.gridStyle {
+  border: 1px solid #d4d4d4;
+  width: 100%;
+  height: 600px;
+  color: #000; }
+
+.scrollable_div {
+  padding: 10px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 36px;
+  bottom: 0px;
+  padding-bottom: 50px;
+  color: #EEE; }
+
+#new_client_div {
+  position: absolute;
+  right: 10px;
+  top: 50px;
+  max-height: 600px;
+  border-radius: 5px;
+  width: 800px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 2px 2px 10px #000;
+  padding: 20px 5px;
+  z-index: 5;
+  overflow-y: auto;
+  background: url("../images/backgrounds/textile2.jpg"); }
+  #new_client_div .close_one_client {
+    position: absolute;
+    left: 8px;
+    top: 3px;
+    cursor: pointer;
+    font-size: 15px;
+    color: #CCC;
+    border-radius: 30px;
+    height: 25px;
+    width: 25px; }
+  #new_client_div .close_one_client:hover {
+    color: #FFF; }

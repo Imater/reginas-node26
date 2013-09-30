@@ -413,7 +413,7 @@ myApp.factory('socket', function($rootScope) {
 
 myApp.filter('jsFilterClients', function() {
     return function(clients, distinct, group_by) {
-
+      console.info(777);
       var answer = _.filter(clients, function(client){
 
         if( (group_by=='manager') && (client.manager == distinct.manager) ) return true;
@@ -647,6 +647,17 @@ myApp.factory('myApi', function($http, $q){
 
       return dfd.promise;      
     },
+    getClientFull: function($scope,client_id) {
+      var dfd = $q.defer();
+
+      jsGetToken().done(function(token){
+        $http({url:'/api/v1/client/'+client_id, method: "GET", isArray: true, params: { token: token, manager: $scope.manager_filter}}).then(function(result){
+          dfd.resolve(result.data);
+        });
+      });
+
+      return dfd.promise;      
+    },    
     getStat: function($scope) {
       var dfd = $q.defer();
 
@@ -654,7 +665,7 @@ myApp.factory('myApi', function($http, $q){
 
         var filters = $scope.leftmenu;
 
-        $http({url:'/api/v1/stat',method: "GET", isArray: true, params: { token: token, filters: filters, brand: $scope.brand }}).then(function(result){
+        $http({url:'/api/v1/stat',method: "GET", isArray: true, params: { token: token, filters: filters, brand: $scope.brand, manager: $scope.manager_filter }}).then(function(result){
           dfd.resolve(result.data);
         });
       });
@@ -662,6 +673,22 @@ myApp.factory('myApi', function($http, $q){
       return dfd.promise;      
 
     },
+    getTableStat: function($scope) {
+      var dfd = $q.defer();
+
+      jsGetToken().done(function(token){
+
+        var filters = $scope.leftmenu;
+
+        $http({url:'/api/v1/stat_table',method: "GET", isArray: true, params: { token: token, brand: $scope.brand, manager: $scope.manager_filter }}).then(function(result){
+          dfd.resolve(result.data);
+        });
+      });
+
+      return dfd.promise;      
+
+    },
+
     searchString: function($scope, searchstring) {
       var dfd = $q.defer();
 
@@ -682,7 +709,7 @@ myApp.factory('myApi', function($http, $q){
 
         var filters = $scope.leftmenu;
 
-        $http({url:'/api/v1/calendar',method: "GET", isArray: true, params: { token: token, start_date: start_date, end_date: end_date, brand: $scope.brand }}).then(function(result){
+        $http({url:'/api/v1/calendar',method: "GET", isArray: true, params: { token: token, start_date: start_date, end_date: end_date, brand: $scope.brand, manager: $scope.manager_filter }}).then(function(result){
           console.info(result);
           dfd.resolve(result.data);
         });
@@ -736,6 +763,7 @@ myApp.factory('myApi', function($http, $q){
 
       
     },    
+
     regNewUser:function($scope) {
       var dfd = $q.defer();
         var reg_user = angular.copy( $scope.reg_user );
@@ -762,6 +790,36 @@ myApp.factory('myApi', function($http, $q){
 
       return dfd.promise;      
 
+    },
+    newModel: function($scope) {
+      var dfd = $q.defer();
+      jsGetToken().done(function(token){
+        $http({url:'/api/v1/models', method: "POST", isArray: true, params: { token: token, brand: $scope.brand }}).then(function(result){
+            dfd.resolve(result.data);
+        });
+
+      });
+      return dfd.promise;      
+    },
+    saveModel: function($scope, changes, model_id) {
+      var dfd = $q.defer();
+      jsGetToken().done(function(token){
+        $http({url:'/api/v1/models', method: "PUT", isArray: true, data: {changes: changes}, params: { token: token, brand: $scope.brand, model_id: model_id }}).then(function(result){
+            dfd.resolve(result.data);
+        });
+
+      });
+      return dfd.promise;      
+    },
+    deleteModel: function($scope, del_id) {
+      var dfd = $q.defer();
+      jsGetToken().done(function(token){
+        $http({url:'/api/v1/models', method: "DELETE", isArray: true, params: { del_id: del_id ,token: token, brand: $scope.brand }}).then(function(result){
+            dfd.resolve(result.data);
+        });
+
+      });
+      return dfd.promise;      
     },
     getCUP: function($scope) {
       var dfd = $q.defer();
@@ -846,6 +904,22 @@ $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
 
  $scope.manager_filter = -1;
 
+$scope.jsFioShort = function(fio, need_surname) {
+    if(!fio) return "";
+    var fio_sp = fio.split(" ");
+    var answer = fio_sp[0] + " "+(fio_sp[1]?(fio_sp[1].substr(0,1)+"."):"") + ((fio_sp[2]&&need_surname)?(fio_sp[2].substr(0,1)+"."):"");
+    return answer;
+}
+
+ $scope.jsFindInArray = function(myarray, fieldname, myid) {
+  var answer = _.find(myarray, function(com){
+    if(com[fieldname]) {
+      return (com[fieldname] == myid);
+    }
+  });
+  return answer;
+ }
+
  $scope.jsShowManagerFilter = function() {
   if($scope.manager_filter == -1) {
     return "Все клиенты";
@@ -896,24 +970,59 @@ $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
 
  $scope.today_date = toMysql( (new Date()) ).substr(0,10);
 
+  $scope.jsLoadStat = function() {
+    if($scope.brand) {
+        myApi.getStat($scope).then(function(result){
+            $scope.$parent.stat = result;
+        });    
+    }
+  }
+
 
  $scope.jsSelectBrand = function(id) {
     $scope.brand=id;
     $scope.jsLoadStat(); 
     $scope.jsRefreshClients();    
+    $("#myfullcalendar").fullCalendar("refetchEvents");
  }
 
  $scope.jsSelectManager = function(manager_id) {
     $scope.manager_filter = manager_id;
+    $scope.jsLoadStat(); 
     $scope.jsRefreshClients();
+    $("#myfullcalendar").fullCalendar("refetchEvents");
  }
+
+ $scope.jsCloseOneClient = function(){
+    $scope.one_client = undefined;
+ };
 
  //дефолтные установки выбора даты
  $.datetimeEntry.setDefaults({spinnerImage: 'bower_components/jquery.datetimeentry/spinnerDefault.png', datetimeFormat: 'W N Y H:M'});
 
+//фильтр для выбора уникальных групп менеджеров или дат
+ $scope.jsGetDistinctTitle = function(distinct) {
+    var group_by = $scope.clientsgroupby;
+    var answer = distinct[group_by];
+    if( (group_by == "vd") || (group_by == "out") ) {
+      answer = answer.substr(0,7);
+      var an = answer.split("-");
+      answer = an[1]+"-"+an[0];
+    } else if (group_by == "model") {
+      if($scope.models[answer]) {
+        answer = $scope.models[answer].model;
+      } else {
+        answer = "Модель не указана";
+      }
+    }
+    return answer;
+ }        
+
+
  //клик в меню
  $scope.jsSelectLeftMenu = function(menu_item, $index) {
           $scope.clientsgroupby = menu_item.group_by; 
+          $scope.searchstring = "";
           $scope.leftmenu.active = $index;  
           $scope.leftmenu.current_filter = menu_item.filter;  
           console.info("SELECT LEFT MENU=", menu_item, $index);
@@ -924,16 +1033,72 @@ $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
 
  $scope.jsRefreshClients = function() {
     if(!$scope.clientsgroupby) return true;
-    $scope.clients_current_i = 1;
     console.info("jsRefreshClients");
+    $scope.clients_current_i = 1;
 
     var query = angular.extend( {brand:$scope.brand, limit: {start:0, end:LIST_LENGTH}}, $scope.leftmenu.current_filter);
     $scope.clients_query = angular.extend( query, {group_by:$scope.clientsgroupby, manager: $scope.manager_filter} );
 
     myApi.getClient( $scope, $scope.clients_query ).then(function(result){
         $scope.clients = result;
+        $scope.clients_distincts = $scope.clientsToFilter( $scope.clients );
+        $scope.clients_by_distinct = $scope.clientsByDistinct( $scope.clients, $scope.clients_distincts );
     });
  }
+
+ $scope.jsSelectGroup = function(new_group) {
+  $scope.clientsgroupby = new_group;
+  $scope.jsRefreshClients();
+ }
+
+  $scope.clientsByDistinct = function(clients, distincts) {
+    var answer = {};
+    var compare;
+    $.each(distincts, function(i, dist){
+      var index = dist[ $scope.clientsgroupby ];
+      if( ($scope.clientsgroupby == "vd") || ($scope.clientsgroupby == "out") ) index = dist[ $scope.clientsgroupby ].substr(0,7);
+
+      answer[ index ] = _.filter(clients, function(client){
+        if( ($scope.clientsgroupby == "vd") || ($scope.clientsgroupby == "out") ) {
+          compare = (client[ $scope.clientsgroupby ].substr(0,7) == dist[ $scope.clientsgroupby ].substr(0,7) );
+        } else {
+          compare = (client[ $scope.clientsgroupby ] == dist[ $scope.clientsgroupby ] );  
+        }
+        
+
+        return compare;
+      });
+    });
+
+    return answer;
+  }
+
+  var indexedTeams = [];       
+  $scope.clientsToFilter = function(clients) {
+        indexedTeams = [];
+
+        //console.info("make_group", $scope.clientsgroupby);
+
+        var answer = _.filter(clients, function(client){
+
+          if( ($scope.clientsgroupby == 'vd') || ($scope.clientsgroupby == 'out') ) {
+            if( indexedTeams.indexOf(client[ $scope.clientsgroupby ].substr(0,7))==-1) {
+              indexedTeams.push(client[ $scope.clientsgroupby ].substr(0,7));
+              return true;
+            }
+
+          } else {
+            if(indexedTeams.indexOf(client[$scope.clientsgroupby])==-1) {
+              indexedTeams.push(client[$scope.clientsgroupby]);
+              return true;
+            }
+
+          }
+
+
+        });
+        return answer;
+  }        
 
 
  //если таблица выдач, то порядок клиентов обратный

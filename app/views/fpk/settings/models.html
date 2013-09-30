@@ -1,0 +1,14 @@
+<div class="scrollable_div">
+	<h2>Модели автомобилей</h2>
+	<div class="gridStyle" ng-grid="gridOptions"></div>
+	<br>
+	<button class="btn btn-success btn-sm" ng-click="jsAddNewModel()"><i class="icon-plus"></i>Добавить новую модель</button> 
+	<button ng-if="mySelections[0].model" class="btn btn-danger btn-sm pull-right" ng-click="jsDeleteSelectedModel()"><i class="icon-trash"></i> Удалить <b>{{mySelections[0].model}}</b></button>
+	<hr>
+	<ol>
+	<li>Редактирование значений запускается кликом в ячейку. Данные сохраняются автоматически.</li>
+	<li>Короткое название должно быть не больше 7 символов. Оно используется в списке клиентов.</li>
+	<li>Показывать - если 1, то данный автомобиль показывается в выборе модели менеджером. Иначе ставьте 0.</li>
+	<li>Вы не сможете удалить модель, если она используется в клиентах.</li>
+	</ol>
+</div>

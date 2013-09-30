@@ -1,9 +1,8 @@
-  <li ng-repeat="distinct in clientsToFilter()"><h2>{{distinct.manager}}</h2>
   <!-- {{jsGetDistinctTitle(distinct)}} -->
                 <!-- | filter:filterDistinct | orderBy:clientsgroupby:jsOrder(clientsgroupby) -->
 
         <ol class="clients_list clearfix noselectable">
-                  <li ng-repeat="client in local_clients | jsFilterClients:distinct:clientsgroupby" class="client_card" myid="{{client.id}}">
+                  <li ng-repeat="client in jsClientsInDistinct()" class="client_card" myid="{{client.id}}">
 
                         <div class="client_container" ng-click="jsOpenClient(client);">
                            <div class="client_car" title="{{client.status}}" style="background:-webkit-gradient(linear, right top, left top, color-stop({{car_status[client.status].procent}}, #2b365a), color-stop({{car_status[client.status].procent}}, #516F8F)) !important;">
@@ -22,13 +21,14 @@
                           <div class="client_info" ng-click="client._edit = !client._edit">
                             <i class='icon-phone'></i>{{client.phone1}} {{client.phone11}}<span ng-if="client.phone2">, </span>{{client.phone2}} {{client.phone22}}<span ng-if="client.phone3">,</span> {{client.phone3}} {{client.phone33}} {{client.phone4}} {{client.phone44}}<br>
                             {{client.adress}}
-                            <span ng-if="client.cost"><i class='icon-dollar'></i> {{client.cost | currency}}</span>
+                            <span ng-if="client.cost"><i class='icon-dollar'></i> {{client.cost}} руб.</span>
                             <br>
                             <span ng-if="client.creditmanager">[оплата: <b>{{client.creditmanager}}</b>]<br></span>
-                            <span ng-if="client.commercial">[откуда узнали: <b>{{client.commercial}}</b>]<br></span>
+                            <span ng-if="client.commercial_id">[откуда узнали: <b>{{jsFindInArray(commercials,"id",client.commercial_id).title}}</b>]<br></span>
                             <span ng-if="client.vin">[VIN: <b>{{client.vin}}</b>]<br></span>
                             <span ng-if="client.email">[Email: <b>{{client.email}}</b>]<br></span>
-                            {{client.text}}
+                            <span ng-if="client.text">{{client.text}}<br></span>
+                            [Менеджер: <i class="icon-user"></i><b>{{jsFindInArray(managers,"id",client.manager_id).fio}}</b>]<br>
                           </div>
                           <div ng-if="client._edit == true" class="client_edit" jq-show-effect="client._edit == true" jq-options="{type:'slide', duration:200, delay:200, hideImmediately: true}">
                             
@@ -42,6 +42,7 @@
                               </div>
 
                             </div>
+
 
                             <div class="row">
 
@@ -87,15 +88,13 @@
                               <div class="col-md-6 but">
                                     <div class="btn-group">
                                       <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                                        Откуда узнали: <b>Телевидение</b> <span class="caret"></span>
+                                        Откуда узнали: <b>{{jsFindInArray(commercials,"id",client.commercial_id).title}}</b> <span class="caret"></span>
                                       </button>
-                                      <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#">Action</a></li>
-                                        <li><a href="#">Another action</a></li>
-                                        <li><a href="#">Something else here</a></li>
+                                      <ol class="dropdown-menu" role="menu">
+                                        <li ng-click="client.commercial_id = comm.id" ng-repeat="comm in commercials"><a>{{comm.title}}</a></li>
                                         <li class="divider"></li>
-                                        <li><a href="#">Separated link</a></li>
-                                      </ul>
+                                        <li ng-click="client.commercial_id=0"><a>Неизвестно</a></li>
+                                      </ol>
                                     </div>                              
                               </div>
 
@@ -121,14 +120,15 @@
                               <div class="col-md-6 but">
                                     <div class="btn-group">
                                       <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                                        Вид оплаты: <b>Кредит</b> <span class="caret"></span>
+                                        Вид оплаты: <b>{{client.creditmanager}}</b> <span class="caret"></span>
                                       </button>
                                       <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#">Action</a></li>
-                                        <li><a href="#">Another action</a></li>
-                                        <li><a href="#">Something else here</a></li>
+                                        <li ng-click="client.creditmanager='Кредит - {{credit.fio}}'" ng-repeat="credit in credit_managers"><a href="#">Кредит - {{credit.fio}}</a></li>
                                         <li class="divider"></li>
-                                        <li><a href="#">Separated link</a></li>
+                                        <li ng-click="client.creditmanager='Наличный расчет'"><a>Наличный расчет</a></li>
+                                        <li ng-click="client.creditmanager='Кредит - самостоятельно'"><a>Кредит - самостоятельно</a></li>
+                                        <li ng-click="client.creditmanager='Безналичный расчёт'"><a>Безналичный расчёт</a></li>
+                                        <li ng-click="client.creditmanager='Лизинг'"><a>Лизинг</a></li>
                                       </ul>
                                     </div>                              
                               </div>
@@ -196,8 +196,15 @@
 
                             <div class="row">
                             
-                              <div class="col-md-12">
+                              <div class="col-md-6">
                                 <textarea class="client_adress" ng-model="client.adress" msd-elastic placeholder="паспортные данные и адрес"></textarea>
+                              </div>
+
+                              <div class="col-md-6">
+                                <div class="input-group input-group-sm vin_group">
+                                  <input type="text" class="form-control" ng-model="client.vin" placeholder="Vin-код или номер заказа">
+                                  <span class="input-group-addon">Vin</span>
+                                </div>                              
                               </div>
 
                             </div>
@@ -214,6 +221,29 @@
                               <div class="col-md-6">
                                 <button class="btn btn-success btn-sm" ng-click="jsClientSave(client)">Сохранить</button>
                               </div>
+
+                            <div class="row">
+                              <div class="col-md-6 but selectmanager">
+                                    <div class="btn-group">
+                                      <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                                        Менеджер: <b>{{jsFioShort(jsFindInArray(managers,"id",client.manager_id).fio)}}</b> <span class="caret"></span>
+                                      </button>
+                                      <ul class="dropdown-menu" role="menu">
+                                          <li ng-click="client.manager_id=manager.id" ng-repeat="manager in managers | onlyManager:true"><a><i class="icon-user"></i>{{manager.fio}}</a></li>
+
+                                            <li class="dropdown-submenu"><a>Остальные</a>
+                                             <ul class="dropdown-menu">
+                                              <li ng-click="jsSelectManager(manager.id)" ng-repeat="manager in managers | onlyManager:false"><a>{{manager.fio}}</a></li>
+                                             </ul>
+                                            </li>
+
+          
+                                      </ul>
+                                    </div>                              
+                              </div>
+                            </div>
+
+
                             </div>
 
                           </div>
@@ -224,7 +254,10 @@
                               <div class="do_line" ng-click="do._visible = !do._visible" ng-class="{'did':do.checked!='0000-00-00 00:00:00'}">
                                 <div class="datemini" ng-model="do.date2" title="{{do.date2}}"></div>
                                 <div class="do_type_icon"><img ng-src="/images/do_type/{{do_types_array[do.type].img}}" width="20px" height="20px" title="Тип дела: {{do.type}}"></div>
-                                <div class="do_text">{{do.text}}</div>
+                                <div class="do_text">
+                                  {{do.text}} 
+                                  <span ng-if="do.host_id!=client.manager_id && do.host_id>0">[Поручил: <i class="icon-user"></i>{{jsFioShort(jsFindInArray(managers,"id",do.host_id).fio)}}]</span>
+                                </div>
                               </div>
                               
                               <div ng-if="do._visible == true" jq-show-effect="do._visible == true" jq-options="{type:'slide', duration:150, delay:200, hideImmediately: true}" class="do_edit" style="display:none;">
@@ -249,5 +282,3 @@
 
             </li>
         </ol>
-
-</li>

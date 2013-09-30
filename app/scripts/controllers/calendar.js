@@ -5,17 +5,13 @@ myApp.controller('calendarCtrl', function ($scope, $resource, $rootScope, $locat
 
 $scope.$parent.leftmenu = { active:1,
                 items : [
-                  {id:0, title:"Календарь отдела", group_by: "manager", 
-                   filter: {no_out: true, no_dg: true, no_vd:true}},
+                  {id:0, title:"Календарь отдела", group_by: "manager"},
 
-                  {id:1, title:"Мой календарь", group_by: "manager", 
-                   filter: {no_out: true, dg: true, no_vd:true}},
+                  {id:1, title:"Мой календарь", group_by: "manager"},
 
-                  {id:2, title:"Журнал выдач", group_by: "vd", 
-                   filter: {no_out: true, no_dg: false, vd:true}},
+                  {id:2, title:"Журнал выдач", group_by: "vd"},
 
-                  {id:3, title:"Журнал тест-драйвов", group_by: "creditmanager", 
-                   filter: {no_out: true, no_dg: true, no_vd:true, credit: true}}
+                  {id:3, title:"Журнал тест-драйвов", group_by: "creditmanager"}
 
                   ]
                 };
@@ -34,13 +30,35 @@ $scope.$parent.leftmenu = { active:1,
         timeFormat: 'H:mm',
         axisFormat: 'H:mm',
         weekends:true,
+        firstHour: 9,
         selectable: false,
         selectHelper: true,
+        eventClick: function(calEvent, jsEvent, view) {
+
+//        alert('Event: ' + calEvent.title);
+        console.info("calEvent = ",calEvent);
+
+        myApi.getClientFull($scope, calEvent.client_id).then(function(client){
+          console.info("client = ", client);
+          $scope.$parent.one_client = client;
+          $scope.$parent.one_client[0]._visible = true;
+          $.each($scope.$parent.one_client[0].do, function(i, mydo){
+            if(mydo.id == calEvent.myid) mydo._visible = true;
+          });
+        });
+//        alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+//        alert('View: ' + view.name);
+
+        // change the border color just for fun
+        $(this).css('border-color', 'red');
+
+        },
         viewDisplay: function(view) {
         	setTimeout(function(){
         		onResize();
         	},5);
         },
+
         defaultView:'agendaWeek', //agendaWeek
         header:{
           left: 'month agendaWeek agendaDay basicWeek basicDay',
@@ -75,12 +93,16 @@ $scope.$parent.leftmenu = { active:1,
 	            ( ( (el.date2>=start) && (el.date2<=end) ) || ((el.date2>=start) && (el.date2<=end)) )) {
 
 	        	var alld = /00:00:00/.test(el.date2);
-
+            var manager = $scope.jsFindInArray($scope.managers,"id",el.manager_id)
+            if(manager) manager = '['+$scope.jsFioShort(manager.fio)+']';
+            var title = el.text + " ("+$scope.jsFioShort(el.fio, true) + " - " + el.short+" "+manager+ ")";
 	            caldata.push(
-	               {title: el.text, 
+	               {title: title, 
 	                start:el.date2, 
 	                allDay: alld,
-	                end:el.date2
+	                end:el.date2,
+                  myid: el.id,
+                  client_id: el.client
 	               } 
 	               );                
 	          } 

@@ -1,5 +1,6 @@
 <div id="panel_top">
 
+
 <nav class="navbar navbar-default navbar-static-top navbar-inverse" role="navigation">
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
@@ -92,7 +93,6 @@
 
 <div id="panel_center" style="left:{{left_panel_width}}px">
     <div id="panel_center_header">
-
        <div class="make_center">
             <div class="menu_mini select_brand">
                 <div class="btn-group">
@@ -165,11 +165,16 @@
 
         </div><!-- header -->   
 
-
-            
             <div id="center_content">
 
       <div class="" app-view-segment="1"></div>
+
+      <div id="new_client_div" ng-if="one_client">
+          <div class="close_one_client" ng-click="jsCloseOneClient()"><i class="icon-cancel-1"></i></div>
+          <div class="one_client_container">
+            <div client-list="one_client" my-attr="one_client"></div>
+          </div>
+      </div>
 
 
 <!--

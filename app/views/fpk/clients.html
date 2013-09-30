@@ -1,18 +1,17 @@
 
-              <div id="cards_scrollable" infinite-scroll="myPagingFunction()" infinite-scroll-distance="0">
+              <div id="cards_scrollable" infinite-scroll="myPagingFunction()" infinite-scroll-distance="500">
                <div id="cards_container">
 
                 <div id="cards_header" >                  
-                    <div class="btn-group col-sm-3" style="display:block">
+                    <div class="btn-group col-sm-3" style="display:none">
                         <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
                           Груп: {{clientsgroupby}}
                           <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
                           <li role="presentation" class="dropdown-header">Группировать:</li>                 
-                          <li ng-click="clientsgroupby = 'manager';"><a href="#"><span class='hot_key'>alt + 1</span>по менеджеру</a></li>
-                          <li ng-click="clientsgroupby = 'model';"><a href="#"><span class='hot_key'>alt + 2</span>по модели</a></li>
-                          <li><a href="#"><span class='hot_key'>alt + 3</span>по дате</a></li>
+                          <li ng-click="jsSelectGroup('manager');"><a href="#"><span class='hot_key'>alt + 1</span>по менеджеру</a></li>
+                          <li ng-click="jsSelectGroup('model');"><a href="#"><span class='hot_key'>alt + 2</span>по модели</a></li>
                         </ul>
 
                     </div>
@@ -50,9 +49,11 @@
                 <!-- <button ng-click="myPagingFunction()">Load More...</button> -->
 
               <ul class="group_title">
+                <li ng-repeat="distinct in clients_distincts"><h2>{{jsGetDistinctTitle(distinct)}}</h2>
 
-                  <div client-list="clients" my-attr="clients" my-distinct="distinct"></div>
+                  <div client-list="clients" my-attr="clients" my-distinct="distinct" clients-by-distinct="clients_by_distinct"></div>
 
+                </li>
               </ul>
 
                 </li>

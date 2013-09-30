@@ -1,7 +1,7 @@
 
 
 
-angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 'ui.redactor.multi', 'ui.calendar', "ng", "infinite-scroll", "monospaced.elastic", 'route-segment', 'view-segment'])
+angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 'ui.redactor.multi', 'ui.calendar', "ng", "infinite-scroll", "monospaced.elastic", 'route-segment', 'view-segment', 'ngGrid'])
     .config(function ($routeProvider, $locationProvider, $compileProvider, $routeSegmentProvider) {
 
 //    $locationProvider.html5Mode(false).hashPrefix('!');
@@ -15,8 +15,11 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
             .when('/fpk', 's1')
             .when('/fpk/clients', 's1.clients')
             .when('/fpk/stat', 's1.stat')
+            .when('/fpk/stat_table', 's1.stat_table')
             .when('/fpk/news', 's1.news')
             .when('/fpk/calendar', 's1.calendar')
+            .when('/fpk/settings', 's1.settings')
+            .when('/fpk/settings/models', 's1.settings.models')
 
             .segment('user', {
                 templateUrl: 'views/user.html',
@@ -47,6 +50,20 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
                 templateUrl: 'views/fpk/stat.html',
                 controller: 'statCtrl'
             })
+            .segment('stat_table', {
+                templateUrl: 'views/fpk/stat/stat_table.html',
+                controller: 'statTableCtrl'
+            })
+            .segment('settings', {
+                templateUrl: 'views/fpk/settings.html',
+                controller: 'settingsCtrl'
+            })
+            .within()
+            .segment('models', {
+                templateUrl: 'views/fpk/settings/models.html',
+                controller: 'settingsCtrl'
+            })
+
             .up();
 
         $routeProvider.otherwise({redirectTo: '/fpk/clients'});
@@ -107,18 +124,8 @@ function MainCtrl($scope, $routeSegment, myApi) {
 
     $scope.user_fio = "Login...";
 
-    jsRefreshToken().done(function () {
-        ///////////////////////////////////////////////
-        myApi.loadUserInfo($scope).then(function(user){
-          console.info(user,"user Loaded");
-          $scope.the_user = user.user[0];
-          $scope.brand = user.user[0].brand; //бренд по умолчанию
-          $scope.managers = user.users; //список всех менеджеров
-
-        });  
-        ///////////////////////////////////////////////
-        console.info("refresh_token_did");
-        //загружаем таблицу моделей
+    $scope.jsLoadModelsFromServer = function() {
+         var dfd = new $.Deferred();
          myApi.getModels($scope).then(function(data){ 
             var answer = {};
             var answer2 = {};
@@ -138,7 +145,30 @@ function MainCtrl($scope, $routeSegment, myApi) {
             $scope.brands = answer2;
             $scope.users_group = answer3;
             $scope.users_groups = data.users_group;
+            dfd.resolve();
          }); //getModels
+         return dfd.promise();
+    }
+
+
+
+    jsRefreshToken().done(function () {
+        ///////////////////////////////////////////////
+        myApi.loadUserInfo($scope).then(function(user){
+          console.info(user,"user Loaded");
+          $scope.the_user = user.user[0];
+          $scope.brand = user.user[0].brand; //бренд по умолчанию
+          $scope.managers = user.users; //список всех менеджеров
+          $scope.credit_managers = _.filter(user.users, function(user){
+            return (user.user_group == 7);
+          });
+          $scope.commercials = user.commercials;
+
+        });  
+        ///////////////////////////////////////////////
+        console.info("refresh_token_did");
+        //загружаем таблицу моделей
+        $scope.jsLoadModelsFromServer();
          /////////////////////////////////////////////
 
 
@@ -201,5 +231,4 @@ angular.module("ngLocale", [], ["$provide", function ($provide) {
         return PLURAL_CATEGORY.OTHER;
     }, "DATETIME_FORMATS": {"MONTH": ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"], "SHORTMONTH": ["янв.", "февр.", "марта", "апр.", "мая", "июня", "июля", "авг.", "сент.", "окт.", "нояб.", "дек."], "DAY": ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"], "SHORTDAY": ["вс", "пн", "вт", "ср", "чт", "пт", "сб"], "AMPMS": ["AM", "PM"], "medium": "dd.MM.yyyy H:mm:ss", "short": "dd.MM.yy H:mm", "fullDate": "EEEE, d MMMM y 'г'.", "longDate": "d MMMM y 'г'.", "mediumDate": "dd.MM.yyyy", "shortDate": "dd.MM.yy", "mediumTime": "H:mm:ss", "shortTime": "H:mm"}, "id": "ru-ru"});
 }]);
-
 

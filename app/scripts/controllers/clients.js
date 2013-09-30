@@ -5,9 +5,6 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
 
 
 
-
-
-
  $scope.$parent.leftmenu = { active:1,
                 items : [
                   {id:0, title:"В работе", group_by: "manager", 
@@ -22,20 +19,13 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
                   {id:3, title:"Кредиты", group_by: "creditmanager", 
                    filter: {no_out: true, no_dg: true, no_vd:true, credit: true}},
 
-                  {id:4, title:"Out", group_by: "manager", 
+                  {id:4, title:"Out", group_by: "out", 
                    filter: {out: true}},
 
                   {id:5, title:"Администратор", group_by: "manager"}
                   ]
                 };
 
-  $scope.jsLoadStat = function() {
-    if($scope.brand) {
-        myApi.getStat($scope).then(function(result){
-            $scope.$parent.stat = result;
-        });    
-    }
-  }
 
   $scope.jsLoadStat();
 
@@ -49,11 +39,13 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
 
    $scope.clients_current_i = 1;
 
+
+
  $scope.myPagingFunction = function() {
           console.info("page_function");
           var query = $scope.clients_query;
           if(!query) return true;
-          query.limit.start = LIST_LENGTH*$scope.clients_current_i;
+          query.limit.start = LIST_LENGTH*$scope.$parent.clients_current_i;
           query.limit.end = LIST_LENGTH;
 
 
@@ -61,9 +53,12 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
             angular.forEach(result, function(value, key){
               if($scope.clients) $scope.clients.push( value );  
             });
+            $scope.$parent.clients_distincts = $scope.clientsToFilter( $scope.$parent.clients );
+            $scope.$parent.clients_by_distinct = $scope.clientsByDistinct( $scope.$parent.clients, $scope.$parent.clients_distincts );
+
             
 
-            $scope.clients_current_i += 1;
+            $scope.$parent.clients_current_i += 1;
 
           });
    };
@@ -74,9 +69,15 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
     clearTimeout(tm_search);
     tm_search = setTimeout(function(){
       if(searchstring.length>3) {
+          $scope.$parent.clientsgroupby = "manager";
           myApi.searchString($scope, searchstring).then(function(result){
-            $scope.clients = result;
+            $scope.$parent.clients = result;
+            $scope.$parent.clients_distincts = $scope.clientsToFilter( $scope.$parent.clients );
+            $scope.$parent.clients_by_distinct = $scope.clientsByDistinct( $scope.$parent.clients, $scope.$parent.clients_distincts );
+
           });
+      } else {
+        $scope.jsRefreshClients();    
       }
     },1000);
   }
@@ -94,26 +95,33 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
 
 
 
-myApp.directive("clientList", function ($compile, myApi) {
+myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
   return {
 //    template: '{{local_clients}} {{local_clients.length}} hi!', 
     templateUrl: 'views/client_list.html',
     restrict: 'A',
     scope: {
       local_clients: "=myAttr",
-      distinct: "=myDistinct"
+      distinct: "=myDistinct",
+      clients_by_distinct: "=clientsByDistinct"
     },
     link: function ($scope, elm, attrs, clients) {
         $scope.models = $scope.$parent.models;
         $scope.models_array = $scope.$parent.models_array;
         $scope.car_status = $scope.$parent.car_status;
         $scope.car_status_array = $scope.$parent.car_status_array //глобальные статусы
+        $scope.commercials = $scope.$parent.commercials;
+        $scope.jsFindInArray = $scope.$parent.jsFindInArray;
+        //$scope.clients_distincts //= $scope.$parent.clients_distincts;
 
-        $scope.clientsgroupby = $scope.$parent.clientsgroupby //глобальные статусы
-        console.info("...",$scope.clientsgroupby);
+//        $scope.clients_by_distinct = $scope.$parent.clients_by_distinct;
 
         $scope.do_types = $scope.$parent.do_types;
         $scope.do_types_array = $scope.$parent.do_types_array;
+        $scope.jsFioShort = $scope.$parent.jsFioShort;
+
+        $scope.credit_managers = $scope.$parent.credit_managers;
+        $scope.managers = $scope.$parent.managers;
 
         $scope.jsLoadStat = $scope.$parent.jsLoadStat;
         $scope.stat = $scope.$parent.stat;
@@ -121,49 +129,12 @@ myApp.directive("clientList", function ($compile, myApi) {
         $scope.models_array_show = _.filter($scope.$parent.models_array, function(el){ return ( (el.brand == $scope.$parent.brand) && (el.show == 1)); });
 
 
-         var indexedTeams = [];       
-
-         $scope.clientsToFilter = function() {
-                indexedTeams = [];
-
-                //console.info("make_group", $scope.clientsgroupby);
-
-                answer = _.filter($scope.local_clients, function(client){
-
-                  if( $scope.clientsgroupby == 'vd' ) {
-                    if(client.vd && indexedTeams.indexOf(client.vd.substr(0,7))==-1) {
-                      indexedTeams.push(client.vd.substr(0,7));
-                      return true;
-                    }
-
-                  } else {
-                    if(indexedTeams.indexOf(client[$scope.clientsgroupby])==-1) {
-                      indexedTeams.push(client[$scope.clientsgroupby]);
-                      return true;
-                    }
-
-                  }
-
-
-                });
-
-                return answer;
-         }        
-
-
-        //фильтр для выбора уникальных групп менеджеров или дат
-         $scope.jsGetDistinctTitle = function(distinct) {
-            var group_by = $scope.clientsgroupby;
-            var answer = distinct[group_by];
-            if(group_by == "vd") {
-              answer = answer.substr(0,7);
-              var an = answer.split("-");
-              answer = an[1]+"-"+an[0];
-            }
-            return answer;
-         }        
-
-
+        $scope.jsClientsInDistinct = function() {
+          if(!$scope.distinct) return $scope.local_clients;
+          var index = $scope.distinct[$scope.$parent.clientsgroupby];
+          if( ($scope.$parent.clientsgroupby == "vd") || ($scope.$parent.clientsgroupby == "out") ) var index = $scope.distinct[$scope.$parent.clientsgroupby].substr(0,7);
+          return $scope.clients_by_distinct[ index ];
+        }
 
         $scope.jsClientSave = function(client){
           var client_id = client.id;
@@ -180,32 +151,14 @@ myApp.directive("clientList", function ($compile, myApi) {
 
           
           myApi.saveClient($scope, changes, client_id).then(function(value){
-            if(value.affectedRows>0) client._edit = false;
+            if(value.affectedRows>0) {
+              client._edit = false;
+              $("#myfullcalendar").fullCalendar("refetchEvents");
+            }
             else alert("Не могу отправить данные на сервер");
           });
         }
 
-
-        $scope.jsFilterClients111 = function(distinct) {
-          return function(item) {
-              
-              var fieldname = $scope.clientsgroupby ? $scope.clientsgroupby:"manager";
-
-              var compare
-               = true;
-              if( $scope.$parent.leftmenu.active == 2) {
-
-                compare = compare && 
-                    (item.vd.substr(0,7)==distinct.vd.substr(0,7));
-
-              } else if( $scope.$parent.leftmenu.active == 3) {
-                compare = compare && 
-                    (item.creditmanager==distinct.creditmanager);
-              } else if(distinct) compare = (item.manager == distinct.manager);
-              if(compare) return true;
-              else return false;
-            }
-        }
 
         $scope.jsOpenClient = function(client) {
           if(!client.do) {
@@ -228,7 +181,7 @@ myApp.directive("clientList", function ($compile, myApi) {
           var client_id = client.id;
           var do_type_title = do_type.title;
 
-          myApi.addDo(scope, do_type_title, client_id).then(function(result){
+          myApi.addDo($scope, do_type_title, client_id).then(function(result){
             console.info("ADDED",result);
             var insert_id = result.insert_id;
             myApi.getDo(client.id).then(function(value){
@@ -361,6 +314,8 @@ function DoCtrl($scope, myApi) { //контроллер дел
         myApi.saveDo($scope, changes, $scope.client.id).then(function(client_back){
           $scope.backup_copy = angular.copy( $scope.do );
           $scope.client.na_date = client_back[0].na_date; 
+          $("#myfullcalendar").fullCalendar("refetchEvents");
+
           setTimeout(function(){ if($scope.jsLoadStat) $scope.jsLoadStat(); },500);
           //$scope.setX($scope.client.id, client_back[0]);
 

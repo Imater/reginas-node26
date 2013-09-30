@@ -248,9 +248,12 @@ exports.findCalendar = function(request,response) {
 	var start_date = request.query.start_date;
 	var end_date = request.query.end_date;
 	var brand = request.query.brand;
+	var manager_id = request.query.manager;
 
-	console.info("HI:",request.query);
-    pool.query('SELECT * FROM `1_do` WHERE brand = ? AND date2>= ? AND date2<= ? ', [brand, start_date, end_date] , function (err, rows, fields) {
+	var insert_sql = "";
+	if(manager_id>0) insert_sql = "1_do.manager_id = '"+manager_id+"' AND ";
+
+    pool.query('SELECT 1_do.*, 1_clients.fio, 1_models.short FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model WHERE '+insert_sql+' 1_do.brand = ? AND 1_do.date2>= ? AND 1_do.date2<= ? ', [ brand, start_date, end_date] , function (err, rows, fields) {
     		rows = correct_dates(rows);
 		    response.send(rows);
   	});	
@@ -284,18 +287,31 @@ exports.searchString = function(request,response) {
 	var search = request.query.search;
 
 	console.info("HI:",request.query);
-    connection.query('SELECT * FROM `1_clients` WHERE brand = :brand AND `OUT` = "0000-00-00 00:00:00" AND '+
-    					'(fio like :search OR '+
-    					'phone1 like :search OR '+
-    					'phone2 like :search OR '+
-    					'phone3 like :search OR '+
-    					'phone4 like :search OR '+
-    					'adress like :search'+
-    					') LIMIT 1000', {brand:brand, search: ("%"+search+"%")} , function (err, rows, fields) {
-    		rows = correct_dates(rows);
-    		console.info(err);
-		    response.send(rows);
-  	});	
+
+	pool.query("SELECT DISTINCT(client) FROM 1_do WHERE brand = '"+brand+"' AND (text LIKE '%"+search+"%' OR comment LIKE '%"+search+"%') LIMIT 2000", 
+		function (err, clients) {
+
+		var ids = "(";
+		$.each(clients, function(i, cl){
+			ids += cl.client+",";
+		});
+		ids += " -1)";
+
+	    connection.query('SELECT * FROM `1_clients` WHERE id IN '+ids+' OR (brand = :brand AND `OUT` = "0000-00-00 00:00:00" AND '+
+	    					'(fio like :search OR '+
+	    					'phone1 like :search OR '+
+	    					'phone2 like :search OR '+
+	    					'phone3 like :search OR '+
+	    					'phone4 like :search OR '+
+	    					'adress like :search'+
+	    					')) LIMIT 2000', {brand:brand, search: ("%"+search+"%")} , function (err, rows, fields) {
+	    		rows = correct_dates(rows);
+	    		console.info(err);
+			    response.send(rows);
+	  	});	
+
+	});
+
 }
 
 
@@ -465,8 +481,8 @@ exports.findAllClients = function(request, response) {
 
 	var f_limit = filter.limit ? ' LIMIT '+filter.limit.start+','+filter.limit.end : ' LIMIT 100';
 
-	var f_order = filter.group_by ? ' ORDER BY '+filter.group_by : '';
-	if(filter.group_by == "vd") f_order+=" DESC";
+	var f_order = filter.group_by ? ' ORDER BY `'+filter.group_by+'`' : '';
+	if( (filter.group_by == "vd") || (filter.group_by == "out") ) f_order+=" DESC";
 
 
 	var myquery = 'SELECT * FROM `1_clients` WHERE ' + f_filter + " true " + f_order + f_limit;
@@ -483,6 +499,30 @@ exports.findAllClients = function(request, response) {
 }
 
 
+exports.findClient = function(request, response) {
+
+	var manager = request.query.manager;
+	var client_id = request.params.id;
+
+	console.info(request,client_id);
+
+	var myquery = 'SELECT * FROM `1_clients` WHERE id = ? LIMIT 1';
+
+	console.info("query = ", myquery);
+
+    pool.query(myquery, [client_id], function (err, rows, fields) {
+    	pool.query('SELECT * FROM `1_do` WHERE client = ? ORDER by date2 DESC', [client_id], function (err, does, fields) {
+    		does = correct_dates( does );
+  			rows = correct_dates( rows );
+  			rows[0].do = does;
+	  		response.send(rows);
+	  	});
+  	});	
+
+}
+
+
+
 
 exports.loadStat = function(request, response) {
 
@@ -492,7 +532,9 @@ exports.loadStat = function(request, response) {
 	var answer = {};
 
 	var brand_id = request.query.brand;
-	var cache_id = md5(JSON.stringify(request.query.filters) + brand_id);
+	var manager_id = request.query.manager;
+	console.info("manager_stat", manager_id);
+	var cache_id = md5(JSON.stringify(request.query.filters) + brand_id + manager_id);
 
 	if(!stat_cache[brand_id]) {
 		stat_cache[brand_id] = {};
@@ -504,12 +546,20 @@ exports.loadStat = function(request, response) {
 		console.info("Stat from cache "+cache_id+", brand = ", brand_id);
 	} else {
 
+		if(manager_id>0) {
+			var manager_sql = " manager_id = '"+manager_id+"' AND "
+		} else {
+			var manager_sql = "";			
+		}
+
 		$.each(filter.items, function(i, el){
 			if(el.filter) {
 				el.filter.brand = request.query.brand;
-				f_filter = jsMakeClientFilter(el.filter);		
+				f_filter = jsMakeClientFilter(el.filter);	
 
-				var myquery = 'SELECT count(*) cnt FROM `1_clients` WHERE ' + f_filter + " true ";			
+
+				var myquery = 'SELECT count(*) cnt FROM `1_clients` WHERE ' + manager_sql + f_filter + " true ";			
+				console.info(myquery);
 
 				var dfd = (function(){
 					var dfd = $.Deferred();
@@ -576,7 +626,9 @@ exports.saveClient = function(request, response) {
 	query = "UPDATE 1_clients SET ? WHERE id = '"+client_id+"'";
 
     pool.query(query, changes, function (err, rows, fields) {
-    	response.send({affectedRows: rows.affectedRows});
+    	jsUpdateClient(client_id).done(function(client_id){
+    		response.send({affectedRows: rows.affectedRows});
+    	});
 
   	});	
   });
@@ -593,9 +645,9 @@ exports.newDo = function(request, response) {
 
  jsCheckToken(request.query.token).done(function(user_id){
 
-	query = "INSERT INTO 1_do SET client = ?, type = ?, text = ?, brand = ?, date2 = DATE_ADD(NOW(), INTERVAL 16 MINUTE)";
+	query = "INSERT INTO 1_do SET manager_id = ?, client = ?, type = ?, text = ?, brand = ?, date2 = DATE_ADD(NOW(), INTERVAL 6 MINUTE), host_id = ? ";
 
-    pool.query(query, [ client_id, do_type, do_type, brand_id ], function (err, rows, fields) {
+    pool.query(query, [ user_id, client_id, do_type, do_type, brand_id, user_id ], function (err, rows, fields) {
     	var insert_id = rows.insertId;
     	response.send({insert_id: insert_id});
     	console.info("ADDED rows = ", rows, err);
@@ -615,6 +667,60 @@ exports.loadModels = function(request, response) {
   	});	
 
 }
+
+exports.newModel = function(request, response) {
+
+ var brand_id = request.query.brand;
+
+ console.info(brand_id);
+
+ jsCheckToken(request.query.token).done(function(user_id){
+    pool.query('INSERT INTO `1_models` SET `brand` = ?, `model` = "Новая модель", `cost` = 0, `show` = 1, `short` = "Новая"',[brand_id], function (err, rows, fields) {
+		response.send({rows:rows, err: err});
+  	});	
+  });
+
+}
+
+exports.saveModel = function(request, response) {
+
+ var brand_id = request.query.brand;
+ var model_id = request.query.model_id;
+ var changes = request.body.changes;
+
+ console.info("Сохраняю",brand_id, changes);
+
+ jsCheckToken(request.query.token).done(function(user_id){
+   $.each(changes, function(i, ch){
+    	pool.query('UPDATE `1_models` SET ? WHERE id = "'+ch.id+'"',[ch], function (err, rows, fields) {
+			response.send({rows:rows, err: err});
+  		});	
+   });
+
+  });
+
+}
+
+exports.deleteModel = function(request, response) {
+
+ var brand_id = request.query.brand;
+ var del_id = request.query.del_id;
+
+ jsCheckToken(request.query.token).done(function(user_id){
+    pool.query('SELECT count(*) cnt FROM `1_clients` WHERE model = ?',[del_id], function (err, rows, fields) {
+    	if(rows[0].cnt>0) {
+    	  response.send({rows:rows, err: err});	
+    	} else {
+		  pool.query('DELETE FROM `1_models` WHERE id = ?',[del_id], function (err, rows, fields) {
+		  	response.send({rows:rows, err: err});
+		  });
+		  
+    	}
+  	});	
+  });
+
+}
+
 
 exports.loadStatAll = function(request, response) {
     pool.query('SELECT id, brand, model, creditmanager, zv, vz, tst, dg, vd, `out`, status, commercial, manager FROM `1_clients`', function (err, rows, fields) {
@@ -828,6 +934,7 @@ function jsUpdateClient(client_id) {
 	var dfd = $.Deferred();
 
 
+ pool.query('SELECT manager_id, 1_users.fio FROM `1_clients` LEFT JOIN `1_users` ON 1_users.id = 1_clients.manager_id WHERE 1_clients.id=?',[client_id], function (err, the_client, fields) {
   	pool.query('SELECT * FROM `1_do` WHERE client=? ORDER by date2',[client_id], function (err, client_do, fields) {
   			client_do = correct_dates(client_do, "no_zero_dates");
 
@@ -838,12 +945,17 @@ function jsUpdateClient(client_id) {
   						 dg:"0000-00-00 00:00:00",
   						 vd:"0000-00-00 00:00:00",
   						 out:"0000-00-00 00:00:00",
+  						 manager:"-1",
   						 na_id:"",
   						 na_date:"0000-00-00 00:00:00",
   						 na_title:"",
   						 na_type:"",
   						 out_reason:""
   						 }
+
+  			answer['manager'] = the_client[0].fio;
+
+  			console.info("MAN = ", answer["manager"]);
 
   			var first_action = false;
   			$.each(client_do, function(i,mydo){
@@ -941,6 +1053,7 @@ function jsUpdateClient(client_id) {
 
   			
   	});
+  });
 return dfd.promise();
  
 }
@@ -1007,7 +1120,9 @@ exports.loadUserInfo = function(request, response) {
  	console.info("USER_ID:", user_id);
 	pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone FROM `1_users` WHERE id = ? LIMIT 1',[user_id], function (err, user, fields) {
 		pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone FROM `1_users` WHERE brand=? ORDER BY fio',[user[0].brand], function (err, users, fields) {
-		response.send({user: user, users: users});
+			pool.query('SELECT * FROM `1_commercials`', function (err, commercials, fields) {
+				response.send({user: user, users: users, commercials: commercials});
+			});
 		});
 	});
 
@@ -1058,6 +1173,58 @@ exports.parseManagers = function(request, response) {
 	});
 }
 
+exports.parseManagers2 = function(request, response) {
+
+	pool.query('SELECT id, fio, brand FROM `1_users`', function (err, sql_users, fields) {
+		var users = {};
+		$.each(sql_users, function(i, user){
+			if(!users[user.brand]) users[user.brand] = {};
+			users[user.brand][user.fio] = user;
+		});
+
+
+		pool.query('SELECT id, manager, brand FROM `1_do`', function (err, clients, fields) {
+			count = 0;
+			$.each(clients, function(i, client){
+				client.brand = parseInt(client.brand);
+
+				if(users[client.brand] && users[client.brand][client.manager]) var manager_id = users[client.brand][client.manager].id;
+				else var manager_id = -1;
+
+				var txt_query = "UPDATE 1_do SET manager_id = '"+manager_id+"' WHERE id='"+client.id+"'; ";
+				pool.query(txt_query, function (err, rows, fields) {
+						console.info([err, rows]);
+				});
+
+				//console.info("client = ", client.id, client.manager, manager_id );
+			});
+		});	
+
+	});
+}
+
+
+exports.exportClients = function(request, response) {
+
+	pool.query('SELECT * FROM `1_clients` WHERE brand = 1 OR brand = 13', function (err, clients, fields) {
+		var users = {};
+		clients = correct_dates(clients);
+		var txt1 = "";
+		$.each(clients[0], function(key, value){
+				if(value==NaN) key = ".";
+				if( !_.isFunction(key) ) txt1 += ""+key+";";
+		});
+		txt1 += "<br>";
+		$.each(clients, function(i, client){
+			$.each(client, function(key, value){
+				if(value==NaN) value = ".";
+				if( !_.isFunction(value) ) txt1 += ""+value+";";
+			});
+			txt1 += "<br>";
+		});
+    	response.send( txt1 );
+	});
+}
 
 
 exports.loadStatTable = function(request, response) {
@@ -1154,11 +1321,14 @@ exports.loadStatTable = function(request, response) {
 app.get('/migrate', database.loadAllFromMySQL)
 app.get('/api/v1/parseManagers', database.parseManagers)
 
+app.get('/api/v1/parseManagers2', database.parseManagers2)
+
 
 app.get('/api/v1/bigdata', database.loadAllBig)
 app.get('/api/v1/bigdata2', database.loadAllBig2)
 
 app.get('/api/v1/client', database.findAllClients );
+app.get('/api/v1/client/:id', database.findClient );
 app.get('/api/v1/do/:id', database.findDoById );
 app.get('/api/v1/calendar', database.findCalendar );
 
@@ -1169,6 +1339,8 @@ app.get('/api/v1/search', database.searchString );
 
 app.get('/api/v1/client/update/:id', database.updateClient );
 
+app.get('/api/v1/clients_export', database.exportClients );
+
 
 app.get('/api/v1/stat', database.loadStat );
 app.get('/api/v1/stat/all', database.loadStatAll );
@@ -1177,6 +1349,10 @@ app.get('/api/v1/stat/cup/cars', database.loadStatCupCars );
 
 app.get('/api/v1/models', database.loadModels );
 app.get('/api/v1/user/info', database.loadUserInfo );
+
+app.post('/api/v1/models', database.newModel );
+app.put('/api/v1/models', database.saveModel );
+app.delete('/api/v1/models', database.deleteModel );
 
 app.put('/api/v1/do/:id', database.saveDo );
 app.put('/api/v1/client/:id', database.saveClient );
