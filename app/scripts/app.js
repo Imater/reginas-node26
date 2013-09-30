@@ -150,7 +150,7 @@ function MainCtrl($scope, $routeSegment, myApi) {
          return dfd.promise();
     }
 
-
+    $scope.brand = localStorage.getItem("brand")?localStorage.getItem("brand"):1;
 
     jsRefreshToken().done(function () {
         ///////////////////////////////////////////////
@@ -158,6 +158,7 @@ function MainCtrl($scope, $routeSegment, myApi) {
           console.info(user,"user Loaded");
           $scope.the_user = user.user[0];
           $scope.brand = user.user[0].brand; //бренд по умолчанию
+          localStorage.setItem("brand", $scope.brand);
           $scope.managers = user.users; //список всех менеджеров
           $scope.credit_managers = _.filter(user.users, function(user){
             return (user.user_group == 7);
@@ -168,7 +169,11 @@ function MainCtrl($scope, $routeSegment, myApi) {
         ///////////////////////////////////////////////
         console.info("refresh_token_did");
         //загружаем таблицу моделей
-        $scope.jsLoadModelsFromServer();
+        $scope.jsLoadModelsFromServer().then(function(){
+            setTimeout(function(){
+            $scope.$broadcast('user_loaded', $scope.the_user);
+            },1);
+        });
          /////////////////////////////////////////////
 
 

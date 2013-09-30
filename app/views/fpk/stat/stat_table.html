@@ -1,3 +1,39 @@
-<h2>Подробная статистика</h2>
+<div class="scrollable_div">
+		<h2>Подробная статистика</h2>
+		<h4>1. Договора по моделям</h4>
+                <ul class="nav nav-tabs top_tabs">
+                  <li ng-class="{active:stat_view_switch==0}" ng-click="stat_view_switch=0"><a>Выдачи</a></li>
 
-<div class="gridStyle" ng-grid="gridOptions"></div>
+                  <li ng-class="{active:stat_view_switch==1}" ng-click="stat_view_switch=1"><a>Договора</a></li>
+
+                  <li ng-class="{active:stat_view_switch==2}"  ng-click="stat_view_switch=2"><a>Расторжения</a></li>
+
+                  <li ng-class="{active:stat_view_switch==3}" ng-click="stat_view_switch=3"><a>Тест-драйвы</a></li>
+
+                  <li ng-class="{active:stat_view_switch==4}" ng-click="stat_view_switch=4"><a>Визиты</a></li>
+
+                  <li ng-class="{active:stat_view_switch==5}" ng-click="stat_view_switch=5"><a>Звонки</a></li>
+
+                </ul>	
+        <table class="stat_table">
+		<tr ng-repeat="line in stat_labels" class="stat_table_header">
+			<th>
+			Модель
+			</th>
+			<th ng-repeat="col in line.cols">
+			{{col.col}}
+			</th>
+		</tr>
+		<tr ng-repeat="line in stat_table">
+			<td class="line_name">
+			{{line.model}}
+			</td>
+			<td ng-repeat="col in line.cols">
+			<div ng-repeat="do_type in col.do_types" title="{{do_type.do_title}}" class="do_type_div">
+				<img ng-src="images/do_type/{{do_type.do_image}}">
+				<span ng-if="do_type.value">{{do_type.value}}</span>
+			</div>
+			</td>
+		</tr>
+		</table>
+</div>

@@ -551,7 +551,7 @@ exports.loadStat = function(request, response) {
 		} else {
 			var manager_sql = "";			
 		}
-
+	if(filter.items)
 		$.each(filter.items, function(i, el){
 			if(el.filter) {
 				el.filter.brand = request.query.brand;
@@ -1229,74 +1229,195 @@ exports.exportClients = function(request, response) {
 
 exports.loadStatTable = function(request, response) {
 
-	var answer = {};
+	var brand_id = request.query.brand;
 
-	pool.query('SELECT * FROM `1_models` WHERE brand=?',[1], function (err, models, fields) {
+	var cache_id = md5( brand_id + "salt");
 
-		var do_type = "vz";
+	if(!stat_cache[brand_id]) {
+		stat_cache[brand_id] = {};
+	}
 
-		var col_function = function(car, col){
-			//console.info(car.fio, col.col);
-			var month = (col.length>1)?col.col:'0'+col.col;
-			if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
-				return true;
-			} else {
-				return false;
-			}
-			
-		};		
+	if(true && stat_cache[brand_id][cache_id]) {
+		response.send( stat_cache[brand_id][cache_id] );
+		console.info("Stat table from Cache");
+	} else {
 
-		var col_function_month = function(car, col){
-			//console.info(car.fio, col.col);
-			var month = (col.length>1)?col.col:'0'+col.col;
-			if( (car[do_type]) && (car[do_type].indexOf("2012-")!=-1) ) {
-				return true;
-			} else {
-				return false;
-			}
-			
-		};		
+		var answer = {};
 
-		$.each(models, function(i, model){
-			var cols = [];
-			var fu;
-			for(var i=1; i<=12; i+=1) {
-				if(i==2) {
-					fu = col_function_month;
+		pool.query('SELECT * FROM `1_models` WHERE brand=?',[brand_id], function (err, models, fields) {
+
+
+			var functions = [
+				{
+					do_type: "vd",
+					do_image: "1vidacha.png",
+					do_title: "Выдача",
+					value: 0, 
+					ids: [],
+					the_function: function(car, col){
+					var do_type = "vd";
+					//console.info(car.fio, col.col);
+					var month = (col.length>1)?col.col:'0'+col.col;
+					if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
+						return true;
+					} else {
+						return false;
+					}
+					
+					} 
+				},
+				{
+					do_type: "dg",
+					do_image: "1dogovor.png",
+					do_title: "Договора",
+					value: 0, 
+					ids: [],
+					the_function: function(car, col){
+					var do_type = "dg";
+					//console.info(car.fio, col.col);
+					var month = (col.length>1)?col.col:'0'+col.col;
+					if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
+						return true;
+					} else {
+						return false;
+					}
+					
+					} 
+				},
+				{
+					do_type: "out",
+					do_image: "1out.png",
+					do_title: "Расторжения",
+					value: 0, 
+					ids: [],
+					the_function: function(car, col){
+					var do_type = "out";
+					//console.info(car.fio, col.col);
+					var month = (col.length>1)?col.col:'0'+col.col;
+					if( (car.dg=="") && (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
+						return true;
+					} else {
+						return false;
+					}
+					
+					} 
+				},
+				{
+					do_type: "tst",
+					do_image: "1test-drive.png",
+					do_title: "Тест-драйвы",
+					value: 0, 
+					ids: [],
+					the_function: function(car, col){
+					var do_type = "tst";
+					//console.info(car.fio, col.col);
+					var month = (col.length>1)?col.col:'0'+col.col;
+					if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
+						return true;
+					} else {
+						return false;
+					}
+					
+					} 
+				},
+				{
+					do_type: "vz",
+					do_image: "1vizit.png",
+					do_title: "Визиты",
+					value: 0, 
+					ids: [],
+					the_function: function(car, col){
+					var do_type = "vz";
+					//console.info(car.fio, col.col);
+					var month = (col.length>1)?col.col:'0'+col.col;
+					if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
+						return true;
+					} else {
+						return false;
+					}
+					
+					} 
+				},
+				{
+					do_type: "zv",
+					do_image: "1zvonok.png",
+					do_title: "Звонки",
+					value: 0, 
+					ids: [],
+					the_function: function(car, col){
+					var do_type = "zv";
+					//console.info(car.fio, col.col);
+					var month = (col.length>1)?col.col:'0'+col.col;
+					if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
+						return true;
+					} else {
+						return false;
+					}
+					
+					} 
+				}
+
+			]
+
+
+			var col_function_month = function(car, col){
+				//console.info(car.fio, col.col);
+				var month = (col.length>1)?col.col:'0'+col.col;
+				if( (car[do_type]) && (car[do_type].indexOf("2012-")!=-1) ) {
+					return true;
 				} else {
-					fu = col_function;
+					return false;
 				}
-				cols.push({
-						   col:i,
-						   value: 0,
-						   func: fu
-						  });
-			}
-			if(!answer[model.id]) answer[ model.id ] = {cols:cols, model: model.model};			
-		});
+				
+			};		
+
+			$.each(models, function(i, model){
+				var cols = [];
+				var fu;
+				for(var i=1; i<=12; i+=1) {
+/*					if(i==200) {
+						fu = col_function_month;
+					} else {
+						fu = col_function;
+					}
+*/					cols.push({
+							   col:i,
+							   do_types: jsClone(functions)
+							  });
+				}
+				if(!answer[model.id]) answer[ model.id ] = {cols:cols, model: model.model};			
+			});
 
 
 
-		pool.query('SELECT * FROM `1_clients` WHERE brand=? AND dg != "0000-00-00 00:00:00"',[1], function (err, cars, fields) {
-			cars = correct_dates(cars);
+			pool.query('SELECT * FROM `1_clients` WHERE brand=?',[brand_id], function (err, cars, fields) {
+				cars = correct_dates(cars, "no_zero_dates");
+				
+				$.each(cars, function(k, car){
+					if( answer[car.model] ) {
+						$.each( answer[car.model].cols, function(l, col){
+							$.each(col.do_types, function(k, the_function){
+								if(the_function.the_function(car, col)) { 
+									the_function.value += 1;
+									//the_function.ids.push(car.id);
+								}
+							});
+							
+
+
+						});
+					}
+				});	//cars	
 			
-			$.each(cars, function(k, car){
-				if( answer[car.model] ) {
-					console.info("model = ",car.model, answer[car.model].cols);
-					$.each( answer[car.model].cols, function(l, col){
-						if(col.func(car, col)) col.value += 1;
-					});
-				}
-			});	//cars	
-		
+					response.send(answer);
+					stat_cache[brand_id][cache_id] = answer;
 
-				response.send(answer);
-
-			}); //cars
-	}); //model
-
+				}); //cars
+		}); //model
+	}
 	
 }
+
 
 
 
@@ -1475,3 +1596,9 @@ var imap = {
 
 
 
+
+function jsClone(element) {
+	return $.map(element, function (obj) {
+                      return $.extend({}, obj);
+    });
+}

@@ -677,9 +677,6 @@ myApp.factory('myApi', function($http, $q){
       var dfd = $q.defer();
 
       jsGetToken().done(function(token){
-
-        var filters = $scope.leftmenu;
-
         $http({url:'/api/v1/stat_table',method: "GET", isArray: true, params: { token: token, brand: $scope.brand, manager: $scope.manager_filter }}).then(function(result){
           dfd.resolve(result.data);
         });

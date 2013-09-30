@@ -1869,3 +1869,44 @@ a {
         color: #FFF;
     }
 }
+
+.stat_table {
+    background: #FFF;
+    color: #000;
+    th {
+        padding: 2px 5px;
+        min-width: 4em;
+        text-align: center;
+        background: #CCC;        
+        border-left: 1px solid #EEE;
+        border-right: 1px solid #EEE;
+    }
+    td {
+        min-width: 4em;
+        text-align: left;
+        border: 1px solid #EEE;
+        img {
+            opacity: 0;
+            margin-right: 10px;
+            width: 10px;
+            height: 10px;
+        }
+    }
+    td:hover {
+        img {
+            opacity: 1;
+        }
+    }
+    .line_name {
+        text-align: right;
+        font-weight: bold;
+    }
+    .do_type_div {
+        padding: 2px 5px;
+        cursor:pointer;
+        border-radius: 3px;
+    }
+    .do_type_div:hover {
+        background: #DDD;
+    }
+}

@@ -2,49 +2,32 @@
 
 myApp.controller('statTableCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment) {
 
+$scope.stat_view_switch = 1;
 
-if(false)
-$scope.myData = [{name: "Moroni", age: 50},
-                 {name: "Tiancum", age: 43},
-                 {name: "Jacob", age: 27},
-                 {name: "Nephi", age: 29},
-                 {name: "Enos", age: 34}];
- 
-if(false)
- var columns = [
-    {field:'model', displayName: 'Полное название'},
-    {field:'cost', displayName: 'Средняя цена'},
-    {field:'show', displayName: 'Показывать'},
-    {field:'short', displayName: 'Короткое название'}
+$scope.refreshStatTable = function(){
+	 myApi.getTableStat($scope).then(function(answer) {
+	 	$scope.stat_labels = [];
+	 	var k=0;
+	 	$.each(answer, function(i, el){
+	 		if(k==0) {
+	 			$scope.stat_labels.push( el );
+	 			k+=1;
+	 		}
+	 	});
 
- ];
+	 	$scope.stat_table = answer;
+	 });
+}
 
- myApi.getTableStat($scope).then(function(answer) {
- 	console.info(answer);
- 	var table = [];
- 	$.each(answer, function(i, el){
- 		var line = {};
- 		$.each(el.cols, function(j, col){
- 			line[col.col] = col.value;
- 		})
- 		line["model"] = el.model;
- 		
- 		table.push( line );
- 	});
- 	console.info(table);
- 	$scope.myData = table;
- });
+$scope.refreshStatTable();
 
- $scope.mySelections = [];
+$scope.$watch("brand", function(){
+	$scope.refreshStatTable();
+});
 
- $scope.gridOptions = { data: 'myData', 
-//        columnDefs: columns,
-//        enableCellSelection: true,
-//        enableRowSelection: false,
-        enableCellEditOnFocus: true,
-        multiSelect: false,
-        selectedItems: $scope.mySelections,
-         };         
+$scope.$watch("stat_view_switch", function(){
+	$scope.refreshStatTable();
+});
 
 
 });
