@@ -323,7 +323,7 @@ function DoCtrl($scope, myApi) { //контроллер дел
 
 
    $scope.$watch("do.text",function( value, old_value ){
-     if((!$scope.can_parse_date) || (old_value == value)) return true;
+     if(($scope.do.checked!=NO_DATE) || (!$scope.can_parse_date) || (old_value == value)) return true;
      var parse_date = jsParseDate( value );
      if(parse_date && parse_date.date) {
       $scope.do.date2 = toMysql( parse_date.date );

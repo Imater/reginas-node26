@@ -174,8 +174,7 @@ function MainCtrl($scope, $routeSegment, myApi, $timeout) {
 
     }
 
-    jsRefreshToken().done(function () {
-        ///////////////////////////////////////////////
+    $scope.jsRefreshUserInfo = function() {
         myApi.loadUserInfo($scope).then(function(user){
           $scope.the_user = user.user[0];
           $scope.brand = user.user[0].brand; //бренд по умолчанию
@@ -188,6 +187,12 @@ function MainCtrl($scope, $routeSegment, myApi, $timeout) {
           /////////////////////////////////////////////
           $scope.jsRefreshDo($scope);
         });  
+    }
+
+
+    jsRefreshToken().done(function () {
+        ///////////////////////////////////////////////
+        $scope.jsRefreshUserInfo();
         ///////////////////////////////////////////////
         console.info("refresh_token_did");
         //загружаем таблицу моделей

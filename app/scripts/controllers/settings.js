@@ -21,7 +21,7 @@ myApp.controller('settingsCtrl', function ($scope, $resource, $rootScope, $locat
  
  $scope.jsRefreshModels = function(){
    $scope.myData = _.filter($scope.models_array, function(model){
-      return (model.brand == 1);
+      return (model.brand == $scope.brand);
    });  
  }
 

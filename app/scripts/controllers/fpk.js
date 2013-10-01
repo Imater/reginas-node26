@@ -682,7 +682,6 @@ myApp.directive('slideToggle', function() {
       scope.$watch('isOpen', function(newVal,oldVal){
         if(newVal !== oldVal){ 
             element.stop().slideToggle(slideDuration);
-            alert(newVal);
         }
       });
     }
@@ -1079,6 +1078,13 @@ $scope.jsFioShort = function(fio, need_surname) {
 
  $scope.today_date = toMysql( (new Date()) ).substr(0,10);
 
+  $scope.$watch('today_date', function(val, newVal) {
+    if(val!=newVal) {
+      $scope.jsLoadStat();
+    }
+  });
+
+
   $scope.jsLoadStat = function() {
     if($scope.brand) {
         myApi.getStat($scope).then(function(result){
@@ -1090,10 +1096,14 @@ $scope.jsFioShort = function(fio, need_surname) {
 
 
  $scope.jsSelectBrand = function(id) {
+    $scope.$parent.brand=id;
     $scope.brand=id;
     $scope.jsLoadStat(); 
     $scope.jsRefreshClients();   
-    $scope.jsRefreshDo($scope); 
+    $scope.jsRefreshUserInfo(); 
+    //$scope.jsLoadModelsFromServer();
+    if($scope.jsRefreshModels) $scope.jsRefreshModels();
+    $scope.manager_filter = -1;
     $("#myfullcalendar").fullCalendar("refetchEvents");
  }
 
