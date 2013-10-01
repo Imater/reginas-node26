@@ -1539,7 +1539,7 @@ a {
   position: absolute;
   right: 10px;
   top: 50px;
-  border-radius: 5px;
+  border-radius: 10px;
   width: 800px;
   background: rgba(255, 255, 255, 0.95);
   box-shadow: 2px 2px 10px #000;
@@ -1547,15 +1547,16 @@ a {
   z-index: 5;
   overflow-y: auto;
   overflow-x: hidden;
-  background: url("../images/backgrounds/textile2.jpg"); }
+  background: url("../images/backgrounds/textile3.jpg");
+  border: 1px dashed #888; }
   #new_client_div ol {
     padding: 5px; }
   #new_client_div .close_one_client {
     position: absolute;
-    right: 3px;
-    top: 3px;
+    right: -3px;
+    top: 4px;
     cursor: pointer;
-    font-size: 15px;
+    font-size: 14px;
     color: #CCC;
     border-radius: 30px;
     height: 25px;

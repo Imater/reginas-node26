@@ -1031,7 +1031,7 @@ $scope.jsFioShort = function(fio, need_surname) {
 
  $scope.jsShowManagerFilter = function() {
   if($scope.manager_filter == -1) {
-    return "Все клиенты";
+    return "Все менеджеры";
   } else {
     var the_manager = _.find($scope.managers, function(manager) {
       return (manager.id == $scope.manager_filter );
@@ -1294,10 +1294,9 @@ $scope.jsFioShort = function(fio, need_surname) {
     localStorage.setItem("body_class", $("body").attr("class"));
     if($("body").hasClass("right_hide")) {
       $scope.$parent.today_do = [];
-      $scope.right_panel_hide = true;
+      $scope.$parent.right_panel_hide = true;
     } else {
       $scope.$parent.right_panel_hide = false;
-      $scope.right_panel_hide = false;
       $scope.jsRefreshDo($scope);
     }
     onResize();

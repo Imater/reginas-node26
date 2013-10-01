@@ -37,7 +37,7 @@
         <a  class="dropdown-toggle" data-toggle="dropdown">Фильтр: {{jsShowManagerFilter()}} <b class="caret"></b></a>
         <ul class="dropdown-menu">
           <li role="presentation" class="dropdown-header">Фильтровать по:</li>                   
-          <li ng-click="jsSelectManager(-1)"><a><i class="icon-users"></i>Все клиенты</a></li>
+          <li ng-click="jsSelectManager(-1)"><a><i class="icon-users"></i>Все менеджеры</a></li>
           <li role="presentation" class="dropdown-header">Менеджеры: {{manager_filter}}</li>                   
           <li ng-click="jsSelectManager(manager.id)" ng-repeat="manager in managers | onlyManager:true"><a><i class="icon-user"></i>{{manager.fio}} {{manager.id}}</a></li>
           <li class="dropdown-submenu"><a >Остальные</a>
@@ -275,7 +275,7 @@
 <div id="panel_right" resizable2 style="width:{{right_panel_width}}px">
 
     <div id="panel_right_header">
-    Дела:
+    Дела<span ng-if="manager_filter==-1"> всего отдела</span><span ng-if="manager_filter!=-1"> менеджера</span>:
     </div>
 
     <div id="panel_right_content" class="noselectable">
@@ -286,6 +286,7 @@
           <div class="do_type_icon"><img ng-src="/images/do_type/{{do_types_array[mydo.type].img}}" width="10px" title="Тип дела: {{mydo.type}}"></div>
           {{mydo.text}}
           <div class="mydo_fio"><span ng-if="mydo.short"><b>{{mydo.short}}</b> — </span>{{(mydo.fio)}}</div>
+          <div ng-if="manager_filter==-1" class="mydo_fio">Менеджер: <i class="icon-user"></i>{{jsFioShort(mydo.manager)}}</div>
           </li>
         </ol>
       </div>

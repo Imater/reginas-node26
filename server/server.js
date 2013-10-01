@@ -699,6 +699,9 @@ exports.loadStat = function(request, response) {
 
 		$.when.apply(null, dfdArray).then(function(){
 			answer = {left_stat: answer, sms: result};
+			if(!stat_cache[brand_id]) {
+				stat_cache[brand_id] = {};
+			}
 			stat_cache[brand_id][ cache_id ] = answer;
 			response.send(answer);	
 		})
@@ -1041,6 +1044,9 @@ exports.loadStatCup = function(request, response) {
    	    		});
 
    	    		answer = {brands: brands, cars: ""};
+				if(!stat_cache[brand_id]) {
+					stat_cache[brand_id] = {};
+				}
    	    		stat_cache[brand_id][ cache_id ] = answer;
    	    		response.send(answer);
    	    });
@@ -1588,6 +1594,9 @@ exports.loadStatTable = function(request, response) {
 				});	//cars	
 			
 					response.send(answer);
+					if(!stat_cache[brand_id]) {
+						stat_cache[brand_id] = {};
+					}
 					stat_cache[brand_id][cache_id] = answer;
 
 				}); //cars
