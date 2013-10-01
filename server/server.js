@@ -237,7 +237,7 @@ exports.findMessageById = function(request,response) {
 
 exports.findDoById = function(request,response) {
 	var user_id = request.query.user_id;
-    pool.query('SELECT * FROM `1_do` WHERE client = ?', [request.params.id] , function (err, rows, fields) {
+    pool.query('SELECT * FROM `1_do` WHERE client = ? ORDER by date2 DESC, id DESC', [request.params.id] , function (err, rows, fields) {
     		rows = correct_dates(rows);
 		    response.send(rows);
   	});	
@@ -297,14 +297,17 @@ exports.searchString = function(request,response) {
 		});
 		ids += " -1)";
 
-	    connection.query('SELECT * FROM `1_clients` WHERE id IN '+ids+' OR (brand = :brand AND `OUT` = "0000-00-00 00:00:00" AND '+
-	    					'(fio like :search OR '+
-	    					'phone1 like :search OR '+
-	    					'phone2 like :search OR '+
-	    					'phone3 like :search OR '+
-	    					'phone4 like :search OR '+
-	    					'adress like :search'+
-	    					')) LIMIT 2000', {brand:brand, search: ("%"+search+"%")} , function (err, rows, fields) {
+		var sr = ("%"+search+"%");
+
+	    pool.query('SELECT * FROM `1_clients` WHERE id IN '+ids+' OR (brand = ? AND `out`="0000-00-00 00:00:00" AND '+
+	    					'(fio like ? OR '+
+	    					'phone1 like ? OR '+
+	    					'phone2 like ? OR '+
+	    					'phone3 like ? OR '+
+	    					'phone4 like ? OR '+
+	    					'comment like ? OR '+
+	    					'adress like ?'+
+	    					')) LIMIT 2000', [brand, sr, sr, sr, sr, sr, sr, sr] , function (err, rows, fields) {
 	    		rows = correct_dates(rows);
 	    		console.info(err);
 			    response.send(rows);
@@ -481,8 +484,10 @@ exports.findAllClients = function(request, response) {
 
 	var f_limit = filter.limit ? ' LIMIT '+filter.limit.start+','+filter.limit.end : ' LIMIT 100';
 
-	var f_order = filter.group_by ? ' ORDER BY `'+filter.group_by+'`' : '';
-	if( (filter.group_by == "vd") || (filter.group_by == "out") ) f_order+=" DESC";
+	var desc = "";
+	if( (filter.group_by == "vd") || (filter.group_by == "out") ) desc=" DESC";
+
+	var f_order = filter.group_by ? ' ORDER BY `'+filter.group_by+'` '+desc+', `date` DESC' : '';
 
 
 	var myquery = 'SELECT * FROM `1_clients` WHERE ' + f_filter + " true " + f_order + f_limit;
@@ -498,20 +503,106 @@ exports.findAllClients = function(request, response) {
 
 }
 
+//Добавление нового клиента с делами
+exports.addNewClient = function(request, response) {
+
+	var add_do_array = request.query.add_do_array;
+	var brand_id = request.query.brand;
+	var manager_id = request.query.manager;
+
+
+ jsCheckToken(request.query.token).done(function(user_id){
+
+ 	var values = {
+ 		fio: "Клиент " + jsGetHourMinutes( (new Date) ),
+ 		date: tomysql( (new Date) ),
+ 		brand: brand_id,
+ 		manager_id: manager_id,
+ 		model: -1,
+ 		creditmanager: 'Неизвестно'
+ 	};
+
+	query = "INSERT INTO 1_clients SET ?";
+	console.info("Добавляю новго клиента", brand_id, manager_id, add_do_array, values);
+
+    pool.query(query, values, function (err, rows, fields) {
+    	var insert_id = rows.insertId;
+    	if(insert_id) {
+	    	var dfdArray = [];
+	    	$.each(add_do_array, function(i, do_type){
+	    		if(do_type!='false') dfdArray.push( jsAddDoToClient(insert_id, do_type, brand_id, user_id, manager_id, i) );
+	    	});
+	    	$.when.apply(null, dfdArray).then(function(){
+	    		jsUpdateClient(insert_id).then(function(){
+	    			response.send({insert_id: insert_id});
+	    		});
+		    	
+	    	})
+    	}
+    	console.info("ADDED rows = ", rows, err);
+  	});	
+  });
+}
+
+function jsAddDoToClient(client_id, do_type, brand_id, user_id, manager_id, i) {
+	var dfd = new $.Deferred();
+
+	var now = (new Date( (new Date).getTime()+i*60000 ));
+	var time_now = tomysql( now );
+
+	var text, type;
+	console.info("do_type", do_type);
+	if(do_type == "vz") {
+		text = "Визит "+jsGetHourMinutes( now );
+		type = "Визит";
+	} else if (do_type == "zv") {
+		text = "Звонок "+jsGetHourMinutes( now );
+		type = "Звонок";
+	} else if (do_type == "tst") {
+		text = "Тест-драйв "+jsGetHourMinutes( now );
+		type = "Тест-драйв";
+	} else if (do_type == "out") {
+		text = "OUT "+jsGetHourMinutes( now );
+		type = "OUT";
+	}
+
+	var values = {
+		client: client_id,
+		brand: brand_id,
+		manager_id: manager_id,
+		date1: time_now,
+		date2: time_now,
+		checked: time_now,
+		created: time_now,
+		changed: time_now,
+		text: text,
+		type: type,
+		host_id: user_id
+
+
+	};
+
+	query = "INSERT INTO 1_do SET ?";
+    pool.query(query, values, function (err, rows, fields) {
+    	dfd.resolve(rows);
+    	console.info("Добавил дело: ",rows,err);
+    });
+
+	return dfd.promise();
+}
+
 
 exports.findClient = function(request, response) {
 
 	var manager = request.query.manager;
 	var client_id = request.params.id;
 
-	console.info(request,client_id);
-
 	var myquery = 'SELECT * FROM `1_clients` WHERE id = ? LIMIT 1';
 
 	console.info("query = ", myquery);
 
     pool.query(myquery, [client_id], function (err, rows, fields) {
-    	pool.query('SELECT * FROM `1_do` WHERE client = ? ORDER by date2 DESC', [client_id], function (err, does, fields) {
+    	pool.query('SELECT * FROM `1_do` WHERE client = ? ORDER by date2 DESC, id DESC', [client_id], function (err, does, fields) {
     		does = correct_dates( does );
   			rows = correct_dates( rows );
   			rows[0].do = does;
@@ -618,7 +709,7 @@ exports.saveDo = function(request, response) {
 }
 
 exports.saveClient = function(request, response) {
-	var changes = JSON.parse(request.query.changes);
+	var changes = request.body.changes;
 	var client_id = request.query.client_id;
 
  jsCheckToken(request.query.token).done(function(user_id){
@@ -626,10 +717,7 @@ exports.saveClient = function(request, response) {
 	query = "UPDATE 1_clients SET ? WHERE id = '"+client_id+"'";
 
     pool.query(query, changes, function (err, rows, fields) {
-    	jsUpdateClient(client_id).done(function(client_id){
-    		response.send({affectedRows: rows.affectedRows});
-    	});
-
+  		response.send({affectedRows: rows.affectedRows});
   	});	
   });
 
@@ -934,7 +1022,7 @@ function jsUpdateClient(client_id) {
 	var dfd = $.Deferred();
 
 
- pool.query('SELECT manager_id, 1_users.fio FROM `1_clients` LEFT JOIN `1_users` ON 1_users.id = 1_clients.manager_id WHERE 1_clients.id=?',[client_id], function (err, the_client, fields) {
+ pool.query('SELECT * FROM `1_clients` WHERE 1_clients.id=?',[client_id], function (err, the_client, fields) {
   	pool.query('SELECT * FROM `1_do` WHERE client=? ORDER by date2',[client_id], function (err, client_do, fields) {
   			client_do = correct_dates(client_do, "no_zero_dates");
 
@@ -945,7 +1033,6 @@ function jsUpdateClient(client_id) {
   						 dg:"0000-00-00 00:00:00",
   						 vd:"0000-00-00 00:00:00",
   						 out:"0000-00-00 00:00:00",
-  						 manager:"-1",
   						 na_id:"",
   						 na_date:"0000-00-00 00:00:00",
   						 na_title:"",
@@ -953,9 +1040,6 @@ function jsUpdateClient(client_id) {
   						 out_reason:""
   						 }
 
-  			answer['manager'] = the_client[0].fio;
-
-  			console.info("MAN = ", answer["manager"]);
 
   			var first_action = false;
   			$.each(client_do, function(i,mydo){
@@ -1450,6 +1534,9 @@ app.get('/api/v1/bigdata2', database.loadAllBig2)
 
 app.get('/api/v1/client', database.findAllClients );
 app.get('/api/v1/client/:id', database.findClient );
+app.post('/api/v1/client', database.addNewClient );
+
+
 app.get('/api/v1/do/:id', database.findDoById );
 app.get('/api/v1/calendar', database.findCalendar );
 
@@ -1602,3 +1689,10 @@ function jsClone(element) {
                       return $.extend({}, obj);
     });
 }
+
+function jsGetHourMinutes(time_now) {
+ 	var answer = ((time_now.getHours()>9)?(time_now.getHours()):("0"+time_now.getHours()));
+ 	answer += ":"+((time_now.getMinutes()>9)?(time_now.getMinutes()):("0"+time_now.getMinutes()));	
+ 	return answer;
+}
+

@@ -148,17 +148,17 @@
                     </button>
                     <ul class="dropdown-menu pull-right">
                       <li role="presentation" class="dropdown-header">Без действий</li>
-                      <li><a >Новый клиент</a></li>
+                      <li ng-click="jsNewClient()"><a >Новый клиент</a></li>
                       <li role="presentation" class="divider"></li>                 
                       <li role="presentation" class="dropdown-header">С действиями</li>
-                      <li><a >Звонок</a></li>
-                      <li><a >Визит</a></li>
-                      <li><a >Тестдрайв</a></li>
+                      <li ng-click="jsNewClient(['zv', false])"><a >Звонок</a></li>
+                      <li ng-click="jsNewClient(['vz', false])"><a >Визит</a></li>
+                      <li ng-click="jsNewClient(['vz','tst'])"><a >Тестдрайв</a></li>
                       <li role="presentation" class="divider"></li>                 
                       <li role="presentation" class="dropdown-header">Клиент с отказом</li>
-                      <li><a >Звонок</a></li>
-                      <li><a >Визит</a></li>
-                      <li><a >Тестдрайв</a></li>
+                      <li ng-click="jsNewClient(['zv','out'])"><a >Звонок</a></li>
+                      <li ng-click="jsNewClient(['vz','out'])"><a >Визит</a></li>
+                      <li ng-click="jsNewClient(['vz','tst','out'])"><a >Тестдрайв</a></li>
                     </ul>
                   </div>
             </div>

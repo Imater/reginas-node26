@@ -225,7 +225,7 @@ function jsDateDiff(date2) {
   if(!date2) return answer;
   if(date2=="0000-00-00 00:00:00") return answer;
 
-  var date1 = new Date();
+  var date1 = new Date((new Date()).getTime()-1*60000);
   var date2 = fromMysql(date2);
   var dif_sec = date2.getTime() - date1.getTime();
 
@@ -271,13 +271,15 @@ myApp.directive('datemini', ['$timeout', function($timeout) { return {
       ngModel.$render = function() {
         var date2 = ngModel.$viewValue;
         var answer = jsDateDiff(date2);
-        if(($scope.client) && ($scope.client.out!=NO_DATE)) {
-          answer.text = "OUT";
-          answer.class = "date_out";
-        }
-        if( ($scope.client) && ($scope.client.out!=NO_DATE) && ($scope.client.dg!=NO_DATE) ) {
-          answer.text = "РАСТОРГ";
-          answer.class = "date_rastorg";
+        if(attrs.dateType=="client") {
+          if(($scope.client) && ($scope.client.out!=NO_DATE)) {
+            answer.text = "OUT";
+            answer.class = "date_out";
+          }
+          if( ($scope.client) && ($scope.client.out!=NO_DATE) && ($scope.client.dg!=NO_DATE) ) {
+            answer.text = "РАСТОРГ";
+            answer.class = "date_rastorg";
+          }
         }
         $element.html(answer.text || '').removeClass("past").removeClass("datetoday").removeClass("datepast").addClass(answer.class);
 
@@ -483,6 +485,49 @@ function onResize(){
 
 };
 
+myApp.directive('returnOnBlur', function() {    
+    return {
+        restrict: 'A',
+        link: function(scope, elm, attrs) {            
+            console.info("bluer", $(elm) );
+
+            var old_index, mydoid;
+            var index_cache = {};
+
+            elm.on("keydown",function(){
+              old_index = $(this).parents("li:first").index();
+              mydoid = $(this).parents("li:first").attr("mydoid");
+              console.info("SAVE-CURRENT INDEX = ", old_index);
+            });
+
+            elm.bind("blur", function(){
+                  console.info( "blur!", scope.$parent.$index );
+                  var old_this = this;
+                  setTimeout(function(){
+                    var new_index = $("li[mydoid='"+mydoid+"']").index();
+                    if(old_index != new_index) {
+                      $("li[mydoid='"+mydoid+"'] .do_text_input").focus();
+                    }
+                    console.info( old_index, new_index, mydoid, scope.$parent.$index );
+
+                  },0);
+                  setTimeout(function(){
+                    var new_index = $("li[mydoid='"+mydoid+"']").index();
+                    if(old_index != new_index) {
+                      $("li[mydoid='"+mydoid+"'] .do_text_input").focus();
+                    }
+                    console.info( old_index, new_index, mydoid, scope.$parent.$index );
+
+                  },600);                  
+            });
+
+            //elm.datetimeEntry('setDatetime', scope.onChange);
+
+        }
+    };        
+
+});
+
 myApp.directive('dateTimeEntry', function() {    
     return {
         restrict: 'A',
@@ -658,6 +703,17 @@ myApp.factory('myApi', function($http, $q){
 
       return dfd.promise;      
     },    
+    jsNewClient: function($scope, add_do_array) {
+      var dfd = $q.defer();
+
+      jsGetToken().done(function(token){
+        $http({url:'/api/v1/client', method: "POST", isArray: true, params: { token: token, manager: $scope.manager_filter, brand: $scope.brand, add_do_array: add_do_array}}).then(function(result){
+          dfd.resolve(result.data);
+        });
+      });
+
+      return dfd.promise;      
+    },
     getStat: function($scope) {
       var dfd = $q.defer();
 
@@ -750,7 +806,7 @@ myApp.factory('myApi', function($http, $q){
 
       jsGetToken().done(function(token){
 
-        $http({url:'/api/v1/client/'+changes.id,method: "PUT", isArray: true, params: { token: token, changes: changes, brand: $scope.brand, client_id: client_id }}).then(function(result){
+        $http({url:'/api/v1/client/'+changes.id,method: "PUT", isArray: true, data: {changes: changes}, params: { token: token, brand: $scope.brand, client_id: client_id }}).then(function(result){
             console.info("DO SAVED: ",result.data);
           dfd.resolve(result.data);
         });
@@ -899,7 +955,6 @@ $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
 
  $scope.$routeSegment = $routeSegment;
 
- $scope.manager_filter = -1;
 
 $scope.jsFioShort = function(fio, need_surname) {
     if(!fio) return "";
@@ -985,6 +1040,7 @@ $scope.jsFioShort = function(fio, need_surname) {
 
  $scope.jsSelectManager = function(manager_id) {
     $scope.manager_filter = manager_id;
+    localStorage.setItem("manager_filter", manager_id);
     $scope.jsLoadStat(); 
     $scope.jsRefreshClients();
     $("#myfullcalendar").fullCalendar("refetchEvents");
@@ -992,6 +1048,7 @@ $scope.jsFioShort = function(fio, need_surname) {
 
  $scope.jsCloseOneClient = function(){
     $scope.one_client = undefined;
+    if($scope.jsRefreshClients) $scope.jsRefreshClients();
  };
 
  //дефолтные установки выбора даты
@@ -1010,6 +1067,15 @@ $scope.jsFioShort = function(fio, need_surname) {
         answer = $scope.models[answer].model;
       } else {
         answer = "Модель не указана";
+      }
+    } else if (group_by == "manager_id") {
+      if(distinct.manager_id == -1) {
+          answer = "Менеджер не указан";
+        } else {
+        answer = _.find($scope.managers, function(manager){
+          return manager.id == distinct.manager_id;
+        });
+        if(answer) answer = answer.fio;
       }
     }
     return answer;
@@ -1046,6 +1112,26 @@ $scope.jsFioShort = function(fio, need_surname) {
  $scope.jsSelectGroup = function(new_group) {
   $scope.clientsgroupby = new_group;
   $scope.jsRefreshClients();
+ }
+
+ //Добавление нового клиента с делами
+ $scope.jsNewClient = function(add_do_array) {
+  myApi.jsNewClient($scope, add_do_array).then( function(answer) {
+    console.info(answer);
+    myApi.getClientFull($scope, answer.insert_id).then(function(client){
+            console.info("client = ", client);
+            $scope.one_client = client;
+            $scope.one_client[0]._visible = true;
+            $scope.one_client[0]._edit = true;
+            setTimeout(function(){
+              $("#new_client_div .client_fio_input input").focus().select();
+            },600);
+/*            $.each($scope.$parent.one_client[0].do, function(i, mydo){
+              if(mydo.id == calEvent.myid) mydo._visible = true;
+            });
+*/});
+
+  });
  }
 
   $scope.clientsByDistinct = function(clients, distincts) {

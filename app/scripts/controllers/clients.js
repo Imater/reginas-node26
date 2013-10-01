@@ -7,22 +7,20 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
 
  $scope.$parent.leftmenu = { active:1,
                 items : [
-                  {id:0, title:"В работе", group_by: "manager", 
+                  {id:0, title:"В работе", group_by: "manager_id", 
                    filter: {no_out: true, no_dg: true, no_vd:true}},
 
-                  {id:1, title:"Договора", group_by: "manager", 
+                  {id:1, title:"Договора", group_by: "manager_id", 
                    filter: {no_out: true, dg: true, no_vd:true}},
 
                   {id:2, title:"Выданы", group_by: "vd", 
                    filter: {no_out: true, no_dg: false, vd:true}},
 
                   {id:3, title:"Кредиты", group_by: "creditmanager", 
-                   filter: {no_out: true, no_dg: true, no_vd:true, credit: true}},
+                   filter: {no_out: true, no_vd:true, credit: true}},
 
                   {id:4, title:"Out", group_by: "out", 
-                   filter: {out: true}},
-
-                  {id:5, title:"Администратор", group_by: "manager"}
+                   filter: {out: true}}
                   ]
                 };
 
@@ -122,6 +120,8 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
 
         $scope.credit_managers = $scope.$parent.credit_managers;
         $scope.managers = $scope.$parent.managers;
+
+        $scope.jsOnOffDateParser = $scope.$parent.jsOnOffDateParser;
 
         $scope.jsLoadStat = $scope.$parent.jsLoadStat;
         $scope.stat = $scope.$parent.stat;
@@ -275,6 +275,21 @@ function DoCtrl($scope, myApi) { //контроллер дел
    $scope.jsLoadStat = $scope.$parent.jsLoadStat;
    $scope.stat = $scope.$parent.stat;
 
+   $scope.can_parse_date = true;
+
+   $scope.$watch("do.text",function( value, old_value ){
+     if((!$scope.can_parse_date) || (old_value == value)) return true;
+     var parse_date = jsParseDate( value );
+     if(parse_date && parse_date.date) {
+      $scope.do.date2 = toMysql( parse_date.date );
+     }
+     console.info( "Date = ", parse_date, $scope.can_parse_date, $scope.$parent.can_parse_date);
+   });
+
+   $scope.jsParseDateTrigger = function(){
+    alert(1);
+    $scope.can_parse_date = !$scope.can_parse_date;
+   }
 
    $scope.jsDoDone = function() {
       var now = toMysql( (new Date()) );

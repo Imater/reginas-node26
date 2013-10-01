@@ -949,7 +949,7 @@ body {
         font-size: 1.4em;
         font-weight: bold;
         display: inline;
-        margin-left: 5px; }
+        margin-left: 10px; }
       .clients_list .client_card .client_container .out_reason {
         text-align: right;
         clear: both; }
@@ -1024,6 +1024,10 @@ body {
             .clients_list .client_card .client_inside ul li.client_do_li .do_edit .do_text {
               margin-top: 7px;
               width: 100%; }
+            .clients_list .client_card .client_inside ul li.client_do_li .do_edit .do_text_input {
+              margin-top: 7px;
+              width: 100%;
+              max-height: 100px; }
             .clients_list .client_card .client_inside ul li.client_do_li .do_edit .do_del {
               float: right; }
             .clients_list .client_card .client_inside ul li.client_do_li .do_edit .do_done {
@@ -1324,11 +1328,22 @@ a {
   .client_edit .car_cost {
     margin-left: 47px; }
   .client_edit .client_fio_input {
-    margin-right: -4px; }
+    margin-right: -4px;
+    margin-bottom: 10px; }
     .client_edit .client_fio_input input {
       font-weight: bold; }
+  .client_edit .btn-sm, .client_edit .btn-xs {
+    padding: 3px 10px;
+    box-shadow: 0px 0px 5px #000; }
   .client_edit .btn-success {
-    margin-left: 3px; }
+    margin-left: 3px;
+    box-shadow: none; }
+  .client_edit .input-group-sm > .form-control, .client_edit .input-group-sm > .input-group-addon, .client_edit .input-group-sm > .input-group-btn > .btn {
+    height: 25px;
+    padding: 2px 10px;
+    font-weight: bold; }
+  .client_edit .phone_ok i {
+    color: green; }
 
 .client_status {
   color: #FFF;
@@ -1448,7 +1463,7 @@ a {
     text-align: right;
     font-weight: bold; }
   .stat_table .do_type_div {
-    padding: 2px 5px;
+    padding: 0px 5px;
     cursor: pointer;
     border-radius: 3px; }
   .stat_table .do_type_div:hover {

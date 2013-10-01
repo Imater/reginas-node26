@@ -13,9 +13,9 @@
                             <div class="do_btn" ng-repeat="do_type in do_types" ng-click="jsAddDo(do_type,client);$event.stopPropagation();"><img title="{{do_type.title}}" ng-src="images/do_type/{{do_type.img}}"></div>
                            </div>
 
-                           <div class="datemini" ng-model="client.na_date" title="{{client.na_date}}"></div> 
+                           <div class="datemini" date-type="client" ng-model="client.na_date" title="{{client.na_date}}"></div> 
                            <div class="client_fio">{{client.fio}}</div>
-                           <div class="out_reason">{{client.out_reason}}</div>
+                           <div ng-if="client.out_reason.length&&client.out_reason.length>9" class="out_reason">{{client.out_reason}}</div>
                         </div>      
                         <div ng-if="client._visible == true" class="client_inside selectable" jq-show-effect="client._visible == true" jq-options="{type:'slide', duration:200, delay:200, hideImmediately: true}" style="display:none;">
                           <div class="client_info" ng-click="client._edit = !client._edit">
@@ -27,7 +27,7 @@
                             <span ng-if="client.commercial_id">[откуда узнали: <b>{{jsFindInArray(commercials,"id",client.commercial_id).title}}</b>]<br></span>
                             <span ng-if="client.vin">[VIN: <b>{{client.vin}}</b>]<br></span>
                             <span ng-if="client.email">[Email: <b>{{client.email}}</b>]<br></span>
-                            <span ng-if="client.text">{{client.text}}<br></span>
+                            <span ng-if="client.comment">{{client.comment}}<br></span>
                             [Менеджер: <i class="icon-user"></i><b>{{jsFindInArray(managers,"id",client.manager_id).fio}}</b>]<br>
                           </div>
                           <div ng-if="client._edit == true" class="client_edit" jq-show-effect="client._edit == true" jq-options="{type:'slide', duration:200, delay:200, hideImmediately: true}">
@@ -48,7 +48,7 @@
 
                               <div class="col-md-3">
                                 <div class="input-group input-group-sm">
-                                  <span class="input-group-addon"><i class="icon-phone"></i></span>
+                                  <span ng-class="{phone_ok: (client.phone1.length==11)}" class="input-group-addon"><i class="icon-phone"></i></span>
                                   <input type="text" class="form-control" ng-model="client.phone1" placeholder="89221234567">
                                 </div>
                               </div>
@@ -73,7 +73,7 @@
                             
                               <div class="col-md-3">
                                 <div class="input-group input-group-sm">
-                                  <span class="input-group-addon"><i class="icon-phone"></i></span>
+                                  <span  ng-class="{phone_ok: (client.phone2.length==11)}" class="input-group-addon"><i class="icon-phone"></i></span>
                                   <input type="text" class="form-control" ng-model="client.phone2" placeholder="">
                                 </div>
                               </div>
@@ -105,7 +105,7 @@
                             
                               <div class="col-md-3">
                                 <div class="input-group input-group-sm">
-                                  <span class="input-group-addon"><i class="icon-phone"></i></span>
+                                  <span  ng-class="{phone_ok: (client.phone3.length==11)}" class="input-group-addon"><i class="icon-phone"></i></span>
                                   <input type="text" class="form-control" ng-model="client.phone3" placeholder="">
                                 </div>
                               </div>
@@ -140,7 +140,7 @@
                             
                               <div class="col-md-3">
                                 <div class="input-group input-group-sm">
-                                  <span class="input-group-addon"><i class="icon-phone"></i></span>
+                                  <span  ng-class="{phone_ok: (client.phone4.length==11)}" class="input-group-addon"><i class="icon-phone"></i></span>
                                   <input type="text" class="form-control" ng-model="client.phone4" placeholder="">
                                 </div>
                               </div>
@@ -197,7 +197,7 @@
                             <div class="row">
                             
                               <div class="col-md-6">
-                                <textarea class="client_adress" ng-model="client.adress" msd-elastic placeholder="паспортные данные и адрес"></textarea>
+                                <textarea class="client_adress" ng-model="client.adress" msd-elastic placeholder="паспортные данные и адрес" title="паспортные данные и адрес"></textarea>
                               </div>
 
                               <div class="col-md-6">
@@ -212,7 +212,7 @@
                             <div class="row">
                             
                               <div class="col-md-12">
-                                <textarea class="client_text" ng-model="client.text" msd-elastic placeholder="Подробности..."></textarea>
+                                <textarea class="client_text" ng-model="client.comment" msd-elastic placeholder="Подробности..."></textarea>
                               </div>
 
                             </div>
@@ -250,9 +250,9 @@
 
 
                           <ul>
-                            <li ng-repeat="do in client.do | orderBy: 'date2': true" class="client_do_li" ng-controller="DoCtrl" myindex={{$index}} mydoid="{{do.id}}">
+                            <li ng-repeat="do in client.do | orderBy: ['date2','id']: true" class="client_do_li" ng-controller="DoCtrl" myindex={{$index}} mydoid="{{do.id}}">
                               <div class="do_line" ng-click="do._visible = !do._visible" ng-class="{'did':do.checked!='0000-00-00 00:00:00'}">
-                                <div class="datemini" ng-model="do.date2" title="{{do.date2}}"></div>
+                                <div class="datemini" date-type="do" ng-model="do.date2" title="{{do.date2}}"></div>
                                 <div class="do_type_icon"><img ng-src="/images/do_type/{{do_types_array[do.type].img}}" width="20px" height="20px" title="Тип дела: {{do.type}}"></div>
                                 <div class="do_text">
                                   {{do.text}} 
@@ -267,9 +267,13 @@
 
                                     <button class="do_del">Удалить</button>
                                     <button ng-click="jsDoCancel()" class="do_cancel">Отменить</button>
-                                    <textarea placeholder="Введите описание дела..." class="do_text" msd-elastic ng-model="do.text" ></textarea>
+                                    <textarea placeholder="Введите описание дела..." class="do_text_input" return-on-blur="do_text" msd-elastic ng-model="do.text" ></textarea>                                    
                                     <input ng-model="do.manager"></input><br>
                                     <input date-time-entry="do.date2" class="do_date2"></input>
+                                    <a ng-click="jsParseDateTrigger()">
+                                      <span ng-if="can_parse_date">Распознавание дат: вкл</span>
+                                      <span ng-if="!can_parse_date">Распознавание дат: выкл</span>
+                                    </a>
                                 </div>
 
                               </div>
