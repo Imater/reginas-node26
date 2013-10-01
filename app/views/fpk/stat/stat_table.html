@@ -1,7 +1,7 @@
 <div class="scrollable_div">
 		<h2>Подробная статистика</h2>
-		<h4>1. Договора по моделям</h4>
-                <ul class="nav nav-tabs top_tabs">
+		<h4>1. Динамика воронки продаж по моделям</h4>
+                <ul class="nav nav-tabs top_tabs" style="display:none">
                   <li ng-class="{active:stat_view_switch==0}" ng-click="stat_view_switch=0"><a>Выдачи</a></li>
 
                   <li ng-class="{active:stat_view_switch==1}" ng-click="stat_view_switch=1"><a>Договора</a></li>
@@ -18,7 +18,7 @@
         <table class="stat_table">
 		<tr ng-repeat="line in stat_labels" class="stat_table_header">
 			<th>
-			Модель
+			Модель/Месяц
 			</th>
 			<th ng-repeat="col in line.cols">
 			{{col.col}}

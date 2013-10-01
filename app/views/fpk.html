@@ -1,6 +1,5 @@
 <div id="panel_top">
 
-
 <nav class="navbar navbar-default navbar-static-top navbar-inverse" role="navigation">
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
@@ -16,16 +15,14 @@
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse navbar-ex1-collapse">
     <ul class="nav navbar-nav">
-      <li class="dropdown">
+      <li class="dropdown" style="display:none;">
         <a class="dropdown-toggle" data-toggle="dropdown">Рейтинг <b class="caret"></b></a>
         <ul class="dropdown-menu">
           <li role="presentation" class="dropdown-header">Рейтинг за 7 дней:</li>                 
-          <li><a >Action</a></li>
           <li><a >Another action</a></li>
           <li role="presentation" class="divider"></li>
 
           <li role="presentation" class="dropdown-header">Рейтинг за 30 дней:</li>                 
-          <li><a >Something else here</a></li>
           <li><a >Separated link</a></li>
           <li role="presentation" class="divider"></li>          
 
@@ -66,7 +63,7 @@
 
     <div id="panel_left_content" class="noselectable">
         <ul class="left_menu">
-          <li ng-repeat="menu_item in leftmenu.items" ng-class="{ 'active': ($index==leftmenu.active) }" ng-click="jsSelectLeftMenu(menu_item, $index);">
+          <li ng-repeat="menu_item in leftmenu.items" ng-class="{ 'active': ($index==leftmenu.active||$routeSegment.startsWith(menu_item.segment)) }" ng-click="jsSelectLeftMenu(menu_item, $index);">
           {{menu_item.title}} <div ng-if="stat[menu_item.id]" class="div_count">{{stat[menu_item.id]}}</div>
           </li>
         </ul>
@@ -91,7 +88,7 @@
 
 </div>
 
-<div id="panel_center" style="left:{{left_panel_width}}px">
+<div id="panel_center" style="left:{{left_panel_width}}px; right:{{right_panel_width}}px;">
     <div id="panel_center_header">
        <div class="make_center">
             <div class="menu_mini select_brand">
@@ -118,7 +115,7 @@
 
                   <a href="#/fpk/calendar" ng-class="{active: $routeSegment.startsWith('s1.calendar')}" type="button" class="btn btn-default">Календарь</a>
 
-                  <a href="#/fpk/stat" ng-class="{active: $routeSegment.startsWith('s1.stat')}" type="button" class="btn btn-default">Статистика</a>
+                  <a href="#/fpk/statistic" ng-class="{active: $routeSegment.startsWith('s1.stat')}" type="button" class="btn btn-default">Статистика</a>
 
                 </div>
             </div>
@@ -136,11 +133,10 @@
 
                         <a href="#/fpk/calendar" ng-class="{active: $routeSegment.startsWith('s1.calendar')}" type="button" class="btn btn-default">Календарь</a>
 
-                        <a href="#/fpk/stat" ng-class="{active: $routeSegment.startsWith('s1.stat')}" type="button" class="btn btn-default">Статистика</a>
+                        <a href="#/fpk/statistic" ng-class="{active: $routeSegment.startsWith('s1.stat')}" type="button" class="btn btn-default">Статистика</a>
                     </ul>
                   </div>
                 </div>
-
             <div class="menu_mini right">
                 <div class="btn-group">
                     <button type="button" class="btn btn-box btn-default dropdown-toggle" data-toggle="dropdown"> Добавить
@@ -169,7 +165,7 @@
 
       <div class="" app-view-segment="1"></div>
 
-      <div id="new_client_div" ng-if="one_client">
+      <div id="new_client_div" ng-if="show_one_client" resizablefull>
           <div class="close_one_client" ng-click="jsCloseOneClient()"><i class="icon-cancel-1"></i></div>
           <div class="one_client_container">
             <div client-list="one_client" my-attr="one_client"></div>
@@ -206,6 +202,16 @@
 
         <div id="panel_opener_left" ng-click="openPanel('left')">
             <i class="icon-right-open-1"></i>
+        </div>
+
+        <div class="cup_sms">
+          <ul>
+            <li ng-repeat="sms in cup_sms | orderBy:'order'" title="{{sms.title}}">
+              <img class="img_{{sms.type}}" ng-src="/images/do_type/{{sms.icon}}" width="14px">
+                <span class="sms" ng-if="!sms.plan">{{sms.day}} ({{sms.month}})</span>
+                <span class="sms" ng-if="sms.plan">{{sms.plan.plan5}} + {{sms.plan.plan4}} + {{sms.plan.plan3}}</span>
+            </li>
+          </ul>
         </div>
         
         <div id="panel_opener_right" ng-click="openPanel('right')">
@@ -266,5 +272,23 @@
 
     </div>
 
-<div id="panel_right">
+<div id="panel_right" resizable2 style="width:{{right_panel_width}}px">
+
+    <div id="panel_right_header">
+    Дела:
+    </div>
+
+    <div id="panel_right_content" class="noselectable">
+      <div class="mydo">
+        <ol>
+          <li ng-click="jsOpenClientFromRight(mydo)" ng-repeat="mydo in today_do">
+          <div class="datemini right_do" time-now="time_now" date-type="client" ng-model="mydo.date2" title="{{client.na_date}}"></div> 
+          <div class="do_type_icon"><img ng-src="/images/do_type/{{do_types_array[mydo.type].img}}" width="10px" title="Тип дела: {{mydo.type}}"></div>
+          {{mydo.text}}
+          <div class="mydo_fio"><span ng-if="mydo.short"><b>{{mydo.short}}</b> — </span>{{(mydo.fio)}}</div>
+          </li>
+        </ol>
+      </div>
+    </div>
+
 </div>

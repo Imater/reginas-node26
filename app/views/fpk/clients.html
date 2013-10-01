@@ -39,7 +39,7 @@
                             <ul class="dropdown-menu pull-right">
                               <li role="presentation" class="dropdown-header">Где искать:</li>                  
                               <li><a >Среди всех менеджеров</a></li>
-                              <li><a >Среди моих клиентов</a></li>
+                              <li ng-if="false"><a >Среди моих клиентов</a></li>
                             </ul>
                           </div><!-- /btn-group -->
                     </div><!-- /input-group -->
@@ -51,7 +51,7 @@
               <ul class="group_title">
                 <li ng-repeat="distinct in clients_distincts"><h2>{{jsGetDistinctTitle(distinct)}}</h2>
 
-                  <div client-list="clients" my-attr="clients" my-distinct="distinct" clients-by-distinct="clients_by_distinct"></div>
+                  <div client-list="clients" time-now="time_now" my-attr="clients" my-distinct="distinct" clients-by-distinct="clients_by_distinct"></div>
 
                 </li>
               </ul>

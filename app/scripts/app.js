@@ -14,7 +14,7 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
 
             .when('/fpk', 's1')
             .when('/fpk/clients', 's1.clients')
-            .when('/fpk/stat', 's1.stat')
+            .when('/fpk/statistic', 's1.stat')
             .when('/fpk/stat_table', 's1.stat_table')
             .when('/fpk/news', 's1.news')
             .when('/fpk/calendar', 's1.calendar')
@@ -115,7 +115,13 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
     });
 
 
-function MainCtrl($scope, $routeSegment, myApi) {
+function MainCtrl($scope, $routeSegment, myApi, $timeout) {
+
+    var body_class = localStorage.getItem("body_class");
+    if(body_class) $("body").attr("class", body_class);
+    if($("body").hasClass("right_hide")) $scope.right_panel_hide = true;
+    else $scope.right_panel_hide = false;
+
 
     $scope.$routeSegment = $routeSegment;
 
@@ -123,8 +129,7 @@ function MainCtrl($scope, $routeSegment, myApi) {
     });
 
     var manager_filter = localStorage.getItem("manager_filter");
-    $scope.manager_filter = manager_filter?manager_filter:-1;
-
+    $scope.manager_filter = manager_filter?manager_filter:(-1);
 
     $scope.user_fio = "Login...";
 
@@ -156,10 +161,22 @@ function MainCtrl($scope, $routeSegment, myApi) {
 
     $scope.brand = localStorage.getItem("brand")?localStorage.getItem("brand"):1;
 
+    $scope.today_do = [];
+    $scope.jsRefreshDo = function(scope){        
+        if($scope.right_panel_hide == false) {
+          myApi.getDoToday(scope).then(function(answer){
+            $scope.today_do = answer;
+            console.info("DO:",$scope.today_do);
+          });
+        } else {
+            //$scope.today_do = [];
+        }
+
+    }
+
     jsRefreshToken().done(function () {
         ///////////////////////////////////////////////
         myApi.loadUserInfo($scope).then(function(user){
-          console.info(user,"user Loaded");
           $scope.the_user = user.user[0];
           $scope.brand = user.user[0].brand; //бренд по умолчанию
           localStorage.setItem("brand", $scope.brand);
@@ -168,7 +185,8 @@ function MainCtrl($scope, $routeSegment, myApi) {
             return (user.user_group == 7);
           });
           $scope.commercials = user.commercials;
-
+          /////////////////////////////////////////////
+          $scope.jsRefreshDo($scope);
         });  
         ///////////////////////////////////////////////
         console.info("refresh_token_did");

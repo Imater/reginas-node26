@@ -40,13 +40,13 @@
   </div>
 
   <div class="input-group">
-    <i ng-if="reg_user.phone_ok" class="icon-ok ok2"></i><span class="input-group-addon" title="На этот мобильный телефон будут приходить назначенные Вами SMS напоминания">Телефон для SMS напом.:</span>
+    <i ng-if="reg_user.phone_ok" class="icon-ok ok2"></i><span class="input-group-addon" title="На этот мобильный телефон будут приходить назначенные Вами SMS напоминания">Телефон для SMS напоминаний:</span>
     <input type="text" class="form-control" ng-model="reg_user.phone" placeholder="89227277772">
   </div>
 
   <hr>
 
   <button id="reg_btn" class="btn btn-success" ng-click="jsRegNew()" ng-class={'disabled':jsRegCheck()}>Зарегистрироваться</button>
-  {{reg_user}}
+  
 
 </center>

@@ -4,14 +4,13 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 
  	$scope.$parent.leftmenu = { active:1,
                 items : [
-                  {id:10, title:"Холдинг", href: "#/fpk/clients/stat/cup"},
-                  {id:11, title:"Ежедневный", href: "#/fpk/clients/stat/day"},
-                  {id:12, title:"Детальный", href: "#/fpk/clients/stat/detail"},
-                  {id:13, title:"По месяцам", href: "#/fpk/clients/stat/year"},
+                  {id:0, title:"Холдинг", href: "/fpk/statistic", segment: "s1.statistic"},
+                  {id:1, title:"Подробная таблица", href: "/fpk/stat_table", segment: "s1.stat_table"}
                 ]
 
                 };
-	
+	$scope.leftmenu.active = -1;
+
 	$scope.stat_view_switch = 1;
 
 

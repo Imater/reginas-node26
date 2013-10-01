@@ -253,11 +253,30 @@ exports.findCalendar = function(request,response) {
 	var insert_sql = "";
 	if(manager_id>0) insert_sql = "1_do.manager_id = '"+manager_id+"' AND ";
 
-    pool.query('SELECT 1_do.*, 1_clients.fio, 1_models.short FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model WHERE '+insert_sql+' 1_do.brand = ? AND 1_do.date2>= ? AND 1_do.date2<= ? ', [ brand, start_date, end_date] , function (err, rows, fields) {
+    pool.query('SELECT 1_do.*, 1_clients.fio, 1_models.short FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model WHERE '+insert_sql+' 1_do.brand = ? AND 1_do.date2>= ? AND 1_do.date2<= ? AND 1_do.checked = "0000-00-00 00:00:00"', [ brand, start_date, end_date] , function (err, rows, fields) {
     		rows = correct_dates(rows);
 		    response.send(rows);
   	});	
 }
+
+exports.getDo = function(request,response) {
+	var user_id = request.query.user_id;
+	var brand = request.query.brand;
+	var manager_id = request.query.manager;
+
+	jsCheckToken(request.query.token).done(function(user_id){
+		var insert_sql = "";
+		if(manager_id>0) insert_sql = "1_do.manager_id = '"+manager_id+"' AND ";
+		var query = 'SELECT 1_do.*, 1_clients.id, 1_clients.fio, 1_models.short FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model WHERE '+insert_sql+' 1_do.brand = ? AND 1_do.date2<= DATE_ADD(NOW(), INTERVAL 10 DAY) AND 1_do.checked = "0000-00-00 00:00:00" ORDER by date2';
+		console.info(query);
+	    pool.query(query, [ brand ] , function (err, rows, fields) {
+	    		rows = correct_dates(rows);
+			    response.send(rows);
+	  	});	
+	});
+}
+
+
 
 connection.config.queryFormat = function (query, values) {
   if (!values) return query;
@@ -603,10 +622,12 @@ exports.findClient = function(request, response) {
 
     pool.query(myquery, [client_id], function (err, rows, fields) {
     	pool.query('SELECT * FROM `1_do` WHERE client = ? ORDER by date2 DESC, id DESC', [client_id], function (err, does, fields) {
+    		if(rows.length) {
     		does = correct_dates( does );
   			rows = correct_dates( rows );
   			rows[0].do = does;
 	  		response.send(rows);
+	  		}
 	  	});
   	});	
 
@@ -623,9 +644,10 @@ exports.loadStat = function(request, response) {
 	var answer = {};
 
 	var brand_id = request.query.brand;
+	var today = request.query.today;
 	var manager_id = request.query.manager;
 	console.info("manager_stat", manager_id);
-	var cache_id = md5(JSON.stringify(request.query.filters) + brand_id + manager_id);
+	var cache_id = md5(JSON.stringify(request.query.filters) + brand_id + manager_id + today);
 
 	if(!stat_cache[brand_id]) {
 		stat_cache[brand_id] = {};
@@ -666,13 +688,64 @@ exports.loadStat = function(request, response) {
 			}
 		});	
 
+		var result = [];
+		dfdArray.push( jsLoadStatSMS("dg", brand_id, today, result) );
+		dfdArray.push( jsLoadStatSMS("vd", brand_id, today, result) );
+		dfdArray.push( jsLoadStatSMS("vd_plan", brand_id, today, result) );
+		dfdArray.push( jsLoadStatSMS("out", brand_id, today, result) );
+		dfdArray.push( jsLoadStatSMS("zv", brand_id, today, result) );
+		dfdArray.push( jsLoadStatSMS("vz", brand_id, today, result) );
+		dfdArray.push( jsLoadStatSMS("tst", brand_id, today, result) );
+
 		$.when.apply(null, dfdArray).then(function(){
+			answer = {left_stat: answer, sms: result};
 			stat_cache[brand_id][ cache_id ] = answer;
 			response.send(answer);	
 		})
 	};
 	
 }
+
+var jsLoadStatSMS = function(type, brand_id, today, result) {
+	var dfd = $.Deferred();
+	var tmp = today.split("-");
+	var today_month = tmp[0]+"-"+tmp[1];
+	if( type != "vd_plan" ) {
+		if(type=="dg") var val = {type: type, icon: "1dogovor.png", day: 0, month: 0, title: "Договора", order: 0};
+		if(type=="vd") var val = {type: type, icon: "1vidacha.png", day: 0, month: 0, title: "Выдачи", order: 1};
+		if(type=="out") var val = {type: type, icon: "1out.png", day: 0, month: 0, title: "Расторжения", order: 3};
+		if(type=="zv") var val = {type: type, icon: "1zvonok.png", day: 0, month: 0, title: "Звонки первичные", order: 4};
+		if(type=="vz") var val = {type: type, icon: "1vizit.png", day: 0, month: 0, title: "Визиты первичные", order: 5};
+		if(type=="tst") var val = {type: type, icon: "1test-drive.png", day: 0, month: 0, title: "Тестдрайвы", order: 6};
+
+		myquery = "SELECT count(*) cnt FROM `1_clients` WHERE `"+type+"` LIKE '"+today_month+"%' AND brand = ? ";
+		pool.query(myquery, [brand_id], function (err, rows_month, fields) {
+			myquery = "SELECT count(*) cnt FROM `1_clients` WHERE `"+type+"` LIKE '"+today+"%' AND brand = ? ";
+			pool.query(myquery, [brand_id], function (err, rows_day, fields) {
+				val["month"] = rows_month[0].cnt;
+				val["day"] = rows_day[0].cnt;
+				result.push( val );
+				dfd.resolve();
+			});
+		});
+	} else if (type=="vd_plan") {
+		var val = {type: type, icon: "1vidacha.png", day: 0, month: 0, title: "Запланированные выдачи", order: 2};
+		myquery = "SELECT icon2 FROM `1_clients` WHERE `icon2`>2 AND vd='0000-00-00 00:00:00' AND `out`='0000-00-00 00:00:00' AND brand = ? ";
+		pool.query(myquery, [brand_id], function (err, rows, fields) {
+			val["plan"] = { plan5: 0, plan4: 0, plan3: 0 };
+			$.each(rows, function(i, cl){
+				if( cl.icon2 == 3 ) val.plan.plan3 += 1;
+				if( cl.icon2 == 4 ) val.plan.plan4 += 1;
+				if( cl.icon2 == 5 ) val.plan.plan5 += 1;
+			});
+			result.push( val );
+			dfd.resolve();
+		});
+	}
+	return dfd.promise();
+}
+
+
 
 exports.loadAllBig2 = function(request, response) {
     
@@ -718,6 +791,7 @@ exports.saveClient = function(request, response) {
 
     pool.query(query, changes, function (err, rows, fields) {
   		response.send({affectedRows: rows.affectedRows});
+  		stat_cache = {}; //обнуляем кеш
   	});	
   });
 
@@ -728,14 +802,16 @@ exports.newDo = function(request, response) {
 	var client_id = request.query.client_id;
 	var do_type = request.query.do_type;
 	var brand_id = request.query.brand;
+	var manager_id = request.query.manager;
+
 
 	console.info(request.query, brand_id);
 
  jsCheckToken(request.query.token).done(function(user_id){
+ 	if(manager_id == -1) manager_id = user_id;
+	query = "INSERT INTO 1_do SET manager_id = ?, client = ?, type = ?, text = ?, brand = ?, date2 = DATE_ADD(NOW(), INTERVAL 5 MINUTE), host_id = ? ";
 
-	query = "INSERT INTO 1_do SET manager_id = ?, client = ?, type = ?, text = ?, brand = ?, date2 = DATE_ADD(NOW(), INTERVAL 6 MINUTE), host_id = ? ";
-
-    pool.query(query, [ user_id, client_id, do_type, do_type, brand_id, user_id ], function (err, rows, fields) {
+    pool.query(query, [ manager_id, client_id, do_type, do_type, brand_id, user_id ], function (err, rows, fields) {
     	var insert_id = rows.insertId;
     	response.send({insert_id: insert_id});
     	console.info("ADDED rows = ", rows, err);
@@ -804,6 +880,23 @@ exports.deleteModel = function(request, response) {
 		  });
 		  
     	}
+  	});	
+  });
+
+}
+
+exports.removeClient = function(request, response) {
+
+ var client_id = request.query.client_id;
+
+ console.info(client_id);
+
+ jsCheckToken(request.query.token).done(function(user_id){
+    pool.query('DELETE * FROM 1_do WHERE client = ?',[client_id], function (err, rows, fields) {
+		  pool.query('DELETE FROM `1_clients` WHERE id = ?',[client_id], function (err, rows, fields) {
+		  	response.send({rows:rows, err: err});
+		  	console.info({rows:rows, err: err});
+		  });
   	});	
   });
 
@@ -1189,6 +1282,7 @@ exports.regNewUser = function(request, response) {
 
 			pool.query('INSERT INTO `1_users` SET ?',[new_fields], function (err, rows, fields) {
 				console.info(rows);
+				response.send(rows);
 			});
 		}
 	});
@@ -1535,6 +1629,7 @@ app.get('/api/v1/bigdata2', database.loadAllBig2)
 app.get('/api/v1/client', database.findAllClients );
 app.get('/api/v1/client/:id', database.findClient );
 app.post('/api/v1/client', database.addNewClient );
+app.delete('/api/v1/client/:id', database.removeClient );
 
 
 app.get('/api/v1/do/:id', database.findDoById );
@@ -1564,6 +1659,8 @@ app.delete('/api/v1/models', database.deleteModel );
 
 app.put('/api/v1/do/:id', database.saveDo );
 app.put('/api/v1/client/:id', database.saveClient );
+app.get('/api/v1/do', database.getDo );
+
 
 app.post('/api/v1/do', database.newDo );
 

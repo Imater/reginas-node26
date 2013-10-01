@@ -87,6 +87,43 @@ myApp.directive('resizable', function() { return {
 }
 });
 
+myApp.directive('resizablefull', function() { return {
+    //restrict: 'A',
+    require: '?ngModel',
+    link: function($scope, $element, attrs, ngModel) {
+      // view -> model
+      $element.resizable({ handles: "e" });
+
+      $element.on('resize', function(event, ui) {
+      });
+    }
+}
+});
+
+
+myApp.directive('resizable2', function() { return {
+    //restrict: 'A',
+    require: '?ngModel',
+    link: function($scope, $element, attrs, ngModel) {
+      // view -> model
+      $element.resizable({ handles: "w" });
+
+      var tm_resize;
+      $element.on('resize', function(event, ui) {
+        console.info("rezize", event, ui);
+        clearTimeout(tm_resize);
+        tm_resize = setTimeout(function(){
+            $scope.$apply(function() {
+              $scope.right_panel_width = ui.size.width;
+              localStorage.setItem("right_panel_width", ui.size.width);
+            });
+
+        },1);
+      })
+    }
+}
+});
+
 
 
 myApp.directive('sortable', function() { return {
@@ -219,13 +256,12 @@ myApp.directive('modelChangeBlur', function() {
     };
 });
 
-function jsDateDiff(date2) {
+function jsDateDiff($scope,date2) {
   var answer = {text:"&nbsp;", class:""};
-
   if(!date2) return answer;
   if(date2=="0000-00-00 00:00:00") return answer;
 
-  var date1 = new Date((new Date()).getTime()-1*60000);
+  var date1 = new Date(( new Date() ).getTime()-1*60000);
   var date2 = fromMysql(date2);
   var dif_sec = date2.getTime() - date1.getTime();
 
@@ -266,11 +302,13 @@ myApp.directive('datemini', ['$timeout', function($timeout) { return {
     link: function($scope, $element, attrs, ngModel) {
       // don't do anything unless this is actually bound to a model
       // view -> model
-
       //ngModel.$viewValue.html("+3дн");
+      $scope.$watch("time_now", function(){
+        ngModel.$render();
+      });
       ngModel.$render = function() {
         var date2 = ngModel.$viewValue;
-        var answer = jsDateDiff(date2);
+        var answer = jsDateDiff($scope, date2);
         if(attrs.dateType=="client") {
           if(($scope.client) && ($scope.client.out!=NO_DATE)) {
             answer.text = "OUT";
@@ -280,7 +318,7 @@ myApp.directive('datemini', ['$timeout', function($timeout) { return {
             answer.text = "РАСТОРГ";
             answer.class = "date_rastorg";
           }
-        }
+        }        
         $element.html(answer.text || '').removeClass("past").removeClass("datetoday").removeClass("datepast").addClass(answer.class);
 
         }
@@ -497,7 +535,6 @@ myApp.directive('returnOnBlur', function() {
             elm.on("keydown",function(){
               old_index = $(this).parents("li:first").index();
               mydoid = $(this).parents("li:first").attr("mydoid");
-              console.info("SAVE-CURRENT INDEX = ", old_index);
             });
 
             elm.bind("blur", function(){
@@ -544,7 +581,6 @@ myApp.directive('dateTimeEntry', function() {
             elm.on("keydown",function(){
               old_index = $(this).parents("li:first").index();
               mydoid = $(this).parents("li:first").attr("mydoid");
-              console.info("SAVE-CURRENT INDEX = ", old_index);
             });
 
             elm.datetimeEntry().change(function() {
@@ -566,7 +602,6 @@ myApp.directive('dateTimeEntry', function() {
                     if(old_index != new_index) {
                       $("li[mydoid='"+mydoid+"'] .do_date2").focus();
                     }
-                    console.info( old_index, new_index, mydoid, scope.$parent.$index );
 
                   },0);
                   setTimeout(function(){
@@ -574,7 +609,6 @@ myApp.directive('dateTimeEntry', function() {
                     if(old_index != new_index) {
                       $("li[mydoid='"+mydoid+"'] .do_date2").focus();
                     }
-                    console.info( old_index, new_index, mydoid, scope.$parent.$index );
 
                   },600);
                 });
@@ -681,6 +715,17 @@ myApp.factory('myApi', function($http, $q){
 
       return dfd.promise;
     },
+    getDoToday:function($scope) {
+      var dfd = $q.defer();
+
+      jsGetToken().done(function(token){
+        $http({url:'/api/v1/do',method: "GET", params: { token: token, brand: $scope.brand, manager: $scope.manager_filter}}).then(function(result){
+          dfd.resolve(result.data);
+        });
+      });
+
+      return dfd.promise;
+    },
     getClient: function($scope,filter) {
       var dfd = $q.defer();
 
@@ -721,7 +766,7 @@ myApp.factory('myApi', function($http, $q){
 
         var filters = $scope.leftmenu;
 
-        $http({url:'/api/v1/stat',method: "GET", isArray: true, params: { token: token, filters: filters, brand: $scope.brand, manager: $scope.manager_filter }}).then(function(result){
+        $http({url:'/api/v1/stat',method: "GET", isArray: true, params: { token: token, filters: filters, brand: $scope.brand, manager: $scope.manager_filter, today: $scope.today_date }}).then(function(result){
           dfd.resolve(result.data);
         });
       });
@@ -778,6 +823,7 @@ myApp.factory('myApi', function($http, $q){
 
         $http({url:'/api/v1/do/'+changes.id,method: "PUT", isArray: true, params: { token: token, changes: changes, brand: $scope.brand, client_id: client_id }}).then(function(result){
             console.info("DO SAVED: ",result.data);
+
           dfd.resolve(result.data);
         });
       });
@@ -791,7 +837,7 @@ myApp.factory('myApi', function($http, $q){
 
       jsGetToken().done(function(token){
 
-        $http({url:'/api/v1/do',method: "POST", isArray: true, params: { token: token, do_type: do_type, brand: $scope.$parent.brand, client_id: client_id }}).then(function(result){
+        $http({url:'/api/v1/do',method: "POST", isArray: true, params: { token: token, do_type: do_type, brand: $scope.$parent.brand, client_id: client_id, manager: $scope.manager_filter }}).then(function(result){
             console.info("DO NEW: ",result.data);
           dfd.resolve(result.data);
         });
@@ -816,7 +862,21 @@ myApp.factory('myApi', function($http, $q){
 
       
     },    
+    deleteClient: function($scope, client_id) {
+      var dfd = $q.defer();
 
+      jsGetToken().done(function(token){
+
+        $http({url:'/api/v1/client/'+client_id,method: "DELETE", isArray: true, params: { token: token, client_id: client_id }}).then(function(result){
+            console.info("CLIENT DELETE: ",result.data);
+            dfd.resolve(result.data);
+        });
+      });
+
+      return dfd.promise;      
+
+      
+    },
     regNewUser:function($scope) {
       var dfd = $q.defer();
         var reg_user = angular.copy( $scope.reg_user );
@@ -944,16 +1004,13 @@ var LIST_LENGTH = 100; //кол-во загружаемых клиентов з�
 
 myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment) {
 
-
-
 $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
     console.info("list_finish");
     //you also get the actual event object
     //do stuff, execute functions -- whatever...
 });        
 
-
- $scope.$routeSegment = $routeSegment;
+$scope.$routeSegment = $routeSegment;
 
 
 $scope.jsFioShort = function(fio, need_surname) {
@@ -984,14 +1041,14 @@ $scope.jsFioShort = function(fio, need_surname) {
  }
  
  $scope.do_types = [ //типы дел
-    {img: "1zvonok.png", title: "Звонок"},
-    {img: "1vizit.png", title: "Визит"},
-    {img: "1test-drive.png", title: "Тест-драйв"},
+    {img: "1zvonok.png", title: "Звонок", fieldname: "zv"},
+    {img: "1vizit.png", title: "Визит", fieldname: "vz"},
+    {img: "1test-drive.png", title: "Тест-драйв", fieldname: "tst"},
     {img: "1credit.png", title: "Кредит"},
-    {img: "1dogovor.png", title: "Договор"},
+    {img: "1dogovor.png", title: "Договор", fieldname: "dg"},
     {img: "1settings.png", title: "Подготовка"},
-    {img: "1vidacha.png", title: "Выдача"},
-    {img: "1out.png", title: "OUT"}
+    {img: "1vidacha.png", title: "Выдача", fieldname: "vd"},
+    {img: "1out.png", title: "OUT", fieldname: "out"}
  ];
 
  var tmp_status = {};
@@ -1025,7 +1082,8 @@ $scope.jsFioShort = function(fio, need_surname) {
   $scope.jsLoadStat = function() {
     if($scope.brand) {
         myApi.getStat($scope).then(function(result){
-            $scope.$parent.stat = result;
+            $scope.$parent.stat = result.left_stat;
+            $scope.cup_sms = result.sms;
         });    
     }
   }
@@ -1034,7 +1092,8 @@ $scope.jsFioShort = function(fio, need_surname) {
  $scope.jsSelectBrand = function(id) {
     $scope.brand=id;
     $scope.jsLoadStat(); 
-    $scope.jsRefreshClients();    
+    $scope.jsRefreshClients();   
+    $scope.jsRefreshDo($scope); 
     $("#myfullcalendar").fullCalendar("refetchEvents");
  }
 
@@ -1043,16 +1102,31 @@ $scope.jsFioShort = function(fio, need_surname) {
     localStorage.setItem("manager_filter", manager_id);
     $scope.jsLoadStat(); 
     $scope.jsRefreshClients();
+    $scope.jsRefreshDo($scope);
     $("#myfullcalendar").fullCalendar("refetchEvents");
  }
 
  $scope.jsCloseOneClient = function(){
-    $scope.one_client = undefined;
+    $scope.show_one_client = false;
     if($scope.jsRefreshClients) $scope.jsRefreshClients();
  };
 
  //дефолтные установки выбора даты
  $.datetimeEntry.setDefaults({spinnerImage: 'bower_components/jquery.datetimeentry/spinnerDefault.png', datetimeFormat: 'W N Y H:M'});
+
+ $scope.jsOpenClientFromRight = function(mydo) {
+
+         myApi.getClientFull($scope, mydo.client).then(function(client){
+          console.info("client = ", client);
+          $scope.one_client = client;
+          $scope.show_one_client = true;
+          $scope.one_client[0]._visible = true;
+          $.each($scope.one_client[0].do, function(i, thedo){
+            if(thedo.id == mydo.id) thedo._visible = true;
+          });
+        });
+ }
+
 
 //фильтр для выбора уникальных групп менеджеров или дат
  $scope.jsGetDistinctTitle = function(distinct) {
@@ -1084,9 +1158,13 @@ $scope.jsFioShort = function(fio, need_surname) {
 
  //клик в меню
  $scope.jsSelectLeftMenu = function(menu_item, $index) {
+          $scope.leftmenu.active = $index;  
+          if(menu_item.href) {
+            window.location.hash = menu_item.href;
+            return true;
+          }
           $scope.clientsgroupby = menu_item.group_by; 
           $scope.searchstring = "";
-          $scope.leftmenu.active = $index;  
           $scope.leftmenu.current_filter = menu_item.filter;  
           console.info("SELECT LEFT MENU=", menu_item, $index);
           $scope.jsRefreshClients();
@@ -1121,6 +1199,7 @@ $scope.jsFioShort = function(fio, need_surname) {
     myApi.getClientFull($scope, answer.insert_id).then(function(client){
             console.info("client = ", client);
             $scope.one_client = client;
+            $scope.show_one_client = true;
             $scope.one_client[0]._visible = true;
             $scope.one_client[0]._edit = true;
             setTimeout(function(){
@@ -1194,6 +1273,10 @@ $scope.jsFioShort = function(fio, need_surname) {
   $scope.left_panel_width = localStorage.getItem("left_panel_width");
   if(!$scope.left_panel_width) $scope.left_panel_width = 250;
 
+
+  $scope.right_panel_width = localStorage.getItem("right_panel_width");
+  if(!$scope.right_panel_width) $scope.right_panel_width = 200;
+
 	$scope.redactorOptions = {
       autoresize: false,
       imageUpload: './api/v1/save_file/?save_file='+this_user_id
@@ -1208,6 +1291,16 @@ $scope.jsFioShort = function(fio, need_surname) {
 
   $scope.openPanel = function(which_panel) {
     $("body").toggleClass(which_panel+"_hide");
+    localStorage.setItem("body_class", $("body").attr("class"));
+    if($("body").hasClass("right_hide")) {
+      $scope.$parent.today_do = [];
+      $scope.right_panel_hide = true;
+    } else {
+      $scope.$parent.right_panel_hide = false;
+      $scope.right_panel_hide = false;
+      $scope.jsRefreshDo($scope);
+    }
+    onResize();
   };
 
   

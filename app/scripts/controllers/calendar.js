@@ -5,16 +5,11 @@ myApp.controller('calendarCtrl', function ($scope, $resource, $rootScope, $locat
 
 $scope.$parent.leftmenu = { active:1,
                 items : [
-                  {id:0, title:"Календарь отдела", group_by: "manager"},
-
-                  {id:1, title:"Мой календарь", group_by: "manager"},
-
-                  {id:2, title:"Журнал выдач", group_by: "vd"},
-
-                  {id:3, title:"Журнал тест-драйвов", group_by: "creditmanager"}
-
+                  {id:0, title:"Календарь дел", group_by: "manager", href:"/fpk/calendar"}
                   ]
                 };
+
+$scope.time_now = $scope.$parent.time_now;
 
 
 	setTimeout(function(){
@@ -41,6 +36,8 @@ $scope.$parent.leftmenu = { active:1,
         myApi.getClientFull($scope, calEvent.client_id).then(function(client){
           console.info("client = ", client);
           $scope.$parent.one_client = client;
+          $scope.$parent.show_one_client = true;
+
           $scope.$parent.one_client[0]._visible = true;
           $.each($scope.$parent.one_client[0].do, function(i, mydo){
             if(mydo.id == calEvent.myid) mydo._visible = true;

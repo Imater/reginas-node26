@@ -70,7 +70,10 @@ myApp.controller('loginCtrl', function ($scope, $resource, $rootScope, $location
  }
 
  $scope.jsRegNew = function() {
- 	myApi.regNewUser($scope);
+ 	myApi.regNewUser($scope).then(function(answer){
+    alert("Вы успешно зарегистрировались. Теперь вводите пароль и входите.");
+    window.location.hash = "#/user/login";
+  });
  };
 
 

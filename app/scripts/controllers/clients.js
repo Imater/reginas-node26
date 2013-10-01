@@ -25,7 +25,7 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
                 };
 
 
-  $scope.jsLoadStat();
+  if($scope.jsLoadStat) $scope.jsLoadStat();
 
   if($scope.jsSelectLeftMenu) {
     $scope.jsSelectLeftMenu($scope.leftmenu.items[1], 1);
@@ -100,10 +100,14 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
     restrict: 'A',
     scope: {
       local_clients: "=myAttr",
+      time_now: "=timeNow",
       distinct: "=myDistinct",
       clients_by_distinct: "=clientsByDistinct"
     },
     link: function ($scope, elm, attrs, clients) {
+
+ //       $scope.time_now = fpkCtrl.get_time_now();
+
         $scope.models = $scope.$parent.models;
         $scope.models_array = $scope.$parent.models_array;
         $scope.car_status = $scope.$parent.car_status;
@@ -124,16 +128,46 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
         $scope.jsOnOffDateParser = $scope.$parent.jsOnOffDateParser;
 
         $scope.jsLoadStat = $scope.$parent.jsLoadStat;
+        $scope.jsRefreshDo = $scope.$parent.jsRefreshDo;
         $scope.stat = $scope.$parent.stat;
+        $scope.brand = $scope.$parent.brand;
+        $scope.manager_filter = $scope.$parent.manager_filter;
 
         $scope.models_array_show = _.filter($scope.$parent.models_array, function(el){ return ( (el.brand == $scope.$parent.brand) && (el.show == 1)); });
 
+        $scope.jsPlanRotate = function(client, fieldname) {
+          client[fieldname] += 1;
+          if(client[fieldname]>5) client[fieldname] = 0;
+          $scope.jsClientSave(client);
+        }
+
+
+        $scope.jsCheckDoType = function(do_type, client) {
+          return false;
+          console.info(do_type, client, client[do_type.fieldname]);
+          if( do_type.fieldname && (client[do_type.fieldname]!=NO_DATE) ) return true;
+          else return false;
+        }
 
         $scope.jsClientsInDistinct = function() {
           if(!$scope.distinct) return $scope.local_clients;
           var index = $scope.distinct[$scope.$parent.clientsgroupby];
           if( ($scope.$parent.clientsgroupby == "vd") || ($scope.$parent.clientsgroupby == "out") ) var index = $scope.distinct[$scope.$parent.clientsgroupby].substr(0,7);
           return $scope.clients_by_distinct[ index ];
+        }
+
+        $scope.jsClientDelete = function(client) {
+          var client_id = client.id;
+          if( confirm("Вы действительно хотите удалить клиента №"+client_id+"? Лучше откажитесь и поставьте ему OUT.") ) {
+              myApi.deleteClient($scope, client_id).then(function(value){
+                console.info(value);
+                if(value.rows.affectedRows>0) {
+                  $scope.$parent.jsRefreshClients();
+                }
+                else alert("Не могу удилить клиента. Лучше поставьте ему OUT.");
+              }); 
+          }
+
         }
 
         $scope.jsClientSave = function(client){
@@ -153,6 +187,7 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
           myApi.saveClient($scope, changes, client_id).then(function(value){
             if(value.affectedRows>0) {
               client._edit = false;
+              $scope.jsLoadStat();
               $("#myfullcalendar").fullCalendar("refetchEvents");
             }
             else alert("Не могу отправить данные на сервер");
@@ -264,6 +299,8 @@ function DoCtrl($scope, myApi) { //контроллер дел
    $scope.backup_copy = angular.copy( $scope.do );
    $scope.client = $scope.$parent.client;
    $scope.backup_copy._visible = true;
+   $scope.time_now = $scope.$parent.time_now;
+   $scope.brand = $scope.$parent.brand;
 
    $scope.models = $scope.$parent.models;
    $scope.models_array = $scope.$parent.models_array;
@@ -273,9 +310,17 @@ function DoCtrl($scope, myApi) { //контроллер дел
    $scope.do_types_array = $scope.$parent.do_types_array;
 
    $scope.jsLoadStat = $scope.$parent.jsLoadStat;
+   $scope.jsRefreshDo = $scope.$parent.jsRefreshDo;
    $scope.stat = $scope.$parent.stat;
+   $scope.manager_filter = $scope.$parent.manager_filter;
 
    $scope.can_parse_date = true;
+
+   $scope.jsAddHours = function(hours) {
+          var answer = new Date( (new Date).getTime() + hours*60*60000 );
+          $scope.do.date2 = toMysql(answer);
+   };
+
 
    $scope.$watch("do.text",function( value, old_value ){
      if((!$scope.can_parse_date) || (old_value == value)) return true;
@@ -283,11 +328,9 @@ function DoCtrl($scope, myApi) { //контроллер дел
      if(parse_date && parse_date.date) {
       $scope.do.date2 = toMysql( parse_date.date );
      }
-     console.info( "Date = ", parse_date, $scope.can_parse_date, $scope.$parent.can_parse_date);
    });
 
    $scope.jsParseDateTrigger = function(){
-    alert(1);
     $scope.can_parse_date = !$scope.can_parse_date;
    }
 
@@ -331,7 +374,10 @@ function DoCtrl($scope, myApi) { //контроллер дел
           $scope.client.na_date = client_back[0].na_date; 
           $("#myfullcalendar").fullCalendar("refetchEvents");
 
-          setTimeout(function(){ if($scope.jsLoadStat) $scope.jsLoadStat(); },500);
+          setTimeout(function(){ if($scope.jsLoadStat) $scope.jsLoadStat(); 
+            $scope.jsRefreshDo($scope);
+            console.info($scope.manager_filter)
+          },500);
           //$scope.setX($scope.client.id, client_back[0]);
 
 

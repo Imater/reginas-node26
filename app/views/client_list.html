@@ -10,18 +10,22 @@
                            </div>
 
                            <div class="do_buttons">
-                            <div class="do_btn" ng-repeat="do_type in do_types" ng-click="jsAddDo(do_type,client);$event.stopPropagation();"><img title="{{do_type.title}}" ng-src="images/do_type/{{do_type.img}}"></div>
+                            <div class="do_btn" ng-repeat="do_type in do_types" ng-click="jsAddDo(do_type,client);$event.stopPropagation();"><img ng-class="{img_active:jsCheckDoType(do_type, client)}" title="{{do_type.title}}" ng-src="images/do_type/{{do_type.img}}"></div>
                            </div>
 
-                           <div class="datemini" date-type="client" ng-model="client.na_date" title="{{client.na_date}}"></div> 
+                           <div class="datemini" time-now="time_now" date-type="client" ng-model="client.na_date" title="{{client.na_date}}"></div> 
                            <div class="client_fio">{{client.fio}}</div>
                            <div ng-if="client.out_reason.length&&client.out_reason.length>9" class="out_reason">{{client.out_reason}}</div>
                         </div>      
                         <div ng-if="client._visible == true" class="client_inside selectable" jq-show-effect="client._visible == true" jq-options="{type:'slide', duration:200, delay:200, hideImmediately: true}" style="display:none;">
                           <div class="client_info" ng-click="client._edit = !client._edit">
-                            <i class='icon-phone'></i>{{client.phone1}} {{client.phone11}}<span ng-if="client.phone2">, </span>{{client.phone2}} {{client.phone22}}<span ng-if="client.phone3">,</span> {{client.phone3}} {{client.phone33}} {{client.phone4}} {{client.phone44}}<br>
-                            {{client.adress}}
-                            <span ng-if="client.cost"><i class='icon-dollar'></i> {{client.cost}} руб.</span>
+                            <div class="client_plan">
+                              Желание клиента: <img ng-click="jsPlanRotate(client,'icon');$event.stopPropagation();" ng-src="images/progress/progres-{{client.icon}}.gif"><br>
+                              Вероятность выдачи в этом месяце: <img ng-click="jsPlanRotate(client,'icon2');$event.stopPropagation();" ng-src="images/progress/progres-{{client.icon2}}.gif">
+                            </div>
+                            <i class='icon-phone'></i>{{client.phone1}} {{client.phone11}}<span ng-if="client.phone2">, </span>{{client.phone2}} {{client.phone22}}<span ng-if="client.phone3">,</span> {{client.phone3}} {{client.phone33}} {{client.phone4}} {{client.phone44}}
+                            <span ng-if="client.adress"><br>{{client.adress}}</span>
+                            <span ng-if="client.cost"><br><i class='icon-dollar'></i>{{client.cost}} руб.</span>
                             <br>
                             <span ng-if="client.creditmanager">[оплата: <b>{{client.creditmanager}}</b>]<br></span>
                             <span ng-if="client.commercial_id">[откуда узнали: <b>{{jsFindInArray(commercials,"id",client.commercial_id).title}}</b>]<br></span>
@@ -218,8 +222,12 @@
                             </div>
 
                             <div class="row">
-                              <div class="col-md-6">
+                              <div class="col-md-3">
                                 <button class="btn btn-success btn-sm" ng-click="jsClientSave(client)">Сохранить</button>
+                              </div>
+                              <div class="col-md-3">
+                                <a class="pull-right delete_client" ng-click="jsClientDelete(client)">Удалить клиента</a>
+                              </a>
                               </div>
 
                             <div class="row">
@@ -252,28 +260,126 @@
                           <ul>
                             <li ng-repeat="do in client.do | orderBy: ['date2','id']: true" class="client_do_li" ng-controller="DoCtrl" myindex={{$index}} mydoid="{{do.id}}">
                               <div class="do_line" ng-click="do._visible = !do._visible" ng-class="{'did':do.checked!='0000-00-00 00:00:00'}">
-                                <div class="datemini" date-type="do" ng-model="do.date2" title="{{do.date2}}"></div>
-                                <div class="do_type_icon"><img ng-src="/images/do_type/{{do_types_array[do.type].img}}" width="20px" height="20px" title="Тип дела: {{do.type}}"></div>
+                                <div class="datemini"  time-now="time_now" date-type="do" ng-model="do.date2" title="{{do.date2}}"></div>
+                                <div class="do_type_icon"><img ng-src="/images/do_type/{{do_types_array[do.type].img}}" width="20px" title="Тип дела: {{do.type}}"></div>
                                 <div class="do_text">
                                   {{do.text}} 
                                   <span ng-if="do.host_id!=client.manager_id && do.host_id>0">[Поручил: <i class="icon-user"></i>{{jsFioShort(jsFindInArray(managers,"id",do.host_id).fio)}}]</span>
+                                  <span ng-if="do.manager_id!=client.manager_id && do.manager_id>0">[Исполнитель: <i class="icon-user"></i>{{jsFioShort(jsFindInArray(managers,"id",do.manager_id).fio)}}]</span>
+                                  <span ng-if="do.comment" class="do_result"><br>Результат: {{do.comment}}</span>
                                 </div>
                               </div>
                               
                               <div ng-if="do._visible == true" jq-show-effect="do._visible == true" jq-options="{type:'slide', duration:150, delay:200, hideImmediately: true}" class="do_edit" style="display:none;">
-                                <div>
-                                    <button ng-click="jsDoSave(); do._visible=false;" class="do_save">Сохранить</button>
-                                    <button ng-click="jsDoDone();jsDoSave();do._visible=false;" class="do_done">{{do.checked!='0000-00-00 00:00:00' && "Снять выполнение" || "Выполнить"}}</button>   
 
-                                    <button class="do_del">Удалить</button>
-                                    <button ng-click="jsDoCancel()" class="do_cancel">Отменить</button>
-                                    <textarea placeholder="Введите описание дела..." class="do_text_input" return-on-blur="do_text" msd-elastic ng-model="do.text" ></textarea>                                    
-                                    <input ng-model="do.manager"></input><br>
-                                    <input date-time-entry="do.date2" class="do_date2"></input>
-                                    <a ng-click="jsParseDateTrigger()">
-                                      <span ng-if="can_parse_date">Распознавание дат: вкл</span>
-                                      <span ng-if="!can_parse_date">Распознавание дат: выкл</span>
-                                    </a>
+                                <div>
+                                    <div class="row">
+                                      <div class="col-md-12">
+                                            <button ng-click="jsDoSave(); do._visible=false;" class="do_save">Сохранить</button>
+                                            <button ng-click="jsDoDone();jsDoSave();do._visible=false;" class="do_done">{{do.checked!='0000-00-00 00:00:00' && "Снять выполнение" || "Выполнить"}}</button>   
+
+                                            <button class="do_del">Удалить</button>
+                                            <button ng-click="jsDoCancel()" class="do_cancel">Отменить</button>
+                                      </div>
+                                    </div>
+
+                                    <div class="row">
+                                    
+                                      <div class="col-md-12">
+                                        <div class="input-group input-group-sm">
+                                          <span class="input-group-addon">Дело:</span>
+                                            <textarea placeholder="Введите описание дела..." class="do_text_input" return-on-blur="do_text" ng-model="do.text" ></textarea> 
+
+                                        </div>
+                                      </div>
+                                    
+
+
+
+                                    </div> <!-- row -->
+
+                                    <div class="row">
+                                    
+                                      <div class="col-md-8">
+                                        <div class="input-group input-group-sm">
+                                          <span class="input-group-addon" title="Результат выполнения дела">Результат</span>
+                                            <textarea placeholder="Результат выполнения дела..." class="do_comment_input" ng-model="do.comment" ></textarea> 
+
+                                        </div>
+                                      </div>
+                                    
+
+                                      <div class="col-md-4 do_types_button">
+                                            <div class="btn-group">
+                                              <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                Тип дела: <b>{{do.type}}</b> <span class="caret"></span>
+                                              </button>
+                                              <ul class="dropdown-menu" role="menu">
+                                                <li ng-repeat="do_type in do_types" ng-click="do.type = do_type.title"><a><img title="{{do_type.title}}" ng-src="images/do_type/{{do_type.img}}">{{do_type.title}}</a></li>
+                                              </ul>
+                                            </div><br>                         
+                                            <a ng-click="jsParseDateTrigger()">
+                                              <span ng-if="can_parse_date">Распознавание дат: вкл</span>
+                                              <span ng-if="!can_parse_date">Распознавание дат: выкл</span>
+                                            </a>
+
+                                      </div>
+
+
+                                    </div> <!-- row -->
+
+                                    <div class="row">
+                                    
+                                      <div class="col-md-8">
+                                        <div class="input-group input-group-sm">
+                                          <span class="input-group-addon">Дата:</span>
+                                          <input date-time-entry="do.date2" class="do_date2"></input>
+                                        </div>
+                                        <div class="fast_time">
+                                          <span>
+                                            Через: 
+                                            <a ng-click="jsAddHours(0.5)">30 мин.,</a> 
+                                            <a ng-click="jsAddHours(1)">1 час,</a> 
+                                            <a ng-click="jsAddHours(2)">2 часа,</a>
+                                            <a ng-click="jsAddHours(3)">3 часа,</a>
+                                            <a ng-click="jsAddHours(24)">1 день,</a>
+                                            <a ng-click="jsAddHours(48)">2 дня,</a>
+                                            <a ng-click="jsAddHours(72)">3 дня,</a>
+                                            <a ng-click="jsAddHours(168)">1 нед.,</a>
+                                            <a ng-click="jsAddHours(336)">2 нед.,</a>
+                                            <a ng-click="jsAddHours(744)">1 месяц.</a>
+
+                                          </span>
+                                        </div>
+                                      </div>
+                                    
+
+                                      <div class="col-md-4 do_types_button">
+                                            <div class="btn-group">
+                                              <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                Исполнитель: <b>{{jsFioShort(jsFindInArray(managers,"id",do.manager_id).fio)}}</b> <span class="caret"></span>
+                                              </button>
+                                              <ul class="dropdown-menu pull-right" role="menu">
+                                                  <li  ng-click="do.manager_id = manager.id" ng-repeat="manager in managers | onlyManager:true"><a><i class="icon-user"></i>{{manager.fio}}</a></li>
+
+                                                    <li class="dropdown-submenu"><a>Остальные</a>
+                                                     <ul class="dropdown-menu">
+                                                      <li ng-click="do.manager_id = manager.id" ng-repeat="manager in managers | onlyManager:false"><a>{{manager.fio}}</a></li>
+                                                     </ul>
+                                                    </li>
+
+                  
+                                              </ul>
+                                            </div>                              
+                                      </div>
+
+
+                                    </div> <!-- row -->
+
+                                </div>
+
+                                <div>
+                                                                        
                                 </div>
 
                               </div>
