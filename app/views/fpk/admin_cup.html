@@ -2,11 +2,11 @@
 	<h3>Учёт трафика</h3>
 	<div class="admin_cup">
 		<ul class="admin_ul">
-			<li ng-repeat="manager in managers | onlyManager:true">
+			<li ng-repeat="manager in fpk.managers | onlyManager:true">
 				<div class="admin_col">
 					<span class="manager_fio">
 						<i class="icon-user"></i>
-						{{jsFioShort(manager.fio,"name")}}
+						{{fpk.jsFioShort(manager.fio,"name")}}
 					</span>
 				</div>
 				
@@ -103,7 +103,7 @@
 		<div class="col-md-7">
 		<h5>Откуда про нас узнали:</h5>
 		<ol class="commercial_select">
-            <li ng-click="client.commercial_id = comm.id" ng-repeat="comm in commercials"><a>{{comm.title}}</a></li>
+            <li ng-click="client.commercial_id = comm.id" ng-repeat="comm in fpk.commercials"><a>{{comm.title}}</a></li>
             <li ng-click="client.commercial_id=0"><a>Неизвестно</a></li>
   		</ol>
   		</div>

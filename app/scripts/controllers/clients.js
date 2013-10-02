@@ -5,7 +5,7 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
 
 
 
- $scope.$parent.leftmenu = { active:1,
+ $scope.fpk.leftmenu = { active:1,
                 items : [
                   {id:0, title:"В работе", group_by: "manager_id", 
                    filter: {no_out: true, no_dg: true, no_vd:true}},
@@ -28,38 +28,38 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
                 };
 
 
-  if($scope.jsLoadStat) $scope.jsLoadStat();
+  if($scope.fpk.jsLoadStat) $scope.fpk.jsLoadStat();
 
-  if($scope.jsSelectLeftMenu) {
-    $scope.jsSelectLeftMenu($scope.leftmenu.items[1], 1);
+  if($scope.fpk.jsSelectLeftMenu) {
+    $scope.fpk.jsSelectLeftMenu($scope.fpk.leftmenu.items[1], 1);
   }
 /*    myApi.getClient({brand:1, no_out: true, no_dg: true, no_vd:true}).then(function(x){
       $scope.clients = x;
     });
 */
 
-   $scope.clients_current_i = 1;
+   $scope.fpk.clients_current_i = 1;
 
 
 
  $scope.myPagingFunction = function() {
           console.info("page_function");
-          var query = $scope.clients_query;
+          var query = $scope.fpk.clients_query;
           if(!query) return true;
-          query.limit.start = LIST_LENGTH*$scope.$parent.clients_current_i;
+          query.limit.start = LIST_LENGTH*$scope.fpk.clients_current_i;
           query.limit.end = LIST_LENGTH;
 
 
           myApi.getClient( $scope, query ).then(function(result){
             angular.forEach(result, function(value, key){
-              if($scope.clients) $scope.clients.push( value );  
+              if($scope.fpk.clients) $scope.fpk.clients.push( value );  
             });
-            $scope.$parent.clients_distincts = $scope.clientsToFilter( $scope.$parent.clients );
-            $scope.$parent.clients_by_distinct = $scope.clientsByDistinct( $scope.$parent.clients, $scope.$parent.clients_distincts );
+            $scope.fpk.clients_distincts = $scope.fpk.clientsToFilter( $scope.fpk.clients );
+            $scope.fpk.clients_by_distinct = $scope.fpk.clientsByDistinct( $scope.fpk.clients, $scope.fpk.clients_distincts );
 
             
 
-            $scope.$parent.clients_current_i += 1;
+            $scope.fpk.clients_current_i += 1;
 
           });
    };
@@ -70,15 +70,15 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
     clearTimeout(tm_search);
     tm_search = setTimeout(function(){
       if(searchstring.length>3) {
-          $scope.$parent.clientsgroupby = "manager_id";
+          $scope.fpk.clientsgroupby = "manager_id";
           myApi.searchString($scope, searchstring).then(function(result){
-            $scope.$parent.clients = result;
-            $scope.$parent.clients_distincts = $scope.clientsToFilter( $scope.$parent.clients );
-            $scope.$parent.clients_by_distinct = $scope.clientsByDistinct( $scope.$parent.clients, $scope.$parent.clients_distincts );
+            $scope.fpk.clients = result;
+            $scope.fpk.clients_distincts = $scope.fpk.clientsToFilter( $scope.fpk.clients );
+            $scope.fpk.clients_by_distinct = $scope.fpk.clientsByDistinct( $scope.fpk.clients, $scope.fpk.clients_distincts );
 
           });
       } else {
-        $scope.jsRefreshClients();    
+        $scope.fpk.jsRefreshClients();    
       }
     },1000);
   }
@@ -109,9 +109,12 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
     },
     link: function ($scope, elm, attrs, clients) {
 
+
+        $scope.fpk = $scope.$parent.fpk;
+
  //       $scope.time_now = fpkCtrl.get_time_now();
 
-        $scope.models = $scope.$parent.models;
+/*        $scope.models = $scope.$parent.models;
         $scope.models_array = $scope.$parent.models_array;
         $scope.car_status = $scope.$parent.car_status;
         $scope.car_status_array = $scope.$parent.car_status_array //глобальные статусы
@@ -127,7 +130,6 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
 
         $scope.credit_managers = $scope.$parent.credit_managers;
         $scope.managers = $scope.$parent.managers;
-        $scope.jsRefreshClients = $scope.$parent.jsRefreshClients;
 
         $scope.jsOnOffDateParser = $scope.$parent.jsOnOffDateParser;
 
@@ -137,7 +139,14 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
         $scope.brand = $scope.$parent.brand;
         $scope.manager_filter = $scope.$parent.manager_filter;
 
-        $scope.models_array_show = _.filter($scope.$parent.models_array, function(el){ return ( (el.brand == $scope.$parent.brand) && (el.show == 1)); });
+        
+
+*/
+        
+$scope.names = ["john", "bill", "charlie", "robert", "alban", "oscar", "marie", "celine", "brad", "drew", "rebecca", "michel", "francis", "jean", "paul", "pierre", "nicolas", "alfred", "gerard", "louis", "albert", "edouard", "benoit", "guillaume", "nicolas", "joseph"];
+
+
+        $scope.fpk.models_array_show = _.filter($scope.fpk.models_array, function(el){ return ( (el.brand == $scope.fpk.brand) && (el.show == 1)); });
 
         $scope.jsPlanRotate = function(client, fieldname) {
           client[fieldname] += 1;
@@ -155,8 +164,8 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
 
         $scope.jsClientsInDistinct = function() {
           if(!$scope.distinct) return $scope.local_clients;
-          var index = $scope.distinct[$scope.$parent.clientsgroupby];
-          if( ($scope.$parent.clientsgroupby == "vd") || ($scope.$parent.clientsgroupby == "out") ) var index = $scope.distinct[$scope.$parent.clientsgroupby].substr(0,7);
+          var index = $scope.distinct[$scope.fpk.clientsgroupby];
+          if( ($scope.fpk.clientsgroupby == "vd") || ($scope.fpk.clientsgroupby == "out") ) var index = $scope.distinct[$scope.fpk.clientsgroupby].substr(0,7);
           return $scope.clients_by_distinct[ index ];
         }
 
@@ -166,7 +175,7 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
               myApi.deleteClient($scope, client_id).then(function(value){
                 console.info(value);
                 if(value.rows.affectedRows>0) {
-                  $scope.$parent.jsRefreshClients();
+                  $scope.fpk.jsRefreshClients();
                 }
                 else alert("Не могу удилить клиента. Лучше поставьте ему OUT.");
               }); 
@@ -191,7 +200,7 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
           myApi.saveClient($scope, changes, client_id).then(function(value){
             if(value.affectedRows>0) {
               client._edit = false;
-              $scope.jsLoadStat();
+              $scope.fpk.jsLoadStat();
               $("#myfullcalendar").fullCalendar("refetchEvents");
             }
             else alert("Не могу отправить данные на сервер");
@@ -301,7 +310,7 @@ myApp.directive('jqShowEffect', ['$timeout', function($timeout) {
 
 function DoCtrl($scope, myApi) { //контроллер дел
    $scope.backup_copy = angular.copy( $scope.do );
-   $scope.client = $scope.$parent.client;
+/*   $scope.client = $scope.$parent.client;
    $scope.backup_copy._visible = true;
    $scope.time_now = $scope.$parent.time_now;
    $scope.brand = $scope.$parent.brand;
@@ -311,7 +320,7 @@ function DoCtrl($scope, myApi) { //контроллер дел
    $scope.car_status = $scope.$parent.car_status;
    $scope.car_status_array = $scope.$parent.car_status_array;
 
-   $scope.jsRefreshClients = $scope.$parent.jsRefreshClients;
+   $scope.fpk.jsRefreshClients = $scope.fpk.jsRefreshClients;
 
    $scope.do_types_array = $scope.$parent.do_types_array;
 
@@ -319,6 +328,8 @@ function DoCtrl($scope, myApi) { //контроллер дел
    $scope.jsRefreshDo = $scope.$parent.jsRefreshDo;
    $scope.stat = $scope.$parent.stat;
    $scope.manager_filter = $scope.$parent.manager_filter;
+*/
+   $scope.fpk = $scope.$parent.fpk;
 
    $scope.can_parse_date = true;
 
@@ -380,9 +391,9 @@ function DoCtrl($scope, myApi) { //контроллер дел
           $scope.client.na_date = client_back[0].na_date; 
           $("#myfullcalendar").fullCalendar("refetchEvents");
 
-          setTimeout(function(){ if($scope.jsLoadStat) $scope.jsLoadStat(); 
-            $scope.jsRefreshDo($scope);
-            console.info($scope.manager_filter)
+          setTimeout(function(){ if($scope.fpk.jsLoadStat) $scope.fpk.jsLoadStat(); 
+            $scope.fpk.jsRefreshDo($scope);
+            console.info($scope.fpk.manager_filter)
           },500);
           //$scope.setX($scope.client.id, client_back[0]);
 
@@ -401,7 +412,7 @@ function DoCtrl($scope, myApi) { //контроллер дел
               myApi.deleteDo($scope, $scope.do.id).then(function(value){
                 console.info(value);
                 if(value.rows.affectedRows>0) {
-                  $scope.jsRefreshClients();
+                  $scope.fpk.jsRefreshClients();
                 }
                 else alert("Не могу удилить дело.");
               }); 

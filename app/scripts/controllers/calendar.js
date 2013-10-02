@@ -3,13 +3,12 @@
 myApp.controller('calendarCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment) {
 
 
-$scope.$parent.leftmenu = { active:1,
+$scope.fpk.leftmenu = { active:1,
                 items : [
                   {id:0, title:"Календарь дел", group_by: "manager", href:"/fpk/calendar"}
                   ]
                 };
 
-$scope.time_now = $scope.$parent.time_now;
 
 
 	setTimeout(function(){
@@ -35,11 +34,11 @@ $scope.time_now = $scope.$parent.time_now;
 
         myApi.getClientFull($scope, calEvent.client_id).then(function(client){
           console.info("client = ", client);
-          $scope.$parent.one_client = client;
-          $scope.$parent.show_one_client = true;
+          $scope.fpk.one_client = client;
+          $scope.fpk.show_one_client = true;
 
-          $scope.$parent.one_client[0]._visible = true;
-          $.each($scope.$parent.one_client[0].do, function(i, mydo){
+          $scope.fpk.one_client[0]._visible = true;
+          $.each($scope.fpk.one_client[0].do, function(i, mydo){
             if(mydo.id == calEvent.myid) mydo._visible = true;
           });
         });
@@ -90,9 +89,9 @@ $scope.time_now = $scope.$parent.time_now;
 	            ( ( (el.date2>=start) && (el.date2<=end) ) || ((el.date2>=start) && (el.date2<=end)) )) {
 
 	        	var alld = /00:00:00/.test(el.date2);
-            var manager = $scope.jsFindInArray($scope.managers,"id",el.manager_id)
-            if(manager) manager = '['+$scope.jsFioShort(manager.fio)+']';
-            var title = el.text + " ("+$scope.jsFioShort(el.fio, true) + " - " + el.short+" "+manager+ ")";
+            var manager = $scope.fpk.jsFindInArray($scope.fpk.managers,"id",el.manager_id)
+            if(manager) manager = '['+$scope.fpk.jsFioShort(manager.fio)+']';
+            var title = el.text + " ("+$scope.fpk.jsFioShort(el.fio, true) + " - " + el.short+" "+manager+ ")";
 	            caldata.push(
 	               {title: title, 
 	                start:el.date2, 

@@ -336,6 +336,32 @@ exports.searchString = function(request,response) {
 
 }
 
+exports.getAutocomplete = function(request,response) {
+
+//	var user_id = request.query.user_id;
+	var brand = request.query.brand;
+	var search = request.query.searchtext;
+
+
+	console.info("HI:",request.query, search);
+
+		var sr = (search+"%");
+
+	    pool.query('SELECT phone1, phone2, phone3, phone4, 1_clients.fio, 1_users.fio manager, 1_models.short FROM `1_clients` LEFT JOIN `1_users` ON 1_users.id = 1_clients.manager_id LEFT JOIN `1_models` ON 1_models.id = 1_clients.model WHERE (1_clients.brand = ? AND `out`="0000-00-00 00:00:00" AND '+
+	    					'(1_clients.fio like ? OR '+
+	    					'phone1 like ? OR '+
+	    					'phone2 like ? OR '+
+	    					'phone3 like ? OR '+
+	    					'phone4 like ?'+
+	    					')) LIMIT 20', [brand, sr, sr, sr, sr, sr] , function (err, rows, fields) {
+	    		rows = correct_dates(rows);
+	    		console.info(err);
+			    response.send(rows);
+	  	});	
+
+}
+
+
 
 exports.newMessage = function(request,response) {
 	var user_id = request.query.user_id;
@@ -1706,6 +1732,7 @@ app.get('/api/v1/stat_table', database.loadStatTable );
 app.get('/api/v1/xls', database.loadXLS );
 
 app.get('/api/v1/search', database.searchString );
+app.get('/api/v1/autocomplete', database.getAutocomplete );
 
 app.get('/api/v1/client/update/:id', database.updateClient );
 

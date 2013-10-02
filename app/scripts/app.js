@@ -122,10 +122,22 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
 
 function MainCtrl($scope, $routeSegment, myApi, $timeout) {
 
+    $scope.fpk = {}; //главный объект, в котором хранится всё общее
+
+    $scope.fpk.showfpk = function() {
+        var answer = "";
+        $.each($scope.fpk, function(i,el){
+            var the_el = _.isFunction(el)?"function(){}":JSON.stringify(el);
+            answer += "<b>"+i+"</b> = " + the_el + "<br><br>";
+        });
+        return answer;
+    }
+
     var body_class = localStorage.getItem("body_class");
     if(body_class) $("body").attr("class", body_class);
-    if($("body").hasClass("right_hide")) $scope.right_panel_hide = true;
-    else $scope.right_panel_hide = false;
+    if($("body").hasClass("right_hide")) $scope.fpk.right_panel_hide = true;
+    else $scope.fpk.right_panel_hide = false;
+
 
 
     $scope.$routeSegment = $routeSegment;
@@ -134,11 +146,11 @@ function MainCtrl($scope, $routeSegment, myApi, $timeout) {
     });
 
     var manager_filter = localStorage.getItem("manager_filter");
-    $scope.manager_filter = manager_filter?manager_filter:(-1);
+    $scope.fpk.manager_filter = manager_filter?manager_filter:(-1);
 
-    $scope.user_fio = "Login...";
+    $scope.fpk.user_fio = "Login...";
 
-    $scope.jsLoadModelsFromServer = function() {
+    $scope.fpk.jsLoadModelsFromServer = function() {
          var dfd = new $.Deferred();
          myApi.getModels($scope).then(function(data){ 
             var answer = {};
@@ -154,56 +166,57 @@ function MainCtrl($scope, $routeSegment, myApi, $timeout) {
             $.each(data.users_group, function(i, user_group){
               answer3[user_group.id] = user_group;
             });
-            $scope.models_array = data.models;
-            $scope.models = answer;
-            $scope.brands = answer2;
-            $scope.users_group = answer3;
-            $scope.users_groups = data.users_group;
+            $scope.fpk.models_array = data.models;
+            $scope.fpk.models = answer;
+            $scope.fpk.brands = answer2;
+            $scope.fpk.users_group = answer3;
+            $scope.fpk.users_groups = data.users_group;
             dfd.resolve();
          }); //getModels
          return dfd.promise();
     }
 
-    $scope.brand = localStorage.getItem("brand")?localStorage.getItem("brand"):1;
+    $scope.fpk.brand = localStorage.getItem("brand")?localStorage.getItem("brand"):1;
 
-    $scope.today_do = [];
-    $scope.jsRefreshDo = function(scope){        
-        if($scope.right_panel_hide == false) {
+
+    $scope.fpk.today_do = [];
+    $scope.fpk.jsRefreshDo = function(scope){        
+        if($scope.fpk.right_panel_hide == false) {
           myApi.getDoToday(scope).then(function(answer){
-            $scope.today_do = answer;
-            console.info("DO:",$scope.today_do);
+            $scope.fpk.today_do = answer;
+            console.info("DO:",$scope.fpk.today_do);
           });
         } else {
-            //$scope.today_do = [];
+            //$scope.fpk.today_do = [];
         }
 
     }
 
-    $scope.jsRefreshUserInfo = function() {
+    $scope.fpk.jsRefreshUserInfo = function() {
         myApi.loadUserInfo($scope).then(function(user){
-          $scope.the_user = user.user[0];
-          $scope.brand = user.user[0].brand; //бренд по умолчанию
-          localStorage.setItem("brand", $scope.brand);
-          $scope.managers = user.users; //список всех менеджеров
-          $scope.credit_managers = _.filter(user.users, function(user){
+          $scope.fpk.the_user = user.user[0];
+          $scope.fpk.brand = user.user[0].brand; //бренд по умолчанию
+          localStorage.setItem("brand", $scope.fpk.brand);
+          $scope.fpk.managers = user.users; //список всех менеджеров
+          $scope.fpk.credit_managers = _.filter(user.users, function(user){
             return (user.user_group == 7);
           });
-          $scope.commercials = user.commercials;
+          $scope.fpk.commercials = user.commercials;
           /////////////////////////////////////////////
-          $scope.jsRefreshDo($scope);
+          $scope.fpk.jsRefreshDo($scope);
         });  
     }
 
 
     jsRefreshToken().done(function () {
         ///////////////////////////////////////////////
-        $scope.jsRefreshUserInfo();
+        $scope.fpk.jsRefreshUserInfo();
         ///////////////////////////////////////////////
         console.info("refresh_token_did");
         //загружаем таблицу моделей
-        $scope.jsLoadModelsFromServer().then(function(){
+        $scope.fpk.jsLoadModelsFromServer().then(function(){
             setTimeout(function(){
-            $scope.$broadcast('user_loaded', $scope.the_user);
+            $scope.$broadcast('user_loaded', $scope.fpk.the_user);
             },1);
         });
          /////////////////////////////////////////////

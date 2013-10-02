@@ -27,42 +27,7 @@ i18n.init({lng:"ru"},function(t) {
 
 var myApp = angular.module('fpkApp');
 
-myApp.directive('syncOnChange', function() {
-    return {
-        link: function(scope, element, attrs) {
-            var tm_watch;
-            scope.$watch('note', function(newValue, oldValue) {
-                clearTimeout(tm_watch);
-                clearTimeout(scope.tm_start_sync);
-                tm_watch = setTimeout(function(){
-                scope.sync.did = false;
-                if (newValue!=oldValue) {
-                    
-                    var changefield = scope.note._changefield?scope.note._changefield:[];
-                    var old_length = changefield.length;
-                    $.each(newValue, function(i, n){
-                       if( !(/\$\$/.test(i)) && !(/_/.test(i)) && (oldValue[i] != n) ) changefield.push(i);
-                    });
 
-
-                    if(changefield.length>old_length) {
-
-                      scope.$apply(function(){
-                        scope.note._changefield = arrayUnique(changefield);
-                        scope.note._changetime = jsNow();
-                        
-                      });
-
-                      scope.jsStartSync();
-                    }
-                }
-
-                },500);
-                    //console.info("I see a data change!",changefield);
-            }, true);
-        }
-    }
-});
 
 myApp.directive('resizable', function() { return {
     //restrict: 'A',
@@ -77,7 +42,7 @@ myApp.directive('resizable', function() { return {
         clearTimeout(tm_resize);
         tm_resize = setTimeout(function(){
             $scope.$apply(function() {
-              $scope.left_panel_width = ui.size.width;
+              $scope.fpk.left_panel_width = ui.size.width;
               localStorage.setItem("left_panel_width", ui.size.width);
             });
 
@@ -93,6 +58,7 @@ myApp.directive('resizablefull', function() { return {
     link: function($scope, $element, attrs, ngModel) {
       // view -> model
       $element.resizable({ handles: "e" });
+      $element.draggable();
 
       $element.on('resize', function(event, ui) {
       });
@@ -114,7 +80,7 @@ myApp.directive('resizable2', function() { return {
         clearTimeout(tm_resize);
         tm_resize = setTimeout(function(){
             $scope.$apply(function() {
-              $scope.right_panel_width = ui.size.width;
+              $scope.fpk.right_panel_width = ui.size.width;
               localStorage.setItem("right_panel_width", ui.size.width);
             });
 
@@ -126,36 +92,65 @@ myApp.directive('resizable2', function() { return {
 
 
 
-myApp.directive('sortable', function() { return {
-    //restrict: 'A',
-    require: '?ngModel',
-    link: function($scope, $element, attrs, ngModel) {
-      // view -> model
-      $element.sortable({
-        tolerance: 'pointer',
-        handle: ".card_footer",
-        //helper: "clone",
-//        placeholder: "sortable-placeholder",
 
+myApp.directive('autoComplete', function($timeout, myApi) {
+    return function(scope, iElement, iAttrs) {
+            iElement.autocomplete({
+                source: function( request, response ) {
+                  var searchtext = request.term;
+                  myApi.getAutocomplete(scope, searchtext).then(function(answer){
+                    console.info(answer);
+                    var res = [];
+                    $.each(answer, function(i,el){
 
-      });
+                      var title = el.fio + " (" + el.manager + ") " + el.short + "";
 
+                      var phones = (el.phone1?el.phone1:"")+(el.phone2?" ,"+el.phone2+"":"")+(el.phone3?" ,"+el.phone3+"":"")+(el.phone4?" ,"+el.phone4+". ":". "); 
 
-      $element.on('sortstop', function(event, ui) {
-        //console.info("sort_stop", event, ui.item.index());
-        $scope.$apply(function() {
-            $.each($element.find(".li_card"), function(i,el){
-              var id = $(el).attr("myid");
-              $scope.jsFind(id).position = i;
+                      title = (phones + title).replace(searchtext, ">"+searchtext+"<");
+
+                      res.push({label: title, value: el.phone1})
+                    });
+
+                    response(res);
+                  });
+
+/*                        response( {
+                          label: "HELLO",
+                          value: "UPS"
+                        } );
+*/
+
+/*                  $.ajax({
+                    url: "api/v1/autocomplete",
+                    dataType: "jsonp",
+                    data: {
+                      featureClass: "P",
+                      style: "full",
+                      maxRows: 12,
+                      name_startsWith: request.term,
+                      brand: scope.fpk.brand
+                    },
+                    success: function( data ) {
+                      response( $.map( data, function( item ) {
+                        console.info("ANSWER = ",item);
+
+                        return {
+                          label: "HELLO",
+                          value: "UPS"
+                        }
+                      }));
+                    }
+                  });
+*/                },
+                select: function() {
+                    $timeout(function() {
+                      iElement.trigger('input');
+                    }, 0);
+                }
             });
-
-        });
-      })
-    }
-}
+    };
 });
-
-
 
 
 
@@ -303,7 +298,7 @@ myApp.directive('datemini', ['$timeout', function($timeout) { return {
       // don't do anything unless this is actually bound to a model
       // view -> model
       //ngModel.$viewValue.html("+3дн");
-      $scope.$watch("time_now", function(){
+      $scope.$watch("fpk.time_now", function(){
         ngModel.$render();
       });
       ngModel.$render = function() {
@@ -326,70 +321,6 @@ myApp.directive('datemini', ['$timeout', function($timeout) { return {
     
   }}]);
 
-
-
-myApp.directive("ngPortlet", function ($compile) {
-  return {
-    template: '',
-    restrict: 'E',
-        link: function (scope, elm, attrs) {
-            var jsOpenFolder = function(){
-                //console.log(elm, attrs);
-
-                if(attrs.open) {
-
-                  $(elm).next("ul").slideToggle(100);
-
-                  return true;
-                } 
-                attrs.$set("open","true");
-
-                var tmp_html = '<ul style="display:none">'+
-                  '<li ng-repeat="note in findByParent('+attrs.parent+')"><div class="left_tree_title" compile="note.title"></div><ng-portlet parent="{{note.id}}"></ng-portlet></li></ul>';
-
-
-var tmp_html = '<ul style="display:none">'+
-                    '<li class="li_left" ng-repeat="note in findByParent('+attrs.parent+') | orderBy: sortByPosition()" ng-class="{ \'selected\': note.id == selectedIndexLeft,\'card_big\': $index == zoomIndex,\'card_folder\': note.count>0 }">'+
-                      '<div class="li_icons">'+
-                      '<div class="triangle" ng-click="add()"></div>'+
-                      '<div class="card_icon" ng-click="add()">'+
-                            '<i class="icon-doc-2"></i>'+
-                            '<div class="the_count" ng-bind="note.count=findByParent(note.id,\'count\')">'+
-                            '</div>'+
-                          '</div>'+     
-                      '</div>'+        
-
-                      '<div class="left_tree_title" ng-click="liClickedLeft(note.id);" contenteditable="false" ng-model="note.title">'+
-                      '</div>'+
-                    '<ng-portlet parent="{{note.id}}"></ng-portlet>'+  
-                    '</li>'+
-                  '</ul>';
-                elm.after( $compile(tmp_html)(scope) );
-                setTimeout(function(){ $(elm).next("ul").slideDown(100) }, 1);
-            }
-
-            scope.add = jsOpenFolder;
-
-
-        }
-  };
-});
-
-
-myApp.filter('noFractionCurrency',
-  [ '$filter', '$locale',
-  function(filter, locale) {
-    var currencyFilter = filter('currency');
-    var formats = locale.NUMBER_FORMATS;
-    return function(amount, currencySymbol) {
-      var value = currencyFilter(amount, currencySymbol);
-      var sep = value.indexOf(formats.DECIMAL_SEP);
-      if(amount >= 0) { 
-        return value.substring(0, sep);
-      }
-      return value.substring(0, sep) + ')';
-    };
-  } ]);
 
 
 myApp.factory('socket', function($rootScope) {
@@ -701,6 +632,15 @@ myApp.directive('onFinishRender', function ($timeout) {
 
 myApp.factory('myApi', function($http, $q){
   return {
+    getAutocomplete: function($scope, searchtext) {
+      var dfd = $q.defer();
+
+        $http({url:'/api/v1/autocomplete',method: "GET", params: { brand: $scope.fpk.brand, searchtext: searchtext }}).then(function(result){
+          dfd.resolve(result.data);
+        });
+
+      return dfd.promise;
+    },
     getDo: function(id) {
       var dfd = $q.defer();
 
@@ -716,7 +656,7 @@ myApp.factory('myApi', function($http, $q){
       var dfd = $q.defer();
 
       jsGetToken().done(function(token){
-        $http({url:'/api/v1/do',method: "GET", params: { token: token, brand: $scope.brand, manager: $scope.manager_filter}}).then(function(result){
+        $http({url:'/api/v1/do',method: "GET", params: { token: token, brand: $scope.fpk.brand, manager: $scope.fpk.manager_filter}}).then(function(result){
           dfd.resolve(result.data);
         });
       });
@@ -727,7 +667,7 @@ myApp.factory('myApi', function($http, $q){
       var dfd = $q.defer();
 
       jsGetToken().done(function(token){
-        $http({url:'/api/v1/client',method: "GET", isArray: true, params: { token: token, filter:filter, manager: $scope.manager_filter}}).then(function(result){
+        $http({url:'/api/v1/client',method: "GET", isArray: true, params: { token: token, filter:filter, manager: $scope.fpk.manager_filter}}).then(function(result){
           dfd.resolve(result.data);
         });
       });
@@ -738,7 +678,7 @@ myApp.factory('myApi', function($http, $q){
       var dfd = $q.defer();
 
       jsGetToken().done(function(token){
-        $http({url:'/api/v1/client/'+client_id, method: "GET", isArray: true, params: { token: token, manager: $scope.manager_filter}}).then(function(result){
+        $http({url:'/api/v1/client/'+client_id, method: "GET", isArray: true, params: { token: token, manager: $scope.fpk.manager_filter}}).then(function(result){
           dfd.resolve(result.data);
         });
       });
@@ -749,7 +689,7 @@ myApp.factory('myApi', function($http, $q){
       var dfd = $q.defer();
 
       jsGetToken().done(function(token){
-        $http({url:'/api/v1/client', method: "POST", isArray: true, params: { token: token, manager: $scope.manager_filter, brand: $scope.brand, add_do_array: add_do_array}}).then(function(result){
+        $http({url:'/api/v1/client', method: "POST", isArray: true, params: { token: token, manager: $scope.fpk.manager_filter, brand: $scope.fpk.brand, add_do_array: add_do_array}}).then(function(result){
           dfd.resolve(result.data);
         });
       });
@@ -761,9 +701,9 @@ myApp.factory('myApi', function($http, $q){
 
       jsGetToken().done(function(token){
 
-        var filters = $scope.leftmenu;
+        var filters = $scope.fpk.leftmenu;
 
-        $http({url:'/api/v1/stat',method: "GET", isArray: true, params: { token: token, filters: filters, brand: $scope.brand, manager: $scope.manager_filter, today: $scope.today_date }}).then(function(result){
+        $http({url:'/api/v1/stat',method: "GET", isArray: true, params: { token: token, filters: filters, brand: $scope.fpk.brand, manager: $scope.fpk.manager_filter, today: $scope.fpk.today_date }}).then(function(result){
           dfd.resolve(result.data);
         });
       });
@@ -775,7 +715,7 @@ myApp.factory('myApi', function($http, $q){
       var dfd = $q.defer();
 
       jsGetToken().done(function(token){
-        $http({url:'/api/v1/stat_table',method: "GET", isArray: true, params: { token: token, brand: $scope.brand, manager: $scope.manager_filter }}).then(function(result){
+        $http({url:'/api/v1/stat_table',method: "GET", isArray: true, params: { token: token, brand: $scope.fpk.brand, manager: $scope.fpk.manager_filter }}).then(function(result){
           dfd.resolve(result.data);
         });
       });
@@ -789,7 +729,7 @@ myApp.factory('myApi', function($http, $q){
 
       jsGetToken().done(function(token){
 
-        $http({url:'/api/v1/search',method: "GET", isArray: true, params: { token: token, search: searchstring, brand: $scope.brand }}).then(function(result){
+        $http({url:'/api/v1/search',method: "GET", isArray: true, params: { token: token, search: searchstring, brand: $scope.fpk.brand }}).then(function(result){
           dfd.resolve(result.data);
         });
       });
@@ -802,9 +742,9 @@ myApp.factory('myApi', function($http, $q){
 
       jsGetToken().done(function(token){
 
-        var filters = $scope.leftmenu;
+        var filters = $scope.fpk.leftmenu;
 
-        $http({url:'/api/v1/calendar',method: "GET", isArray: true, params: { token: token, start_date: start_date, end_date: end_date, brand: $scope.brand, manager: $scope.manager_filter }}).then(function(result){
+        $http({url:'/api/v1/calendar',method: "GET", isArray: true, params: { token: token, start_date: start_date, end_date: end_date, brand: $scope.fpk.brand, manager: $scope.fpk.manager_filter }}).then(function(result){
           console.info(result);
           dfd.resolve(result.data);
         });
@@ -818,7 +758,7 @@ myApp.factory('myApi', function($http, $q){
 
       jsGetToken().done(function(token){
 
-        $http({url:'/api/v1/do_by_type',method: "GET", isArray: true, params: { token: token, type_do: type_do, brand: $scope.brand, today: today }}).then(function(result){
+        $http({url:'/api/v1/do_by_type',method: "GET", isArray: true, params: { token: token, type_do: type_do, brand: $scope.fpk.brand, today: today }}).then(function(result){
             console.info("DO RECIVED: ",result.data);
             dfd.resolve(result.data);
         });
@@ -833,7 +773,7 @@ myApp.factory('myApi', function($http, $q){
 
       jsGetToken().done(function(token){
 
-        $http({url:'/api/v1/do',method: "POST", isArray: true, params: { token: token, do_type: do_type, brand: $scope.$parent.brand, client_id: client_id, manager: $scope.manager_filter }}).then(function(result){
+        $http({url:'/api/v1/do',method: "POST", isArray: true, params: { token: token, do_type: do_type, brand: $scope.fpk.brand, client_id: client_id, manager: $scope.fpk.manager_filter }}).then(function(result){
             console.info("DO NEW: ",result.data);
           dfd.resolve(result.data);
         });
@@ -848,7 +788,7 @@ myApp.factory('myApi', function($http, $q){
 
       jsGetToken().done(function(token){
 
-        $http({url:'/api/v1/client/'+changes.id,method: "PUT", isArray: true, data: {changes: changes}, params: { token: token, brand: $scope.brand, client_id: client_id }}).then(function(result){
+        $http({url:'/api/v1/client/'+changes.id,method: "PUT", isArray: true, data: {changes: changes}, params: { token: token, brand: $scope.fpk.brand, client_id: client_id }}).then(function(result){
             console.info("DO SAVED: ",result.data);
           dfd.resolve(result.data);
         });
@@ -908,7 +848,7 @@ myApp.factory('myApi', function($http, $q){
     getModels: function($scope) {
       var dfd = $q.defer();
 
-        $http({url:'/api/v1/models', method: "GET", isArray: true, params: { brand: $scope.brand }}).then(function(result){
+        $http({url:'/api/v1/models', method: "GET", isArray: true, params: { brand: $scope.fpk.brand }}).then(function(result){
             dfd.resolve(result.data);
         });
 
@@ -918,7 +858,7 @@ myApp.factory('myApi', function($http, $q){
     newModel: function($scope) {
       var dfd = $q.defer();
       jsGetToken().done(function(token){
-        $http({url:'/api/v1/models', method: "POST", isArray: true, params: { token: token, brand: $scope.brand }}).then(function(result){
+        $http({url:'/api/v1/models', method: "POST", isArray: true, params: { token: token, brand: $scope.fpk.brand }}).then(function(result){
             dfd.resolve(result.data);
         });
 
@@ -928,7 +868,7 @@ myApp.factory('myApi', function($http, $q){
     saveModel: function($scope, changes, model_id) {
       var dfd = $q.defer();
       jsGetToken().done(function(token){
-        $http({url:'/api/v1/models', method: "PUT", isArray: true, data: {changes: changes}, params: { token: token, brand: $scope.brand, model_id: model_id }}).then(function(result){
+        $http({url:'/api/v1/models', method: "PUT", isArray: true, data: {changes: changes}, params: { token: token, brand: $scope.fpk.brand, model_id: model_id }}).then(function(result){
             dfd.resolve(result.data);
         });
 
@@ -938,7 +878,7 @@ myApp.factory('myApi', function($http, $q){
     deleteModel: function($scope, del_id) {
       var dfd = $q.defer();
       jsGetToken().done(function(token){
-        $http({url:'/api/v1/models', method: "DELETE", isArray: true, params: { del_id: del_id ,token: token, brand: $scope.brand }}).then(function(result){
+        $http({url:'/api/v1/models', method: "DELETE", isArray: true, params: { del_id: del_id ,token: token, brand: $scope.fpk.brand }}).then(function(result){
             dfd.resolve(result.data);
         });
 
@@ -949,7 +889,7 @@ myApp.factory('myApi', function($http, $q){
       var dfd = $q.defer();
       jsGetToken().done(function(token){
 
-        $http({url:'/api/v1/stat/cup', method: "GET", isArray: true, params: { token: token, brand: $scope.brand, today_date: $scope.today_date }}).then(function(result){
+        $http({url:'/api/v1/stat/cup', method: "GET", isArray: true, params: { token: token, brand: $scope.fpk.brand, today_date: $scope.fpk.today_date }}).then(function(result){
           dfd.resolve(result.data);
         });
       });
@@ -970,12 +910,12 @@ myApp.factory('myApi', function($http, $q){
       return dfd.promise;      
 
     },
-    saveDo: function($scope,changes, client_id) {
+    saveDo: function($scope, changes, client_id) {
       var dfd = $q.defer();
 
       jsGetToken().done(function(token){
 
-        $http({url:'/api/v1/do/'+changes.id,method: "PUT", isArray: true, params: { token: token, changes: changes, brand: $scope.brand, client_id: client_id }}).then(function(result){
+        $http({url:'/api/v1/do/'+changes.id,method: "PUT", isArray: true, params: { token: token, changes: changes, brand: $scope.fpk.brand, client_id: client_id }}).then(function(result){
             console.info("DO SAVED: ",result.data);
 
           dfd.resolve(result.data);
@@ -989,7 +929,7 @@ myApp.factory('myApi', function($http, $q){
     loadUserInfo:function($scope) {
       var dfd = $q.defer();
       jsGetToken().done(function(token){
-        $http({url:'/api/v1/user/info', method: "GET", isArray: true, params: { token: token, brand: $scope.brand }}).then(function(result){
+        $http({url:'/api/v1/user/info', method: "GET", isArray: true, params: { token: token, brand: $scope.fpk.brand }}).then(function(result){
             dfd.resolve(result.data);
         });
       });
@@ -1043,22 +983,22 @@ $scope.$routeSegment = $routeSegment;
 $scope.getSMS = function(sms) {
   //sms.do_type;
   if($scope.sms_active == sms) {
-    var today = $scope.today_date.substr(0,7);
+    var today = $scope.fpk.today_date.substr(0,7);
   } else {
-    var today = $scope.today_date;
+    var today = $scope.fpk.today_date;
   }
   $scope.sms_active = sms;
   var type_do = sms.type;
 
   myApi.getClientsByDoType($scope, type_do, today).then(function(answer){
     console.info("clients", answer);
-    $scope.one_client = answer;
-    $scope.show_one_client = true;
+    $scope.fpk.one_client = answer;
+    $scope.fpk.show_one_client = true;
   });
 
 }
 
-$scope.jsFioShort = function(fio, need_surname) {
+$scope.fpk.jsFioShort = function(fio, need_surname) {
     if(!fio) return "";
     var fio_sp = fio.split(" ");
     var name = (fio_sp[1]?(fio_sp[1].substr(0,1)+"."):"");
@@ -1067,7 +1007,7 @@ $scope.jsFioShort = function(fio, need_surname) {
     return answer;
 }
 
- $scope.jsFindInArray = function(myarray, fieldname, myid) {
+ $scope.fpk.jsFindInArray = function(myarray, fieldname, myid) {
   var answer = _.find(myarray, function(com){
     if(com[fieldname]) {
       return (com[fieldname] == myid);
@@ -1076,18 +1016,18 @@ $scope.jsFioShort = function(fio, need_surname) {
   return answer;
  }
 
- $scope.jsShowManagerFilter = function() {
-  if($scope.manager_filter == -1) {
+ $scope.fpk.jsShowManagerFilter = function() {
+  if($scope.fpk.manager_filter == -1) {
     return "Все менеджеры";
   } else {
-    var the_manager = _.find($scope.managers, function(manager) {
-      return (manager.id == $scope.manager_filter );
+    var the_manager = _.find($scope.fpk.managers, function(manager) {
+      return (manager.id == $scope.fpk.manager_filter );
     });
     if(the_manager) return the_manager.fio;
   }
  }
  
- $scope.do_types = [ //типы дел
+ $scope.fpk.do_types = [ //типы дел
     {img: "1zvonok.png", title: "Звонок", fieldname: "zv"},
     {img: "1vizit.png", title: "Визит", fieldname: "vz"},
     {img: "1test-drive.png", title: "Тест-драйв", fieldname: "tst"},
@@ -1100,10 +1040,10 @@ $scope.jsFioShort = function(fio, need_surname) {
  ];
 
  var tmp_status = {};
- $.each($scope.do_types, function(i, dt){
+ $.each($scope.fpk.do_types, function(i, dt){
   tmp_status[dt.title] = dt;
  });
- $scope.do_types_array = tmp_status;
+ $scope.fpk.do_types_array = tmp_status;
 
 
  var statuses = [ //статусы нахождения автомобилей
@@ -1121,54 +1061,53 @@ $scope.jsFioShort = function(fio, need_surname) {
   tmp_status[st.title] = st;
  });
 
- $scope.car_status = tmp_status; //глобальные статусы
- $scope.car_status_array = statuses; //глобальные статусы
+ $scope.fpk.car_status = tmp_status; //глобальные статусы
+ $scope.fpk.car_status_array = statuses; //глобальные статусы
  tmp_status = "";
 
- $scope.today_date = toMysql( (new Date()) ).substr(0,10);
+ $scope.fpk.today_date = toMysql( (new Date()) ).substr(0,10);
 
-  $scope.$watch('today_date', function(val, newVal) {
+  $scope.$watch('fpk.today_date', function(val, newVal) {
     if(val!=newVal) {
-      $scope.jsLoadStat();
+      $scope.fpk.jsLoadStat();
     }
   });
 
 
-  $scope.jsLoadStat = function() {
-    if($scope.brand) {
+  $scope.fpk.jsLoadStat = function() {
+    if($scope.fpk.brand) {
         myApi.getStat($scope).then(function(result){
-            $scope.$parent.stat = result.left_stat;
-            $scope.cup_sms = result.sms;
+            $scope.fpk.stat = result.left_stat;
+            $scope.fpk.cup_sms = result.sms;
         });    
     }
   }
 
 
  $scope.jsSelectBrand = function(id) {
-    $scope.$parent.brand=id;
-    $scope.brand=id;
-    $scope.jsLoadStat(); 
-    $scope.jsRefreshClients();   
-    $scope.jsRefreshUserInfo(); 
+    $scope.fpk.brand=id;
+    $scope.fpk.jsLoadStat(); 
+    $scope.fpk.jsRefreshClients();   
+    $scope.fpk.jsRefreshUserInfo(); 
     //$scope.jsLoadModelsFromServer();
     if($scope.jsRefreshModels) $scope.jsRefreshModels();
-    $scope.manager_filter = -1;
+    $scope.fpk.manager_filter = -1;
     $("#myfullcalendar").fullCalendar("refetchEvents");
  }
 
  $scope.jsSelectManager = function(manager_id) {
-    $scope.manager_filter = manager_id;
+    $scope.fpk.manager_filter = manager_id;
     localStorage.setItem("manager_filter", manager_id);
-    $scope.jsLoadStat(); 
-    $scope.jsRefreshClients();
-    $scope.jsRefreshDo($scope);
+    $scope.fpk.jsLoadStat(); 
+    $scope.fpk.jsRefreshClients();
+    $scope.fpk.jsRefreshDo($scope);
     $("#myfullcalendar").fullCalendar("refetchEvents");
  }
 
  $scope.jsCloseOneClient = function(){
-    $scope.show_one_client = false;
+    $scope.fpk.show_one_client = false;
     $scope.sms_active = false;
-    if($scope.jsRefreshClients) $scope.jsRefreshClients();
+    if($scope.fpk.jsRefreshClients) $scope.fpk.jsRefreshClients();
  };
 
  //дефолтные установки выбора даты
@@ -1178,10 +1117,10 @@ $scope.jsFioShort = function(fio, need_surname) {
 
          myApi.getClientFull($scope, mydo.client).then(function(client){
           console.info("client = ", client);
-          $scope.one_client = client;
-          $scope.show_one_client = true;
-          $scope.one_client[0]._visible = true;
-          $.each($scope.one_client[0].do, function(i, thedo){
+          $scope.fpk.one_client = client;
+          $scope.fpk.show_one_client = true;
+          $scope.fpk.one_client[0]._visible = true;
+          $.each($scope.fpk.one_client[0].do, function(i, thedo){
             if(thedo.id == mydo.id) thedo._visible = true;
           });
         });
@@ -1189,16 +1128,16 @@ $scope.jsFioShort = function(fio, need_surname) {
 
 
 //фильтр для выбора уникальных групп менеджеров или дат
- $scope.jsGetDistinctTitle = function(distinct) {
-    var group_by = $scope.clientsgroupby;
+ $scope.fpk.jsGetDistinctTitle = function(distinct) {
+    var group_by = $scope.fpk.clientsgroupby;
     var answer = distinct[group_by];
     if( (group_by == "vd") || (group_by == "out") ) {
       answer = answer.substr(0,7);
       var an = answer.split("-");
       answer = an[1]+"-"+an[0];
     } else if (group_by == "model") {
-      if($scope.models[answer]) {
-        answer = $scope.models[answer].model;
+      if($scope.fpk.models[answer]) {
+        answer = $scope.fpk.models[answer].model;
       } else {
         answer = "Модель не указана";
       }
@@ -1206,7 +1145,7 @@ $scope.jsFioShort = function(fio, need_surname) {
       if(distinct.manager_id == -1) {
           answer = "Менеджер не указан";
         } else {
-        answer = _.find($scope.managers, function(manager){
+        answer = _.find($scope.fpk.managers, function(manager){
           return manager.id == distinct.manager_id;
         });
         if(answer) answer = answer.fio;
@@ -1216,40 +1155,42 @@ $scope.jsFioShort = function(fio, need_surname) {
  }        
 
 
+ $scope.fpk.jsRefreshClients = function() {
+    if(!$scope.fpk.clientsgroupby) return true;
+    console.info("jsRefreshClients");
+    $scope.fpk.clients_current_i = 1;
+
+    var query = angular.extend( {brand:$scope.fpk.brand, limit: {start:0, end:LIST_LENGTH}}, $scope.fpk.leftmenu.current_filter);
+    $scope.fpk.clients_query = angular.extend( query, {group_by:$scope.fpk.clientsgroupby, manager: $scope.fpk.manager_filter} );
+
+    myApi.getClient( $scope, $scope.fpk.clients_query ).then(function(result){
+        $scope.fpk.clients = result;
+        $scope.fpk.clients_distincts = $scope.fpk.clientsToFilter( $scope.fpk.clients );
+        $scope.fpk.clients_by_distinct = $scope.fpk.clientsByDistinct( $scope.fpk.clients, $scope.fpk.clients_distincts );
+    });
+ }
+
+
  //клик в меню
- $scope.jsSelectLeftMenu = function(menu_item, $index) {
-          $scope.leftmenu.active = $index;  
+ $scope.fpk.jsSelectLeftMenu = function(menu_item, $index) {
+          $scope.fpk.leftmenu.active = $index;  
           if(menu_item.href) {
             window.location.hash = menu_item.href;
             return true;
           }
-          $scope.clientsgroupby = menu_item.group_by; 
+          $scope.fpk.clientsgroupby = menu_item.group_by; 
           $scope.searchstring = "";
-          $scope.leftmenu.current_filter = menu_item.filter;  
+          $scope.fpk.leftmenu.current_filter = menu_item.filter;  
           console.info("SELECT LEFT MENU=", menu_item, $index);
-          $scope.jsRefreshClients();
+          $scope.fpk.jsRefreshClients();
 
           $('#cards_scrollable').scrollTop(0);
  }
 
- $scope.jsRefreshClients = function() {
-    if(!$scope.clientsgroupby) return true;
-    console.info("jsRefreshClients");
-    $scope.clients_current_i = 1;
-
-    var query = angular.extend( {brand:$scope.brand, limit: {start:0, end:LIST_LENGTH}}, $scope.leftmenu.current_filter);
-    $scope.clients_query = angular.extend( query, {group_by:$scope.clientsgroupby, manager: $scope.manager_filter} );
-
-    myApi.getClient( $scope, $scope.clients_query ).then(function(result){
-        $scope.clients = result;
-        $scope.clients_distincts = $scope.clientsToFilter( $scope.clients );
-        $scope.clients_by_distinct = $scope.clientsByDistinct( $scope.clients, $scope.clients_distincts );
-    });
- }
-
+ 
  $scope.jsSelectGroup = function(new_group) {
-  $scope.clientsgroupby = new_group;
-  $scope.jsRefreshClients();
+  $scope.fpk.clientsgroupby = new_group;
+  $scope.fpk.jsRefreshClients();
  }
 
  //Добавление нового клиента с делами
@@ -1258,10 +1199,10 @@ $scope.jsFioShort = function(fio, need_surname) {
     console.info(answer);
     myApi.getClientFull($scope, answer.insert_id).then(function(client){
             console.info("client = ", client);
-            $scope.one_client = client;
-            $scope.show_one_client = true;
-            $scope.one_client[0]._visible = true;
-            $scope.one_client[0]._edit = true;
+            $scope.fpk.one_client = client;
+            $scope.fpk.show_one_client = true;
+            $scope.fpk.one_client[0]._visible = true;
+            $scope.fpk.one_client[0]._edit = true;
             setTimeout(function(){
               $("#new_client_div .client_fio_input input").focus().select();
             },600);
@@ -1273,18 +1214,18 @@ $scope.jsFioShort = function(fio, need_surname) {
   });
  }
 
-  $scope.clientsByDistinct = function(clients, distincts) {
+  $scope.fpk.clientsByDistinct = function(clients, distincts) {
     var answer = {};
     var compare;
     $.each(distincts, function(i, dist){
-      var index = dist[ $scope.clientsgroupby ];
-      if( ($scope.clientsgroupby == "vd") || ($scope.clientsgroupby == "out") ) index = dist[ $scope.clientsgroupby ].substr(0,7);
+      var index = dist[ $scope.fpk.clientsgroupby ];
+      if( ($scope.fpk.clientsgroupby == "vd") || ($scope.fpk.clientsgroupby == "out") ) index = dist[ $scope.fpk.clientsgroupby ].substr(0,7);
 
       answer[ index ] = _.filter(clients, function(client){
-        if( ($scope.clientsgroupby == "vd") || ($scope.clientsgroupby == "out") ) {
-          compare = (client[ $scope.clientsgroupby ].substr(0,7) == dist[ $scope.clientsgroupby ].substr(0,7) );
+        if( ($scope.fpk.clientsgroupby == "vd") || ($scope.fpk.clientsgroupby == "out") ) {
+          compare = (client[ $scope.fpk.clientsgroupby ].substr(0,7) == dist[ $scope.fpk.clientsgroupby ].substr(0,7) );
         } else {
-          compare = (client[ $scope.clientsgroupby ] == dist[ $scope.clientsgroupby ] );  
+          compare = (client[ $scope.fpk.clientsgroupby ] == dist[ $scope.fpk.clientsgroupby ] );  
         }
         
 
@@ -1296,22 +1237,22 @@ $scope.jsFioShort = function(fio, need_surname) {
   }
 
   var indexedTeams = [];       
-  $scope.clientsToFilter = function(clients) {
+  $scope.fpk.clientsToFilter = function(clients) {
         indexedTeams = [];
 
-        //console.info("make_group", $scope.clientsgroupby);
+        //console.info("make_group", $scope.fpk.clientsgroupby);
 
         var answer = _.filter(clients, function(client){
 
-          if( ($scope.clientsgroupby == 'vd') || ($scope.clientsgroupby == 'out') ) {
-            if( indexedTeams.indexOf(client[ $scope.clientsgroupby ].substr(0,7))==-1) {
-              indexedTeams.push(client[ $scope.clientsgroupby ].substr(0,7));
+          if( ($scope.fpk.clientsgroupby == 'vd') || ($scope.fpk.clientsgroupby == 'out') ) {
+            if( indexedTeams.indexOf(client[ $scope.fpk.clientsgroupby ].substr(0,7))==-1) {
+              indexedTeams.push(client[ $scope.fpk.clientsgroupby ].substr(0,7));
               return true;
             }
 
           } else {
-            if(indexedTeams.indexOf(client[$scope.clientsgroupby])==-1) {
-              indexedTeams.push(client[$scope.clientsgroupby]);
+            if(indexedTeams.indexOf(client[$scope.fpk.clientsgroupby])==-1) {
+              indexedTeams.push(client[$scope.fpk.clientsgroupby]);
               return true;
             }
 
@@ -1353,13 +1294,13 @@ $scope.jsFioShort = function(fio, need_surname) {
     $("body").toggleClass(which_panel+"_hide");
     localStorage.setItem("body_class", $("body").attr("class"));
     if($("body").hasClass("right_hide")) {
-      $scope.$parent.today_do = [];
-      $scope.$parent.right_panel_hide = true;
+      $scope.fpk.today_do = [];
+      $scope.fpk.right_panel_hide = true;
     } else {
-      $scope.$parent.right_panel_hide = false;
-      $scope.jsRefreshDo($scope);
+      $scope.fpk.right_panel_hide = false;
+      $scope.fpk.jsRefreshDo($scope);
     }
-    onResize();
+    setTimeout(function(){ onResize() }, 50);
   };
 
   

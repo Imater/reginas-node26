@@ -20,8 +20,8 @@ myApp.controller('settingsCtrl', function ($scope, $resource, $rootScope, $locat
                  {name: "Enos", age: 34}];
  
  $scope.jsRefreshModels = function(){
-   $scope.myData = _.filter($scope.models_array, function(model){
-      return (model.brand == $scope.brand);
+   $scope.myData = _.filter($scope.fpk.models_array, function(model){
+      return (model.brand == $scope.fpk.brand);
    });  
  }
 

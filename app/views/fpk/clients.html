@@ -32,7 +32,7 @@
 
 
                     <div class="input-group col-sm-3" id="cards_search">
-                          <input id="search_notes" type="text" ng-model="search_string_for_timeout" ng-change="startSearch(search_string_for_timeout)" class="form-control input-sm" placeholder="Искать...">
+                          <input auto-complete id="search_notes" type="text" ng-model="search_string_for_timeout" ng-change="startSearch(search_string_for_timeout)" class="form-control input-sm" placeholder="Искать...">
                       <!-- <eased-input value="search_string" timeout="500" placeholder="Найти..." class="input-sm"/> -->
                           <div class="input-group-btn">
                             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
@@ -49,9 +49,10 @@
                 <!-- <button ng-click="myPagingFunction()">Load More...</button> -->
 
               <ul class="group_title">
-                <li ng-repeat="distinct in clients_distincts"><h2>{{jsGetDistinctTitle(distinct)}}</h2>
+                <li ng-repeat="distinct in fpk.clients_distincts"><h2>{{fpk.jsGetDistinctTitle(distinct)}}</h2>
 
-                  <div client-list="clients" time-now="time_now" my-attr="clients" my-distinct="distinct" clients-by-distinct="clients_by_distinct"></div>
+                  <div client-list="fpk.clients" time-now="time_now" my-attr="fpk.clients" my-distinct="distinct" clients-by-distinct="fpk.clients_by_distinct"></div>
+                  
 
                 </li>
               </ul>

@@ -1549,7 +1549,7 @@ a {
   box-shadow: 2px 2px 10px #000;
   padding: 25px 5px;
   z-index: 5;
-  overflow-y: auto;
+  overflow-y: scroll;
   overflow-x: hidden;
   z-index: 10000;
   background: url("../images/backgrounds/textile3.jpg");
@@ -1668,3 +1668,13 @@ a {
     font-size: 12px; }
   .admin_cup_new .del_new:hover {
     color: red; }
+
+.ui-autocomplete {
+  background: #EEE !important;
+  box-shadow: 0px 0px 10px !important; }
+  .ui-autocomplete li {
+    border-top: 1px solid #FFF;
+    border-bottom: 1px solid #CCC; }
+    .ui-autocomplete li a {
+      font-size: 12px;
+      font-family: inherit; }

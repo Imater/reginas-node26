@@ -1,5 +1,4 @@
 <div id="panel_top">
-
 <nav class="navbar navbar-default navbar-static-top navbar-inverse" role="navigation">
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
@@ -11,6 +10,7 @@
     </button>
     <a class="navbar-brand"><img src="images/logo-mini.png" width="50px" height="18px">Регинас</a>
   </div>
+
 
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse navbar-ex1-collapse">
@@ -35,15 +35,15 @@
       <li><a href="#/fpk/admin_cup">Трафик</a></li>
       <li><a href="#/fpk/settings/models">Настройки</a></li>
       <li class="dropdown">
-        <a  class="dropdown-toggle" data-toggle="dropdown">Фильтр: {{jsShowManagerFilter()}} <b class="caret"></b></a>
+        <a  class="dropdown-toggle" data-toggle="dropdown">Фильтр: {{fpk.jsShowManagerFilter()}} <b class="caret"></b></a>
         <ul class="dropdown-menu">
           <li role="presentation" class="dropdown-header">Фильтровать по:</li>                   
           <li ng-click="jsSelectManager(-1)"><a><i class="icon-users"></i>Все менеджеры</a></li>
-          <li role="presentation" class="dropdown-header">Менеджеры: {{manager_filter}}</li>                   
-          <li ng-click="jsSelectManager(manager.id)" ng-repeat="manager in managers | onlyManager:true"><a><i class="icon-user"></i>{{manager.fio}}</a></li>
+          <li role="presentation" class="dropdown-header">Менеджеры:</li>                   
+          <li ng-click="jsSelectManager(manager.id)" ng-repeat="manager in fpk.managers | onlyManager:true"><a><i class="icon-user"></i>{{manager.fio}}</a></li>
           <li class="dropdown-submenu"><a >Остальные</a>
            <ul class="dropdown-menu">
-            <li ng-click="jsSelectManager(manager.id)" ng-repeat="manager in managers | onlyManager:false"><a >{{manager.fio}}</a></li>
+            <li ng-click="jsSelectManager(manager.id)" ng-repeat="manager in fpk.managers | onlyManager:false"><a >{{manager.fio}}</a></li>
            </ul>
           </li>
         </ul>
@@ -55,22 +55,22 @@
   
 </div>
 
-<div id="panel_left" resizable style="width:{{left_panel_width}}px">
+<div id="panel_left" resizable style="width:{{fpk.left_panel_width}}px">
 
 
     <div id="panel_left_header">
-      <a href="#/user/login" title="{{users_groups[the_user.user_group].title}}"><i class="icon-user"></i> {{the_user.fio}}</a>
+      <a href="#/user/login" title="{{fpk.users_groups[fpk.the_user.user_group].title}}"><i class="icon-user"></i> {{fpk.the_user.fio}}</a>
     </div>
 
     <div id="panel_left_content" class="noselectable">
         <ul class="left_menu">
-          <li ng-repeat="menu_item in leftmenu.items" ng-class="{ 'active': ($index==leftmenu.active||$routeSegment.startsWith(menu_item.segment)) }" ng-click="jsSelectLeftMenu(menu_item, $index);">
-          {{menu_item.title}} <div ng-if="stat[menu_item.id]" class="div_count">{{stat[menu_item.id]}}</div>
+          <li ng-repeat="menu_item in fpk.leftmenu.items" ng-class="{ 'active': ($index==fpk.leftmenu.active||$routeSegment.startsWith(menu_item.segment)) }" ng-click="fpk.jsSelectLeftMenu(menu_item, $index);">
+          {{menu_item.title}} <div ng-if="fpk.stat[menu_item.id]" class="div_count">{{fpk.stat[menu_item.id]}}</div>
           </li>
         </ul>
 
         <div id="main_calendar">
-          <div id="datetoday" class="input-append date" ng-model="today_date" datepicker>
+          <div id="datetoday" class="input-append date" ng-model="fpk.today_date" datepicker>
         </div>
 
         </div>
@@ -89,18 +89,18 @@
 
 </div>
 
-<div id="panel_center" style="left:{{left_panel_width}}px; right:{{right_panel_width}}px;">
+<div id="panel_center" style="left:{{fpk.left_panel_width}}px; right:{{fpk.right_panel_width}}px;">
     <div id="panel_center_header">
        <div class="make_center">
             <div class="menu_mini select_brand">
                 <div class="btn-group">
                     <button type="button" class="btn btn-cloud btn-default dropdown-toggle" data-toggle="dropdown" ng-class="{ 'synced': sync.did, 'syncing': sync.syncing }">
-                      <img ng-if="brands[brand]" height="16px" width="25.6px" ng-src="images/logos/{{brands[brand].logo}}"></img>
+                      <img ng-if="fpk.brands[fpk.brand]" height="16px" width="25.6px" ng-src="images/logos/{{fpk.brands[fpk.brand].logo}}"></img>
                       <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
                       <li role="presentation" class="dropdown-header">Выбор бренда:</li>                   
-                      <li ng-repeat="the_brand in brands | orderBy:'title'"><a ng-click="jsSelectBrand(the_brand.id)"><img height="16px" width="25.6px" style="margin-right:10px;" ng-src="images/logos/{{the_brand.logo}}"></img>{{the_brand.title}}</a></li>
+                      <li ng-repeat="the_brand in fpk.brands | orderBy:'title'"><a ng-click="jsSelectBrand(the_brand.id)"><img height="16px" width="25.6px" style="margin-right:10px;" ng-src="images/logos/{{the_brand.logo}}"></img>{{the_brand.title}}</a></li>
                     </ul>
                   </div>
                 </div>
@@ -166,10 +166,12 @@
 
       <div class="" app-view-segment="1"></div>
 
-      <div id="new_client_div" ng-if="show_one_client" resizablefull>
+      <div id="new_client_div" ng-if="fpk.show_one_client" resizablefull>
           <div class="close_one_client" ng-click="jsCloseOneClient()"><i class="icon-cancel-1"></i></div>
           <div class="one_client_container">
-            <div client-list="one_client" my-attr="one_client"></div>
+
+            <div client-list="fpk.one_client" my-attr="fpk.one_client"></div>
+            }
           </div>
       </div>
 
@@ -207,7 +209,7 @@
 
         <div class="cup_sms">
           <ul>
-            <li ng-repeat="sms in cup_sms | orderBy:'order'" title="{{sms.title}}" ng-click="getSMS(sms)" ng-class="{active: (sms == sms_active)}">
+            <li ng-repeat="sms in fpk.cup_sms | orderBy:'order'" title="{{sms.title}}" ng-click="getSMS(sms)" ng-class="{active: (sms == sms_active)}">
                 <img class="img_{{sms.type}}" ng-src="/images/do_type/{{sms.icon}}" width="14px">
                 <span class="sms" ng-if="!sms.plan">{{sms.day}} ({{sms.month}})</span>
                 <span class="sms" ng-if="sms.plan">{{sms.plan.plan5}} + {{sms.plan.plan4}} + {{sms.plan.plan3}}</span>
@@ -219,7 +221,7 @@
             <i class="icon-left-open-1"></i>
         </div>
 
-
+    <!-- <font color="black" ng-bind-html="fpk.showfpk()"></font> -->
     </div> <!-- footer -->
 
 
@@ -273,24 +275,26 @@
 
     </div>
 
-<div id="panel_right" resizable2 style="width:{{right_panel_width}}px">
+<div id="panel_right" resizable2 style="width:{{fpk.right_panel_width}}px">
 
     <div id="panel_right_header">
-    Дела<span ng-if="manager_filter==-1"> всего отдела</span><span ng-if="manager_filter!=-1"> менеджера</span>:
+    Дела<span ng-if="fpk.manager_filter==-1"> всего отдела</span><span ng-if="fpk.manager_filter!=-1"> менеджера</span>:
     </div>
 
     <div id="panel_right_content" class="noselectable">
       <div class="mydo">
         <ol>
-          <li ng-click="jsOpenClientFromRight(mydo)" ng-repeat="mydo in today_do">
+          <li ng-click="jsOpenClientFromRight(mydo)" ng-repeat="mydo in fpk.today_do">
           <div class="datemini right_do" time-now="time_now" date-type="client" ng-model="mydo.date2" title="{{client.na_date}}"></div> 
-          <div class="do_type_icon"><img ng-src="/images/do_type/{{do_types_array[mydo.type].img}}" width="10px" title="Тип дела: {{mydo.type}}"></div>
+          <div class="do_type_icon"><img ng-src="/images/do_type/{{fpk.do_types_array[mydo.type].img}}" width="10px" title="Тип дела: {{mydo.type}}"></div>
           {{mydo.text}}
           <div class="mydo_fio"><span ng-if="mydo.short"><b>{{mydo.short}}</b> — </span>{{(mydo.fio)}}</div>
-          <div ng-if="manager_filter==-1" class="mydo_fio">Менеджер: <i class="icon-user"></i>{{jsFioShort(mydo.manager)}}</div>
+          <div ng-if="fpk.manager_filter==-1" class="mydo_fio">Менеджер: <i class="icon-user"></i>{{jsFioShort(mydo.manager)}}</div>
           </li>
         </ol>
       </div>
     </div>
 
 </div>
+
+

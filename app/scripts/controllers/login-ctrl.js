@@ -85,6 +85,7 @@ myApp.controller('loginCtrl', function ($scope, $resource, $rootScope, $location
       } else {
       	localStorage.setItem("user_last_email",$scope.reg_user.email);
       	window.location.hash = "#/fpk/clients";
+        $scope.fpk.jsRefreshUserInfo();
       };
       console.info(answer);
     });
