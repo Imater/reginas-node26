@@ -20,7 +20,10 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
                    filter: {no_out: true, no_vd:true, credit: true}},
 
                   {id:4, title:"Out", group_by: "out", 
-                   filter: {out: true}}
+                   filter: {out: true}}, 
+
+                  {id:5, title:"Трейд-ин", group_by: "manager_id", 
+                   filter: {bu: true}}
                   ]
                 };
 

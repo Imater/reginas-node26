@@ -484,6 +484,8 @@ function jsMakeClientFilter(filter, manager_id) {
 	f_filter += filter.no_dg ? '`dg` = "'+NO_DATE+'" AND ' : '';
 	f_filter += filter.dg ? '`dg` != "'+NO_DATE+'" AND ' : '';
 
+	f_filter += filter.bu ? '`bu` != "'+NO_DATE+'" AND ' : '';
+
 	f_filter += (manager_id>0) ? ' manager_id = "'+manager_id+'" AND ' : '';
 
 	f_filter += filter.credit ? '`creditmanager` LIKE "Кредит -%" AND ' : '';
@@ -1180,6 +1182,7 @@ function jsUpdateClient(client_id) {
   						 dg:"0000-00-00 00:00:00",
   						 vd:"0000-00-00 00:00:00",
   						 out:"0000-00-00 00:00:00",
+  						 bu:"0000-00-00 00:00:00",
   						 na_id:"",
   						 na_date:"0000-00-00 00:00:00",
   						 na_title:"",
@@ -1198,6 +1201,11 @@ function jsUpdateClient(client_id) {
 					answer.na_type = mydo.type;
 				}
 
+  				if(mydo.type == "Трейд-ин") {
+  					if(mydo.checked=="") {
+  						answer.bu = mydo.date2;
+  					}
+  				}
 
   				if(mydo.type == "Визит") {
   					if(!first_action && mydo.checked!="") {
