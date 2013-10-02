@@ -16,6 +16,7 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
             .when('/fpk/clients', 's1.clients')
             .when('/fpk/statistic', 's1.stat')
             .when('/fpk/stat_table', 's1.stat_table')
+            .when('/fpk/admin_cup', 's1.admin_cup')
             .when('/fpk/news', 's1.news')
             .when('/fpk/calendar', 's1.calendar')
             .when('/fpk/settings', 's1.settings')
@@ -37,6 +38,10 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
             .segment('clients', {
                 templateUrl: 'views/fpk/clients.html',
                 controller: 'clientsCtrl'
+            })
+            .segment('admin_cup', {
+                templateUrl: 'views/fpk/admin_cup.html',
+                controller: 'adminCtrl'
             })
             .segment('news', {
                 templateUrl: 'views/fpk/news.html',

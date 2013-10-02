@@ -2107,3 +2107,93 @@ a {
         background: #DDD;
     }
 }
+
+
+.admin_cup {
+    ul.admin_ul {
+        list-style: none;
+        padding: 0px;
+        li {
+            min-height: 36px;
+            background: #EEE;
+            color: #000;
+            border-top: 1px solid #FFF;
+            border-bottom: 1px solid #888;
+            vertical-align: middle;
+            .manager_fio {
+                width: 15em;
+                font-size: 14px;
+                padding-left: 5px;
+                display: inline-block;
+            }
+            .admin_col {
+                display: inline-block;
+                min-width: 13em;
+            }
+            img {
+                height: 17px;
+                margin-top: -4px;
+            }
+            span {
+                display: inline-block;
+            }
+            .round {
+                min-width: 6em;
+                text-align: center;
+                font-size: 14px;
+                padding: 2px 10px;
+                background: #35426b;
+                color: #FFF;
+                border-radius: 10px;
+                margin: 5px;
+                height: 24px;
+                cursor: pointer;
+            }
+            .round:hover {
+                background: #000;
+            }
+
+        }
+
+    }
+}
+
+.admin_cup_new {
+    position: absolute;
+    right: 10px;
+    left: 10px;
+    bottom: 0px;
+    z-index: 10;
+    background: #EEE;
+    padding: 15px;
+    color: #000;
+    border-radius: 10px;
+    font-size: 14px;
+    box-shadow: 2px 2px 10px #000;
+    max-width: 800px;
+    border: 1px dashed #888;
+    background-image: url('../images/textures/01.jpeg');
+    background-size: 130px;
+    ol {
+        box-shadow: inset 0px 0px 5px rgba(0,0,0,0.4);
+        padding: 10px 45px;
+        background: #EEE;
+    }
+    h5 {
+        margin-left: 20px;
+    }
+    a {
+        color: #000;
+    }
+    .close_new {
+        font-size: 12px;
+        margin-left: 30px;
+    }
+    .del_new {
+        font-size: 12px;
+    }
+    .del_new:hover {
+        color: red;
+    }
+
+}

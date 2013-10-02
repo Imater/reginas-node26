@@ -314,7 +314,7 @@ myApp.directive('datemini', ['$timeout', function($timeout) { return {
             answer.text = "OUT";
             answer.class = "date_out";
           }
-          if( ($scope.client) && ($scope.client.out!=NO_DATE) && ($scope.client.dg!=NO_DATE) ) {
+          if( ($scope.client) && (($scope.client.out!=NO_DATE) && ($scope.client.out!="")) && ($scope.client.dg!=NO_DATE) ) {
             answer.text = "РАСТОРГ";
             answer.class = "date_rastorg";
           }
@@ -1061,7 +1061,9 @@ $scope.getSMS = function(sms) {
 $scope.jsFioShort = function(fio, need_surname) {
     if(!fio) return "";
     var fio_sp = fio.split(" ");
-    var answer = fio_sp[0] + " "+(fio_sp[1]?(fio_sp[1].substr(0,1)+"."):"") + ((fio_sp[2]&&need_surname)?(fio_sp[2].substr(0,1)+"."):"");
+    var name = (fio_sp[1]?(fio_sp[1].substr(0,1)+"."):"");
+    if(need_surname == "name") var name = (fio_sp[1]?(fio_sp[1]+""):"");
+    var answer = fio_sp[0] + " "+ name + ((fio_sp[2]&&need_surname&&(need_surname!="name"))?(fio_sp[2].substr(0,1)+"."):"");
     return answer;
 }
 

@@ -32,6 +32,7 @@
       </li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
+      <li><a href="#/fpk/admin_cup">Трафик</a></li>
       <li><a href="#/fpk/settings/models">Настройки</a></li>
       <li class="dropdown">
         <a  class="dropdown-toggle" data-toggle="dropdown">Фильтр: {{jsShowManagerFilter()}} <b class="caret"></b></a>
@@ -39,7 +40,7 @@
           <li role="presentation" class="dropdown-header">Фильтровать по:</li>                   
           <li ng-click="jsSelectManager(-1)"><a><i class="icon-users"></i>Все менеджеры</a></li>
           <li role="presentation" class="dropdown-header">Менеджеры: {{manager_filter}}</li>                   
-          <li ng-click="jsSelectManager(manager.id)" ng-repeat="manager in managers | onlyManager:true"><a><i class="icon-user"></i>{{manager.fio}} {{manager.id}}</a></li>
+          <li ng-click="jsSelectManager(manager.id)" ng-repeat="manager in managers | onlyManager:true"><a><i class="icon-user"></i>{{manager.fio}}</a></li>
           <li class="dropdown-submenu"><a >Остальные</a>
            <ul class="dropdown-menu">
             <li ng-click="jsSelectManager(manager.id)" ng-repeat="manager in managers | onlyManager:false"><a >{{manager.fio}}</a></li>

@@ -1,0 +1,114 @@
+<div class="scrollable_div">
+	<h3>Учёт трафика</h3>
+	<div class="admin_cup">
+		<ul class="admin_ul">
+			<li ng-repeat="manager in managers | onlyManager:true">
+				<div class="admin_col">
+					<span class="manager_fio">
+						<i class="icon-user"></i>
+						{{jsFioShort(manager.fio,"name")}}
+					</span>
+				</div>
+				
+				<div class="admin_col" ng-click="jsAddAdminDo()">
+					<img src="images/do_type/1zvonok.png">
+					<span class="round">
+					 	{{23}} > {{5}}
+					</span>
+				</div>
+
+				<div class="admin_col">
+					<img src="images/do_type/1vizit.png">
+					<span class="round">
+					 	{{3}} < {{4}}
+					</span>
+				</div>
+
+				<div class="admin_col">
+					<img src="images/do_type/1test-drive.png">
+					<span class="round">
+					 	{{2}} > {{1}}
+					</span>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>
+
+
+
+	<div class="admin_cup_new" ng-if="cup_new_show">
+	  <div class="row">
+	  	<div class="col-md-12">
+	  		<button class="btn btn-success btn-sm">Сохранить</button>
+
+            <div class="btn-group">
+              <button type="button" class="btn btn-default btn-sm dropdown-toggle pull-center" data-toggle="dropdown">
+                Тип дела: <b>Визит</b> <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu pull-right" role="menu">
+              	<li><a>Визит</a></li>
+              	<li><a>Звонок</a></li>
+              	<li><a>Тест-драйв</a></li>
+              </ul>
+            </div>
+
+
+	  		<a class="close_new pull-right" ng-click="jsCloseAdminDo()">Закрыть</a>
+	  		<a class="del_new pull-right">Удалить</a>
+
+	  	</div>
+	  </div>
+	  <br>
+	  <div class="row">
+	  	<div class="col-md-8">
+            <div class="input-group input-group-sm client_fio_input">
+              <span class="input-group-addon" title="ФИО клиента">ФИО:</span>
+              <input ui-keypress="{enter: 'foo()'}" type="text" class="form-control" ng-model="client.fio"  placeholder="Самойлов Анатолий Петрович">
+            </div>
+
+	  	</div>
+		<div class="col-md-4">
+
+            <div class="btn-group">
+              <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                Менеджер: <b>Петров Иван{{jsFioShort(jsFindInArray(managers,"id",client.manager_id).fio)}}</b> <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu pull-right" role="menu">
+                  <li ng-click="client.manager_id=manager.id" ng-repeat="manager in managers | onlyManager:true"><a><i class="icon-user"></i>{{manager.fio}}</a></li>
+
+                    <li class="dropdown-submenu"><a>Остальные</a>
+                     <ul class="dropdown-menu">
+                      <li ng-click="client.manager_id=manager.id" ng-repeat="manager in managers | onlyManager:false"><a>{{manager.fio}}</a></li>
+                     </ul>
+                    </li>
+
+
+              </ul>
+            </div>
+
+		</div>	  
+	  </div> <!-- row -->
+
+
+	  <div class="row">
+		<div class="col-md-5">
+		<h5>Модель:</h5>
+		<ol class="model_select">
+            <li><a>Неизвестно</a></li>
+ 			<li ng-repeat="model in models" ng-click="client.model = model.id"><a>{{model.model}}</a></li>
+  		</ol>
+  		</div>
+
+		<div class="col-md-7">
+		<h5>Откуда про нас узнали:</h5>
+		<ol class="commercial_select">
+            <li ng-click="client.commercial_id = comm.id" ng-repeat="comm in commercials"><a>{{comm.title}}</a></li>
+            <li ng-click="client.commercial_id=0"><a>Неизвестно</a></li>
+  		</ol>
+  		</div>
+
+	  </div> <!-- row -->
+
+
+	</div>

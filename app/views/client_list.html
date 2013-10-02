@@ -31,7 +31,7 @@
                             <span ng-if="client.commercial_id">[откуда узнали: <b>{{jsFindInArray(commercials,"id",client.commercial_id).title}}</b>]<br></span>
                             <span ng-if="client.vin">[VIN: <b>{{client.vin}}</b>]<br></span>
                             <span ng-if="client.email">[Email: <b>{{client.email}}</b>]<br></span>
-                            <span ng-if="client.comment">{{client.comment}}<br></span>
+                            <span ng-if="client.comment.length">{{client.comment}}<br></span><span style="font-size:0px;">{{client.comment.length}}</span>
                             [Менеджер: <i class="icon-user"></i><b>{{jsFindInArray(managers,"id",client.manager_id).fio}}</b>]<br>
                           </div>
                           <div ng-if="client._edit == true" class="client_edit" jq-show-effect="client._edit == true" jq-options="{type:'slide', duration:200, delay:200, hideImmediately: true}">
