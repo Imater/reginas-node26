@@ -67,7 +67,7 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
     clearTimeout(tm_search);
     tm_search = setTimeout(function(){
       if(searchstring.length>3) {
-          $scope.$parent.clientsgroupby = "manager";
+          $scope.$parent.clientsgroupby = "manager_id";
           myApi.searchString($scope, searchstring).then(function(result){
             $scope.$parent.clients = result;
             $scope.$parent.clients_distincts = $scope.clientsToFilter( $scope.$parent.clients );
@@ -124,6 +124,7 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
 
         $scope.credit_managers = $scope.$parent.credit_managers;
         $scope.managers = $scope.$parent.managers;
+        $scope.jsRefreshClients = $scope.$parent.jsRefreshClients;
 
         $scope.jsOnOffDateParser = $scope.$parent.jsOnOffDateParser;
 
@@ -307,6 +308,8 @@ function DoCtrl($scope, myApi) { //контроллер дел
    $scope.car_status = $scope.$parent.car_status;
    $scope.car_status_array = $scope.$parent.car_status_array;
 
+   $scope.jsRefreshClients = $scope.$parent.jsRefreshClients;
+
    $scope.do_types_array = $scope.$parent.do_types_array;
 
    $scope.jsLoadStat = $scope.$parent.jsLoadStat;
@@ -389,6 +392,17 @@ function DoCtrl($scope, myApi) { //контроллер дел
    $scope.jsDoCancel = function() {
     console.info(angular.copy( $scope.backup_copy ));
     $scope.do = angular.copy( $scope.backup_copy );
+   }
+   $scope.jsDelDo = function() {
+          if( confirm("Вы действительно хотите удалить дело №"+$scope.do.id+"?") ) {
+              myApi.deleteDo($scope, $scope.do.id).then(function(value){
+                console.info(value);
+                if(value.rows.affectedRows>0) {
+                  $scope.jsRefreshClients();
+                }
+                else alert("Не могу удилить дело.");
+              }); 
+          }
    }
 
 }

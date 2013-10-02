@@ -267,7 +267,7 @@ exports.getDo = function(request,response) {
 	jsCheckToken(request.query.token).done(function(user_id){
 		var insert_sql = "";
 		if(manager_id>0) insert_sql = "1_do.manager_id = '"+manager_id+"' AND ";
-		var query = 'SELECT 1_do.*, 1_clients.id, 1_clients.fio, 1_models.short FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model WHERE '+insert_sql+' 1_do.brand = ? AND 1_do.date2<= DATE_ADD(NOW(), INTERVAL 10 DAY) AND 1_do.checked = "0000-00-00 00:00:00" ORDER by date2';
+		var query = 'SELECT 1_do.*, 1_clients.id, 1_clients.fio, 1_models.short FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model WHERE '+insert_sql+' 1_do.brand = ? AND 1_do.date2<= DATE_ADD(NOW(), INTERVAL 31 DAY) AND 1_do.checked = "0000-00-00 00:00:00" ORDER by date2';
 		console.info(query);
 	    pool.query(query, [ brand ] , function (err, rows, fields) {
 	    		rows = correct_dates(rows);
@@ -532,6 +532,8 @@ exports.addNewClient = function(request, response) {
 
  jsCheckToken(request.query.token).done(function(user_id){
 
+ 	if( !(manager_id>0) ) manager_id = user_id;
+
  	var values = {
  		fio: "Клиент " + jsGetHourMinutes( (new Date) ),
  		date: tomysql( (new Date) ),
@@ -633,6 +635,33 @@ exports.findClient = function(request, response) {
 
 }
 
+//поиск клиентов по типу дела
+exports.findClientDoType = function(request, response) {
+
+	var brand_id = request.query.brand;
+	var today = request.query.today;
+	var type_do = request.query.type_do;
+
+	if(type_do == "vd_plan") {
+		var insert_sql = 'icon2 > 2 ORDER by `icon2` DESC';
+	} else {
+		var insert_sql = '`'+type_do+'` LIKE "'+today+'%" ORDER by `'+type_do+'` DESC';
+	}
+
+	if(type_do == "out"){
+		var insert_sql = '`'+type_do+'` LIKE "'+today+'%" AND dg != "0000-00-00 00:00:00" ORDER by `'+type_do+'` DESC';
+	}
+
+	var myquery = 'SELECT * FROM `1_clients` WHERE '+insert_sql+' LIMIT 5000';
+
+	console.info("query = ", myquery);
+
+    pool.query(myquery, function (err, rows, fields) {
+  			rows = correct_dates( rows );
+	  		response.send(rows);
+  	});	
+
+}
 
 
 
@@ -721,9 +750,15 @@ var jsLoadStatSMS = function(type, brand_id, today, result) {
 		if(type=="vz") var val = {type: type, icon: "1vizit.png", day: 0, month: 0, title: "Визиты первичные", order: 5};
 		if(type=="tst") var val = {type: type, icon: "1test-drive.png", day: 0, month: 0, title: "Тестдрайвы", order: 6};
 
-		myquery = "SELECT count(*) cnt FROM `1_clients` WHERE `"+type+"` LIKE '"+today_month+"%' AND brand = ? ";
+		if(type=="out") {
+			var insert_sql = ' dg != "0000-00-00 00:00:00" AND';
+		} else {
+			var insert_sql = ' ';
+		}
+
+		myquery = "SELECT count(*) cnt FROM `1_clients` WHERE "+insert_sql+" `"+type+"` LIKE '"+today_month+"%' AND brand = ? ";
 		pool.query(myquery, [brand_id], function (err, rows_month, fields) {
-			myquery = "SELECT count(*) cnt FROM `1_clients` WHERE `"+type+"` LIKE '"+today+"%' AND brand = ? ";
+			myquery = "SELECT count(*) cnt FROM `1_clients` WHERE "+insert_sql+" `"+type+"` LIKE '"+today+"%' AND brand = ? ";
 			pool.query(myquery, [brand_id], function (err, rows_day, fields) {
 				val["month"] = rows_month[0].cnt;
 				val["day"] = rows_day[0].cnt;
@@ -826,7 +861,7 @@ exports.newDo = function(request, response) {
 exports.loadModels = function(request, response) {
     
     pool.query('SELECT * FROM `1_models` ORDER by model', function (err, models, fields) {
-	    pool.query('SELECT * FROM `1_brands`', function (err, brands, fields) {
+	    pool.query('SELECT * FROM `1_brands` ORDER by title', function (err, brands, fields) {
 		    pool.query('SELECT * FROM `1_users_group`', function (err, users_group, fields) {
 	  			response.send({models:models, brands: brands, users_group: users_group });
 	  		});
@@ -895,11 +930,24 @@ exports.removeClient = function(request, response) {
  console.info(client_id);
 
  jsCheckToken(request.query.token).done(function(user_id){
-    pool.query('DELETE * FROM 1_do WHERE client = ?',[client_id], function (err, rows, fields) {
+    pool.query('DELETE FROM 1_do WHERE client = ?',[client_id], function (err, rows, fields) {
 		  pool.query('DELETE FROM `1_clients` WHERE id = ?',[client_id], function (err, rows, fields) {
 		  	response.send({rows:rows, err: err});
 		  	console.info({rows:rows, err: err});
 		  });
+  	});	
+  });
+
+}
+
+exports.removeDo = function(request, response) {
+
+ var do_id = request.query.do_id;
+
+ jsCheckToken(request.query.token).done(function(user_id){
+    pool.query('DELETE FROM 1_do WHERE id = ? LIMIT 1',[do_id], function (err, rows, fields) {
+		  	response.send({rows:rows, err: err});
+		  	console.info({rows:rows, err: err});
   	});	
   });
 
@@ -1441,7 +1489,7 @@ exports.loadStatTable = function(request, response) {
 					the_function: function(car, col){
 					var do_type = "vd";
 					//console.info(car.fio, col.col);
-					var month = (col.length>1)?col.col:'0'+col.col;
+					var month = (col.col>1)?col.col:'0'+col.col;
 					if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
 						return true;
 					} else {
@@ -1459,7 +1507,8 @@ exports.loadStatTable = function(request, response) {
 					the_function: function(car, col){
 					var do_type = "dg";
 					//console.info(car.fio, col.col);
-					var month = (col.length>1)?col.col:'0'+col.col;
+					var month = (col.col>1)?col.col:'0'+col.col;
+					console.info("DO_MONTH",month, car[do_type]);
 					if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
 						return true;
 					} else {
@@ -1477,7 +1526,7 @@ exports.loadStatTable = function(request, response) {
 					the_function: function(car, col){
 					var do_type = "out";
 					//console.info(car.fio, col.col);
-					var month = (col.length>1)?col.col:'0'+col.col;
+					var month = (col.col>1)?col.col:'0'+col.col;
 					if( (car.dg=="") && (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
 						return true;
 					} else {
@@ -1495,7 +1544,7 @@ exports.loadStatTable = function(request, response) {
 					the_function: function(car, col){
 					var do_type = "tst";
 					//console.info(car.fio, col.col);
-					var month = (col.length>1)?col.col:'0'+col.col;
+					var month = (col.col>1)?col.col:'0'+col.col;
 					if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
 						return true;
 					} else {
@@ -1513,7 +1562,7 @@ exports.loadStatTable = function(request, response) {
 					the_function: function(car, col){
 					var do_type = "vz";
 					//console.info(car.fio, col.col);
-					var month = (col.length>1)?col.col:'0'+col.col;
+					var month = (col.col>1)?col.col:'0'+col.col;
 					if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
 						return true;
 					} else {
@@ -1531,7 +1580,7 @@ exports.loadStatTable = function(request, response) {
 					the_function: function(car, col){
 					var do_type = "zv";
 					//console.info(car.fio, col.col);
-					var month = (col.length>1)?col.col:'0'+col.col;
+					var month = (col.col>1)?col.col:'0'+col.col;
 					if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
 						return true;
 					} else {
@@ -1546,8 +1595,8 @@ exports.loadStatTable = function(request, response) {
 
 			var col_function_month = function(car, col){
 				//console.info(car.fio, col.col);
-				var month = (col.length>1)?col.col:'0'+col.col;
-				if( (car[do_type]) && (car[do_type].indexOf("2012-")!=-1) ) {
+				var month = (col.col>1)?col.col:'0'+col.col;
+				if( (car[do_type]) && (car[do_type].indexOf("2013-")!=-1) ) {
 					return true;
 				} else {
 					return false;
@@ -1573,7 +1622,7 @@ exports.loadStatTable = function(request, response) {
 			});
 
 
-
+			console.info("BRAND:", brand_id);
 			pool.query('SELECT * FROM `1_clients` WHERE brand=?',[brand_id], function (err, cars, fields) {
 				cars = correct_dates(cars, "no_zero_dates");
 				
@@ -1643,6 +1692,7 @@ app.delete('/api/v1/client/:id', database.removeClient );
 
 app.get('/api/v1/do/:id', database.findDoById );
 app.get('/api/v1/calendar', database.findCalendar );
+app.delete('/api/v1/do/:id', database.removeDo );
 
 app.get('/api/v1/stat_table', database.loadStatTable );
 app.get('/api/v1/xls', database.loadXLS );
@@ -1652,6 +1702,7 @@ app.get('/api/v1/search', database.searchString );
 app.get('/api/v1/client/update/:id', database.updateClient );
 
 app.get('/api/v1/clients_export', database.exportClients );
+
 
 
 app.get('/api/v1/stat', database.loadStat );
@@ -1669,6 +1720,8 @@ app.delete('/api/v1/models', database.deleteModel );
 app.put('/api/v1/do/:id', database.saveDo );
 app.put('/api/v1/client/:id', database.saveClient );
 app.get('/api/v1/do', database.getDo );
+
+app.get('/api/v1/do_by_type', database.findClientDoType );
 
 
 app.post('/api/v1/do', database.newDo );

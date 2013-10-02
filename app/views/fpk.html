@@ -99,7 +99,7 @@
                     </button>
                     <ul class="dropdown-menu">
                       <li role="presentation" class="dropdown-header">Выбор бренда:</li>                   
-                      <li ng-repeat="the_brand in brands | orderBy:'brandname'"><a ng-click="jsSelectBrand(the_brand.id)"><img height="16px" width="25.6px" style="margin-right:10px;" ng-src="images/logos/{{the_brand.logo}}"></img>{{the_brand.title}}</a></li>
+                      <li ng-repeat="the_brand in brands | orderBy:'title'"><a ng-click="jsSelectBrand(the_brand.id)"><img height="16px" width="25.6px" style="margin-right:10px;" ng-src="images/logos/{{the_brand.logo}}"></img>{{the_brand.title}}</a></li>
                     </ul>
                   </div>
                 </div>
@@ -206,8 +206,8 @@
 
         <div class="cup_sms">
           <ul>
-            <li ng-repeat="sms in cup_sms | orderBy:'order'" title="{{sms.title}}">
-              <img class="img_{{sms.type}}" ng-src="/images/do_type/{{sms.icon}}" width="14px">
+            <li ng-repeat="sms in cup_sms | orderBy:'order'" title="{{sms.title}}" ng-click="getSMS(sms)" ng-class="{active: (sms == sms_active)}">
+                <img class="img_{{sms.type}}" ng-src="/images/do_type/{{sms.icon}}" width="14px">
                 <span class="sms" ng-if="!sms.plan">{{sms.day}} ({{sms.month}})</span>
                 <span class="sms" ng-if="sms.plan">{{sms.plan.plan5}} + {{sms.plan.plan4}} + {{sms.plan.plan3}}</span>
             </li>

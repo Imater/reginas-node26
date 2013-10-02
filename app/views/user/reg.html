@@ -22,7 +22,7 @@
       <div class="input-group-btn">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Ваш бренд: <b><img height="20px" style="margin-right:10px;" ng-src="images/logos/{{brands[reg_user.brand].logo}}"></img>{{brands[reg_user.brand].title}}</b> <span class="caret"></span></button>
         <ul class="dropdown-menu pull-right">
-                      <li ng-repeat="the_brand in brands | orderBy:'brandname'" ng-click="reg_user.brand = the_brand.id"><a><img height="16px" width="25.6px" style="margin-right:3px;" ng-src="images/logos/{{the_brand.logo}}"></img>{{the_brand.title}}</a></li>
+                      <li ng-repeat="the_brand in brands" ng-click="reg_user.brand = the_brand.id"><a><img height="16px" width="25.6px" style="margin-right:3px;" ng-src="images/logos/{{the_brand.logo}}"></img>{{the_brand.title}}</a></li>
         </ul>
       </div><!-- /btn-group -->
       <br>

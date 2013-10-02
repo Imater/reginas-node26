@@ -241,7 +241,7 @@
 
                                             <li class="dropdown-submenu"><a>Остальные</a>
                                              <ul class="dropdown-menu">
-                                              <li ng-click="jsSelectManager(manager.id)" ng-repeat="manager in managers | onlyManager:false"><a>{{manager.fio}}</a></li>
+                                              <li ng-click="client.manager_id=manager.id" ng-repeat="manager in managers | onlyManager:false"><a>{{manager.fio}}</a></li>
                                              </ul>
                                             </li>
 
@@ -278,7 +278,7 @@
                                             <button ng-click="jsDoSave(); do._visible=false;" class="do_save">Сохранить</button>
                                             <button ng-click="jsDoDone();jsDoSave();do._visible=false;" class="do_done">{{do.checked!='0000-00-00 00:00:00' && "Снять выполнение" || "Выполнить"}}</button>   
 
-                                            <button class="do_del">Удалить</button>
+                                            <button class="do_del" ng-click="jsDelDo()">Удалить</button>
                                             <button ng-click="jsDoCancel()" class="do_cancel">Отменить</button>
                                       </div>
                                     </div>

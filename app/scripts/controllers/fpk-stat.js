@@ -21,8 +21,14 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 	};
 	$scope.getCUPtable();	
 
-	 $scope.loadCupCar = function(brand_id, do_type) {
-	    myApi.getCUPcars($scope, brand_id, do_type).then(function(cars){
+	 $scope.loadCupCar = function(brand_id, do_type, my_this) {
+	 	if($scope.cup_selected == my_this) {
+			var today = $scope.today_date.substr(0,7);
+	 	} else {
+	 		var today = $scope.today_date;
+	 	}
+	 	$scope.cup_selected = my_this;
+	    myApi.getCUPcars($scope, brand_id, do_type, today).then(function(cars){
 	      $scope.cup_clients = cars;
 	    });
 	 }

@@ -545,7 +545,6 @@ myApp.directive('returnOnBlur', function() {
                     if(old_index != new_index) {
                       $("li[mydoid='"+mydoid+"'] .do_text_input").focus();
                     }
-                    console.info( old_index, new_index, mydoid, scope.$parent.$index );
 
                   },0);
                   setTimeout(function(){
@@ -553,7 +552,6 @@ myApp.directive('returnOnBlur', function() {
                     if(old_index != new_index) {
                       $("li[mydoid='"+mydoid+"'] .do_text_input").focus();
                     }
-                    console.info( old_index, new_index, mydoid, scope.$parent.$index );
 
                   },600);                  
             });
@@ -815,15 +813,14 @@ myApp.factory('myApi', function($http, $q){
       return dfd.promise;      
 
     },
-    saveDo: function($scope,changes, client_id) {
+    getClientsByDoType: function($scope, type_do, today) {
       var dfd = $q.defer();
 
       jsGetToken().done(function(token){
 
-        $http({url:'/api/v1/do/'+changes.id,method: "PUT", isArray: true, params: { token: token, changes: changes, brand: $scope.brand, client_id: client_id }}).then(function(result){
-            console.info("DO SAVED: ",result.data);
-
-          dfd.resolve(result.data);
+        $http({url:'/api/v1/do_by_type',method: "GET", isArray: true, params: { token: token, type_do: type_do, brand: $scope.brand, today: today }}).then(function(result){
+            console.info("DO RECIVED: ",result.data);
+            dfd.resolve(result.data);
         });
       });
 
@@ -868,6 +865,21 @@ myApp.factory('myApi', function($http, $q){
 
         $http({url:'/api/v1/client/'+client_id,method: "DELETE", isArray: true, params: { token: token, client_id: client_id }}).then(function(result){
             console.info("CLIENT DELETE: ",result.data);
+            dfd.resolve(result.data);
+        });
+      });
+
+      return dfd.promise;      
+
+      
+    },
+    deleteDo: function($scope, do_id) {
+      var dfd = $q.defer();
+
+      jsGetToken().done(function(token){
+
+        $http({url:'/api/v1/do/'+do_id,method: "DELETE", isArray: true, params: { token: token, do_id: do_id }}).then(function(result){
+            console.info("DO DELETE: ",result.data);
             dfd.resolve(result.data);
         });
       });
@@ -945,11 +957,11 @@ myApp.factory('myApi', function($http, $q){
       return dfd.promise;      
 
     },
-    getCUPcars: function($scope, brand_id, do_type) {
+    getCUPcars: function($scope, brand_id, do_type, today) {
       var dfd = $q.defer();
       jsGetToken().done(function(token){
 
-        $http({url:'/api/v1/stat/cup/cars', method: "GET", isArray: true, params: { token: token, brand: brand_id, today_date: $scope.today_date, do_type: do_type }}).then(function(result){
+        $http({url:'/api/v1/stat/cup/cars', method: "GET", isArray: true, params: { token: token, brand: brand_id, today_date: today, do_type: do_type }}).then(function(result){
             console.info("STAT_CARS: ",result.data.length);
           dfd.resolve(result.data);
         });
@@ -958,6 +970,22 @@ myApp.factory('myApi', function($http, $q){
       return dfd.promise;      
 
     },
+    saveDo: function($scope,changes, client_id) {
+      var dfd = $q.defer();
+
+      jsGetToken().done(function(token){
+
+        $http({url:'/api/v1/do/'+changes.id,method: "PUT", isArray: true, params: { token: token, changes: changes, brand: $scope.brand, client_id: client_id }}).then(function(result){
+            console.info("DO SAVED: ",result.data);
+
+          dfd.resolve(result.data);
+        });
+      });
+
+      return dfd.promise;      
+
+      
+    },    
     loadUserInfo:function($scope) {
       var dfd = $q.defer();
       jsGetToken().done(function(token){
@@ -1012,6 +1040,24 @@ $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
 $scope.$routeSegment = $routeSegment;
 
 
+$scope.getSMS = function(sms) {
+  //sms.do_type;
+  if($scope.sms_active == sms) {
+    var today = $scope.today_date.substr(0,7);
+  } else {
+    var today = $scope.today_date;
+  }
+  $scope.sms_active = sms;
+  var type_do = sms.type;
+
+  myApi.getClientsByDoType($scope, type_do, today).then(function(answer){
+    console.info("clients", answer);
+    $scope.one_client = answer;
+    $scope.show_one_client = true;
+  });
+
+}
+
 $scope.jsFioShort = function(fio, need_surname) {
     if(!fio) return "";
     var fio_sp = fio.split(" ");
@@ -1047,6 +1093,7 @@ $scope.jsFioShort = function(fio, need_surname) {
     {img: "1dogovor.png", title: "Договор", fieldname: "dg"},
     {img: "1settings.png", title: "Подготовка"},
     {img: "1vidacha.png", title: "Выдача", fieldname: "vd"},
+    {img: "1bu.png", title: "Трейд-ин", fieldname: "bu"},
     {img: "1out.png", title: "OUT", fieldname: "out"}
  ];
 
@@ -1118,6 +1165,7 @@ $scope.jsFioShort = function(fio, need_surname) {
 
  $scope.jsCloseOneClient = function(){
     $scope.show_one_client = false;
+    $scope.sms_active = false;
     if($scope.jsRefreshClients) $scope.jsRefreshClients();
  };
 
