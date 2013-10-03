@@ -412,6 +412,7 @@ function DoCtrl($scope, myApi) { //контроллер дел
                 console.info(value);
                 if(value.rows.affectedRows>0) {
                   $scope.fpk.jsRefreshClients();
+                  if($scope.fpk.jsLoadStat) $scope.fpk.jsLoadStat();
                 }
                 else alert("Не могу удилить дело.");
               }); 
