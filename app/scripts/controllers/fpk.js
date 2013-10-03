@@ -107,7 +107,7 @@ myApp.directive('autoComplete', function($timeout, myApi) {
 
                       var phones = (el.phone1?el.phone1:"")+(el.phone2?" ,"+el.phone2+"":"")+(el.phone3?" ,"+el.phone3+"":"")+(el.phone4?" ,"+el.phone4+". ":". "); 
 
-                      title = (phones + title).replace(searchtext, ">"+searchtext+"<");
+                      title = (phones + title).replace(searchtext, "<font color='red'>"+searchtext+"</font>");
 
                       res.push({label: title, value: el.phone1})
                     });
