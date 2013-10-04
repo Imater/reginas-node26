@@ -1,6 +1,6 @@
 //#/login
 
-myApp.controller('loginCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment) {
+myApp.controller('loginCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment, oAuth2) {
 
  var user_last_email = localStorage.getItem("user_last_email");
 
@@ -79,15 +79,14 @@ myApp.controller('loginCtrl', function ($scope, $resource, $rootScope, $location
 
  $scope.jsLoginNow = function() {
  	
-    jsLogin(hex_md5($scope.reg_user.email+'990990'), hex_md5($scope.reg_user.password_login) ).done( function(answer){ 
-      if(!answer) {
-      	bootstrap_alert.warning("Пароль или логин содержат ошибку"); 
-      } else {
+    oAuth2.jsLogin($scope, hex_md5($scope.reg_user.email.toLowerCase()+'990990'), hex_md5($scope.reg_user.password_login) ).done( function(answer){ 
       	localStorage.setItem("user_last_email",$scope.reg_user.email);
-      	window.location.hash = "#/fpk/clients";
-        $scope.fpk.jsRefreshUserInfo();
-      };
-      console.info(answer);
+        //$scope.fpk.jsRefreshUserInfo();
+        //$scope.init_first();
+        window.location.hash = "#/fpk/clients";
+        console.info(answer);
+    }).fail(function(){
+      bootstrap_alert.warning("Пароль или логин содержат ошибку"); 
     });
 
  };

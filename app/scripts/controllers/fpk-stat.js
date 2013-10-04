@@ -38,6 +38,11 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 		$scope.getCUPtable();	
   	});
 
+	$rootScope.$on("loadstat", function(){
+		$scope.getCUPtable();	
+	});
+
+
 
   
 });

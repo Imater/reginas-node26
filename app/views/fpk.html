@@ -59,7 +59,7 @@
 
 
     <div id="panel_left_header">
-      <a href="#/user/login" title="{{fpk.users_groups[fpk.the_user.user_group].title}}"><i class="icon-user"></i>&nbsp;{{fpk.the_user.fio}}&nbsp;</a>
+      <a href="#/user/login" title="{{fpk.users_groups[fpk.the_user.user_group].title}}"><i class="icon-user"></i>{{fpk.the_user.fio}}<b ng-if="jsGetOnline()"> - online</b><b ng-if="!jsGetOnline()"> - offline</b></a>
     </div>
 
     <div id="panel_left_content" class="noselectable">
@@ -211,7 +211,7 @@
           <ul>
             <li ng-repeat="sms in fpk.cup_sms | orderBy:'order'" title="{{sms.title}}" ng-click="getSMS(sms)" ng-class="{active: (sms == sms_active)}">
                 <img class="img_{{sms.type}}" ng-src="/images/do_type/{{sms.icon}}" width="14px">
-                <span class="sms" ng-if="!sms.plan">{{sms.day}} ({{sms.month}})</span>
+                <span class="sms" color-change="sms" ng-if="!sms.plan">{{sms.day}} ({{sms.month}})</span>
                 <span class="sms" ng-if="sms.plan">{{sms.plan.plan5}} + {{sms.plan.plan4}} + {{sms.plan.plan3}}</span>
             </li>
           </ul>

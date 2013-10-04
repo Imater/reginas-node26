@@ -54,6 +54,7 @@ return dfd.promise();
 
 function jsGetToken($scope) {
 	var dfd = new $.Deferred();
+	return dfd;
 
 	$scope.fpk.init.done(function(){ 
 
@@ -90,6 +91,7 @@ function jsGetToken($scope) {
 
 function jsRefreshToken() {
 	var dfd = new $.Deferred();
+	return dfd;
 
 	//Проверка токена
 	//Request Access Token
@@ -145,9 +147,11 @@ var params_get = 'grant_type=refresh_token'+
 
 
 function jsGetMyFirstToken() {
+	return dfd;
 
 	//Проверка токена
 	//Request Access Token
+
 
 	var oauth2 = localStorage.getItem( "oauth2" );
 

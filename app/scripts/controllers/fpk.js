@@ -323,8 +323,13 @@ myApp.directive('datemini', ['$timeout', function($timeout) { return {
 
 
 
-myApp.factory('socket', function($rootScope) {
-	var socket = io.connect();
+myApp.factory('socket', function($rootScope, $timeout) {
+
+//  io.configure(function () { 
+//  io.set("transports", ["xhr-polling"]); 
+//  io.set("polling duration", 10); 
+//  });
+	var socket = io.connect(undefined, {'connect timeout': 3000});
 
 /*  var globalEvent = "*";
   socket.$emit = function (name) {
@@ -352,10 +357,18 @@ myApp.factory('socket', function($rootScope) {
 		on: function(eventName, callback) {
 			socket.on('disconect', function(){
 				console.info("server off");
+        $timeout(function(){
+          $rootScope.jsSetOnline(false);  
+        },1)
 			});
       socket.on('connect', function(){
         if($rootScope.jsStartSync) $rootScope.jsStartSync();
         console.info("Server connected.");
+        $timeout(function(){
+          $rootScope.jsSetOnline(true);  
+        },1);
+        
+
       });
       socket.on('EMAIL', function(){
         alert("NEW MAIL");
@@ -630,7 +643,7 @@ myApp.directive('onFinishRender', function ($timeout) {
     }
 });
 
-myApp.factory('myApi', function($http, $q){
+myApp.factory('myApi', function($http, $q, oAuth2){
   return {
     getAutocomplete: function($scope, searchtext) {
       var dfd = $q.defer();
@@ -643,7 +656,7 @@ myApp.factory('myApi', function($http, $q){
     getDo: function($scope, id) {
       var dfd = $q.defer();
 
-      jsGetToken($scope).done(function(token){
+      oAuth2.jsGetToken($scope).done(function(token){
         $http({url:'/api/v1/do/'+id,method: "GET", params: { token: token}}).then(function(result){
           dfd.resolve(result.data);
         });
@@ -654,7 +667,7 @@ myApp.factory('myApi', function($http, $q){
     getDoToday:function($scope) {
       var dfd = $q.defer();
 
-      jsGetToken($scope).done(function(token){
+      oAuth2.jsGetToken($scope).done(function(token){
         $http({url:'/api/v1/do',method: "GET", params: { token: token, brand: $scope.fpk.brand, manager: $scope.fpk.manager_filter}}).then(function(result){
           dfd.resolve(result.data);
         });
@@ -665,7 +678,7 @@ myApp.factory('myApi', function($http, $q){
     getClient: function($scope,filter) {
       var dfd = $q.defer();
 
-      jsGetToken($scope).done(function(token){
+      oAuth2.jsGetToken($scope).done(function(token){
         $http({url:'/api/v1/client',method: "GET", isArray: true, params: { token: token, filter:filter, manager: $scope.fpk.manager_filter}}).then(function(result){
           dfd.resolve(result.data);
         });
@@ -676,7 +689,7 @@ myApp.factory('myApi', function($http, $q){
     getClientFull: function($scope,client_id) {
       var dfd = $q.defer();
 
-      jsGetToken($scope).done(function(token){
+      oAuth2.jsGetToken($scope).done(function(token){
         $http({url:'/api/v1/client/'+client_id, method: "GET", isArray: true, params: { token: token, manager: $scope.fpk.manager_filter}}).then(function(result){
           dfd.resolve(result.data);
         });
@@ -687,7 +700,7 @@ myApp.factory('myApi', function($http, $q){
     jsNewClient: function($scope, add_do_array) {
       var dfd = $q.defer();
 
-      jsGetToken($scope).done(function(token){
+      oAuth2.jsGetToken($scope).done(function(token){
         $http({url:'/api/v1/client', method: "POST", isArray: true, params: { token: token, manager: $scope.fpk.manager_filter, brand: $scope.fpk.brand, add_do_array: add_do_array}}).then(function(result){
           dfd.resolve(result.data);
         });
@@ -698,7 +711,7 @@ myApp.factory('myApi', function($http, $q){
     getStat: function($scope) {
       var dfd = $q.defer();
 
-      jsGetToken($scope).done(function(token){
+      oAuth2.jsGetToken($scope).done(function(token){
 
         var filters = $scope.fpk.leftmenu;
 
@@ -713,7 +726,7 @@ myApp.factory('myApi', function($http, $q){
     getTableStat: function($scope) {
       var dfd = $q.defer();
 
-      jsGetToken($scope).done(function(token){
+      oAuth2.jsGetToken($scope).done(function(token){
         $http({url:'/api/v1/stat_table',method: "GET", isArray: true, params: { token: token, brand: $scope.fpk.brand, manager: $scope.fpk.manager_filter }}).then(function(result){
           dfd.resolve(result.data);
         });
@@ -726,7 +739,7 @@ myApp.factory('myApi', function($http, $q){
     searchString: function($scope, searchstring) {
       var dfd = $q.defer();
 
-      jsGetToken($scope).done(function(token){
+      oAuth2.jsGetToken($scope).done(function(token){
 
         $http({url:'/api/v1/search',method: "GET", isArray: true, params: { token: token, search: searchstring, brand: $scope.fpk.brand }}).then(function(result){
           dfd.resolve(result.data);
@@ -739,7 +752,7 @@ myApp.factory('myApi', function($http, $q){
     getDoCalendar: function($scope, start_date, end_date) {
       var dfd = $q.defer();
 
-      jsGetToken($scope).done(function(token){
+      oAuth2.jsGetToken($scope).done(function(token){
 
         var filters = $scope.fpk.leftmenu;
 
@@ -755,7 +768,7 @@ myApp.factory('myApi', function($http, $q){
     getClientsByDoType: function($scope, type_do, today) {
       var dfd = $q.defer();
 
-      jsGetToken($scope).done(function(token){
+      oAuth2.jsGetToken($scope).done(function(token){
 
         $http({url:'/api/v1/do_by_type',method: "GET", isArray: true, params: { token: token, type_do: type_do, brand: $scope.fpk.brand, today: today }}).then(function(result){
             console.info("DO RECIVED: ",result.data);
@@ -770,7 +783,7 @@ myApp.factory('myApi', function($http, $q){
     addDo: function($scope, do_type, client_id) {
       var dfd = $q.defer();
 
-      jsGetToken($scope).done(function(token){
+      oAuth2.jsGetToken($scope).done(function(token){
 
         $http({url:'/api/v1/do',method: "POST", isArray: true, params: { token: token, do_type: do_type, brand: $scope.fpk.brand, client_id: client_id, manager: $scope.fpk.manager_filter }}).then(function(result){
             console.info("DO NEW: ",result.data);
@@ -785,7 +798,7 @@ myApp.factory('myApi', function($http, $q){
     saveClient: function($scope, changes, client_id) {
       var dfd = $q.defer();
 
-      jsGetToken($scope).done(function(token){
+      oAuth2.jsGetToken($scope).done(function(token){
 
         $http({url:'/api/v1/client/'+changes.id,method: "PUT", isArray: true, data: {changes: changes}, params: { token: token, brand: $scope.fpk.brand, client_id: client_id }}).then(function(result){
             console.info("DO SAVED: ",result.data);
@@ -800,7 +813,7 @@ myApp.factory('myApi', function($http, $q){
     deleteClient: function($scope, client_id) {
       var dfd = $q.defer();
 
-      jsGetToken($scope).done(function(token){
+      oAuth2.jsGetToken($scope).done(function(token){
 
         $http({url:'/api/v1/client/'+client_id,method: "DELETE", isArray: true, params: { token: token, client_id: client_id }}).then(function(result){
             console.info("CLIENT DELETE: ",result.data);
@@ -815,7 +828,7 @@ myApp.factory('myApi', function($http, $q){
     deleteDo: function($scope, do_id) {
       var dfd = $q.defer();
 
-      jsGetToken($scope).done(function(token){
+      oAuth2.jsGetToken($scope).done(function(token){
 
         $http({url:'/api/v1/do/'+do_id,method: "DELETE", isArray: true, params: { token: token, do_id: do_id }}).then(function(result){
             console.info("DO DELETE: ",result.data);
@@ -833,7 +846,7 @@ myApp.factory('myApi', function($http, $q){
 
         reg_user.password = hex_md5( reg_user.password );
         reg_user.password2 = hex_md5( reg_user.password + "990990");
-        reg_user.md5email = hex_md5( reg_user.email + "990990");
+        reg_user.md5email = hex_md5( reg_user.email.toLowerCase() + "990990");
 
         $http({url:'/api/v1/user/new',method: "POST", isArray: true, data: {reg_user: reg_user}}).then(function(result){
             console.info("NEW USER: ",result.data);
@@ -856,7 +869,7 @@ myApp.factory('myApi', function($http, $q){
     },
     newModel: function($scope) {
       var dfd = $q.defer();
-      jsGetToken($scope).done(function(token){
+      oAuth2.jsGetToken($scope).done(function(token){
         $http({url:'/api/v1/models', method: "POST", isArray: true, params: { token: token, brand: $scope.fpk.brand }}).then(function(result){
             dfd.resolve(result.data);
         });
@@ -866,7 +879,7 @@ myApp.factory('myApi', function($http, $q){
     },
     saveModel: function($scope, changes, model_id) {
       var dfd = $q.defer();
-      jsGetToken($scope).done(function(token){
+      oAuth2.jsGetToken($scope).done(function(token){
         $http({url:'/api/v1/models', method: "PUT", isArray: true, data: {changes: changes}, params: { token: token, brand: $scope.fpk.brand, model_id: model_id }}).then(function(result){
             dfd.resolve(result.data);
         });
@@ -876,7 +889,7 @@ myApp.factory('myApi', function($http, $q){
     },
     deleteModel: function($scope, del_id) {
       var dfd = $q.defer();
-      jsGetToken($scope).done(function(token){
+      oAuth2.jsGetToken($scope).done(function(token){
         $http({url:'/api/v1/models', method: "DELETE", isArray: true, params: { del_id: del_id ,token: token, brand: $scope.fpk.brand }}).then(function(result){
             dfd.resolve(result.data);
         });
@@ -886,7 +899,7 @@ myApp.factory('myApi', function($http, $q){
     },
     getCUP: function($scope) {
       var dfd = $q.defer();
-      jsGetToken($scope).done(function(token){
+      oAuth2.jsGetToken($scope).done(function(token){
 
         $http({url:'/api/v1/stat/cup', method: "GET", isArray: true, params: { token: token, brand: $scope.fpk.brand, today_date: $scope.fpk.today_date }}).then(function(result){
           dfd.resolve(result.data);
@@ -898,7 +911,7 @@ myApp.factory('myApi', function($http, $q){
     },
     getCUPcars: function($scope, brand_id, do_type, today) {
       var dfd = $q.defer();
-      jsGetToken($scope).done(function(token){
+      oAuth2.jsGetToken($scope).done(function(token){
 
         $http({url:'/api/v1/stat/cup/cars', method: "GET", isArray: true, params: { token: token, brand: brand_id, today_date: today, do_type: do_type }}).then(function(result){
             console.info("STAT_CARS: ",result.data.length);
@@ -912,7 +925,7 @@ myApp.factory('myApi', function($http, $q){
     saveDo: function($scope, changes, client_id) {
       var dfd = $q.defer();
 
-      jsGetToken($scope).done(function(token){
+      oAuth2.jsGetToken($scope).done(function(token){
 
         $http({url:'/api/v1/do/'+changes.id,method: "PUT", isArray: true, params: { token: token, changes: changes, brand: $scope.fpk.brand, client_id: client_id }}).then(function(result){
             console.info("DO SAVED: ",result.data);
@@ -927,7 +940,7 @@ myApp.factory('myApi', function($http, $q){
     },    
     loadUserInfo:function($scope) {
       var dfd = $q.defer();
-      jsGetToken($scope).done(function(token){
+      oAuth2.jsGetToken($scope).done(function(token){
         $http({url:'/api/v1/user/info', method: "GET", isArray: true, params: { token: token, brand: $scope.fpk.brand }}).then(function(result){
             dfd.resolve(result.data);
         });
@@ -940,7 +953,7 @@ myApp.factory('myApi', function($http, $q){
 
   }
 });
-
+////////////////////////////////////////////
 
 
 var bootstrap_alert = function() {};
@@ -951,6 +964,39 @@ bootstrap_alert.warning = function(message) {
 
 $('#clickme').on('click', function() {
             bootstrap_alert.warning('Your text goes here');
+});
+
+
+var tm_change;
+myApp.directive('colorChange', function() {
+  return {
+    link : function(scope, element, attrs) {
+
+      scope.$watch(attrs.colorChange, function(Val, newVal){
+          if(Val != newVal) {
+            if(element.hasClass("changed")) { 
+              element.removeClass("changed"); 
+              setTimeout(function(){
+                element.addClass("changed");
+              },1500);
+            } else {
+              element.addClass("changed");
+            }
+
+            $('body').on("mousemove.my,click,touchdown", function(){
+                clearTimeout(tm_change);
+                tm_change = setTimeout(function(){
+                    $('body').off(".my");
+                    $(".changed").removeClass("changed");
+                },200);
+            });
+          }
+
+
+      }, true);
+
+    }
+  };
 });
 
 
@@ -968,7 +1014,19 @@ $('#clickme').on('click', function() {
 var LIST_LENGTH = 100; //кол-во загружаемых клиентов за один раз
 
 
-myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment) {
+myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment, $timeout) {
+
+
+
+console.info("root", $rootScope);
+
+socket.on("loadstat", function(){
+  $timeout(function(){    
+    $scope.fpk.jsLoadStat();
+    $rootScope.$broadcast("loadstat");
+  },30+parseInt(Math.random()*60));
+});
+
 
 $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
     console.info("list_finish");
@@ -1087,7 +1145,7 @@ $scope.fpk.jsFioShort = function(fio, need_surname) {
     $scope.fpk.brand=id;
     $scope.fpk.jsLoadStat(); 
     $scope.fpk.jsRefreshClients();   
-    $scope.fpk.jsRefreshUserInfo(); 
+    $scope.fpk.jsRefreshUserInfo("dont_set_brand"); 
     //$scope.jsLoadModelsFromServer();
     if($scope.jsRefreshModels) $scope.jsRefreshModels();
     $scope.fpk.manager_filter = -1;

@@ -20,6 +20,7 @@ myApp.controller('settingsCtrl', function ($scope, $resource, $rootScope, $locat
                  {name: "Enos", age: 34}];
  
  $scope.jsRefreshModels = function(){
+   alert("refresh models");
    $scope.myData = _.filter($scope.fpk.models_array, function(model){
       return (model.brand == $scope.fpk.brand);
    });  
@@ -60,6 +61,9 @@ myApp.controller('settingsCtrl', function ($scope, $resource, $rootScope, $locat
 
  $scope.$watch('myData', throtle_save_model, true);
 
+ $scope.$watch('fpk.brand', function(){
+  $scope.jsRefreshModels();
+ });
 
 
  $scope.mySelections = [];

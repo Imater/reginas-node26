@@ -1,4 +1,7 @@
+if( /reginas/.test(window.location.hostname) ) var add = ":8880"
+else add = "";
 
+var oauth2server = "http://"+window.location.hostname+add+"/";
 
 
 angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 'ui.redactor.multi', 'ui.calendar', "ng", "infinite-scroll", "monospaced.elastic", 'route-segment', 'view-segment', 'ngGrid'])
@@ -6,7 +9,6 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
 
 //    $locationProvider.html5Mode(false).hashPrefix('!');
         $routeSegmentProvider.options.autoLoadTemplates = true;
-
 
         $routeSegmentProvider
             .when('/user/login', 'user.login')
@@ -117,12 +119,157 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
         })
 
 
-    });
+    })
+
+angular.module('fpkApp').factory('oAuth2', function($window){
+    return {
+        jsLogin: function ($scope, email1, password) {
+                var dfd = new $.Deferred();
+
+                var params_get = 'grant_type=password&username='+email1+
+                                                '&password='+password+
+                                                '&client_id=4tree_web'+
+                                                '&client_secret=4tree_passw'+
+                                                '&secret='+Math.random();
+                                                
+                $.ajax({
+                    url: oauth2server+"oauth2/token.php",
+                    type: "POST",
+                    dataType: "json",
+                    jsonp: false,
+                    cache: false,
+                    contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                    data: params_get,
+                    processData: false,
+                    cache: true,
+                    success: function (data) {
+                        data.start_time = jsNow();
+                        localStorage.setItem( "oauth2", JSON.stringify(data) );
+                        console.log("success");
+                        dfd.resolve(data);
+                        $scope.init();
 
 
-function MainCtrl($scope, $routeSegment, myApi, $timeout, $q) {
+                    },
+                    abort: function (data) {
+                        console.log("abort");
+                        dfd.reject();
+                    },
+                    error: function (data) {
+                        console.log("error");
+                        dfd.reject();
+                    }
+                });
+
+            return dfd.promise();
+        },
+        jsGetToken: function($scope){
+            var dfd = $.Deferred();
+
+            var my_this = this;
+
+            var oauth2 = localStorage.getItem( "oauth2" );
+            if(oauth2) {
+                data = JSON.parse(oauth2);
+                var dif = jsNow() - (data.start_time + data.expires_in*1000);
+                
+                //проверяем, просрочен ли Token
+                if( dif > -10000 || !dif ) { 
+                    my_this.jsRefreshToken($scope).done(function(data){
+                        console.info("Token устарел! Получил новый. "+data.access_token);
+                        dfd.resolve(data.access_token);
+                    }).fail(function(){
+                        window.location.hash = "#/user/login";
+                    });
+                } else {
+                    dfd.resolve( data.access_token );
+                    
+                }
+                
+            } else {
+                 //window.location.href = "./login.php?dont_have_token";
+                 window.location.hash = "#/user/login";
+                 //alert("redirect to login page");
+            }
+            return dfd.promise();    
+
+        },
+        jsRefreshToken: function($scope){
+            var dfd = $.Deferred();
+
+            console.info("Start_refresh_token new");
+
+            var oauth2 = localStorage.getItem( "oauth2" );
+
+            if( oauth2 ) {
+                        var oauth2data = JSON.parse(oauth2);
+
+            console.info("Use Refresh = ", oauth2data.refresh_token);
+
+            var params_get = 'grant_type=refresh_token'+
+                                            '&client_id=4tree_web'+
+                                            '&client_secret=4tree_passw'+
+                                            '&refresh_token='+oauth2data.refresh_token;
+
+            $.ajax({
+                url: oauth2server+"oauth2/token.php",
+                type: "POST",
+                dataType: "json",
+                jsonp: false,
+                cache: false,
+                contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                data: params_get,
+                processData: false,
+                cache: true,
+                success: function (data) {
+                    data.start_time = jsNow();
+                    localStorage.setItem( "oauth2", JSON.stringify(data) );
+                    console.info("Refresh from server",JSON.stringify(data));
+                    dfd.resolve(data);
+                },
+                abort: function (data) {
+                    console.info(data);
+                    dfd.reject();
+                },
+                error: function (data) {
+                    console.info(data);
+                    dfd.reject();
+                }
+            });
+
+
+            } else {
+                //window.location.href="./login.php";
+                //Нужно залогиниться!
+                dfd.reject();
+
+            }
+
+
+
+            return dfd.promise();
+        }
+    };
+});
+
+
+
+
+
+function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2) {
 
     $scope.fpk = {}; //главный объект, в котором хранится всё общее
+
+    $rootScope.online = "SEX";
+    console.info("SET")
+
+    $rootScope.jsGetOnline = function(){
+        return $rootScope.online;
+    }
+
+    $rootScope.jsSetOnline = function(status){
+        $rootScope.online = status;
+    }
 
     $scope.fpk.showfpk = function() {
         var answer = "";
@@ -194,11 +341,11 @@ function MainCtrl($scope, $routeSegment, myApi, $timeout, $q) {
 
     $scope.fpk.init = new $.Deferred();
 
-     $scope.fpk.jsRefreshUserInfo = function() {
+     $scope.fpk.jsRefreshUserInfo = function(dont_select_brand) {
         var dfd = new $.Deferred();
         myApi.loadUserInfo($scope).then(function(user){
           $scope.fpk.the_user = user.user[0];
-          $scope.fpk.brand = user.user[0].brand; //бренд по умолчанию
+          if(!dont_select_brand) $scope.fpk.brand = user.user[0].brand; //бренд по умолчанию
           localStorage.setItem("brand", $scope.fpk.brand);
           $scope.fpk.managers = user.users; //список всех менеджеров
           $scope.fpk.credit_managers = _.filter(user.users, function(user){
@@ -212,28 +359,30 @@ function MainCtrl($scope, $routeSegment, myApi, $timeout, $q) {
         return dfd.promise();
     }
 
+    $scope.init_first = function(){
+            var dfd = $.Deferred();
+            oAuth2.jsGetToken($scope).done(function () {
+                ///////////////////////////////////////////////
+                $scope.fpk.jsRefreshUserInfo().done(function(){
+                    dfd.resolve();
+                });
+            }); //Refresh Token
+    return dfd.promise();
+    }
 
-    jsRefreshToken().done(function () {
-        ///////////////////////////////////////////////
-        $scope.fpk.jsRefreshUserInfo().done(function(){
-            $scope.fpk.init.resolve();          
+    $scope.init = function() {
+        $scope.fpk.init = $scope.init_first();    
+        $scope.fpk.init.done(function(){
+            $scope.fpk.jsLoadModelsFromServer().then(function(){
+                $scope.fpk.jsRefreshDo($scope);
+            });
+
         });
-        ///////////////////////////////////////////////
-        console.info("refresh_token_did");
-        //загружаем таблицу моделей
-        $scope.fpk.jsLoadModelsFromServer().then(function(){
-            setTimeout(function(){
-            $scope.$broadcast('user_loaded', $scope.fpk.the_user);
-            },1);
-            $scope.fpk.init.resolve();    
-            
-            $scope.fpk.jsRefreshDo($scope);
-        });
-         /////////////////////////////////////////////
+    }
 
+    $scope.init();
+    
 
-
-    }); //Refresh Token
 
 
 

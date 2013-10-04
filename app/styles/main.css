@@ -208,6 +208,11 @@ body {
         #panel_center #center_footer .cup_sms ul li {
           display: inline-block; }
           #panel_center #center_footer .cup_sms ul li .sms {
+            -moz-transition: all 1s;
+            -webkit-transition: all 1s;
+            -ms-transition: all 1s;
+            -o-transition: all 1s;
+            transition: all 1s;
             padding: 2px 7px;
             cursor: pointer;
             min-width: 4em;
@@ -220,6 +225,13 @@ body {
             font-size: 12px;
             border-top: 1px solid rgba(255, 255, 255, 0.3);
             border-bottom: 1px solid #3b3b3b !important; }
+          #panel_center #center_footer .cup_sms ul li .changed.sms {
+            -moz-transition: all 1s;
+            -webkit-transition: all 1s;
+            -ms-transition: all 1s;
+            -o-transition: all 1s;
+            transition: all 1s;
+            background: #cf4006; }
           #panel_center #center_footer .cup_sms ul li .sms:hover {
             background: #1e263c; }
           #panel_center #center_footer .cup_sms ul li img {
@@ -1226,6 +1238,11 @@ body {
         text-align: center;
         border-bottom: 1px solid #AAA; }
         #statistics table tr td b {
+          -moz-transition: all 1s;
+          -webkit-transition: all 1s;
+          -ms-transition: all 1s;
+          -o-transition: all 1s;
+          transition: all 1s;
           font-weight: normal;
           line-height: 1em;
           white-space: nowrap;
@@ -1241,6 +1258,13 @@ body {
           border-top: 1px solid #222222;
           border-bottom: 1px solid #FFF;
           cursor: pointer; }
+        #statistics table tr td b.changed {
+          -moz-transition: all 1s;
+          -webkit-transition: all 1s;
+          -ms-transition: all 1s;
+          -o-transition: all 1s;
+          transition: all 1s;
+          background: #cf4006; }
         #statistics table tr td .cup_plan_b {
           background: #aabccf !important;
           border-top: 1px solid #a2a2a2;

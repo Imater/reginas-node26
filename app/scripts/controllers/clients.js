@@ -2,6 +2,9 @@
 
 myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment) {
 
+    console.info("start clientsCtrl");
+
+
  $scope.fpk.leftmenu = { active:1,
                 items : [
                   {id:0, title:"В работе", group_by: "manager_id", 
@@ -24,18 +27,23 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
                   ]
                 };
 
+  $scope.fpk.init.done(function(){
+      $scope.fpk.clients_current_i = 1;
+      
+      if($scope.fpk.jsLoadStat) $scope.fpk.jsLoadStat();
 
-  if($scope.fpk.jsLoadStat) $scope.fpk.jsLoadStat();
+      if($scope.fpk.jsSelectLeftMenu) {
+        $scope.fpk.jsSelectLeftMenu($scope.fpk.leftmenu.items[1], 1);
+      }
 
-  if($scope.fpk.jsSelectLeftMenu) {
-    $scope.fpk.jsSelectLeftMenu($scope.fpk.leftmenu.items[1], 1);
-  }
+
+  });
 /*    myApi.getClient({brand:1, no_out: true, no_dg: true, no_vd:true}).then(function(x){
       $scope.clients = x;
     });
 */
 
-   $scope.fpk.clients_current_i = 1;
+
 
 
 

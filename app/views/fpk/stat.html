@@ -16,9 +16,9 @@
         <tr ng-repeat="brand in cup | orderBy:'brandname':true">
         	<td class="first_td"><img style="width:32px;" title="{{brand.title}}" ng-src="images/logos/{{brand.logo}}"></td>
         	<td class="cup_icon"><img src="images/do_type/1dogovor.png"></td>
-        	<td ng-class="{active:(cup_selected == brand.id+'dg')}" title="Договора за день (за месяц)" ng-click="loadCupCar(brand.id, 'dg', brand.id+'dg')"><b>{{brand.cup.dogovor}} ({{brand.cup.dogovor_month}})</b></td>
+        	<td ng-class="{active:(cup_selected == brand.id+'dg')}" title="Договора за день (за месяц)" ng-click="loadCupCar(brand.id, 'dg', brand.id+'dg')"><b color-change="brand.cup.dogovor">{{brand.cup.dogovor}} ({{brand.cup.dogovor_month}})</b></td>
         	<td class="cup_icon"><img src="images/do_type/1vidacha.png"></td>
-        	<td ng-class="{active:(cup_selected == brand.id+'vd')}" title="Выдачи за день (за месяц)" ng-click="loadCupCar(brand.id, 'vd', brand.id+'vd')"><b>{{brand.cup.vidacha}} ({{brand.cup.vidacha_month}})</b></td>
+        	<td ng-class="{active:(cup_selected == brand.id+'vd')}" title="Выдачи за день (за месяц)" ng-click="loadCupCar(brand.id, 'vd', brand.id+'vd')"><b color-change="brand.cup.vidacha">{{brand.cup.vidacha}} ({{brand.cup.vidacha_month}})</b></td>
         	<td class="cup_icon"><img src="images/do_type/1out.png"></td>
         	<td ng-class="{active:(cup_selected == brand.id+'out')}" title="Расторжения за день (за месяц)" ng-click="loadCupCar(brand.id, 'out', brand.id+'out')"><b>{{brand.cup.out}} ({{brand.cup.out_month}})</b></td>
         	<td class="cup_icon"><img src="images/do_type/1zvonok.png"></td>

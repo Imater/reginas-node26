@@ -336,6 +336,11 @@ body {
                 li {
                     display: inline-block;
                     .sms {
+                        -moz-transition: all 1s;
+                        -webkit-transition: all 1s;
+                        -ms-transition: all 1s;
+                        -o-transition: all 1s;
+                        transition: all 1s;
                         padding: 2px 7px;
                         cursor: pointer;
                         min-width: 4em;
@@ -349,6 +354,14 @@ body {
                         border-top: 1px solid rgba(255, 255, 255, 0.3);
                         border-bottom: 1px solid #3b3b3b !important;
                     } 
+                    .changed.sms {
+                        -moz-transition: all 1s;
+                        -webkit-transition: all 1s;
+                        -ms-transition: all 1s;
+                        -o-transition: all 1s;
+                        transition: all 1s;
+                        background: #cf4006;
+                    }
                     .sms:hover {
                         background: #1e263c;
                     }               
@@ -1655,6 +1668,11 @@ background-color: none !important;
                 text-align: center;
                 border-bottom: 1px solid #AAA;
                 b {
+                    -moz-transition: all 1s;
+                    -webkit-transition: all 1s;
+                    -ms-transition: all 1s;
+                    -o-transition: all 1s;
+                    transition: all 1s;
                     font-weight: normal;
                     line-height: 1em;
                     white-space: nowrap;
@@ -1670,6 +1688,14 @@ background-color: none !important;
                     border-top: 1px solid darken($panel_background,80%);
                     border-bottom: 1px solid #FFF;
                     cursor: pointer;
+                }
+                b.changed{
+                        -moz-transition: all 1s;
+                        -webkit-transition: all 1s;
+                        -ms-transition: all 1s;
+                        -o-transition: all 1s;
+                        transition: all 1s;
+                        background: #cf4006;
                 }
                 .cup_plan_b {
                     background: lighten($cnt_background, 30%) !important;
