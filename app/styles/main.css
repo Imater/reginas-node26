@@ -1678,3 +1678,6 @@ a {
     .ui-autocomplete li a {
       font-size: 12px;
       font-family: inherit; }
+
+.navbar {
+  margin-bottom: 0px !important; }
