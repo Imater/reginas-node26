@@ -577,10 +577,12 @@ exports.addNewClient = function(request, response) {
     pool.query(query, values, function (err, rows, fields) {
     	var insert_id = rows.insertId;
     	if(insert_id) {
-	    	var dfdArray = [];
+	      var dfdArray = [];
+	      if(add_do_array) {
 	    	$.each(add_do_array, function(i, do_type){
 	    		if(do_type!='false') dfdArray.push( jsAddDoToClient(insert_id, do_type, brand_id, user_id, manager_id, i) );
 	    	});
+	      }
 	    	$.when.apply(null, dfdArray).then(function(){
 	    		jsUpdateClient(insert_id).then(function(){
 	    			response.send({insert_id: insert_id});
