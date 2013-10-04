@@ -2,9 +2,6 @@
 
 myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment) {
 
-
-
-
  $scope.fpk.leftmenu = { active:1,
                 items : [
                   {id:0, title:"В работе", group_by: "manager_id", 
@@ -210,7 +207,7 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
         $scope.jsOpenClient = function(client) {
           if(!client.do) {
 
-            myApi.getDo(client.id).then(function(value){
+            myApi.getDo($scope, client.id).then(function(value){
               client._visible = true;
               client.do = value;
             });
@@ -231,7 +228,7 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
           myApi.addDo($scope, do_type_title, client_id).then(function(result){
             console.info("ADDED",result);
             var insert_id = result.insert_id;
-            myApi.getDo(client.id).then(function(value){
+            myApi.getDo($scope, client.id).then(function(value){
               client.do = value;
               client._visible = true;
               var new_do = _.find(client.do, function(el){ return el.id == insert_id; });

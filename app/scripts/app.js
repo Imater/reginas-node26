@@ -120,7 +120,7 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
     });
 
 
-function MainCtrl($scope, $routeSegment, myApi, $timeout) {
+function MainCtrl($scope, $routeSegment, myApi, $timeout, $q) {
 
     $scope.fpk = {}; //главный объект, в котором хранится всё общее
 
@@ -192,7 +192,10 @@ function MainCtrl($scope, $routeSegment, myApi, $timeout) {
 
     }
 
-    $scope.fpk.jsRefreshUserInfo = function() {
+    $scope.fpk.init = new $.Deferred();
+
+     $scope.fpk.jsRefreshUserInfo = function() {
+        var dfd = new $.Deferred();
         myApi.loadUserInfo($scope).then(function(user){
           $scope.fpk.the_user = user.user[0];
           $scope.fpk.brand = user.user[0].brand; //бренд по умолчанию
@@ -202,15 +205,19 @@ function MainCtrl($scope, $routeSegment, myApi, $timeout) {
             return (user.user_group == 7);
           });
           $scope.fpk.commercials = user.commercials;
+          dfd.resolve();
+          
           /////////////////////////////////////////////
-          $scope.fpk.jsRefreshDo($scope);
         });  
+        return dfd.promise();
     }
 
 
     jsRefreshToken().done(function () {
         ///////////////////////////////////////////////
-        $scope.fpk.jsRefreshUserInfo();
+        $scope.fpk.jsRefreshUserInfo().done(function(){
+            $scope.fpk.init.resolve();          
+        });
         ///////////////////////////////////////////////
         console.info("refresh_token_did");
         //загружаем таблицу моделей
@@ -218,12 +225,17 @@ function MainCtrl($scope, $routeSegment, myApi, $timeout) {
             setTimeout(function(){
             $scope.$broadcast('user_loaded', $scope.fpk.the_user);
             },1);
+            $scope.fpk.init.resolve();    
+            
+            $scope.fpk.jsRefreshDo($scope);
         });
          /////////////////////////////////////////////
 
 
 
     }); //Refresh Token
+
+
 
 }
 

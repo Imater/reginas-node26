@@ -634,17 +634,16 @@ myApp.factory('myApi', function($http, $q){
   return {
     getAutocomplete: function($scope, searchtext) {
       var dfd = $q.defer();
-
         $http({url:'/api/v1/autocomplete',method: "GET", params: { brand: $scope.fpk.brand, searchtext: searchtext }}).then(function(result){
           dfd.resolve(result.data);
         });
 
       return dfd.promise;
     },
-    getDo: function(id) {
+    getDo: function($scope, id) {
       var dfd = $q.defer();
 
-      jsGetToken().done(function(token){
+      jsGetToken($scope).done(function(token){
         $http({url:'/api/v1/do/'+id,method: "GET", params: { token: token}}).then(function(result){
           dfd.resolve(result.data);
         });
@@ -655,7 +654,7 @@ myApp.factory('myApi', function($http, $q){
     getDoToday:function($scope) {
       var dfd = $q.defer();
 
-      jsGetToken().done(function(token){
+      jsGetToken($scope).done(function(token){
         $http({url:'/api/v1/do',method: "GET", params: { token: token, brand: $scope.fpk.brand, manager: $scope.fpk.manager_filter}}).then(function(result){
           dfd.resolve(result.data);
         });
@@ -666,7 +665,7 @@ myApp.factory('myApi', function($http, $q){
     getClient: function($scope,filter) {
       var dfd = $q.defer();
 
-      jsGetToken().done(function(token){
+      jsGetToken($scope).done(function(token){
         $http({url:'/api/v1/client',method: "GET", isArray: true, params: { token: token, filter:filter, manager: $scope.fpk.manager_filter}}).then(function(result){
           dfd.resolve(result.data);
         });
@@ -677,7 +676,7 @@ myApp.factory('myApi', function($http, $q){
     getClientFull: function($scope,client_id) {
       var dfd = $q.defer();
 
-      jsGetToken().done(function(token){
+      jsGetToken($scope).done(function(token){
         $http({url:'/api/v1/client/'+client_id, method: "GET", isArray: true, params: { token: token, manager: $scope.fpk.manager_filter}}).then(function(result){
           dfd.resolve(result.data);
         });
@@ -688,7 +687,7 @@ myApp.factory('myApi', function($http, $q){
     jsNewClient: function($scope, add_do_array) {
       var dfd = $q.defer();
 
-      jsGetToken().done(function(token){
+      jsGetToken($scope).done(function(token){
         $http({url:'/api/v1/client', method: "POST", isArray: true, params: { token: token, manager: $scope.fpk.manager_filter, brand: $scope.fpk.brand, add_do_array: add_do_array}}).then(function(result){
           dfd.resolve(result.data);
         });
@@ -699,7 +698,7 @@ myApp.factory('myApi', function($http, $q){
     getStat: function($scope) {
       var dfd = $q.defer();
 
-      jsGetToken().done(function(token){
+      jsGetToken($scope).done(function(token){
 
         var filters = $scope.fpk.leftmenu;
 
@@ -714,7 +713,7 @@ myApp.factory('myApi', function($http, $q){
     getTableStat: function($scope) {
       var dfd = $q.defer();
 
-      jsGetToken().done(function(token){
+      jsGetToken($scope).done(function(token){
         $http({url:'/api/v1/stat_table',method: "GET", isArray: true, params: { token: token, brand: $scope.fpk.brand, manager: $scope.fpk.manager_filter }}).then(function(result){
           dfd.resolve(result.data);
         });
@@ -727,7 +726,7 @@ myApp.factory('myApi', function($http, $q){
     searchString: function($scope, searchstring) {
       var dfd = $q.defer();
 
-      jsGetToken().done(function(token){
+      jsGetToken($scope).done(function(token){
 
         $http({url:'/api/v1/search',method: "GET", isArray: true, params: { token: token, search: searchstring, brand: $scope.fpk.brand }}).then(function(result){
           dfd.resolve(result.data);
@@ -740,7 +739,7 @@ myApp.factory('myApi', function($http, $q){
     getDoCalendar: function($scope, start_date, end_date) {
       var dfd = $q.defer();
 
-      jsGetToken().done(function(token){
+      jsGetToken($scope).done(function(token){
 
         var filters = $scope.fpk.leftmenu;
 
@@ -756,7 +755,7 @@ myApp.factory('myApi', function($http, $q){
     getClientsByDoType: function($scope, type_do, today) {
       var dfd = $q.defer();
 
-      jsGetToken().done(function(token){
+      jsGetToken($scope).done(function(token){
 
         $http({url:'/api/v1/do_by_type',method: "GET", isArray: true, params: { token: token, type_do: type_do, brand: $scope.fpk.brand, today: today }}).then(function(result){
             console.info("DO RECIVED: ",result.data);
@@ -771,7 +770,7 @@ myApp.factory('myApi', function($http, $q){
     addDo: function($scope, do_type, client_id) {
       var dfd = $q.defer();
 
-      jsGetToken().done(function(token){
+      jsGetToken($scope).done(function(token){
 
         $http({url:'/api/v1/do',method: "POST", isArray: true, params: { token: token, do_type: do_type, brand: $scope.fpk.brand, client_id: client_id, manager: $scope.fpk.manager_filter }}).then(function(result){
             console.info("DO NEW: ",result.data);
@@ -786,7 +785,7 @@ myApp.factory('myApi', function($http, $q){
     saveClient: function($scope, changes, client_id) {
       var dfd = $q.defer();
 
-      jsGetToken().done(function(token){
+      jsGetToken($scope).done(function(token){
 
         $http({url:'/api/v1/client/'+changes.id,method: "PUT", isArray: true, data: {changes: changes}, params: { token: token, brand: $scope.fpk.brand, client_id: client_id }}).then(function(result){
             console.info("DO SAVED: ",result.data);
@@ -801,7 +800,7 @@ myApp.factory('myApi', function($http, $q){
     deleteClient: function($scope, client_id) {
       var dfd = $q.defer();
 
-      jsGetToken().done(function(token){
+      jsGetToken($scope).done(function(token){
 
         $http({url:'/api/v1/client/'+client_id,method: "DELETE", isArray: true, params: { token: token, client_id: client_id }}).then(function(result){
             console.info("CLIENT DELETE: ",result.data);
@@ -816,7 +815,7 @@ myApp.factory('myApi', function($http, $q){
     deleteDo: function($scope, do_id) {
       var dfd = $q.defer();
 
-      jsGetToken().done(function(token){
+      jsGetToken($scope).done(function(token){
 
         $http({url:'/api/v1/do/'+do_id,method: "DELETE", isArray: true, params: { token: token, do_id: do_id }}).then(function(result){
             console.info("DO DELETE: ",result.data);
@@ -857,7 +856,7 @@ myApp.factory('myApi', function($http, $q){
     },
     newModel: function($scope) {
       var dfd = $q.defer();
-      jsGetToken().done(function(token){
+      jsGetToken($scope).done(function(token){
         $http({url:'/api/v1/models', method: "POST", isArray: true, params: { token: token, brand: $scope.fpk.brand }}).then(function(result){
             dfd.resolve(result.data);
         });
@@ -867,7 +866,7 @@ myApp.factory('myApi', function($http, $q){
     },
     saveModel: function($scope, changes, model_id) {
       var dfd = $q.defer();
-      jsGetToken().done(function(token){
+      jsGetToken($scope).done(function(token){
         $http({url:'/api/v1/models', method: "PUT", isArray: true, data: {changes: changes}, params: { token: token, brand: $scope.fpk.brand, model_id: model_id }}).then(function(result){
             dfd.resolve(result.data);
         });
@@ -877,7 +876,7 @@ myApp.factory('myApi', function($http, $q){
     },
     deleteModel: function($scope, del_id) {
       var dfd = $q.defer();
-      jsGetToken().done(function(token){
+      jsGetToken($scope).done(function(token){
         $http({url:'/api/v1/models', method: "DELETE", isArray: true, params: { del_id: del_id ,token: token, brand: $scope.fpk.brand }}).then(function(result){
             dfd.resolve(result.data);
         });
@@ -887,7 +886,7 @@ myApp.factory('myApi', function($http, $q){
     },
     getCUP: function($scope) {
       var dfd = $q.defer();
-      jsGetToken().done(function(token){
+      jsGetToken($scope).done(function(token){
 
         $http({url:'/api/v1/stat/cup', method: "GET", isArray: true, params: { token: token, brand: $scope.fpk.brand, today_date: $scope.fpk.today_date }}).then(function(result){
           dfd.resolve(result.data);
@@ -899,7 +898,7 @@ myApp.factory('myApi', function($http, $q){
     },
     getCUPcars: function($scope, brand_id, do_type, today) {
       var dfd = $q.defer();
-      jsGetToken().done(function(token){
+      jsGetToken($scope).done(function(token){
 
         $http({url:'/api/v1/stat/cup/cars', method: "GET", isArray: true, params: { token: token, brand: brand_id, today_date: today, do_type: do_type }}).then(function(result){
             console.info("STAT_CARS: ",result.data.length);
@@ -913,7 +912,7 @@ myApp.factory('myApi', function($http, $q){
     saveDo: function($scope, changes, client_id) {
       var dfd = $q.defer();
 
-      jsGetToken().done(function(token){
+      jsGetToken($scope).done(function(token){
 
         $http({url:'/api/v1/do/'+changes.id,method: "PUT", isArray: true, params: { token: token, changes: changes, brand: $scope.fpk.brand, client_id: client_id }}).then(function(result){
             console.info("DO SAVED: ",result.data);
@@ -928,7 +927,7 @@ myApp.factory('myApi', function($http, $q){
     },    
     loadUserInfo:function($scope) {
       var dfd = $q.defer();
-      jsGetToken().done(function(token){
+      jsGetToken($scope).done(function(token){
         $http({url:'/api/v1/user/info', method: "GET", isArray: true, params: { token: token, brand: $scope.fpk.brand }}).then(function(result){
             dfd.resolve(result.data);
         });

@@ -52,33 +52,36 @@ return dfd.promise();
 
 
 
-function jsGetToken() {
+function jsGetToken($scope) {
 	var dfd = new $.Deferred();
-	
-	var oauth2 = localStorage.getItem( "oauth2" );
-	if(oauth2) {
-		data = JSON.parse(oauth2);
-		
-		
-		var dif = jsNow() - (data.start_time + data.expires_in*1000);
-		
-//		console.info("Token will expired in ",dif);
-		
-		//проверяем, просрочен ли Token
-		if( dif > -10000 ) { 
-			jsRefreshToken().done(function(data){
-				console.info("Token устарел! Получил новый. "+data.access_token);
-				dfd.resolve(data.access_token);
-			});
+
+	$scope.fpk.init.done(function(){ 
+
+		var oauth2 = localStorage.getItem( "oauth2" );
+		if(oauth2) {
+			data = JSON.parse(oauth2);
+			
+			
+			var dif = jsNow() - (data.start_time + data.expires_in*1000);
+			
+			//проверяем, просрочен ли Token
+			if( dif > -10000 ) { 
+				jsRefreshToken().done(function(data){
+					console.info("Token устарел! Получил новый. "+data.access_token);
+					dfd.resolve(data.access_token);
+				});
+			} else {
+				//console.info("Token свежий :"+data.access_token);			
+				dfd.resolve( data.access_token );
+			}
+			
 		} else {
-			//console.info("Token свежий :"+data.access_token);			
-			dfd.resolve( data.access_token );
+		     //window.location.href = "./login.php?dont_have_token";
+		     window.location.hash = "#/user/login";
 		}
 		
-	} else {
-	     //window.location.href = "./login.php?dont_have_token";
-	     window.location.hash = "#/user/login";
-	}
+	});
+	
 	return dfd.promise();
 }
 
