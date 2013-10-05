@@ -78,6 +78,7 @@ function Report(socket) {
 	//Обрабатываем данные синхронизации
 	this.loadstat = function(){
 		socket.broadcast.emit( 'loadstat' );
+		console.info("push");
 	}
 	this.sync_answer = function(data, user_id) {
 		var dfdArray = [];
@@ -967,6 +968,11 @@ exports.removeClient = function(request, response) {
 		  pool.query('DELETE FROM `1_clients` WHERE id = ?',[client_id], function (err, rows, fields) {
 		  	response.send({rows:rows, err: err});
 		  	console.info({rows:rows, err: err});
+			stat_cache = {}; //обнуляем кеш
+			setTimeout(function(){
+					report.loadstat();
+			},30);
+
 		  });
   	});	
   });
@@ -1320,8 +1326,8 @@ function jsUpdateClient(client_id) {
 
     			dfd.resolve( client_id );
     			console.info("client_id="+client_id+" OK: ", rows.affectedRows);
+				stat_cache = {}; //обнуляем кеш
 				setTimeout(function(){
-					stat_cache = {}; //обнуляем кеш
 					report.loadstat();
 				},30);
 	  			
@@ -1393,11 +1399,13 @@ exports.regNewUser = function(request, response) {
 exports.loadUserInfo = function(request, response) {
  	console.info("USER_ID?:", request.query.token);
 	var brand = request.query.brand;
+	
 
  jsCheckToken(request.query.token).done(function(user_id){
  	console.info("USER_ID:", user_id);
 	pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone FROM `1_users` WHERE id = ? LIMIT 1',[user_id], function (err, user, fields) {
-		pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone FROM `1_users` WHERE brand=? ORDER BY fio',[user[0].brand], function (err, users, fields) {
+		if(brand == 1) barand = user[0].brand;
+		pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone FROM `1_users` WHERE brand=? ORDER BY fio',[brand], function (err, users, fields) {
 			pool.query('SELECT * FROM `1_commercials`', function (err, commercials, fields) {
 				response.send({user: user, users: users, commercials: commercials});
 			});

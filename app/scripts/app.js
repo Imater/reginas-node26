@@ -344,6 +344,7 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
      $scope.fpk.jsRefreshUserInfo = function(dont_select_brand) {
         var dfd = new $.Deferred();
         myApi.loadUserInfo($scope).then(function(user){
+
           $scope.fpk.the_user = user.user[0];
           if(!dont_select_brand) $scope.fpk.brand = user.user[0].brand; //бренд по умолчанию
           localStorage.setItem("brand", $scope.fpk.brand);
