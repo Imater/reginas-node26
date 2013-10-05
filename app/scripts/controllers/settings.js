@@ -20,7 +20,7 @@ myApp.controller('settingsCtrl', function ($scope, $resource, $rootScope, $locat
                  {name: "Enos", age: 34}];
  
  $scope.jsRefreshModels = function(){
-   alert("refresh models");
+   //alert("refresh models");
    $scope.myData = _.filter($scope.fpk.models_array, function(model){
       return (model.brand == $scope.fpk.brand);
    });  
@@ -81,7 +81,7 @@ myApp.controller('settingsCtrl', function ($scope, $resource, $rootScope, $locat
   myApi.newModel($scope).then(function( answer ){
     var new_id = answer.rows.insertId;
     console.info("Новая модель добавлена", new_id);
-    $scope.jsLoadModelsFromServer().then(function(){
+    $scope.fpk.jsLoadModelsFromServer().then(function(){
       $scope.jsRefreshModels();  
       $timeout(function(){
         $(".ngViewport").scrollTop(9999999);
@@ -102,7 +102,7 @@ myApp.controller('settingsCtrl', function ($scope, $resource, $rootScope, $locat
    var del_id = $scope.mySelections[0].id;
    myApi.deleteModel($scope, del_id).then(function(answer){
     if(answer.rows[0].cnt) alert("Не могу удалять модель которая используется в клиентах "+answer.rows[0].cnt+" раз. Если хотите её скрыть, поставьте 'Показывать' = 0");
-    $scope.jsLoadModelsFromServer().then(function(){
+    $scope.fpk.jsLoadModelsFromServer().then(function(){
       $scope.jsRefreshModels();  
     });
    });
