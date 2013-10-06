@@ -83,7 +83,10 @@ myApp.controller('loginCtrl', function ($scope, $resource, $rootScope, $location
       	localStorage.setItem("user_last_email",$scope.reg_user.email);
         //$scope.fpk.jsRefreshUserInfo();
         //$scope.init_first();
-        window.location.hash = "#/fpk/clients";
+        $scope.init().done(function(){
+          window.location.hash = "#/fpk/clients";  
+        });
+        
         console.info(answer);
     }).fail(function(){
       bootstrap_alert.warning("Пароль или логин содержат ошибку"); 

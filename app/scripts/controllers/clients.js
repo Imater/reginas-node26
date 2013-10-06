@@ -4,6 +4,7 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
 
     console.info("start clientsCtrl");
 
+ $scope.fpk.today_date = toMysql( (new Date()) ).substr(0,10);
 
  $scope.fpk.leftmenu = { active:1,
                 items : [
@@ -227,6 +228,23 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
 */        } 
 
           
+        }
+
+        $scope.jsEditClient = function(client) {
+          if($scope.fpk.jsCanEditClient(client)) {
+            client._edit = !client._edit;  
+          } else {
+            alert("Вы не можете редактировать чужого клиента, но можете добавить ему дела. Права на редактирование есть у старшего менеджера и руководителей.");
+          }
+          
+        }
+
+        $scope.jsEditDo = function(client, mydo) {
+          if($scope.fpk.jsCanEditDo(client, mydo)) {
+            mydo._visible = !mydo._visible;
+          } else {
+            alert("Вы не можете редактировать дела чужого клиента, но можете добавить ему дела. Права на редактирование есть у старшего менеджера и руководителей.");
+          }
         }
 
         $scope.jsAddDo = function(do_type, client) {

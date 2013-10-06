@@ -677,13 +677,13 @@ exports.findClientDoType = function(request, response) {
 	var type_do = request.query.type_do;
 
 	if(type_do == "vd_plan") {
-		var insert_sql = 'icon2 > 2 ORDER by `icon2` DESC';
+		var insert_sql = 'icon2 > 2 AND brand="'+brand_id+'" ORDER by `icon2` DESC';
 	} else {
-		var insert_sql = '`'+type_do+'` LIKE "'+today+'%" ORDER by `'+type_do+'` DESC';
+		var insert_sql = '`'+type_do+'` LIKE "'+today+'%" AND brand="'+brand_id+'" ORDER by `'+type_do+'` DESC';
 	}
 
 	if(type_do == "out"){
-		var insert_sql = '`'+type_do+'` LIKE "'+today+'%" AND dg != "0000-00-00 00:00:00" ORDER by `'+type_do+'` DESC';
+		var insert_sql = '`'+type_do+'` LIKE "'+today+'%" AND dg != "0000-00-00 00:00:00" AND brand="'+brand_id+'" ORDER by `'+type_do+'` DESC';
 	}
 
 	var myquery = 'SELECT * FROM `1_clients` WHERE '+insert_sql+' LIMIT 5000';
@@ -701,7 +701,29 @@ exports.findClientDoType = function(request, response) {
 
 exports.loadStat = function(request, response) {
 
-	var filter = request.query.filters ? JSON.parse(request.query.filters):{};
+	//var filter = request.query.filters ? JSON.parse(request.query.filters):{};
+
+	 var filter = { active:1,
+                items : [
+                  {id:0, title:"В работе", group_by: "manager_id", 
+                   filter: {no_out: true, no_dg: true, no_vd:true}},
+
+                  {id:1, title:"Договора", group_by: "manager_id", 
+                   filter: {no_out: true, dg: true, no_vd:true}},
+
+                  {id:2, title:"Выданы", group_by: "vd", 
+                   filter: {no_out: true, no_dg: false, vd:true}},
+
+                  {id:3, title:"Кредиты", group_by: "creditmanager", 
+                   filter: {no_out: true, no_vd:true, credit: true}},
+
+                  {id:4, title:"Out", group_by: "out", 
+                   filter: {out: true}}, 
+
+                  {id:5, title:"Трейд-ин", group_by: "manager_id", 
+                   filter: {bu: true}}
+                  ]
+                };
 
 	var dfdArray = [];
 	var answer = {};
@@ -710,7 +732,7 @@ exports.loadStat = function(request, response) {
 	var today = request.query.today;
 	var manager_id = request.query.manager;
 	console.info("manager_stat", manager_id);
-	var cache_id = md5(JSON.stringify(request.query.filters) + brand_id + manager_id + today);
+	var cache_id = md5(brand_id + manager_id + today);
 
 	if(!stat_cache[brand_id]) {
 		stat_cache[brand_id] = {};
@@ -1403,9 +1425,8 @@ exports.loadUserInfo = function(request, response) {
 
  jsCheckToken(request.query.token).done(function(user_id){
  	console.info("USER_ID:", user_id);
-	pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone FROM `1_users` WHERE id = ? LIMIT 1',[user_id], function (err, user, fields) {
-		if(brand == 1) barand = user[0].brand;
-		pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone FROM `1_users` WHERE brand=? ORDER BY fio',[brand], function (err, users, fields) {
+	pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone FROM `1_users` WHERE id = ? LIMIT 1',[user_id], function (err, user, fields) {		
+		pool.query('SELECT active, id, brand, email, fio, message_on, user_group FROM `1_users` ORDER BY brand, fio', function (err, users, fields) {
 			pool.query('SELECT * FROM `1_commercials`', function (err, commercials, fields) {
 				response.send({user: user, users: users, commercials: commercials});
 			});

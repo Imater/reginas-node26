@@ -1031,6 +1031,13 @@ body {
       .clients_list .client_card .client_container .out_reason {
         text-align: right;
         clear: both; }
+      .clients_list .client_card .client_container .client_lock {
+        float: right;
+        margin-left: -10px;
+        display: inline-block;
+        color: #999;
+        margin-top: 3px;
+        margin-right: 5px; }
       .clients_list .client_card .client_container .client_car {
         float: right;
         clear: right;
@@ -1061,6 +1068,8 @@ body {
           opacity: 0.8 !important; }
     .clients_list .client_card .client_container:hover .do_buttons {
       display: inline-block; }
+    .clients_list .client_card .client_container:hover .client_lock {
+      display: none; }
     .clients_list .client_card .client_inside {
       color: #000 !important;
       margin-left: 15px;
@@ -1108,6 +1117,11 @@ body {
             .clients_list .client_card .client_inside ul li.client_do_li .do_line .do_result {
               font-weight: normal;
               color: green; }
+          .clients_list .client_card .client_inside ul li.client_do_li .do_lock {
+            float: right;
+            color: #888;
+            display: inline-block;
+            margin-top: 1px; }
           .clients_list .client_card .client_inside ul li.client_do_li .did .do_type_icon {
             opacity: 0.7; }
           .clients_list .client_card .client_inside ul li.client_do_li .did.do_line .do_text {
@@ -1193,9 +1207,6 @@ body {
 
 .datetoday {
   background: #cf4106; }
-
-.datetoday.past {
-  background-image: -webkit-gradient(linear, right top, left top, color-stop(0.85, #da5700), color-stop(0.95, #990000)); }
 
 .date_rastorg {
   color: yellow !important; }

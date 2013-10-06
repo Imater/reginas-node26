@@ -13,12 +13,14 @@
                             <div class="do_btn" ng-repeat="do_type in fpk.do_types" ng-click="jsAddDo(do_type,client);$event.stopPropagation();"><img ng-class="{img_active:jsCheckDoType(do_type, client)}" title="{{do_type.title}}" ng-src="images/do_type/{{do_type.img}}"></div>
                            </div>
 
+                           <span ng-if="!fpk.jsCanEditClient(client)" class="client_lock" title="Вы не можете редактировать этого клиента. Обратитесь к руководителю"><i class="icon-lock"></i></span>
+
                            <div class="datemini" time-now="time_now" date-type="client" ng-model="client.na_date" title="{{client.na_date}}"></div> 
-                           <div class="client_fio">{{client.fio}}</div>
+                           <div class="client_fio">{{client.fio}}</div> 
                            <div ng-if="client.out_reason.length&&client.out_reason.length>9" class="out_reason">{{client.out_reason}}</div>
                         </div>      
                         <div ng-if="client._visible == true" class="client_inside selectable" jq-show-effect="client._visible == true" jq-options="{type:'slide', duration:200, delay:200, hideImmediately: true}" style="display:none;">
-                          <div class="client_info" ng-click="client._edit = !client._edit">
+                          <div class="client_info" ng-click="jsEditClient(client)">
                             <div class="client_plan">
                               Желание клиента: <img ng-click="jsPlanRotate(client,'icon');$event.stopPropagation();" ng-src="images/progress/progres-{{client.icon}}.gif"><br>
                               Вероятность выдачи в этом месяце: <img ng-click="jsPlanRotate(client,'icon2');$event.stopPropagation();" ng-src="images/progress/progres-{{client.icon2}}.gif">
@@ -32,7 +34,7 @@
                             <span ng-if="client.vin">[VIN: <b>{{client.vin}}</b>]<br></span>
                             <span ng-if="client.email">[Email: <b>{{client.email}}</b>]<br></span>
                             <span ng-if="client.comment.length">{{client.comment}}<br></span><span style="font-size:0px;">{{client.comment.length}}</span>
-                            [Менеджер: <i class="icon-user"></i><b>{{fpk.jsFindInArray(fpk.managers,"id",client.manager_id).fio}}</b>]<br>
+                            [Менеджер: <i class="icon-user"></i><b>{{fpk.jsFindInArray(fpk.all_managers,"id",client.manager_id).fio}}</b>]<br>
                           </div>
                           <div ng-if="client._edit == true" class="client_edit" jq-show-effect="client._edit == true" jq-options="{type:'slide', duration:200, delay:200, hideImmediately: true}">
                             
@@ -133,7 +135,7 @@
                                         <li ng-click="client.creditmanager='Кредит - самостоятельно'"><a>Кредит - самостоятельно</a></li>
                                         <li ng-click="client.creditmanager='Безналичный расчёт'"><a>Безналичный расчёт</a></li>
                                         <li ng-click="client.creditmanager='Лизинг'"><a>Лизинг</a></li>
-                                        <li ng-click="client.creditmanager='Тендер'"><a>Кредит - самостоятельно</a></li>
+                                        <li ng-click="client.creditmanager='Тендер'"><a>Тендер — открытый конкурс</a></li>
                                       </ul>
                                     </div>                              
                               </div>
@@ -235,7 +237,7 @@
                               <div class="col-md-6 but selectmanager">
                                     <div class="btn-group">
                                       <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                                        Менеджер: <b>{{fpk.jsFioShort(fpk.jsFindInArray(fpk.managers,"id",client.manager_id).fio)}}</b> <span class="caret"></span>
+                                        Менеджер: <b>{{fpk.jsFioShort(fpk.jsFindInArray(fpk.all_managers,"id",client.manager_id).fio)}}</b> <span class="caret"></span>
                                       </button>
                                       <ul class="dropdown-menu" role="menu">
                                           <li ng-click="client.manager_id=manager.id; jsClientSave(client); " ng-repeat="manager in fpk.managers | onlyManager:true"><a><i class="icon-user"></i>{{manager.fio}}</a></li>
@@ -260,13 +262,16 @@
 
                           <ul>
                             <li ng-repeat="do in client.do | orderBy: ['date2','id']: true" class="client_do_li" ng-controller="DoCtrl" myindex={{$index}} mydoid="{{do.id}}">
-                              <div class="do_line" ng-click="do._visible = !do._visible" ng-class="{'did':do.checked!='0000-00-00 00:00:00'}">
+                              <div class="do_line" ng-click="jsEditDo(client, do)" ng-class="{'did':do.checked!='0000-00-00 00:00:00'}">
                                 <div class="datemini"  time-now="time_now" date-type="do" ng-model="do.date2" title="{{do.date2}}"></div>
                                 <div class="do_type_icon"><img ng-src="/images/do_type/{{fpk.do_types_array[do.type].img}}" width="20px" title="Тип дела: {{do.type}}"></div>
+
+                           <span ng-if="!fpk.jsCanEditDo(client, do)" class="do_lock" title="Вы не можете редактировать этого клиента. Обратитесь к руководителю"><i class="icon-lock"></i></span>
+
                                 <div class="do_text">
                                   {{do.text}} 
-                                  <span ng-if="do.host_id!=client.manager_id && do.host_id>0">[Поручил: <i class="icon-user"></i>{{fpk.jsFioShort(fpk.jsFindInArray(fpk.managers,"id",do.host_id).fio)}}]</span>
-                                  <span ng-if="do.manager_id!=client.manager_id && do.manager_id>0">[Исполнитель: <i class="icon-user"></i>{{fpk.jsFioShort(fpk.jsFindInArray(fpk.managers,"id",do.manager_id).fio)}}]</span>
+                                  <span ng-if="do.host_id!=client.manager_id && do.host_id>0">[Поручил: <i class="icon-user"></i>{{fpk.jsFioShort(fpk.jsFindInArray(fpk.all_managers,"id",do.host_id).fio)}}]</span>
+                                  <span ng-if="do.manager_id!=client.manager_id && do.manager_id>0">[Исполнитель: <i class="icon-user"></i>{{fpk.jsFioShort(fpk.jsFindInArray(fpk.all_managers,"id",do.manager_id).fio)}}]</span>
                                   <span ng-if="do.comment" class="do_result"><br>Результат: {{do.comment}}</span>
                                 </div>
                               </div>
@@ -358,7 +363,7 @@
                                       <div class="col-md-4 do_types_button">
                                             <div class="btn-group">
                                               <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                                                Исполнитель: <b>{{fpk.jsFioShort(fpk.jsFindInArray(fpk.managers,"id",do.manager_id).fio)}}</b> <span class="caret"></span>
+                                                Исполнитель: <b>{{fpk.jsFioShort(fpk.jsFindInArray(fpk.all_managers,"id",do.manager_id).fio)}}</b> <span class="caret"></span>
                                               </button>
                                               <ul class="dropdown-menu pull-right" role="menu">
                                                   <li  ng-click="do.manager_id = manager.id" ng-repeat="manager in fpk.managers | onlyManager:true"><a><i class="icon-user"></i>{{manager.fio}}</a></li>

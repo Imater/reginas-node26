@@ -255,8 +255,9 @@ function jsDateDiff($scope,date2) {
   var answer = {text:"&nbsp;", class:""};
   if(!date2) return answer;
   if(date2=="0000-00-00 00:00:00") return answer;
+  var time_now = $scope.fpk.time_now?$scope.fpk.time_now:new Date();
 
-  var date1 = new Date(( new Date() ).getTime()-1*60000);
+  var date1 = new Date(( time_now ).getTime()-1*60000);
   var date2 = fromMysql(date2);
   var dif_sec = date2.getTime() - date1.getTime();
 
@@ -279,7 +280,14 @@ function jsDateDiff($scope,date2) {
   }
 
   if(days == 0) {
-    if(minutes < 0) answer.class="datetoday past";
+    if(minutes < 0) { 
+      answer.class="datetoday past"; 
+      var pr2 = ((-minutes/480)) *100;
+      if(pr2>80) pr2 = 80;
+      answer.image = "-webkit-gradient(linear, left top, right top, color-stop("+pr2+"%, #990000), color-stop("+(pr2+10)+"%, #da5700))";
+      //"-webkit-gradient(linear, right top, left top, color-stop("+pr+", #da5700), color-stop("+(pr+0.1)+", #990000));";
+      //"-webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #333), color-stop(100%, #222))"
+    }
     if(minutes >= 0) answer.class="datetoday";
 
     
@@ -315,6 +323,8 @@ myApp.directive('datemini', ['$timeout', function($timeout) { return {
           }
         }        
         $element.html(answer.text || '').removeClass("past").removeClass("datetoday").removeClass("datepast").addClass(answer.class);
+        $element.css("background-image", answer.image?answer.image:"none;");
+        //.css({"background":answer.image});
 
         }
       }
@@ -418,6 +428,17 @@ myApp.filter('jsFilterClients', function() {
 
 
 
+myApp.filter('nicedate', function() {
+    return function(the_date) {
+      if(the_date) {
+        var ds = the_date.split("-");
+        return ds[2]+"."+ds[1]+"."+ds[0];  
+      }
+      
+    }
+});
+
+
 
 myApp.filter('parent_id', function() {
     return function(input, uppercase) {
@@ -436,36 +457,6 @@ myApp.directive('eatClick', function() {
     }
 })
 
-function onResize(){
-	
-  var center_height = $("#panel_center").height();
-
-  $('#myfullcalendar').fullCalendar('option','contentHeight', center_height - 77); //
-
-  $('.fc-view-month').height( center_height - 77 );
-
-  $("#myfullcalendar .fc-content").height(center_height - 76);
-
-  var body_height = center_height - 73;
-  if( $("#editor_cont").hasClass("fullscreen") ) {
-    body_height = $(window).height() - $("#editor_cont .redactor_editor").offset().top-14;
-  }
-
-
-
-	$("#main_editor .redactor_editor").height(body_height);
-  $("#me .redactor_editor").height(body_height-59);
-  
-
-    $("#editor_cont:not(.ui-resizable)").resizable({
-      handles: 'e',
-      minWidth: 500
-    }).draggable({
-      handle: ".redactor_toolbar"
-    });
-
-
-};
 
 myApp.directive('returnOnBlur', function() {    
     return {
@@ -604,6 +595,9 @@ myApp.directive('datepicker', function() {
                         scope.$apply();
                     }
                 });
+            });
+            scope.$watch("fpk.today_date",function(){
+              element.datepicker('setDate', scope.fpk.today_date);
             });
             scope.$on('$destroy', function() {
             });
@@ -1016,9 +1010,50 @@ var LIST_LENGTH = 100; //кол-во загружаемых клиентов з�
 
 myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment, $timeout) {
 
+  $scope.fpk.today_date = toMysql( (new Date()) ).substr(0,10);
+
+  $scope.fpk.jsLoadStat = function() {
+    if($scope.fpk.brand) {
+        myApi.getStat($scope).then(function(result){
+            $scope.fpk.stat = result.left_stat;
+            $scope.fpk.cup_sms = result.sms;
+        });    
+    }
+  }
 
 
 console.info("root", $rootScope);
+
+
+if($scope.fpk.jsLoadStat) $scope.fpk.jsLoadStat();
+
+$scope.fpk.jsCanEditClient = function(client) {
+   var can_edit_all_client = $scope.fpk.the_user.rights[0].can_edit_all_client;
+
+  if( can_edit_all_client ||
+      (client.manager_id == $scope.fpk.the_user.id )
+    ) {
+    return true; //редактировать можно
+  } else {
+    return false;  //редактировать нельзя
+  }
+
+}
+
+$scope.fpk.jsCanEditDo = function(client, mydo) {
+   var can_edit_all_client = $scope.fpk.the_user.rights[0].can_edit_all_client;
+
+  if( can_edit_all_client ||
+      ((mydo.manager_id == $scope.fpk.the_user.id ) || (mydo.host_id == $scope.fpk.the_user.id )) ||
+      (client.manager_id == $scope.fpk.the_user.id )      
+    ) {
+    return true; //редактировать дело можно
+  } else {
+    return false;  //редактировать дело нельзя
+  }
+
+}
+
 
 socket.on("loadstat", function(){
   $timeout(function(){    
@@ -1122,7 +1157,6 @@ $scope.fpk.jsFioShort = function(fio, need_surname) {
  $scope.fpk.car_status_array = statuses; //глобальные статусы
  tmp_status = "";
 
- $scope.fpk.today_date = toMysql( (new Date()) ).substr(0,10);
 
   $scope.$watch('fpk.today_date', function(val, newVal) {
     if(val!=newVal) {
@@ -1130,15 +1164,6 @@ $scope.fpk.jsFioShort = function(fio, need_surname) {
     }
   });
 
-
-  $scope.fpk.jsLoadStat = function() {
-    if($scope.fpk.brand) {
-        myApi.getStat($scope).then(function(result){
-            $scope.fpk.stat = result.left_stat;
-            $scope.fpk.cup_sms = result.sms;
-        });    
-    }
-  }
 
 
  $scope.jsSelectBrand = function(id) {
@@ -1202,7 +1227,7 @@ $scope.fpk.jsFioShort = function(fio, need_surname) {
       if(distinct.manager_id == -1) {
           answer = "Менеджер не указан";
         } else {
-        answer = _.find($scope.fpk.managers, function(manager){
+        answer = _.find($scope.fpk.all_managers, function(manager){
           return manager.id == distinct.manager_id;
         });
         if(answer) answer = answer.fio;
@@ -1328,12 +1353,12 @@ $scope.fpk.jsFioShort = function(fio, need_surname) {
  }
 
  //забираю ширину панели из хранилища браузера
-  $scope.left_panel_width = localStorage.getItem("left_panel_width");
-  if(!$scope.left_panel_width) $scope.left_panel_width = 250;
+  $scope.fpk.left_panel_width = localStorage.getItem("left_panel_width");
+  if(!$scope.fpk.left_panel_width) $scope.fpk.left_panel_width = 250;
 
 
-  $scope.right_panel_width = localStorage.getItem("right_panel_width");
-  if(!$scope.right_panel_width) $scope.right_panel_width = 200;
+  $scope.fpk.right_panel_width = localStorage.getItem("right_panel_width");
+  if(!$scope.fpk.right_panel_width) $scope.fpk.right_panel_width = 200;
 
 	$scope.redactorOptions = {
       autoresize: false,
