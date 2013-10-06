@@ -221,7 +221,7 @@
             <i class="icon-left-open-1"></i>
         </div>
 
-    <font color="black" ng-bind-html="fpk.showfpk()"></font>
+    <!-- <font color="black" ng-bind-html="fpk.showfpk()"></font> -->
     </div> <!-- footer -->
 
 
@@ -289,7 +289,7 @@
           <div class="do_type_icon"><img ng-src="/images/do_type/{{fpk.do_types_array[mydo.type].img}}" width="10px" title="Тип дела: {{mydo.type}}"></div>
           {{mydo.text}}
           <div class="mydo_fio"><span ng-if="mydo.short"><b>{{mydo.short}}</b> — </span>{{(mydo.fio)}}</div>
-          <div ng-if="fpk.manager_filter==-1" class="mydo_fio">Менеджер: <i class="icon-user"></i>{{jsFioShort(mydo.manager)}}</div>
+          <div ng-if="fpk.manager_filter==-1" class="mydo_fio">Менеджер: <i class="icon-user"></i>{{fpk.jsFioShort(mydo.man)}}</div>
           </li>
         </ol>
       </div>

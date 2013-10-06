@@ -1,12 +1,12 @@
-<div class="scrollable_div">
-<h3>Ежедневный отчёт за {{fpk.today_date | nicedate}}</h3>
+<div class="scrollable_div clients_day">
 
+	<h3>Ежедневный отчёт за {{fpk.today_date | nicedate}}</h3>
 
-<h4>Звонки</h4>
-<h4>Визиты</h4>
-<h4>Тест-драйвы</h4>
-<h4>Договора</h4>
-<h4>Выдачи</h4>
-<h4>Расторжения</h4>
-<h4>OUT</h4>
+	<div ng-repeat="distinct in day_clients | orderBy:'order'">
+	<h4>{{distinct.title}} — {{distinct.counts}} шт</h4>
+
+            <div client-list="distinct.clients" my-attr="distinct.clients"></div>
+
+	</div>
+
 </div>

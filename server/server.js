@@ -257,7 +257,7 @@ exports.findCalendar = function(request,response) {
 	var insert_sql = "";
 	if(manager_id>0) insert_sql = "1_do.manager_id = '"+manager_id+"' AND ";
 
-    pool.query('SELECT 1_do.*, 1_clients.fio, 1_models.short FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model WHERE '+insert_sql+' 1_do.brand = ? AND 1_do.date2>= ? AND 1_do.date2<= ? AND 1_do.checked = "0000-00-00 00:00:00"', [ brand, start_date, end_date] , function (err, rows, fields) {
+    pool.query('SELECT 1_do.*, 1_clients.fio, 1_models.short, 1_users.fio man FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model LEFT JOIN 1_users ON 1_do.manager_id = 1_users.id WHERE '+insert_sql+' 1_do.brand = ? AND 1_do.date2>= ? AND 1_do.date2<= ? AND 1_do.checked = "0000-00-00 00:00:00"', [ brand, start_date, end_date] , function (err, rows, fields) {
     		rows = correct_dates(rows);
 		    response.send(rows);
   	});	
@@ -271,7 +271,7 @@ exports.getDo = function(request,response) {
 	jsCheckToken(request.query.token).done(function(user_id){
 		var insert_sql = "";
 		if(manager_id>0) insert_sql = "1_do.manager_id = '"+manager_id+"' AND ";
-		var query = 'SELECT 1_do.*, 1_clients.id, 1_clients.fio, 1_models.short FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model WHERE '+insert_sql+' 1_do.brand = ? AND 1_do.date2<= DATE_ADD(NOW(), INTERVAL 31 DAY) AND 1_do.checked = "0000-00-00 00:00:00" ORDER by date2';
+		var query = 'SELECT 1_do.*, 1_clients.id, 1_clients.fio, 1_models.short, 1_users.fio man FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model  LEFT JOIN 1_users ON 1_do.manager_id = 1_users.id WHERE '+insert_sql+' 1_do.brand = ? AND 1_do.date2<= DATE_ADD(NOW(), INTERVAL 31 DAY) AND 1_do.checked = "0000-00-00 00:00:00" ORDER by date2';
 		console.info(query);
 	    pool.query(query, [ brand ] , function (err, rows, fields) {
 	    		rows = correct_dates(rows);
@@ -839,6 +839,105 @@ var jsLoadStatSMS = function(type, brand_id, today, result) {
 	return dfd.promise();
 }
 
+
+exports.loadStatDay = function(request, response) {
+    var dfdArray = [];
+    var answer = [];
+
+	var brand = request.query.brand;
+	var today = request.query.today+"%";
+	var manager_id = request.query.manager;
+
+	if(manager_id==-1) {
+		var manager_sql = "";
+	} else {
+		var manager_sql = " AND manager_id = '"+manager_id+"' ";		
+	}
+
+    //Звонки
+    dfdArray.push( (function(){
+    	var dfd = $.Deferred();
+	    pool.query('SELECT * FROM `1_clients` WHERE zv LIKE ? AND brand = ? '+manager_sql+' ORDER by model LIMIT 500', [today, brand], function (err, rows, fields) {
+	    	rows = correct_dates(rows);
+		  	answer.push( {title:"Звонки", order: 0, clients: rows, counts: rows.length} );
+	    	dfd.resolve();
+	  	});	    	
+    	return dfd.promise();
+    })() );
+
+    //Визиты
+    dfdArray.push( (function(){
+    	var dfd = $.Deferred();
+	    pool.query('SELECT * FROM `1_clients` WHERE vz LIKE ? AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    	rows = correct_dates(rows);
+		  	answer.push( {title:"Визиты", order: 1, clients: rows, counts: rows.length} );
+	    	dfd.resolve();
+	  	});	    	
+    	return dfd.promise();
+    })() );
+
+
+    //Тестдрайвы
+    dfdArray.push( (function(){
+    	var dfd = $.Deferred();
+	    pool.query('SELECT * FROM `1_clients` WHERE tst LIKE ? AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    	rows = correct_dates(rows);
+		  	answer.push( {title:"Тест-драйвы", order: 2, clients: rows, counts: rows.length} );
+	    	dfd.resolve();
+	  	});	    	
+    	return dfd.promise();
+    })() );
+
+    //Договора
+    dfdArray.push( (function(){
+    	var dfd = $.Deferred();
+	    pool.query('SELECT * FROM `1_clients` WHERE dg LIKE ? AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    	rows = correct_dates(rows);
+		  	answer.push( {title:"Договора", order: 3, clients: rows, counts: rows.length} );
+	    	dfd.resolve();
+	  	});	    	
+    	return dfd.promise();
+    })() );
+
+    //Выдачи
+    dfdArray.push( (function(){
+    	var dfd = $.Deferred();
+	    pool.query('SELECT * FROM `1_clients` WHERE vd LIKE ? AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    	rows = correct_dates(rows);
+		  	answer.push( {title:"Выдачи", order: 4, clients: rows, counts: rows.length} );
+	    	dfd.resolve();
+	  	});	    	
+    	return dfd.promise();
+    })() );
+
+    //Расторжения
+    dfdArray.push( (function(){
+    	var dfd = $.Deferred();
+	    pool.query('SELECT * FROM `1_clients` WHERE `out` LIKE ? AND dg != "0000-00-00 00:00:00" AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    	rows = correct_dates(rows);
+		  	answer.push( {title:"Расторжения", order: 5, clients: rows, counts: rows.length} );
+	    	dfd.resolve();
+	  	});	    	
+    	return dfd.promise();
+    })() );
+
+    //OUT
+    dfdArray.push( (function(){
+    	var dfd = $.Deferred();
+	    pool.query('SELECT * FROM `1_clients` WHERE `out` LIKE ? AND dg = "0000-00-00 00:00:00" AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    	rows = correct_dates(rows);
+		  	answer.push( {title:"OUT", order: 6, clients: rows, counts: rows.length} );
+	    	dfd.resolve();
+	  	});	    	
+    	return dfd.promise();
+    })() );
+
+
+    $.when.apply(null, dfdArray).then(function(){
+    	response.send( answer );
+    });
+
+}
 
 
 exports.loadAllBig2 = function(request, response) {
@@ -1785,6 +1884,8 @@ app.get('/api/v1/stat', database.loadStat );
 app.get('/api/v1/stat/all', database.loadStatAll );
 app.get('/api/v1/stat/cup', database.loadStatCup );
 app.get('/api/v1/stat/cup/cars', database.loadStatCupCars );
+
+app.get('/api/v1/stat/cup/day', database.loadStatDay );
 
 app.get('/api/v1/models', database.loadModels );
 app.get('/api/v1/user/info', database.loadUserInfo );

@@ -252,7 +252,7 @@ myApp.directive('modelChangeBlur', function() {
 });
 
 function jsDateDiff($scope,date2) {
-  var answer = {text:"&nbsp;", class:""};
+  var answer = {text:"&nbsp;", class:"", image:false};
   if(!date2) return answer;
   if(date2=="0000-00-00 00:00:00") return answer;
   var time_now = $scope.fpk.time_now?$scope.fpk.time_now:new Date();
@@ -324,6 +324,7 @@ myApp.directive('datemini', ['$timeout', function($timeout) { return {
         }        
         $element.html(answer.text || '').removeClass("past").removeClass("datetoday").removeClass("datepast").addClass(answer.class);
         $element.css("background-image", answer.image?answer.image:"none;");
+        if(!answer.image) $element.attr("style","");
         //.css({"background":answer.image});
 
         }
@@ -766,6 +767,21 @@ myApp.factory('myApi', function($http, $q, oAuth2){
 
         $http({url:'/api/v1/do_by_type',method: "GET", isArray: true, params: { token: token, type_do: type_do, brand: $scope.fpk.brand, today: today }}).then(function(result){
             console.info("DO RECIVED: ",result.data);
+            dfd.resolve(result.data);
+        });
+      });
+
+      return dfd.promise;      
+
+      
+    },
+    getClientsDay: function($scope) {
+      var dfd = $q.defer();
+
+      oAuth2.jsGetToken($scope).done(function(token){
+
+        $http({url:'/api/v1/stat/cup/day',method: "GET", isArray: true, params: { token: token, today: $scope.fpk.today_date, brand: $scope.fpk.brand, manager: $scope.fpk.manager_filter }}).then(function(result){
+            console.info("CLIENTS RECIVED: ",result.data);
             dfd.resolve(result.data);
         });
       });

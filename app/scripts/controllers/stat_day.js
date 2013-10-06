@@ -9,5 +9,18 @@ myApp.controller('statDayCtrl', function ($scope, $resource, $rootScope, $locati
 
                 };
 
+    $scope.jsGetClientsDay = function(){
+		myApi.getClientsDay($scope).then(function(day_clients){
+			$scope.day_clients = day_clients;
+		});    	
+    }
+
+    $scope.jsGetClientsDay();
+
+    $scope.$watch("fpk.today_date", function(){
+    	$scope.jsGetClientsDay();	
+    });
+
+
 
 });
