@@ -1028,6 +1028,12 @@ body {
         font-weight: bold;
         display: inline;
         margin-left: 10px; }
+      .clients_list .client_card .client_container .client_manager {
+        float: right;
+        display: inline-block;
+        margin-right: 5px;
+        margin-top: 4px;
+        color: #888; }
       .clients_list .client_card .client_container .out_reason {
         text-align: right;
         clear: both; }

@@ -17,6 +17,7 @@
 
                            <div class="datemini" time-now="time_now" date-type="client" ng-model="client.na_date" title="{{client.na_date}}"></div> 
                            <div class="client_fio">{{client.fio}}</div> 
+                           <div class="client_manager" ng-if="$routeSegment.startsWith('s1.stat')">{{fpk.jsFioShort( fpk.jsFindInArray(fpk.all_managers,"id",client.manager_id).fio,"name")}}</div>
                            <div ng-if="client.out_reason.length&&client.out_reason.length>9" class="out_reason">{{client.out_reason}}</div>
                         </div>      
                         <div ng-if="client._visible == true" class="client_inside selectable" jq-show-effect="client._visible == true" jq-options="{type:'slide', duration:200, delay:200, hideImmediately: true}" style="display:none;">

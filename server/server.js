@@ -857,7 +857,7 @@ exports.loadStatDay = function(request, response) {
     //Звонки
     dfdArray.push( (function(){
     	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE zv LIKE ? AND brand = ? '+manager_sql+' ORDER by model LIMIT 500', [today, brand], function (err, rows, fields) {
+	    pool.query('SELECT * FROM `1_clients` WHERE zv LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model LIMIT 500', [today, brand], function (err, rows, fields) {
 	    	rows = correct_dates(rows);
 		  	answer.push( {title:"Звонки", order: 0, clients: rows, counts: rows.length} );
 	    	dfd.resolve();
@@ -868,7 +868,7 @@ exports.loadStatDay = function(request, response) {
     //Визиты
     dfdArray.push( (function(){
     	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE vz LIKE ? AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    pool.query('SELECT * FROM `1_clients` WHERE vz LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
 	    	rows = correct_dates(rows);
 		  	answer.push( {title:"Визиты", order: 1, clients: rows, counts: rows.length} );
 	    	dfd.resolve();
@@ -880,7 +880,7 @@ exports.loadStatDay = function(request, response) {
     //Тестдрайвы
     dfdArray.push( (function(){
     	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE tst LIKE ? AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    pool.query('SELECT * FROM `1_clients` WHERE tst LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
 	    	rows = correct_dates(rows);
 		  	answer.push( {title:"Тест-драйвы", order: 2, clients: rows, counts: rows.length} );
 	    	dfd.resolve();
@@ -891,7 +891,7 @@ exports.loadStatDay = function(request, response) {
     //Договора
     dfdArray.push( (function(){
     	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE dg LIKE ? AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    pool.query('SELECT * FROM `1_clients` WHERE dg LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
 	    	rows = correct_dates(rows);
 		  	answer.push( {title:"Договора", order: 3, clients: rows, counts: rows.length} );
 	    	dfd.resolve();
@@ -902,7 +902,7 @@ exports.loadStatDay = function(request, response) {
     //Выдачи
     dfdArray.push( (function(){
     	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE vd LIKE ? AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    pool.query('SELECT * FROM `1_clients` WHERE vd LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
 	    	rows = correct_dates(rows);
 		  	answer.push( {title:"Выдачи", order: 4, clients: rows, counts: rows.length} );
 	    	dfd.resolve();
@@ -913,7 +913,7 @@ exports.loadStatDay = function(request, response) {
     //Расторжения
     dfdArray.push( (function(){
     	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE `out` LIKE ? AND dg != "0000-00-00 00:00:00" AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    pool.query('SELECT * FROM `1_clients` WHERE `out` LIKE ? AND dg != "0000-00-00 00:00:00" AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
 	    	rows = correct_dates(rows);
 		  	answer.push( {title:"Расторжения", order: 5, clients: rows, counts: rows.length} );
 	    	dfd.resolve();
@@ -924,7 +924,7 @@ exports.loadStatDay = function(request, response) {
     //OUT
     dfdArray.push( (function(){
     	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE `out` LIKE ? AND dg = "0000-00-00 00:00:00" AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    pool.query('SELECT * FROM `1_clients` WHERE `out` LIKE ? AND dg = "0000-00-00 00:00:00" AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
 	    	rows = correct_dates(rows);
 		  	answer.push( {title:"OUT", order: 6, clients: rows, counts: rows.length} );
 	    	dfd.resolve();
@@ -957,7 +957,7 @@ exports.loadStatAllDay = function(request, response) {
     //Звонки
     dfdArray.push( (function(){
     	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE zv LIKE ? AND brand = ? '+manager_sql+' ORDER by model LIMIT 500', [today, brand], function (err, rows, fields) {
+	    pool.query('SELECT * FROM `1_clients` WHERE zv LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model LIMIT 500', [today, brand], function (err, rows, fields) {
 	    	rows = correct_dates(rows);
 		  	answer.push( {title:"Звонки", order: 0, clients: rows, counts: rows.length} );
 	    	dfd.resolve();
@@ -968,7 +968,7 @@ exports.loadStatAllDay = function(request, response) {
     //Визиты
     dfdArray.push( (function(){
     	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE vz LIKE ? AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    pool.query('SELECT * FROM `1_clients` WHERE vz LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
 	    	rows = correct_dates(rows);
 		  	answer.push( {title:"Визиты", order: 1, clients: rows, counts: rows.length} );
 	    	dfd.resolve();
@@ -980,7 +980,7 @@ exports.loadStatAllDay = function(request, response) {
     //Тестдрайвы
     dfdArray.push( (function(){
     	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE tst LIKE ? AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    pool.query('SELECT * FROM `1_clients` WHERE tst LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
 	    	rows = correct_dates(rows);
 		  	answer.push( {title:"Тест-драйвы", order: 2, clients: rows, counts: rows.length} );
 	    	dfd.resolve();
@@ -991,7 +991,7 @@ exports.loadStatAllDay = function(request, response) {
     //Договора
     dfdArray.push( (function(){
     	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE dg LIKE ? AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    pool.query('SELECT * FROM `1_clients` WHERE dg LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
 	    	rows = correct_dates(rows);
 		  	answer.push( {title:"Договора", order: 3, clients: rows, counts: rows.length} );
 	    	dfd.resolve();
@@ -1002,7 +1002,7 @@ exports.loadStatAllDay = function(request, response) {
     //Выдачи
     dfdArray.push( (function(){
     	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE vd LIKE ? AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    pool.query('SELECT * FROM `1_clients` WHERE vd LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
 	    	rows = correct_dates(rows);
 		  	answer.push( {title:"Выдачи", order: 4, clients: rows, counts: rows.length} );
 	    	dfd.resolve();
@@ -1013,7 +1013,7 @@ exports.loadStatAllDay = function(request, response) {
     //Расторжения
     dfdArray.push( (function(){
     	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE `out` LIKE ? AND dg != "0000-00-00 00:00:00" AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    pool.query('SELECT * FROM `1_clients` WHERE `out` LIKE ? AND dg != "0000-00-00 00:00:00" AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
 	    	rows = correct_dates(rows);
 		  	answer.push( {title:"Расторжения", order: 5, clients: rows, counts: rows.length} );
 	    	dfd.resolve();
@@ -1024,7 +1024,7 @@ exports.loadStatAllDay = function(request, response) {
     //OUT
     dfdArray.push( (function(){
     	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE `out` LIKE ? AND dg = "0000-00-00 00:00:00" AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    pool.query('SELECT * FROM `1_clients` WHERE `out` LIKE ? AND dg = "0000-00-00 00:00:00" AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
 	    	rows = correct_dates(rows);
 		  	answer.push( {title:"OUT", order: 6, clients: rows, counts: rows.length} );
 	    	dfd.resolve();
@@ -1379,7 +1379,7 @@ exports.loadStatCupCars = function(request, response) {
 	var do_type = request.query.do_type;
 	var brand_id = request.query.brand;
 
-	var myorder = "model";
+	var myorder = "manager_id, model";
 
 	var filter = " true ";
 

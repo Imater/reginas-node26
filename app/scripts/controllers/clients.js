@@ -4,6 +4,8 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
 
     console.info("start clientsCtrl");
 
+    $scope.$routeSegment = $routeSegment;
+
  $scope.fpk.today_date = toMysql( (new Date()) ).substr(0,10);
 
  $scope.fpk.leftmenu = { active:1,
@@ -117,6 +119,7 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
 
 
         $scope.fpk = $scope.$parent.fpk;
+        $scope.$routeSegment = $routeSegment;
 
  //       $scope.time_now = fpkCtrl.get_time_now();
 
