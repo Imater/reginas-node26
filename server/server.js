@@ -328,9 +328,10 @@ exports.searchString = function(request,response) {
 	    					'phone2 like ? OR '+
 	    					'phone3 like ? OR '+
 	    					'phone4 like ? OR '+
+	    					'vin like ? OR '+
 	    					'comment like ? OR '+
 	    					'adress like ?'+
-	    					')) LIMIT 2000', [brand, sr, sr, sr, sr, sr, sr, sr] , function (err, rows, fields) {
+	    					')) LIMIT 2000', [brand, sr, sr, sr, sr, sr, sr, sr, sr] , function (err, rows, fields) {
 	    		rows = correct_dates(rows);
 	    		console.info(err);
 			    response.send(rows);

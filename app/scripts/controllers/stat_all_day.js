@@ -42,29 +42,29 @@ myApp.controller('statAllDayCtrl', function ($scope, $resource, $rootScope, $loc
         {title: "CBU", count: "4 (20)", clients:[100483, 100491]},
         {title: "Solaris", count: "2 (35)", clients:[100491]},
         {title: "Итого", count: "6 (55)", clients:[100491, 100483]},
-        {title: "% от трафика", count: "100%", clients:[100491, 100483]},
-        {title: "% от контактов", count: "130%", clients:[100491, 100483]}
+        {title: "% от трафика", count: "100% (100%)", clients:[100491, 100483]},
+        {title: "% от контактов", count: "130% (120%)", clients:[100491, 100483]}
       ],
       voronka_contacts: [
         {title: "CBU", count: "14 (120)", clients:[100483, 100491]},
         {title: "Solaris", count: "12 (67)", clients:[100491]},
         {title: "Итого", count: "26 (187)", clients:[100491, 100483]},
-        {title: "% от трафика", count: "60%", clients:[100491, 100483]},
-        {title: "% от контактов", count: "50%", clients:[100491, 100483]}
+        {title: "% от трафика", count: "60% (50%)", clients:[100491, 100483]},
+        {title: "% от контактов", count: "50% (45%)", clients:[100491, 100483]}
       ],
       voronka_tst: [
         {title: "CBU", count: "1 (18)", clients:[100483, 100491]},
         {title: "Solaris", count: "8 (23)", clients:[100491]},
         {title: "Итого", count: "9 (41)", clients:[100491, 100483]},
-        {title: "% от трафика", count: "45%", clients:[100491, 100483]},
-        {title: "% от контактов", count: "30%", clients:[100491, 100483]}
+        {title: "% от трафика", count: "45% (40%)", clients:[100491, 100483]},
+        {title: "% от контактов", count: "30% (28%)", clients:[100491, 100483]}
       ],
       voronka_dg: [
         {title: "CBU", count: "3 (18)", clients:[100483, 100491]},
         {title: "Solaris", count: "2 (34)", clients:[100491]},
         {title: "Итого", count: "5 (52)", clients:[100491, 100483]},
-        {title: "% от трафика", count: "15%", clients:[100491, 100483]},
-        {title: "% от контактов", count: "10%", clients:[100491, 100483]}
+        {title: "% от трафика", count: "15% (12%)", clients:[100491, 100483]},
+        {title: "% от контактов", count: "10% (8%)", clients:[100491, 100483]}
       ],
       voronka_dg_average: [
         {title: "CBU", count: 2.1, clients:[100483, 100491]},
@@ -75,15 +75,15 @@ myApp.controller('statAllDayCtrl', function ($scope, $resource, $rootScope, $loc
         {title: "CBU", count: "1 (8)", clients:[100483, 100491]},
         {title: "Solaris", count: "2 (16)", clients:[100491]},
         {title: "Итого", count: "3 (24)", clients:[100491, 100483]},
-        {title: "% от трафика", count: "1%", clients:[100491, 100483]},
-        {title: "% от контактов", count: "0.8%", clients:[100491, 100483]}
+        {title: "% от трафика", count: "1% (2%)", clients:[100491, 100483]},
+        {title: "% от контактов", count: "0.8% (0.6%)", clients:[100491, 100483]}
       ],
       voronka_vd: [
         {title: "CBU", count: "2 (10)", clients:[100483, 100491]},
         {title: "Solaris", count: "3 (15)", clients:[100491]},
         {title: "Итого", count: "5 (25)", clients:[100491, 100483]},
-        {title: "% от трафика", count: "19%", clients:[100491, 100483]},
-        {title: "% от контактов", count: "16%", clients:[100491, 100483]}
+        {title: "% от трафика", count: "19% (23%)", clients:[100491, 100483]},
+        {title: "% от контактов", count: "16% (12%)", clients:[100491, 100483]}
       ]
 
 
