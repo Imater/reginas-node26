@@ -999,6 +999,7 @@ myApp.directive('colorChange', function() {
 
       scope.$watch(attrs.colorChange, function(Val, newVal){
           if(Val != newVal) {
+            document.title = "* ФПК ("+scope.fpk.the_user.fio.split(" ")[0]+") — Регинас";
             if(element.hasClass("changed")) { 
               element.removeClass("changed"); 
               setTimeout(function(){
@@ -1011,6 +1012,7 @@ myApp.directive('colorChange', function() {
             $('body').on("mousemove.my,click,touchdown", function(){
                 clearTimeout(tm_change);
                 tm_change = setTimeout(function(){
+                    document.title = "ФПК ("+scope.fpk.the_user.fio.split(" ")[0]+") — Регинас";
                     $('body').off(".my");
                     $(".changed").removeClass("changed");
                 },200);
