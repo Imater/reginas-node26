@@ -78,4 +78,19 @@
 		</tr>
 	</table>	
 
+
+	<h5>Воронка продаж по моделям автомобилей</h5>
+	<table class="day_month">
+		<tr>
+			<th>За день (за месяц)</th>
+			<th ng-repeat="voronka in day.voronka_traffic">{{voronka.title}}</th>
+		</tr>
+		<tr ng-repeat="model in day.voronka_models">
+			<td class="td_title">Модель:</td>
+			<td ng-repeat="voronka in day.voronka_traffic">{{voronka.count}}</td>
+		</tr>
+	</table>
+
+
+
 </div>

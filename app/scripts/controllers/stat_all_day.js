@@ -84,6 +84,22 @@ myApp.controller('statAllDayCtrl', function ($scope, $resource, $rootScope, $loc
         {title: "Итого", count: "5 (25)", clients:[100491, 100483]},
         {title: "% от трафика", count: "19% (23%)", clients:[100491, 100483]},
         {title: "% от контактов", count: "16% (12%)", clients:[100491, 100483]}
+      ],
+      voronka_models: [
+        {title: "Elantra", 
+         sklad: 15, 
+         dg_all: 18, 
+         tst: 1, 
+         dg_day: 3, 
+         dg_month: 10, 
+         vd_day: 3, 
+         vd_month: 50, 
+         plan: 30,
+         traffic_day: 20,
+         traffic_month: 180,
+         phones_day: 50,
+         phones_month: 170
+        }
       ]
 
 

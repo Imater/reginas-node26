@@ -59,7 +59,10 @@
 
 
     <div id="panel_left_header">
-      <a href="#/user/login" title="{{fpk.users_groups[fpk.the_user.user_group].title}}"><i class="icon-user"></i>{{fpk.the_user.fio}}<b ng-if="jsGetOnline()"> - online</b><b ng-if="!jsGetOnline()"> - offline</b></a>
+<!-- {{fpk.users_groups}} -->
+
+      <a href="#/user/login" title="{{fpk.jsFindInArray(fpk.users_groups, 'id', fpk.the_user.user_group ).title}}"><i class="icon-user"></i>{{fpk.the_user.fio}}<b ng-if="jsGetOnline()"> - online</b><b ng-if="!jsGetOnline()"> - offline</b></a>
+
     </div>
 
     <div id="panel_left_content" class="noselectable">
