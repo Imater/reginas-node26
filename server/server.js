@@ -1609,6 +1609,17 @@ exports.parseManagers2 = function(request, response) {
 	});
 }
 
+exports.parseEmail = function(request, response) {
+
+	pool.query('SELECT * FROM `1_users`', function (err, sql_users, fields) {
+		$.each(sql_users, function(i, user){
+			console.info(user.email,user.md5email, md5( user.email.toLowerCase() + "990990") );
+		});
+		response.send(sql_users);
+
+	});
+}
+
 
 exports.exportClients = function(request, response) {
 
@@ -1853,6 +1864,9 @@ app.get('/migrate', database.loadAllFromMySQL)
 app.get('/api/v1/parseManagers', database.parseManagers)
 
 app.get('/api/v1/parseManagers2', database.parseManagers2)
+
+
+app.get('/api/v1/parseEmail', database.parseEmail)
 
 
 app.get('/api/v1/bigdata', database.loadAllBig)
