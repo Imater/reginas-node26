@@ -1742,6 +1742,8 @@ a {
     padding: 2px 10px; }
   .clients_all_day table td {
     text-align: center; }
+  .clients_all_day table th {
+    background: #EEE; }
   .clients_all_day table .td_title {
     max-width: 20em;
     text-align: right;

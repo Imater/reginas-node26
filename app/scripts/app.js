@@ -377,7 +377,7 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
         myApi.loadUserInfo($scope).then(function(user){
 
           $scope.fpk.the_user = user.user[0];
-          document.title = "ФПК ("+user.user[0].fio.split(" ")[0]+") — Регинас";
+          document.title = "ФПК ("+user.user[0].fio.split(" ")[1]+" "+user.user[0].fio.split(" ")[0][0]+".) — Регинас";
           if(!dont_select_brand) $scope.fpk.brand = user.user[0].brand; //бренд по умолчанию
           localStorage.setItem("brand", $scope.fpk.brand);
           $scope.fpk.managers = _.filter(user.users, function(user){

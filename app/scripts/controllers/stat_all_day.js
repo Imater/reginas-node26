@@ -87,29 +87,76 @@ myApp.controller('statAllDayCtrl', function ($scope, $resource, $rootScope, $loc
       ],
       voronka_models: [
         {title: "Elantra", 
-         sklad: 15, 
          dg_all: 18, 
          tst: 1, 
+         tst_month: 18, 
          dg_day: 3, 
          dg_month: 10, 
          vd_day: 3, 
          vd_month: 50, 
          plan: 30,
+         plan_procent: "92%",
          traffic_day: 20,
          traffic_month: 180,
          phones_day: 50,
          phones_month: 170
+        },
+        {title: "Solaris", 
+         dg_all: 11, 
+         tst: 2, 
+         tst_month: 24, 
+         dg_day: 2, 
+         dg_month: 8, 
+         vd_day: 1, 
+         vd_month: 30, 
+         plan: 20,
+         plan_procent: "82%",
+         traffic_day: 14,
+         traffic_month: 160,
+         phones_day: 20,
+         phones_month: 120
+        }
+      ],
+      voronka_models: [
+        {title: "Петров Иван", 
+         dg_all: 18, 
+         tst: 1, 
+         tst_month: 18, 
+         dg_day: 3, 
+         dg_month: 10, 
+         vd_day: 3, 
+         vd_month: 50, 
+         plan: 30,
+         plan_procent: "92%",
+         traffic_day: 20,
+         traffic_month: 180,
+         phones_day: 50,
+         phones_month: 170
+        },
+        {title: "Михайлов Сергей", 
+         dg_all: 11, 
+         tst: 2, 
+         tst_month: 24, 
+         dg_day: 2, 
+         dg_month: 8, 
+         vd_day: 1, 
+         vd_month: 30, 
+         plan: 20,
+         plan_procent: "82%",
+         traffic_day: 14,
+         traffic_month: 160,
+         phones_day: 20,
+         phones_month: 120
         }
       ]
 
 
 
-
     }
 
-/*    $scope.jsGetClientsAllDay = function(){
+    $scope.jsGetClientsAllDay = function(){
 		myApi.getClientsAllDay($scope).then(function(day_clients){
-			$scope.day_clients = day_clients;
+			$scope.day = day_clients;
 		});    	
     }
 
@@ -118,7 +165,7 @@ myApp.controller('statAllDayCtrl', function ($scope, $resource, $rootScope, $loc
     $scope.$watch("fpk.today_date", function(){
     	$scope.jsGetClientsAllDay();	
     });
-*/
+
 
 
 });

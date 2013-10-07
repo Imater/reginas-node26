@@ -82,15 +82,50 @@
 	<h5>Воронка продаж по моделям автомобилей</h5>
 	<table class="day_month">
 		<tr>
-			<th>За день (за месяц)</th>
-			<th ng-repeat="voronka in day.voronka_traffic">{{voronka.title}}</th>
+			<th>Модель авто:</th>
+			<th title="Всего невыполненных договоров">Договора</th>
+			<th>Тесты</th>
+			<th>Договора</th>
+			<th>Выдачи</th>
+			<th>План (вып.)</th>
+			<th>Траффик</th>
+			<th>Телефоны</th>
 		</tr>
 		<tr ng-repeat="model in day.voronka_models">
-			<td class="td_title">Модель:</td>
-			<td ng-repeat="voronka in day.voronka_traffic">{{voronka.count}}</td>
+			<td class="td_title">{{model.title}}:</td>
+			<td>{{model.dg_all}}</td>
+			<td>{{model.tst}} ({{model.tst_month}})</td>
+			<td>{{model.dg_day}} ({{model.dg_month}})</td>
+			<td>{{model.vd_month}}</td>
+			<td>{{model.plan}} ({{model.plan_procent}})</td>
+			<td>{{model.traffic_day}} ({{model.traffic_month}})</td>
+			<td>{{model.phones_day}} ({{model.phones_month}})</td>
 		</tr>
 	</table>
 
+	<h5>Воронка продаж по менеджерам</h5>
+	<table class="day_month">
+		<tr>
+			<th>Менеджер:</th>
+			<th title="Всего невыполненных договоров">Договора</th>
+			<th>Тесты</th>
+			<th>Договора</th>
+			<th>Выдачи</th>
+			<th>План (вып.)</th>
+			<th>Траффик</th>
+			<th>Телефоны</th>
+		</tr>
+		<tr ng-repeat="model in day.voronka_models">
+			<td class="td_title">{{model.title}}:</td>
+			<td>{{model.dg_all}}</td>
+			<td>{{model.tst}} ({{model.tst_month}})</td>
+			<td>{{model.dg_day}} ({{model.dg_month}})</td>
+			<td>{{model.vd_month}}</td>
+			<td>{{model.plan}} ({{model.plan_procent}})</td>
+			<td>{{model.traffic_day}} ({{model.traffic_month}})</td>
+			<td>{{model.phones_day}} ({{model.phones_month}})</td>
+		</tr>
+	</table>
 
 
 </div>

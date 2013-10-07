@@ -22,6 +22,10 @@ myApp.controller('statDayCtrl', function ($scope, $resource, $rootScope, $locati
     	$scope.jsGetClientsDay();	
     });
 
+    $scope.$watch("fpk.brand", function(){
+    	$scope.jsGetClientsDay();	
+    });
+
 
 
 });
