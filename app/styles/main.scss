@@ -1395,7 +1395,7 @@ background-color: none !important;
             }
             .client_lock {
                 float: right;
-                margin-left: -10px;
+                margin-left: 0px;
                 display: inline-block;
                 color: #999;
                 margin-top: 3px;
@@ -1445,6 +1445,9 @@ background-color: none !important;
                 display: inline-block;
             }
             .client_lock {
+                display: none;
+            }
+            .client_manager {
                 display: none;
             }
 

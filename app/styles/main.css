@@ -1039,7 +1039,7 @@ body {
         clear: both; }
       .clients_list .client_card .client_container .client_lock {
         float: right;
-        margin-left: -10px;
+        margin-left: 0px;
         display: inline-block;
         color: #999;
         margin-top: 3px;
@@ -1075,6 +1075,8 @@ body {
     .clients_list .client_card .client_container:hover .do_buttons {
       display: inline-block; }
     .clients_list .client_card .client_container:hover .client_lock {
+      display: none; }
+    .clients_list .client_card .client_container:hover .client_manager {
       display: none; }
     .clients_list .client_card .client_inside {
       color: #000 !important;
