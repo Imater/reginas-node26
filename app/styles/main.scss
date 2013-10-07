@@ -2272,3 +2272,24 @@ margin-bottom: 0px !important;
     }
 }
 
+
+.clients_all_day {
+    table {
+       margin-bottom: 20px;
+       background: #FFF;
+       color: #000;
+       font-size: 14px;
+       td,th {
+        border: 1px solid #CCC;
+        padding: 2px 10px;
+       }
+       td {
+        text-align: center;
+       }
+       .td_title {
+        max-width: 20em;
+        text-align: right;
+        font-weight: bold;
+       }
+    }
+}

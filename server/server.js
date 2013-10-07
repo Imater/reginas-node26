@@ -940,6 +940,107 @@ exports.loadStatDay = function(request, response) {
 }
 
 
+exports.loadStatAllDay = function(request, response) {
+    var dfdArray = [];
+    var answer = [];
+
+	var brand = request.query.brand;
+	var today = request.query.today+"%";
+	var manager_id = request.query.manager;
+
+	if(manager_id==-1) {
+		var manager_sql = "";
+	} else {
+		var manager_sql = " AND manager_id = '"+manager_id+"' ";		
+	}
+
+    //Звонки
+    dfdArray.push( (function(){
+    	var dfd = $.Deferred();
+	    pool.query('SELECT * FROM `1_clients` WHERE zv LIKE ? AND brand = ? '+manager_sql+' ORDER by model LIMIT 500', [today, brand], function (err, rows, fields) {
+	    	rows = correct_dates(rows);
+		  	answer.push( {title:"Звонки", order: 0, clients: rows, counts: rows.length} );
+	    	dfd.resolve();
+	  	});	    	
+    	return dfd.promise();
+    })() );
+
+    //Визиты
+    dfdArray.push( (function(){
+    	var dfd = $.Deferred();
+	    pool.query('SELECT * FROM `1_clients` WHERE vz LIKE ? AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    	rows = correct_dates(rows);
+		  	answer.push( {title:"Визиты", order: 1, clients: rows, counts: rows.length} );
+	    	dfd.resolve();
+	  	});	    	
+    	return dfd.promise();
+    })() );
+
+
+    //Тестдрайвы
+    dfdArray.push( (function(){
+    	var dfd = $.Deferred();
+	    pool.query('SELECT * FROM `1_clients` WHERE tst LIKE ? AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    	rows = correct_dates(rows);
+		  	answer.push( {title:"Тест-драйвы", order: 2, clients: rows, counts: rows.length} );
+	    	dfd.resolve();
+	  	});	    	
+    	return dfd.promise();
+    })() );
+
+    //Договора
+    dfdArray.push( (function(){
+    	var dfd = $.Deferred();
+	    pool.query('SELECT * FROM `1_clients` WHERE dg LIKE ? AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    	rows = correct_dates(rows);
+		  	answer.push( {title:"Договора", order: 3, clients: rows, counts: rows.length} );
+	    	dfd.resolve();
+	  	});	    	
+    	return dfd.promise();
+    })() );
+
+    //Выдачи
+    dfdArray.push( (function(){
+    	var dfd = $.Deferred();
+	    pool.query('SELECT * FROM `1_clients` WHERE vd LIKE ? AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    	rows = correct_dates(rows);
+		  	answer.push( {title:"Выдачи", order: 4, clients: rows, counts: rows.length} );
+	    	dfd.resolve();
+	  	});	    	
+    	return dfd.promise();
+    })() );
+
+    //Расторжения
+    dfdArray.push( (function(){
+    	var dfd = $.Deferred();
+	    pool.query('SELECT * FROM `1_clients` WHERE `out` LIKE ? AND dg != "0000-00-00 00:00:00" AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    	rows = correct_dates(rows);
+		  	answer.push( {title:"Расторжения", order: 5, clients: rows, counts: rows.length} );
+	    	dfd.resolve();
+	  	});	    	
+    	return dfd.promise();
+    })() );
+
+    //OUT
+    dfdArray.push( (function(){
+    	var dfd = $.Deferred();
+	    pool.query('SELECT * FROM `1_clients` WHERE `out` LIKE ? AND dg = "0000-00-00 00:00:00" AND brand = ? '+manager_sql+' ORDER by model  LIMIT 500', [today, brand], function (err, rows, fields) {
+	    	rows = correct_dates(rows);
+		  	answer.push( {title:"OUT", order: 6, clients: rows, counts: rows.length} );
+	    	dfd.resolve();
+	  	});	    	
+    	return dfd.promise();
+    })() );
+
+
+    $.when.apply(null, dfdArray).then(function(){
+    	response.send( answer );
+    });
+
+}
+
+
+
 exports.loadAllBig2 = function(request, response) {
     
 
@@ -1610,10 +1711,18 @@ exports.parseManagers2 = function(request, response) {
 }
 
 exports.parseEmail = function(request, response) {
-
+	console.info("parseEmail");
 	pool.query('SELECT * FROM `1_users`', function (err, sql_users, fields) {
 		$.each(sql_users, function(i, user){
-			console.info(user.email,user.md5email, md5( user.email.toLowerCase() + "990990") );
+			var right_md5 = md5( user.email.toLowerCase() + "990990");
+
+			if(user.md5email != right_md5) {
+				
+				pool.query('UPDATE `1_users` SET md5email="'+right_md5+'" WHERE id="'+user.id+'" LIMIT 1', function (err, row, fields) {
+					console.info(user.email,user.md5email, right_md5, row );
+				});
+			}
+
 		});
 		response.send(sql_users);
 
@@ -1900,6 +2009,7 @@ app.get('/api/v1/stat/cup', database.loadStatCup );
 app.get('/api/v1/stat/cup/cars', database.loadStatCupCars );
 
 app.get('/api/v1/stat/cup/day', database.loadStatDay );
+app.get('/api/v1/stat/cup/all_day', database.loadStatAllDay );
 
 app.get('/api/v1/models', database.loadModels );
 app.get('/api/v1/user/info', database.loadUserInfo );

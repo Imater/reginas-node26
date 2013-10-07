@@ -790,6 +790,21 @@ myApp.factory('myApi', function($http, $q, oAuth2){
 
       
     },
+    getClientsAllDay: function($scope) {
+      var dfd = $q.defer();
+
+      oAuth2.jsGetToken($scope).done(function(token){
+
+        $http({url:'/api/v1/stat/cup/all_day',method: "GET", isArray: true, params: { token: token, today: $scope.fpk.today_date, brand: $scope.fpk.brand, manager: $scope.fpk.manager_filter }}).then(function(result){
+            console.info("CLIENTS RECIVED: ",result.data);
+            dfd.resolve(result.data);
+        });
+      });
+
+      return dfd.promise;      
+
+      
+    },
     addDo: function($scope, do_type, client_id) {
       var dfd = $q.defer();
 

@@ -1,0 +1,81 @@
+<div class="scrollable_div clients_all_day">
+
+	<h3>Подробный ежедневный отчёт за {{fpk.today_date | nicedate}}</h3>
+	<h5>Дни</h5>
+	<table class="day_month">
+		<tr>
+			<th>Дней в месяце</th>
+			<th>Дней с начала месяца</th>
+			<th>Дней до окончания месяца</th>
+		</tr>
+		<tr>
+			<td>{{day.month.days}}</td>
+			<td>{{day.month.days_past}}</td>
+			<td>{{day.month.days_last}}</td>
+		</tr>
+	</table>
+	<h5>Выполнение плана</h5>
+	<table class="plan_month">
+		<tr>
+			<th></th>
+			<th ng-repeat="plan in day.plan_month">{{plan.title}}</th>
+		</tr>
+		<tr>
+			<td class="td_title">План:</td>
+			<td ng-repeat="plan in day.plan_month">{{plan.plan_month}}</td>
+		</tr>
+		<tr>
+			<td class="td_title">Выдано с начала месяца:</td>
+			<td ng-repeat="vd in day.vd_month">{{vd.vd}}</td>
+		</tr>
+		<tr>
+			<td class="td_title">Осталось до плана:</td>
+			<td ng-repeat="vd in day.vd_rest_month">{{vd.vd}}</td>
+		</tr>
+		<tr>
+			<td class="td_title">Запланированные выдачи:</td>
+			<td ng-repeat="vd in day.vd_plan_month" ng-bind-html="vd.vd"></td>
+		</tr>
+		<tr>
+			<td class="td_title">Необходимое кол-во выдач в день для выполнения плана:</td>
+			<td ng-repeat="vd in day.vd_need_rest_for_plan_month">{{vd.vd}}</td>
+		</tr>
+	</table>
+
+	<h5>Воронка продаж</h5>
+	<table class="day_month">
+		<tr>
+			<th>За день (за месяц)</th>
+			<th ng-repeat="voronka in day.voronka_traffic">{{voronka.title}}</th>
+		</tr>
+		<tr>
+			<td class="td_title">Траффик:</td>
+			<td ng-repeat="voronka in day.voronka_traffic">{{voronka.count}}</td>
+		</tr>
+		<tr>
+			<td class="td_title">Контакты:</td>
+			<td ng-repeat="voronka in day.voronka_contacts">{{voronka.count}}</td>
+		</tr>
+		<tr>
+			<td class="td_title">Тест-драйвы:</td>
+			<td ng-repeat="voronka in day.voronka_tst">{{voronka.count}}</td>
+		</tr>
+		<tr>
+			<td class="td_title">Договора:</td>
+			<td ng-repeat="voronka in day.voronka_dg">{{voronka.count}}</td>
+		</tr>
+		<tr>
+			<td class="td_title">Ср.кол-во договоров:</td>
+			<td ng-repeat="voronka in day.voronka_dg_average">{{voronka.count}}</td>
+		</tr>
+		<tr>
+			<td class="td_title">Расторжения:</td>
+			<td ng-repeat="voronka in day.voronka_rastorg">{{voronka.count}}</td>
+		</tr>
+		<tr>
+			<td class="td_title">Выдачи:</td>
+			<td ng-repeat="voronka in day.voronka_vd">{{voronka.count}}</td>
+		</tr>
+	</table>	
+
+</div>
