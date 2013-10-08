@@ -376,7 +376,11 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
           $scope.fpk.all_managers = user.users;
           //user.users; //список всех менеджеров
           $scope.fpk.credit_managers = _.filter(user.users, function(user){
-            return (user.user_group == 7);
+            var answer = ((user.user_group == 7) && (user.brand == $scope.fpk.brand));
+            if( ($scope.fpk.brand == 8) || ($scope.fpk.brand == 7) ) {
+                answer = ((user.user_group == 7) && ((user.brand == 7) || (user.brand == 8) ) );
+            }
+            return answer;
           });          
           $scope.fpk.commercials = user.commercials;
 

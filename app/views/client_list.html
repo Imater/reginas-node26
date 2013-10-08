@@ -130,7 +130,7 @@
                                         Вид оплаты: <b>{{client.creditmanager}}</b> <span class="caret"></span>
                                       </button>
                                       <ul class="dropdown-menu" role="menu">
-                                        <li ng-click="client.creditmanager='Кредит - {{credit.fio}}'" ng-repeat="credit in fpk.credit_managers"><a href="#">Кредит - {{credit.fio}}</a></li>
+                                        <li ng-click="client.creditmanager='Кредит - {{credit.fio}}'; jsClientSave(client);" ng-repeat="credit in fpk.credit_managers"><a href="#">Кредит - {{credit.fio}}</a></li>
                                         <li class="divider"></li>
                                         <li ng-click="client.creditmanager='Наличный расчет'"><a>Наличный расчет</a></li>
                                         <li ng-click="client.creditmanager='Кредит - самостоятельно'"><a>Кредит - самостоятельно</a></li>

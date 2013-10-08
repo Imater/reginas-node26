@@ -4,12 +4,17 @@ myApp.controller('adminCtrl', function ($scope, $resource, $rootScope, $location
 
  	$scope.fpk.leftmenu = { active:1,
                 items : [
-                  {id:0, title:"Учёт трафика", href: "/fpk/admin_cup", segment: "s1.admin_cup"}
+                  {id:10, title:"Учёт трафика", href: "/fpk/admin_cup", segment: "s1.admin_cup"}
                 ]
 
                 };
 
+
+
+
     $scope.jsLoadAdmin = function(){
+        $scope.fpk.models_array_show = _.filter($scope.fpk.models_array, function(el){ return ( (el.brand == $scope.fpk.brand) && (el.show == 1)); });
+        
         myApi.jsGetManagerCupAdmin($scope).then(function(admin){
             $scope.admin = admin;
         })        

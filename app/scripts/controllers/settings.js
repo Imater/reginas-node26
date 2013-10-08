@@ -101,7 +101,7 @@ myApp.controller('settingsCtrl', function ($scope, $resource, $rootScope, $locat
  $scope.jsDeleteSelectedModel = function() {
    var del_id = $scope.mySelections[0].id;
    myApi.deleteModel($scope, del_id).then(function(answer){
-    if(answer.rows[0].cnt) alert("Не могу удалять модель которая используется в клиентах "+answer.rows[0].cnt+" раз. Если хотите её скрыть, поставьте 'Показывать' = 0");
+    if(answer.rows && answer.rows[0].cnt) alert("Не могу удалять модель которая используется в клиентах "+answer.rows[0].cnt+" раз. Если хотите её скрыть, поставьте 'Показывать' = 0");
     $scope.fpk.jsLoadModelsFromServer().then(function(){
       $scope.jsRefreshModels();  
     });

@@ -96,7 +96,8 @@
 		<h5>Модель:</h5>
 		<ol class="model_select">
             <li><a>Неизвестно</a></li>
- 			<li ng-repeat="model in fpk.models" ng-click="client.model = model.id"><a>{{model.model}}</a></li>
+            
+ 			<li ng-repeat="model in fpk.models_array_show" ng-click="client.model = model.id"><a>{{model.model}}</a></li>
   		</ol>
   		</div>
 
