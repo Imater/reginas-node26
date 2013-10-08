@@ -1746,6 +1746,16 @@ a {
     color: red; }
   .admin_cup_new .active {
     font-weight: bold; }
+  .admin_cup_new .do_date1 {
+    width: 17em;
+    height: 28px;
+    margin-left: 20px;
+    display: inline-block; }
+  .admin_cup_new .datetimeEntry_control {
+    position: absolute;
+    margin-left: -25px;
+    margin-top: 5px;
+    opacity: 0.3; }
 
 .ui-autocomplete {
   background: #EEE !important;
