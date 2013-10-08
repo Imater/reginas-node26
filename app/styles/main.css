@@ -972,6 +972,25 @@ body {
   background: #FFF; }
   #myfullcalendar .fc-event-inner {
     font-size: 11px; }
+  #myfullcalendar .event_not_did {
+    background: #ffffde;
+    color: #000;
+    border: 1px solid #c8cc82; }
+  #myfullcalendar .event_did {
+    background: #ffffde;
+    color: #000;
+    border: 1px solid #c8cc82;
+    opacity: 0.5; }
+    #myfullcalendar .event_did .fc-event-title {
+      text-decoration: line-through !important; }
+  #myfullcalendar .event_not_did_confirm {
+    background: #b2ff3c;
+    color: #000;
+    border: 1px solid #c3cfb8; }
+  #myfullcalendar .event_past {
+    border: 1px solid #febcbe; }
+  #myfullcalendar .event_selected {
+    border-color: blue; }
 
 #myfullcalendar .fc-content {
   height: 100%;

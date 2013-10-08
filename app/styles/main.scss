@@ -1313,6 +1313,31 @@ background-color: none !important;
     .fc-event-inner {
         font-size: 11px;
     }
+    .event_not_did {
+        background: #ffffde;
+        color: #000;
+        border: 1px solid #c8cc82;
+    }
+    .event_did {
+        background: #ffffde;
+        color: #000;
+        border: 1px solid #c8cc82;
+        opacity: 0.5;
+        .fc-event-title {
+            text-decoration: line-through !important;
+        }
+    }
+    .event_not_did_confirm {
+        background: #b2ff3c;
+        color: #000;
+        border: 1px solid #c3cfb8;
+    }
+    .event_past {
+        border: 1px solid #febcbe;   
+    }
+    .event_selected {
+        border-color: blue;
+    }
 }
 
 #myfullcalendar .fc-content {

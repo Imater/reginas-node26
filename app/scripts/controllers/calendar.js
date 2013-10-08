@@ -5,14 +5,19 @@ myApp.controller('calendarCtrl', function ($scope, $resource, $rootScope, $locat
 
   $scope.fpk.leftmenu = { active:0,
                 items : [
-                  {id:0, title:"Календарь дел", group_by: "manager", href:"/fpk/calendar"},
-                  {id:1, title:"Календарь выдач", group_by: "manager", href:"/fpk/calendar/vd"}
+                  {id:10, title:"Календарь дел", group_by: "manager", href:"/fpk/calendar"},
+                  {id:11, title:"Журнал выдач", group_by: "manager", href:"/fpk/calendar/vd"},
+                  {id:12, title:"Журнал тестов", group_by: "manager", href:"/fpk/calendar/tst"}
                   ]
                 };
 
   if(window.location.hash.indexOf("/vd")!=-1) {
     var calendar_do_type = "vd";
     $scope.fpk.leftmenu.active = 1;
+  }
+  if(window.location.hash.indexOf("/tst")!=-1) {
+    var calendar_do_type = "tst";
+    $scope.fpk.leftmenu.active = 2;
   }
 
   $scope.$watch("fpk.leftmenu.active", function(Val, newVal){
@@ -58,7 +63,9 @@ myApp.controller('calendarCtrl', function ($scope, $resource, $rootScope, $locat
 //        alert('View: ' + view.name);
 
         // change the border color just for fun
-        $(this).css('border-color', 'red');
+        $(".event_selected").removeClass("event_selected");
+        $(this).addClass("event_selected");
+
 
         },
         viewDisplay: function(view) {
@@ -75,8 +82,8 @@ myApp.controller('calendarCtrl', function ($scope, $resource, $rootScope, $locat
         },
         eventSources: [{ events: function(start, end, callback) {
             $scope.jsGetEvents(start, end, callback);
-           },
-           className: 'my_event'
+           }
+           //, className: 'my_event'
         }],        
         dayClick: $scope.alertEventOnClick,
         eventDrop: $scope.alertOnDrop,
@@ -105,26 +112,33 @@ myApp.controller('calendarCtrl', function ($scope, $resource, $rootScope, $locat
      myApi.getDoCalendar($scope, start, end, calendar_do_type).then(function(events){
 	     
 	     $.each(events, function(i,el) {
-	        if( ((el.date2!="0000-00-00 00:00:00") || (el.date2!="0000-00-00 00:00:00") ) && (el.checked=="0000-00-00 00:00:00") &&
+	        if( ((el.date2!="0000-00-00 00:00:00") || (el.date2!="0000-00-00 00:00:00") ) &&
 	            ( ( (el.date2>=start) && (el.date2<=end) ) || ((el.date2>=start) && (el.date2<=end)) )) {
 
 	        	var alld = /00:00:00/.test(el.date2);
             var manager = $scope.fpk.jsFindInArray($scope.fpk.managers,"id",el.manager_id)
             if(manager) manager = '['+$scope.fpk.jsFioShort(manager.fio)+']';
             var title = el.text + " ("+$scope.fpk.jsFioShort(el.fio, true) + " - " + el.short+" "+manager+ ")";
+            var do_class="event_did";
+            if( (el.checked=="0000-00-00 00:00:00") ) do_class = "event_not_did";
+            if( (el.icon2>4) ) do_class = "event_not_did_confirm";
+            if( el.date2 < toMysql( (new Date ) ) ) do_class += " event_past";
+
 	            caldata.push(
 	               {title: title, 
 	                start:el.date2, 
 	                allDay: alld,
 	                end:el.date2,
                   myid: el.id,
+                  className: do_class,
                   client_id: el.client
 	               } 
 	               );                
 	          } 
 	       });
+       setTimeout(function(){ onResize(); },500);
 	     callback(caldata);
-	     console.info(caldata);
+	     //console.info(caldata);
      });
 
   }
