@@ -851,7 +851,10 @@ exports.jsGetManagerCupAdmin = function(request, response) {
 
   	function jsAdminIncrement(managers, manager_id, field_name) {
 			var cup_element = _.find(admin, function(el){ return el.manager_id == manager_id; });
-			if(cup_element) cup_element[ field_name ] += 1;
+			if(cup_element) {
+				if(cup_element[ field_name ]=="") cup_element[ field_name ] = 0;
+				cup_element[ field_name ] += 1;
+			}
   	}
 
     pool.query('SELECT * FROM `1_users` WHERE brand = ? AND user_group IN (5,6) ORDER by id', [brand], function (err, users, fields) {
