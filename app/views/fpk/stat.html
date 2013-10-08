@@ -11,6 +11,7 @@
                   <li ng-class="{active:stat_view_switch==4}" ng-click="stat_view_switch=4"><a>По менеджерам</a></li>
 
                 </ul>	
+        <a class="pull-right" ng-click="$scope.getCUPtable();fpk.jsLoadStat();">Обновить (данные на: {{fpk.stat_load_time}})</a>
         <br><br>
         <table>
         <tr ng-repeat="brand in cup | orderBy:'brandname':true">

@@ -1061,6 +1061,8 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
         myApi.getStat($scope).then(function(result){
             $scope.fpk.stat = result.left_stat;
             $scope.fpk.cup_sms = result.sms;
+            var time_split = toMysql( (new Date) ).split(" ")[1].split(":");
+            $scope.fpk.stat_load_time = time_split[0]+":"+time_split[1];
         });    
     }
   }

@@ -854,6 +854,161 @@ var jsLoadStatSMS = function(type, brand_id, today, result) {
 	return dfd.promise();
 }
 
+exports.jsGetReiting = function(request, response) {
+
+	var brand = request.query.brand;
+	var today = request.query.today+"%";
+	var today_date = request.query.today;
+
+	var now = tomysql( (new Date) );
+	var current_time = now.split(" ")[1];
+
+	var today_year = now.split("-")[0]+"%";
+
+	var today_date_sql = request.query.today+" "+current_time;
+
+	var start_today = request.query.end_today+"%";
+	var start_today_date = request.query.start_today;
+
+	var start_today_date_sql = request.query.start_today+" "+current_time;
+
+    var answer = [];
+
+    function jsFindCost(client, models) {
+    	var model = _.find(models, function(model) { return (model.id == client.model) });
+
+		var cost = 600000;
+		if(client.cost>250000) {
+			cost = client.cost;
+		} else if (model && model.cost) {
+			cost = model.cost;
+		}
+		return cost;
+
+    }
+
+  	function jsIncrement(managers, manager_id, field_name, cost) {
+			var cup_element = _.find(managers, function(el){ return el.manager_id == manager_id; });
+			if(cup_element) {
+				if(cup_element[ field_name ]=="") cup_element[ field_name ] = 0;
+				cup_element[ field_name ] += cost?cost:1;
+			}
+  	}
+
+    pool.query('SELECT * FROM `1_users` WHERE brand = ? AND user_group IN (5,6) ORDER by id', [brand], function (err, users, fields) {
+	    pool.query('SELECT * FROM `1_models` WHERE brand = ?', [brand], function (err, models, fields) {
+		    pool.query('SELECT * FROM `1_clients` WHERE brand = ? AND zv LIKE ? OR vz LIKE ? OR tst LIKE ?', [brand, today_year, today_year, today_year], function (err, clients, fields) {
+		    	clients = correct_dates(clients,"date_null");
+		    	var dfdArray = [];
+
+		    	$.each(users, function(i, user){ //делаем пустой ответ
+		    		answer.push( {
+			            manager:user.fio,
+			            manager_id:user.id,
+
+			            vd_count: 0,
+			            dg_count: 0,
+			            tst_count: 0,
+			            vz_count: 0,
+			            rastorg_count: 0,
+			            no_na_count: 0,
+
+			            vd_sum: 0,
+			            dg_sum: 0,
+			            tst_sum: 0,
+			            vz_sum: 0,
+			            rastorg_sum: 0,
+			            no_na_sum: 0,
+
+			            vd_ids: '',
+			            dg_ids: '',
+			            tst_ids: '',
+			            vz_ids: '',
+			            rastorg_ids: '',
+			            no_na_ids: '',
+
+			            reiting_sum: 0
+			        } );
+		    	});
+		  		
+		    	$.each(clients, function(i, client){
+		    		console.info(client.out);
+		    		if( (client.vd >= start_today_date_sql) && 
+		    			(client.vd <= today_date_sql) && 
+		    			(client.out=='') ) {
+		    			jsIncrement(answer, client.manager_id, "vd_count");
+		    			var cost = jsFindCost(client, models);
+		    			jsIncrement(answer, client.manager_id, "vd_sum", cost);
+		    			jsIncrement(answer, client.manager_id, "vd_ids", ","+client.id);
+
+		    			jsIncrement(answer, client.manager_id, "reiting_sum", cost);
+		    		}
+
+		    		if( (client.dg >= start_today_date_sql) && 
+		    			(client.dg <= today_date_sql) && 
+		    			(client.out=='') ) {
+		    			jsIncrement(answer, client.manager_id, "dg_count");
+		    			var cost = jsFindCost(client, models);
+		    			jsIncrement(answer, client.manager_id, "dg_sum", cost);
+		    			jsIncrement(answer, client.manager_id, "dg_ids", ","+client.id);
+
+		    			jsIncrement(answer, client.manager_id, "reiting_sum", cost/2);
+		    		}
+
+		    		if( (client.tst >= start_today_date_sql) && 
+		    			(client.tst <= today_date_sql) 
+		    			&& (client.out=='') ) {
+		    			jsIncrement(answer, client.manager_id, "tst_count");
+		    			var cost = jsFindCost(client, models);
+		    			jsIncrement(answer, client.manager_id, "tst_sum", cost);
+		    			jsIncrement(answer, client.manager_id, "tst_ids", ","+client.id);
+
+		    			jsIncrement(answer, client.manager_id, "reiting_sum", cost/5);
+		    		}
+
+		    		if( (client.vz >= start_today_date_sql) && 
+		    			(client.vz <= today_date_sql) 
+		    			&& (client.out=='') ) {
+		    			jsIncrement(answer, client.manager_id, "vz_count");
+		    			var cost = jsFindCost(client, models);
+		    			jsIncrement(answer, client.manager_id, "vz_sum", cost);
+		    			jsIncrement(answer, client.manager_id, "vz_ids", ","+client.id);
+
+		    			jsIncrement(answer, client.manager_id, "reiting_sum", cost/10);
+		    		}
+
+
+		    		if( (client.out >= start_today_date_sql) && 
+		    			(client.out <= today_date_sql) &&
+		    			(client.out!='') && (client.dg!='') ) {
+		    			jsIncrement(answer, client.manager_id, "rastorg_count");
+		    			var cost = jsFindCost(client, models);
+		    			jsIncrement(answer, client.manager_id, "rastorg_sum", cost);
+		    			jsIncrement(answer, client.manager_id, "rastorg_ids", ","+client.id);
+		    			jsIncrement(answer, client.manager_id, "reiting_sum", -cost/2);
+		    		}
+
+		    		if( (client.na_date=='') && (client.out=='') ) {
+		    			console.info("na", client);
+		    			jsIncrement(answer, client.manager_id, "no_na_count");
+		    			var cost = jsFindCost(client, models);
+		    			jsIncrement(answer, client.manager_id, "no_na_sum", cost);
+		    			jsIncrement(answer, client.manager_id, "no_na_ids", ","+client.id);
+		    			jsIncrement(answer, client.manager_id, "reiting_sum", -cost/5);
+		    		}
+
+
+		    	});
+
+		    	response.send(answer);
+		    });	
+		});
+    });
+	
+}
+
+
+
 
 exports.jsGetManagerCupAdmin = function(request, response) {
 
@@ -2236,6 +2391,7 @@ app.get('/api/v1/stat/cup/cars', database.loadStatCupCars );
 
 app.get('/api/v1/stat/admin_cup/managers', database.jsGetManagerCupAdmin );
 
+app.get('/api/v1/stat/reiting', database.jsGetReiting );
 
 app.get('/api/v1/stat/cup/day', database.loadStatDay );
 app.get('/api/v1/stat/cup/all_day', database.loadStatAllDay );
