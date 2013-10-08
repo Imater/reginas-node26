@@ -4,6 +4,11 @@ myApp.controller('loginCtrl', function ($scope, $resource, $rootScope, $location
 
  var user_last_email = localStorage.getItem("user_last_email");
 
+
+ if($routeSegment.startsWith('user')) {
+  localStorage.removeItem("oauth2");
+ }
+
  $scope.reg_user = {
  	email: user_last_email?user_last_email:"",
  	email_ok: false,
