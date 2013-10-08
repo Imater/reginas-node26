@@ -1,6 +1,6 @@
 //#fpk/stat
 
-myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment) {
+myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment, $timeout) {
 
  	$scope.fpk.leftmenu = { active:8,
                 items : [
@@ -20,6 +20,8 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 	$scope.getCUPtable = function() {
 	 myApi.getCUP($scope).then(function(cup){
 	    $scope.cup = cup.brands;
+        var time_split = toMysql( (new Date) ).split(" ")[1].split(":");
+	    $scope.fpk.stat_load_time = time_split[0]+":"+time_split[1];
 	 });
 	};
 	$scope.getCUPtable();	

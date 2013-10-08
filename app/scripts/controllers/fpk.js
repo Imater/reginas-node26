@@ -428,6 +428,17 @@ myApp.filter('jsFilterClients', function() {
 });
 
 
+myApp.filter('nicetime', function() {
+    return function(the_date) {
+      if(the_date) {
+        var ds = the_date.split(" ")[1].split(":");
+        return ds[0]+":"+ds[1];  
+      }
+      
+    }
+});
+
+
 
 myApp.filter('nicedate', function() {
     return function(the_date) {
@@ -843,7 +854,37 @@ myApp.factory('myApi', function($http, $q, oAuth2){
       return dfd.promise;      
 
       
-    },    
+    },  
+    addAdmin: function($scope, manager_id, do_type) {
+      var dfd = $q.defer();
+
+      oAuth2.jsGetToken($scope).done(function(token){
+
+        $http({url:'/api/v1/admin',method: "POST", isArray: true, params: { token: token, do_type: do_type, brand: $scope.fpk.brand, manager_id: manager_id, manager: $scope.fpk.manager_filter, today: $scope.fpk.today_date }}).then(function(result){
+            console.info("DO NEW: ",result.data);
+          dfd.resolve(result.data);
+        });
+      });
+
+      return dfd.promise;      
+
+      
+    },
+    saveAdmin: function($scope, changes) {
+      var dfd = $q.defer();
+
+      oAuth2.jsGetToken($scope).done(function(token){
+
+        $http({url:'/api/v1/admin/'+changes.id,method: "PUT", isArray: true, data: {changes: changes}, params: { token: token, brand: $scope.fpk.brand }}).then(function(result){
+            console.info("ADMIN SAVED: ",result.data);
+          dfd.resolve(result.data);
+        });
+      });
+
+      return dfd.promise;      
+
+      
+    },        
     deleteClient: function($scope, client_id) {
       var dfd = $q.defer();
 
@@ -851,6 +892,21 @@ myApp.factory('myApi', function($http, $q, oAuth2){
 
         $http({url:'/api/v1/client/'+client_id,method: "DELETE", isArray: true, params: { token: token, client_id: client_id }}).then(function(result){
             console.info("CLIENT DELETE: ",result.data);
+            dfd.resolve(result.data);
+        });
+      });
+
+      return dfd.promise;      
+
+      
+    },
+    deleteAdmin: function($scope, mydo_id) {
+      var dfd = $q.defer();
+
+      oAuth2.jsGetToken($scope).done(function(token){
+
+        $http({url:'/api/v1/admin/'+mydo_id,method: "DELETE", isArray: true, params: { token: token, mydo_id: mydo_id }}).then(function(result){
+            console.info("ADMIN DELETE: ",result.data);
             dfd.resolve(result.data);
         });
       });
@@ -1061,8 +1117,6 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
         myApi.getStat($scope).then(function(result){
             $scope.fpk.stat = result.left_stat;
             $scope.fpk.cup_sms = result.sms;
-            var time_split = toMysql( (new Date) ).split(" ")[1].split(":");
-            $scope.fpk.stat_load_time = time_split[0]+":"+time_split[1];
         });    
     }
   }

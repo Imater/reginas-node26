@@ -1,8 +1,10 @@
 <div class="scrollable_div">
+	<a class="pull-right" ng-click="jsLoadAdmin();">Обновить</a>
 	<h3>Учёт трафика</h3>
 	<div class="admin_cup">
 		<ul class="admin_ul">
-			<li ng-repeat="a in admin">
+		  <div ng-repeat="a in admin">
+			<li ng-click="a._visible=!a._visible">
 				<div class="admin_col">
 					<span class="manager_fio">
 						<i class="icon-user"></i>
@@ -10,27 +12,38 @@
 					</span>
 				</div>
 				
-				<div class="admin_col" ng-click="jsAddAdminDo()">
+				<div class="admin_col" ng-click="jsAddAdminDo(a.manager_id, 'zv');$event.stopPropagation();">
 					<img src="images/do_type/1zvonok.png">
 					<span class="round">
 					 	{{a.zv_admin}}&nbsp;{{jsSign(a.zv_admin, a.zv_manager)}}&nbsp;{{a.zv_manager}}
 					</span>
 				</div>
 
-				<div class="admin_col">
+				<div class="admin_col" ng-click="jsAddAdminDo(a.manager_id, 'vz');$event.stopPropagation();">
 					<img src="images/do_type/1vizit.png">
 					<span class="round">
 					 	{{a.vz_admin}} {{jsSign(a.vz_admin, a.vz_manager)}} {{a.vz_manager}}
 					</span>
 				</div>
 
-				<div class="admin_col">
+				<div class="admin_col" ng-click="jsAddAdminDo(a.manager_id, 'tst');$event.stopPropagation();">
 					<img src="images/do_type/1test-drive.png">
 					<span class="round">
 					 	{{a.tst_admin}} {{jsSign(a.tst_admin, a.tst_manager)}} {{a.tst_manager}}
 					</span>
 				</div>
 			</li>
+			<div class="admin_content" ng-if="a._visible">
+				<ol>
+					<li ng-repeat="mydo in a.mydo" ng-click="jsEditAdminDo(mydo)" ng-class="{active:( (mydo.id == edit_mydo.id) && (cup_new_show) )}">
+						В <b>{{mydo.date1 | nicetime}}</b> был <b>{{jsDoTypeText(mydo.type)}}</b> по модели 
+						<b>{{(mydo.model==-1)?"неизвестно":fpk.models[mydo.model].model}}</b>.
+						Источник рекламы: <b>{{fpk.jsFindInArray(fpk.commercials,"id",mydo.commercial).title}}</b><span ng-if="mydo.fio">. Клиент: <b>{{mydo.fio}}</b></span>
+						<a class="pull-right"><i class="icon-edit"></i></a>
+					</li>
+				</ol>
+			</div>
+		  </div>
 		</ul>
 	</div>
 </div>
@@ -40,22 +53,22 @@
 	<div class="admin_cup_new" ng-if="cup_new_show">
 	  <div class="row">
 	  	<div class="col-md-12">
-	  		<button class="btn btn-success btn-sm">Сохранить</button>
+	  		<button class="btn btn-success btn-sm" ng-click="jsSaveAdmin(edit_mydo)">Сохранить</button>
 
             <div class="btn-group">
               <button type="button" class="btn btn-default btn-sm dropdown-toggle pull-center" data-toggle="dropdown">
-                Тип дела: <b>Визит</b> <span class="caret"></span>
+                Тип дела: <b>{{jsDoTypeText(edit_mydo.type)}}</b> <span class="caret"></span>
               </button>
               <ul class="dropdown-menu pull-right" role="menu">
-              	<li><a>Визит</a></li>
-              	<li><a>Звонок</a></li>
-              	<li><a>Тест-драйв</a></li>
+              	<li ng-click="edit_mydo.type='zv'"><a>Звонок</a></li>
+              	<li ng-click="edit_mydo.type='vz'"><a>Визит</a></li>
+              	<li ng-click="edit_mydo.type='tst'"><a>Тест-драйв</a></li>
               </ul>
             </div>
 
 
 	  		<a class="close_new pull-right" ng-click="jsCloseAdminDo()">Закрыть</a>
-	  		<a class="del_new pull-right">Удалить</a>
+	  		<a class="del_new pull-right" ng-click="jsDelAdmin(edit_mydo.id)">Удалить</a>
 
 	  	</div>
 	  </div>
@@ -64,7 +77,7 @@
 	  	<div class="col-md-8">
             <div class="input-group input-group-sm client_fio_input">
               <span class="input-group-addon" title="ФИО клиента">ФИО:</span>
-              <input ui-keypress="{enter: 'foo()'}" type="text" class="form-control" ng-model="client.fio"  placeholder="Самойлов Анатолий Петрович">
+              <input type="text" class="form-control" placeholder="Самойлов Анатолий Петрович" ng-model="edit_mydo.fio">
             </div>
 
 	  	</div>
@@ -72,14 +85,14 @@
 
             <div class="btn-group">
               <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                Менеджер: <b>Петров Иван{{jsFioShort(jsFindInArray(managers,"id",client.manager_id).fio)}}</b> <span class="caret"></span>
+                Менеджер: <b>{{fpk.jsFioShort(fpk.jsFindInArray(fpk.managers,"id",edit_mydo.manager_id).fio)}}</b> <span class="caret"></span>
               </button>
               <ul class="dropdown-menu pull-right" role="menu">
-                  <li ng-click="client.manager_id=manager.id" ng-repeat="manager in managers | onlyManager:true"><a><i class="icon-user"></i>{{manager.fio}}</a></li>
+                  <li ng-click="edit_mydo.manager_id=manager.id" ng-repeat="manager in fpk.managers | onlyManager:true"><a><i class="icon-user"></i>{{manager.fio}}</a></li>
 
                     <li class="dropdown-submenu"><a>Остальные</a>
                      <ul class="dropdown-menu">
-                      <li ng-click="client.manager_id=manager.id" ng-repeat="manager in managers | onlyManager:false"><a>{{manager.fio}}</a></li>
+                      <li ng-click="edit_mydo.manager_id=manager.id" ng-repeat="manager in fpk.managers | onlyManager:false"><a>{{manager.fio}}</a></li>
                      </ul>
                     </li>
 
@@ -95,16 +108,16 @@
 		<div class="col-md-5">
 		<h5>Модель:</h5>
 		<ol class="model_select">
-            <li><a>Неизвестно</a></li>
+            <li ng-click="edit_mydo.model = -1"><a>Неизвестно</a></li>
             
- 			<li ng-repeat="model in fpk.models_array_show" ng-click="client.model = model.id"><a>{{model.model}}</a></li>
+ 			<li ng-repeat="model in fpk.models_array_show" ng-click="edit_mydo.model = model.id" ng-class="{active:(edit_mydo.model==model.id)}"><a>{{model.model}}</a></li>
   		</ol>
   		</div>
 
 		<div class="col-md-7">
 		<h5>Откуда про нас узнали:</h5>
 		<ol class="commercial_select">
-            <li ng-click="client.commercial_id = comm.id" ng-repeat="comm in fpk.commercials"><a>{{comm.title}}</a></li>
+            <li ng-click="edit_mydo.commercial = comm.id" ng-class="{active:(edit_mydo.commercial==comm.id)}" ng-repeat="comm in fpk.commercials"><a>{{comm.title}}</a></li>
             <li ng-click="client.commercial_id=0"><a>Неизвестно</a></li>
   		</ol>
   		</div>

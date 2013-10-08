@@ -1023,14 +1023,20 @@ exports.jsGetManagerCupAdmin = function(request, response) {
 			if(cup_element) {
 				if(cup_element[ field_name ]=="") cup_element[ field_name ] = 0;
 				cup_element[ field_name ] += 1;
+				return true;
+			} else {
+				return false;
 			}
   	}
 
     pool.query('SELECT * FROM `1_users` WHERE brand = ? AND user_group IN (5,6) ORDER by id', [brand], function (err, users, fields) {
-	    pool.query('SELECT * FROM `1_doadmin` WHERE brand = ? AND date1 LIKE ? ORDER by id', [brand, today], function (err, do_admin, fields) {
+	    pool.query('SELECT * FROM `1_doadmin` WHERE brand = ? AND date1 LIKE ? ORDER by date1 DESC', [brand, today], function (err, do_admin, fields) {
 		    pool.query('SELECT * FROM `1_clients` WHERE brand = ? AND zv LIKE ? OR vz LIKE ? OR tst LIKE ?', [brand, today, today, today], function (err, clients, fields) {
 		    	do_admin = correct_dates(do_admin);
 		    	clients = correct_dates(clients);
+		    	users.push({id:-2, fio: "Не менеджер"});
+		    	users.push({id:-1, fio: "Неохваченный трафик"});
+		    	users.push({id:-3, fio: "Итого"});
 		    	var dfdArray = [];
 
 		    	$.each(users, function(i, user){ //делаем пустой ответ, потом будем увеличивать нули по мере прохождения
@@ -1045,22 +1051,51 @@ exports.jsGetManagerCupAdmin = function(request, response) {
 			            vz_manager: "",
 
 			            tst_admin: "",
-			            tst_manager: ""
+			            tst_manager: "",
+
+			            mydo: []
 			        } );
 		    	});
 		  		
-		    	$.each(do_admin, function(i, mydo){
-		    		console.info(mydo.type);
-		    		if(mydo.type=='zv') jsAdminIncrement(users, mydo.manager_id, "zv_admin");
-		    		if(mydo.type=='vz') jsAdminIncrement(users, mydo.manager_id, "vz_admin");
-		    		if(mydo.type=='tst') jsAdminIncrement(users, mydo.manager_id, "tst_admin");
+		    	$.each(do_admin, function(i, mydo){		    	
+		    		if(mydo.type=='zv') { 
+		    			jsAdminIncrement(users, mydo.manager_id, "zv_admin");
+		    			jsAdminIncrement(users, -3, "zv_admin");
+		    		}
+		    		if(mydo.type=='vz') {
+		    			jsAdminIncrement(users, mydo.manager_id, "vz_admin");
+		    			jsAdminIncrement(users, -3, "vz_admin");
+		    		}
+		    		if(mydo.type=='tst') {
+		    			jsAdminIncrement(users, mydo.manager_id, "tst_admin");
+		    			jsAdminIncrement(users, -3, "tst_admin");
+		    		}
+ 					var cup_element = _.find(admin, function(el){ return el.manager_id == mydo.manager_id; });
+ 					if(cup_element) cup_element.mydo.push( mydo );
+
 		    	});
 
 		    	$.each(clients, function(i, client){
-		    		console.info(client);
-		    		if( client.zv.indexOf(today_date)!=-1 ) jsAdminIncrement(users, client.manager_id, "zv_manager");
-		    		if( client.vz.indexOf(today_date)!=-1 ) jsAdminIncrement(users, client.manager_id, "vz_manager");
-		    		if( client.tst.indexOf(today_date)!=-1 ) jsAdminIncrement(users, client.manager_id, "tst_manager");
+		    		console.info(client.id);
+			    		if( client.zv.indexOf(today_date)!=-1 ) {
+			    			if(jsAdminIncrement(users, client.manager_id, "zv_manager")) {
+			    			   jsAdminIncrement(users, -3, "zv_manager");	
+			    			}
+			    			
+			    		}
+			    		if( client.vz.indexOf(today_date)!=-1 ) {
+			    			if( jsAdminIncrement(users, client.manager_id, "vz_manager") ) {
+			    				jsAdminIncrement(users, -3, "vz_manager");
+			    			}
+			    			
+			    		}
+			    		if( client.tst.indexOf(today_date)!=-1 ) {
+			    			if( jsAdminIncrement(users, client.manager_id, "tst_manager") ) {
+			    				jsAdminIncrement(users, -3, "tst_manager");	
+			    			}
+			    			
+			    			console.info(client.tst, client.manager_id);
+			    		}
 		    	});
 
 		    	response.send(admin);
@@ -1469,6 +1504,55 @@ exports.saveClient = function(request, response) {
 
 }
 
+exports.newAdmin = function(request, response) {
+	var manager_id = request.query.manager_id;
+	var do_type = request.query.do_type;
+	var brand = request.query.brand;
+	var today = request.query.today;
+
+	var today_datetime = today + " " + tomysql( new Date ).split(" ")[1];
+
+	console.info("!",manager_id, do_type);
+
+ jsCheckToken(request.query.token).done(function(user_id){
+
+ 	var changes = {
+ 		type: do_type,
+ 		manager_id: manager_id,
+ 		date1: today_datetime,
+ 		brand: brand
+
+ 	};
+
+	query = "INSERT INTO `1_doadmin` SET ?";
+
+    pool.query(query, changes, function (err, rows, fields) {
+    	var insert_id = rows.insertId;
+  		response.send({insertId: insert_id});
+  		console.info(err, rows);
+  	});
+
+  });
+
+}
+
+
+exports.saveAdmin = function(request, response) {
+	var changes = request.body.changes;
+	var mydo_id = changes.id;
+
+ jsCheckToken(request.query.token).done(function(user_id){
+
+	query = "UPDATE 1_doadmin SET ? WHERE id = '"+mydo_id+"'";
+
+    pool.query(query, changes, function (err, rows, fields) {
+  		response.send({affectedRows: rows.affectedRows});
+  //		stat_cache = {}; //обнуляем кеш
+  	});	
+  });
+
+}
+
 exports.newDo = function(request, response) {
 	var id = request.params.id;
 	var client_id = request.query.client_id;
@@ -1575,6 +1659,19 @@ exports.removeClient = function(request, response) {
 
 		  });
   	});	
+  });
+
+}
+
+exports.deleteAdmin = function(request, response) {
+
+ var brand_id = request.query.brand;
+ var mydo_id = request.query.mydo_id;
+
+ jsCheckToken(request.query.token).done(function(user_id){
+	  pool.query('DELETE FROM `1_doadmin` WHERE id = ?',[mydo_id], function (err, rows, fields) {
+	  	response.send({rows:rows, err: err});
+	  });
   });
 
 }
@@ -2407,6 +2504,11 @@ app.put('/api/v1/do/:id', database.saveDo );
 app.put('/api/v1/client/:id', database.saveClient );
 app.get('/api/v1/do', database.getDo );
 
+app.put('/api/v1/admin/:id', database.saveAdmin );
+app.post('/api/v1/admin', database.newAdmin );
+app.delete('/api/v1/admin/:id', database.deleteAdmin );
+
+
 app.get('/api/v1/do_by_type', database.findClientDoType );
 
 
@@ -2430,7 +2532,9 @@ app.delete('/api/v1/message/:id', database.findMessageById );
 
 
 app.configure(function() {
-    app.use(express.static(__dirname + '/../app'));
+	app.use(express.compress());
+    app.use( express.static(__dirname + '/../app/images', {maxAge: 31557600000}) );
+    app.use( express.static(__dirname + '/../app') );
 });
 
 
