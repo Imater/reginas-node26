@@ -23,6 +23,7 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
             .when('/fpk/admin_cup', 's1.admin_cup')
             .when('/fpk/news', 's1.news')
             .when('/fpk/calendar', 's1.calendar')
+            .when('/fpk/calendar/:type', 's1.calendar')
             .when('/fpk/settings', 's1.settings')
             .when('/fpk/settings/models', 's1.settings.models')
 
@@ -335,20 +336,9 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
             $.each(data.brands, function(i, brand){
               answer2[brand.id] = brand;
             });
-            $.each(data.users_group, function(i, user_group){
-              answer3[user_group.id] = user_group;
-            });
             $scope.fpk.models_array = data.models;
             $scope.fpk.models = answer;
             $scope.fpk.brands = answer2;
-            $scope.fpk.users_group = answer3;
-            $scope.fpk.users_groups = data.users_group;
-
-              console.info("gr",$scope.fpk.users_groups, $scope.fpk.the_user);
-              $scope.fpk.the_user.rights = _.filter($scope.fpk.users_groups, function(user_group){
-                return user_group.id == $scope.fpk.the_user.user_group;
-              });
-
             dfd.resolve();
          }); //getModels
          return dfd.promise();
@@ -387,8 +377,22 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
           //user.users; //список всех менеджеров
           $scope.fpk.credit_managers = _.filter(user.users, function(user){
             return (user.user_group == 7);
-          });
+          });          
           $scope.fpk.commercials = user.commercials;
+
+            var answer3 = {};
+            $.each(user.users_group, function(i, user_group){
+              answer3[user_group.id] = user_group;
+            });
+            $scope.fpk.users_group = answer3;
+            $scope.fpk.users_groups = user.users_group;
+
+              $scope.fpk.the_user.rights = _.filter($scope.fpk.users_groups, function(user_group){
+                return user_group.id == $scope.fpk.the_user.user_group;
+              });
+
+
+
           dfd.resolve();
           
           /////////////////////////////////////////////

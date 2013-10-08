@@ -3,13 +3,25 @@
 myApp.controller('calendarCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment) {
 
 
-$scope.fpk.leftmenu = { active:1,
+  $scope.fpk.leftmenu = { active:0,
                 items : [
-                  {id:0, title:"Календарь дел", group_by: "manager", href:"/fpk/calendar"}
+                  {id:0, title:"Календарь дел", group_by: "manager", href:"/fpk/calendar"},
+                  {id:1, title:"Календарь выдач", group_by: "manager", href:"/fpk/calendar/vd"}
                   ]
                 };
 
+  if(window.location.hash.indexOf("/vd")!=-1) {
+    var calendar_do_type = "vd";
+    $scope.fpk.leftmenu.active = 1;
+  }
 
+  $scope.$watch("fpk.leftmenu.active", function(Val, newVal){
+    if(Val != newVal) {
+        $("#myfullcalendar").fullCalendar("refetchEvents");
+    }
+  });
+
+  $scope.$routeSegment = $routeSegment;
 
 	setTimeout(function(){
 		onResize();
@@ -81,8 +93,16 @@ $scope.fpk.leftmenu = { active:1,
      var caldata = [];
      start = toMysql(start);
      end = toMysql(end);
+     var calendar_do_type = "all";
 
-     myApi.getDoCalendar($scope, start, end).then(function(events){
+     if(window.location.hash.indexOf("/vd")!=-1) {
+      var calendar_do_type = "vd";
+     }
+     if(window.location.hash.indexOf("/tst")!=-1) {
+      var calendar_do_type = "tst";
+     }
+
+     myApi.getDoCalendar($scope, start, end, calendar_do_type).then(function(events){
 	     
 	     $.each(events, function(i,el) {
 	        if( ((el.date2!="0000-00-00 00:00:00") || (el.date2!="0000-00-00 00:00:00") ) && (el.checked=="0000-00-00 00:00:00") &&

@@ -753,14 +753,14 @@ myApp.factory('myApi', function($http, $q, oAuth2){
       return dfd.promise;      
 
     },
-    getDoCalendar: function($scope, start_date, end_date) {
+    getDoCalendar: function($scope, start_date, end_date, calendar_do_type) {
       var dfd = $q.defer();
 
       oAuth2.jsGetToken($scope).done(function(token){
 
         var filters = $scope.fpk.leftmenu;
 
-        $http({url:'/api/v1/calendar',method: "GET", isArray: true, params: { token: token, start_date: start_date, end_date: end_date, brand: $scope.fpk.brand, manager: $scope.fpk.manager_filter }}).then(function(result){
+        $http({url:'/api/v1/calendar',method: "GET", isArray: true, params: { token: token, start_date: start_date, end_date: end_date, brand: $scope.fpk.brand, manager: $scope.fpk.manager_filter, calendar_do_type: calendar_do_type }}).then(function(result){
           console.info(result);
           dfd.resolve(result.data);
         });

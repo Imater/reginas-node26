@@ -254,10 +254,21 @@ exports.findCalendar = function(request,response) {
 	var brand = request.query.brand;
 	var manager_id = request.query.manager;
 
-	var insert_sql = "";
-	if(manager_id>0) insert_sql = "1_do.manager_id = '"+manager_id+"' AND ";
+	var calendar_do_type = request.query.calendar_do_type;
+
+	var insert_sql = " true AND ";
+	if(manager_id>0) insert_sql = "true AND 1_do.manager_id = '"+manager_id+"' AND ";
+
+	if(calendar_do_type == "vd") {
+		insert_sql += " 1_do.`type` = 'Выдача' AND ";
+	} else if(calendar_do_type == "tst") {
+		insert_sql += " 1_do.`type` = 'Тест-драйв' AND ";
+	}
+
+	console.info("insert_sql",insert_sql);
 
     pool.query('SELECT 1_do.*, 1_clients.fio, 1_models.short, 1_users.fio man FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model LEFT JOIN 1_users ON 1_do.manager_id = 1_users.id WHERE '+insert_sql+' 1_do.brand = ? AND 1_do.date2>= ? AND 1_do.date2<= ? AND 1_do.checked = "0000-00-00 00:00:00"', [ brand, start_date, end_date] , function (err, rows, fields) {
+    		console.info(err);
     		rows = correct_dates(rows);
 		    response.send(rows);
   	});	
@@ -1837,7 +1848,10 @@ exports.loadUserInfo = function(request, response) {
 	pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone FROM `1_users` WHERE id = ? LIMIT 1',[user_id], function (err, user, fields) {		
 		pool.query('SELECT active, id, brand, email, fio, message_on, user_group FROM `1_users` ORDER BY brand, fio', function (err, users, fields) {
 			pool.query('SELECT * FROM `1_commercials`', function (err, commercials, fields) {
-				response.send({user: user, users: users, commercials: commercials});
+			    pool.query('SELECT * FROM `1_users_group`', function (err, users_group, fields) {
+		  			//response.send({models:models, brands: brands, users_group: users_group });
+					response.send({user: user, users: users, commercials: commercials, users_group: users_group});
+	  			});
 			});
 		});
 	});
