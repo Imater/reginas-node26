@@ -987,8 +987,8 @@ body {
     background: #b2ff3c;
     color: #000;
     border: 1px solid #c3cfb8; }
-  #myfullcalendar .event_past {
-    border: 1px solid #febcbe; }
+  #myfullcalendar .event_not_did.event_past {
+    border: 1px solid #fc7e85; }
   #myfullcalendar .event_selected {
     border-color: blue; }
 
