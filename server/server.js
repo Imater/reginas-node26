@@ -841,6 +841,65 @@ var jsLoadStatSMS = function(type, brand_id, today, result) {
 }
 
 
+exports.jsGetManagerCupAdmin = function(request, response) {
+
+	var brand = request.query.brand;
+	var today = request.query.today+"%";
+	var today_date = request.query.today;
+
+    var admin = [];
+
+  	function jsAdminIncrement(managers, manager_id, field_name) {
+			var cup_element = _.find(admin, function(el){ return el.manager_id == manager_id; });
+			if(cup_element) cup_element[ field_name ] += 1;
+  	}
+
+    pool.query('SELECT * FROM `1_users` WHERE brand = ? AND user_group IN (5,6) ORDER by id', [brand], function (err, users, fields) {
+	    pool.query('SELECT * FROM `1_doadmin` WHERE brand = ? AND date1 LIKE ? ORDER by id', [brand, today], function (err, do_admin, fields) {
+		    pool.query('SELECT * FROM `1_clients` WHERE brand = ? AND zv LIKE ? OR vz LIKE ? OR tst LIKE ?', [brand, today, today, today], function (err, clients, fields) {
+		    	do_admin = correct_dates(do_admin);
+		    	clients = correct_dates(clients);
+		    	var dfdArray = [];
+
+		    	$.each(users, function(i, user){ //делаем пустой ответ, потом будем увеличивать нули по мере прохождения
+		    		admin.push( {
+			            manager:user.fio,
+			            manager_id:user.id,
+
+			            zv_admin: "",
+			            zv_manager: "",
+
+			            vz_admin: "",
+			            vz_manager: "",
+
+			            tst_admin: "",
+			            tst_manager: ""
+			        } );
+		    	});
+		  		
+		    	$.each(do_admin, function(i, mydo){
+		    		console.info(mydo.type);
+		    		if(mydo.type=='zv') jsAdminIncrement(users, mydo.manager_id, "zv_admin");
+		    		if(mydo.type=='vz') jsAdminIncrement(users, mydo.manager_id, "vz_admin");
+		    		if(mydo.type=='tst') jsAdminIncrement(users, mydo.manager_id, "tst_admin");
+		    	});
+
+		    	$.each(clients, function(i, client){
+		    		console.info(client);
+		    		if( client.zv.indexOf(today_date)!=-1 ) jsAdminIncrement(users, client.manager_id, "zv_manager");
+		    		if( client.vz.indexOf(today_date)!=-1 ) jsAdminIncrement(users, client.manager_id, "vz_manager");
+		    		if( client.tst.indexOf(today_date)!=-1 ) jsAdminIncrement(users, client.manager_id, "tst_manager");
+		    	});
+
+		    	response.send(admin);
+		    });	
+	    });
+    });
+	
+}
+
+
+
 exports.loadStatDay = function(request, response) {
     var dfdArray = [];
     var answer = [];
@@ -2154,6 +2213,9 @@ app.get('/api/v1/stat', database.loadStat );
 app.get('/api/v1/stat/all', database.loadStatAll );
 app.get('/api/v1/stat/cup', database.loadStatCup );
 app.get('/api/v1/stat/cup/cars', database.loadStatCupCars );
+
+app.get('/api/v1/stat/admin_cup/managers', database.jsGetManagerCupAdmin );
+
 
 app.get('/api/v1/stat/cup/day', database.loadStatDay );
 app.get('/api/v1/stat/cup/all_day', database.loadStatAllDay );

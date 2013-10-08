@@ -2,32 +2,32 @@
 	<h3>Учёт трафика</h3>
 	<div class="admin_cup">
 		<ul class="admin_ul">
-			<li ng-repeat="manager in fpk.managers | onlyManager:true">
+			<li ng-repeat="a in admin">
 				<div class="admin_col">
 					<span class="manager_fio">
 						<i class="icon-user"></i>
-						{{fpk.jsFioShort(manager.fio,"name")}}
+						{{fpk.jsFioShort(a.manager, "name")}}
 					</span>
 				</div>
 				
 				<div class="admin_col" ng-click="jsAddAdminDo()">
 					<img src="images/do_type/1zvonok.png">
 					<span class="round">
-					 	{{23}} > {{5}}
+					 	{{a.zv_admin}}&nbsp;{{jsSign(a.zv_admin, a.zv_manager)}}&nbsp;{{a.zv_manager}}
 					</span>
 				</div>
 
 				<div class="admin_col">
 					<img src="images/do_type/1vizit.png">
 					<span class="round">
-					 	{{3}} < {{4}}
+					 	{{a.vz_admin}} {{jsSign(a.vz_admin, a.vz_manager)}} {{a.vz_manager}}
 					</span>
 				</div>
 
 				<div class="admin_col">
 					<img src="images/do_type/1test-drive.png">
 					<span class="round">
-					 	{{2}} > {{1}}
+					 	{{a.tst_admin}} {{jsSign(a.tst_admin, a.tst_manager)}} {{a.tst_manager}}
 					</span>
 				</div>
 			</li>
@@ -96,7 +96,7 @@
 		<h5>Модель:</h5>
 		<ol class="model_select">
             <li><a>Неизвестно</a></li>
- 			<li ng-repeat="model in models" ng-click="client.model = model.id"><a>{{model.model}}</a></li>
+ 			<li ng-repeat="model in fpk.models" ng-click="client.model = model.id"><a>{{model.model}}</a></li>
   		</ol>
   		</div>
 

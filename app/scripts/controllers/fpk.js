@@ -640,6 +640,15 @@ myApp.directive('onFinishRender', function ($timeout) {
 
 myApp.factory('myApi', function($http, $q, oAuth2){
   return {
+
+    jsGetManagerCupAdmin: function($scope, searchtext) {
+      var dfd = $q.defer();
+        $http({url:'/api/v1/stat/admin_cup/managers',method: "GET", params: { brand: $scope.fpk.brand, today: $scope.fpk.today_date}}).then(function(result){
+          dfd.resolve(result.data);
+        });
+
+      return dfd.promise;
+    },
     getAutocomplete: function($scope, searchtext) {
       var dfd = $q.defer();
         $http({url:'/api/v1/autocomplete',method: "GET", params: { brand: $scope.fpk.brand, searchtext: searchtext }}).then(function(result){
@@ -999,7 +1008,7 @@ myApp.directive('colorChange', function() {
 
       scope.$watch(attrs.colorChange, function(Val, newVal){
           if(Val != newVal) {
-            document.title = "* ФПК ("+user.user[0].fio.split(" ")[1]+" "+user.user[0].fio.split(" ")[0][0]+".) — Регинас";
+            document.title = "* ФПК ("+scope.fpk.the_user.fio.split(" ")[1]+" "+scope.fpk.the_user.fio.split(" ")[0][0]+".) — Регинас";
 
             if(element.hasClass("changed")) { 
               element.removeClass("changed"); 
@@ -1013,7 +1022,7 @@ myApp.directive('colorChange', function() {
             $('body').on("mousemove.my,click,touchdown", function(){
                 clearTimeout(tm_change);
                 tm_change = setTimeout(function(){
-                    document.title = "ФПК ("+user.user[0].fio.split(" ")[1]+" "+user.user[0].fio.split(" ")[0][0]+".) — Регинас";
+                    document.title = "ФПК ("+scope.fpk.the_user.fio.split(" ")[1]+" "+scope.fpk.the_user.fio.split(" ")[0][0]+".) — Регинас";
 
                     $('body').off(".my");
                     $(".changed").removeClass("changed");
