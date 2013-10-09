@@ -692,7 +692,7 @@ exports.findClientDoType = function(request, response) {
 	var type_do = request.query.type_do;
 
 	if(type_do == "vd_plan") {
-		var insert_sql = 'icon2 > 2 AND brand="'+brand_id+'" ORDER by `icon2` DESC';
+		var insert_sql = 'icon2 > 2 AND brand="'+brand_id+'" AND vd = "0000-00-00 00:00:00" ORDER by `icon2` DESC';
 	} else {
 		var insert_sql = '`'+type_do+'` LIKE "'+today+'%" AND brand="'+brand_id+'" ORDER by `'+type_do+'` DESC';
 	}
