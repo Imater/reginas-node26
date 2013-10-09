@@ -158,7 +158,7 @@ angular.module('fpkApp').factory('oAuth2', function($window){
                         localStorage.setItem( "oauth2", JSON.stringify(data) );
                         console.log("success");
                         dfd.resolve(data);
-                        $scope.init();
+                        $scope.fpk.init1();
 
 
                     },
