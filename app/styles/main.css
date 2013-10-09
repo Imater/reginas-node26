@@ -1818,3 +1818,16 @@ a {
     max-width: 20em;
     text-align: right;
     font-weight: bold; }
+
+.reiting_table {
+  background: #EEE;
+  font-size: 12px;
+  color: #000; }
+  .reiting_table td, .reiting_table th {
+    padding: 2px 15px;
+    text-align: center;
+    border: 1px solid #DDD; }
+  .reiting_table .narrow {
+    max-width: 7em; }
+  .reiting_table .manager {
+    white-space: nowrap; }

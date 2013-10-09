@@ -690,11 +690,22 @@ myApp.factory('myApi', function($http, $q, oAuth2){
 
       return dfd.promise;
     },
-    getClient: function($scope,filter) {
+    getClient: function($scope,filter, ids) {
       var dfd = $q.defer();
 
       oAuth2.jsGetToken($scope).done(function(token){
-        $http({url:'/api/v1/client',method: "GET", isArray: true, params: { token: token, filter:filter, manager: $scope.fpk.manager_filter}}).then(function(result){
+        $http({url:'/api/v1/client',method: "GET", isArray: true, params: { token: token, filter:filter, manager: $scope.fpk.manager_filter, ids: ids}}).then(function(result){
+          dfd.resolve(result.data);
+        });
+      });
+
+      return dfd.promise;      
+    },
+    getClientIds: function($scope, ids) {
+      var dfd = $q.defer();
+
+      oAuth2.jsGetToken($scope).done(function(token){
+        $http({url:'/api/v1/client_ids',method: "GET", isArray: true, params: { token: token, manager: $scope.fpk.manager_filter, ids: ids}}).then(function(result){
           dfd.resolve(result.data);
         });
       });
@@ -802,6 +813,25 @@ myApp.factory('myApi', function($http, $q, oAuth2){
 
         $http({url:'/api/v1/stat/cup/day',method: "GET", isArray: true, params: { token: token, today: $scope.fpk.today_date, brand: $scope.fpk.brand, manager: $scope.fpk.manager_filter }}).then(function(result){
             console.info("CLIENTS RECIVED: ",result.data);
+            dfd.resolve(result.data);
+        });
+      });
+
+      return dfd.promise;      
+
+      
+    },
+    getReiting: function($scope) {
+      var dfd = $q.defer();
+
+      var days = $scope.days;
+
+      var start_today = toMysql( new Date( (new Date( fromMysql($scope.fpk.today_date) )).getTime() - 24*60*60*1000*days ) );
+
+      oAuth2.jsGetToken($scope).done(function(token){
+
+        $http({url:'/api/v1/reiting',method: "GET", isArray: true, params: { token: token, start_today: start_today, today: $scope.fpk.today_date, brand: $scope.fpk.brand, manager: $scope.fpk.manager_filter }}).then(function(result){
+            console.info("REITING RECIVED: ",result.data);
             dfd.resolve(result.data);
         });
       });

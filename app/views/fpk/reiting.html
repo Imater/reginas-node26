@@ -1,0 +1,47 @@
+<div class="scrollable_div">
+
+	<ul class="nav nav-tabs">
+	  <li ng-class="{active:(days==1)}" ng-click="days=1"><a>1 день</a></li>
+	  <li ng-class="{active:(days==3)}" ng-click="days=3"><a>3 дня</a></li>
+	  <li ng-class="{active:(days==7)}" ng-click="days=7"><a>7 дней</a></li>
+	  <li ng-class="{active:(days==14)}" ng-click="days=14"><a>14 дней</a></li>
+	  <li ng-class="{active:(days==30)}" ng-click="days=30"><a>30 дней</a></li>
+	  <li ng-class="{active:(days==100)}" ng-click="days=100"><a>100 дней</a></li>
+	  <li ng-class="{active:(days==365)}" ng-click="days=365"><a>365 дней</a></li>
+	</ul>	
+
+	<h2>Рейтинг менеджеров за {{days}} дней</h2>
+
+	<table class="reiting_table">
+		<tr>
+			<th>Место</th>
+			<th class="narrow">% от лидера</th>
+			<th class="manager">Менеджер</th>
+			<th class="narrow">Выдачи</th>
+			<th class="narrow">Договора</th>
+			<th class="narrow">Тесты</th>
+			<th class="narrow">Визиты</th>
+			<th class="narrow">Расторг</th>
+			<th class="narrow">Нет след. действия</th>
+		</tr>
+		<tr ng-repeat="reit in reiting">
+			<td>{{$index+1}}</td>
+			<td>{{reit.reiting}}%</td>
+			<td>{{fpk.jsFioShort(reit.manager, "name")}}</td>
+			<td ng-click="jsShowClientIds(reit.vd_ids);">{{reit.vd_count}}</td>
+			<td ng-click="jsShowClientIds(reit.dg_ids);">{{reit.dg_count}}</td>
+			<td ng-click="jsShowClientIds(reit.tst_ids);">{{reit.tst_count}}</td>
+			<td ng-click="jsShowClientIds(reit.vz_ids);">{{reit.vz_count}}</td>
+			<td ng-click="jsShowClientIds(reit.rastorg_ids);">{{reit.rastorg_count}}</td>
+			<td ng-click="jsShowClientIds(reit.no_na_ids);">{{reit.no_na_count}}</td>
+		</tr>
+
+	</table>
+	<h5>Как считается рейтинг:</h5>
+	<blockquote><p>
+	выдачи + (договора)/2 + (тесты)/5 + (визиты)/10	— (расторжения)/3 — (нет следующих действий)/5</p>
+	<p>
+	Складываются стоимости автомобилей.
+	</p>
+	</blockquote>
+</div>

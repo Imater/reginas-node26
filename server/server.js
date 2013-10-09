@@ -540,6 +540,20 @@ function jsMakeClientFilter(filter, manager_id) {
 }
 
 
+exports.findAllClientsIds = function(request, response) {
+	var manager = request.query.manager;
+	var ids = request.query.ids;
+
+	var myquery = "SELECT * FROM 1_clients WHERE id IN ("+ids+")";
+    pool.query(myquery, function (err, rows, fields) {
+  		rows = correct_dates( rows );
+	  	response.send(rows);
+  	});	
+
+	console.info("IDS = ",ids);
+
+}
+
 exports.findAllClients = function(request, response) {
 
 	var filter = request.query.filter ? JSON.parse(request.query.filter):{};
@@ -867,7 +881,7 @@ exports.jsGetReiting = function(request, response) {
 
 	var today_date_sql = request.query.today+" "+current_time;
 
-	var start_today = request.query.end_today+"%";
+	var start_today = request.query.start_today+"%";
 	var start_today_date = request.query.start_today;
 
 	var start_today_date_sql = request.query.start_today+" "+current_time;
@@ -985,7 +999,7 @@ exports.jsGetReiting = function(request, response) {
 		    			var cost = jsFindCost(client, models);
 		    			jsIncrement(answer, client.manager_id, "rastorg_sum", cost);
 		    			jsIncrement(answer, client.manager_id, "rastorg_ids", ","+client.id);
-		    			jsIncrement(answer, client.manager_id, "reiting_sum", -cost/2);
+		    			jsIncrement(answer, client.manager_id, "reiting_sum", -cost/3);
 		    		}
 
 		    		if( (client.na_date=='') && (client.out=='') ) {
@@ -2519,6 +2533,8 @@ app.get('/api/v1/parseEmail', database.parseEmail)
 app.get('/api/v1/bigdata', database.loadAllBig)
 app.get('/api/v1/bigdata2', database.loadAllBig2)
 
+app.get('/api/v1/client_ids', database.findAllClientsIds );
+
 app.get('/api/v1/client', database.findAllClients );
 app.get('/api/v1/client/:id', database.findClient );
 app.post('/api/v1/client', database.addNewClient );
@@ -2548,7 +2564,7 @@ app.get('/api/v1/stat/cup/cars', database.loadStatCupCars );
 
 app.get('/api/v1/stat/admin_cup/managers', database.jsGetManagerCupAdmin );
 
-app.get('/api/v1/stat/reiting', database.jsGetReiting );
+app.get('/api/v1/reiting', database.jsGetReiting );
 
 app.get('/api/v1/stat/cup/day', database.loadStatDay );
 app.get('/api/v1/stat/cup/all_day', database.loadStatAllDay );
