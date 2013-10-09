@@ -26,14 +26,14 @@
 		</tr>
 		<tr ng-repeat="reit in reiting">
 			<td>{{$index+1}}</td>
-			<td>{{reit.reiting}}%</td>
+			<td title="{{reit.reiting_sum}}">{{reit.reiting}}%</td>
 			<td>{{fpk.jsFioShort(reit.manager, "name")}}</td>
-			<td ng-click="jsShowClientIds(reit.vd_ids);">{{reit.vd_count}}</td>
-			<td ng-click="jsShowClientIds(reit.dg_ids);">{{reit.dg_count}}</td>
-			<td ng-click="jsShowClientIds(reit.tst_ids);">{{reit.tst_count}}</td>
-			<td ng-click="jsShowClientIds(reit.vz_ids);">{{reit.vz_count}}</td>
-			<td ng-click="jsShowClientIds(reit.rastorg_ids);">{{reit.rastorg_count}}</td>
-			<td ng-click="jsShowClientIds(reit.no_na_ids);">{{reit.no_na_count}}</td>
+			<td ng-click="jsShowClientIds(reit.vd_ids);" title="{{reit.vd_sum}}">{{reit.vd_count}}</td>
+			<td ng-click="jsShowClientIds(reit.dg_ids);" title="{{reit.dg_sum}}">{{reit.dg_count}}</td>
+			<td ng-click="jsShowClientIds(reit.tst_ids);" title="{{reit.tst_sum}}">{{reit.tst_count}}</td>
+			<td ng-click="jsShowClientIds(reit.vz_ids);" title="{{reit.vz_sum}}">{{reit.vz_count}}</td>
+			<td ng-click="jsShowClientIds(reit.rastorg_ids);" title="{{reit.rastorg_sum}}">{{reit.rastorg_count}}</td>
+			<td ng-click="jsShowClientIds(reit.no_na_ids);" title="{{reit.no_na_sum}}">{{reit.no_na_count}}</td>
 		</tr>
 
 	</table>
