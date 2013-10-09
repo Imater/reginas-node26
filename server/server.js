@@ -894,6 +894,7 @@ exports.jsGetReiting = function(request, response) {
 		var cost = 600000;
 		if(client.cost>250000) {
 			cost = client.cost;
+			if(cost>1500000) cost = 1500000;
 		} else if (model && model.cost) {
 			cost = model.cost;
 		}
