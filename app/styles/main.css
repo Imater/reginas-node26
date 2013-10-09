@@ -976,17 +976,17 @@ body {
     background: #ffffde;
     color: #000;
     border: 1px solid #c8cc82; }
-  #myfullcalendar .event_did {
-    background: #ffffde;
-    color: #000;
-    border: 1px solid #c8cc82;
-    opacity: 0.5; }
-    #myfullcalendar .event_did .fc-event-title {
-      text-decoration: line-through !important; }
   #myfullcalendar .event_not_did_confirm {
     background: #b2ff3c;
     color: #000;
     border: 1px solid #c3cfb8; }
+  #myfullcalendar .event_did {
+    background: #ffffde !important;
+    color: #000 !important;
+    border: 1px solid #c8cc82 !important;
+    opacity: 0.5 !important; }
+    #myfullcalendar .event_did .fc-event-title {
+      text-decoration: line-through !important; }
   #myfullcalendar .event_not_did.event_past {
     border: 1px solid #fc7e85; }
   #myfullcalendar .event_selected {

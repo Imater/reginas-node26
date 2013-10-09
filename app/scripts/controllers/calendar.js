@@ -119,13 +119,14 @@ myApp.controller('calendarCtrl', function ($scope, $resource, $rootScope, $locat
             var manager = $scope.fpk.jsFindInArray($scope.fpk.managers,"id",el.manager_id)
             if(manager) manager = '['+$scope.fpk.jsFioShort(manager.fio)+']';
             var title = el.text + " ("+$scope.fpk.jsFioShort(el.fio, true) + " - " + el.short+" "+manager+ ")";
-            var do_class="event_did";
-            if( (el.checked=="0000-00-00 00:00:00") ) do_class = "event_not_did";
+            var do_class="event_not_did";
             if( (el.icon2>4) && (el.type == "Выдача") ) { 
               do_class = "event_not_did_confirm";
               title = "(Подтв.) "+title;
             }
             if( el.date2 < toMysql( (new Date ) ) ) do_class += " event_past";
+
+            if( (el.checked!="0000-00-00 00:00:00") ) do_class = "event_did";
 
 	            caldata.push(
 	               {title: title, 

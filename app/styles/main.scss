@@ -1318,19 +1318,19 @@ background-color: none !important;
         color: #000;
         border: 1px solid #c8cc82;
     }
-    .event_did {
-        background: #ffffde;
-        color: #000;
-        border: 1px solid #c8cc82;
-        opacity: 0.5;
-        .fc-event-title {
-            text-decoration: line-through !important;
-        }
-    }
     .event_not_did_confirm {
         background: #b2ff3c;
         color: #000;
         border: 1px solid #c3cfb8;
+    }
+    .event_did {
+        background: #ffffde !important;
+        color: #000  !important;
+        border: 1px solid #c8cc82  !important;
+        opacity: 0.5  !important;
+        .fc-event-title {
+            text-decoration: line-through !important;
+        }
     }
     .event_not_did.event_past {
         border: 1px solid #fc7e85;   
