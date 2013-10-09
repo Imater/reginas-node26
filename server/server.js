@@ -1060,15 +1060,15 @@ exports.jsGetManagerCupAdmin = function(request, response) {
 		    	$.each(do_admin, function(i, mydo){		    	
 		    		if(mydo.type=='zv') { 
 		    			jsAdminIncrement(users, mydo.manager_id, "zv_admin");
-		    			jsAdminIncrement(users, -3, "zv_admin");
+		    			if(mydo.manager_id > 0) jsAdminIncrement(users, -3, "zv_admin");
 		    		}
 		    		if(mydo.type=='vz') {
 		    			jsAdminIncrement(users, mydo.manager_id, "vz_admin");
-		    			jsAdminIncrement(users, -3, "vz_admin");
+		    			if(mydo.manager_id > 0) jsAdminIncrement(users, -3, "vz_admin");
 		    		}
 		    		if(mydo.type=='tst') {
 		    			jsAdminIncrement(users, mydo.manager_id, "tst_admin");
-		    			jsAdminIncrement(users, -3, "tst_admin");
+		    			if(mydo.manager_id > 0) jsAdminIncrement(users, -3, "tst_admin");
 		    		}
  					var cup_element = _.find(admin, function(el){ return el.manager_id == mydo.manager_id; });
  					if(cup_element) cup_element.mydo.push( mydo );
