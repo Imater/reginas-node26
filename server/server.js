@@ -544,7 +544,7 @@ exports.findAllClientsIds = function(request, response) {
 	var manager = request.query.manager;
 	var ids = request.query.ids;
 
-	var myquery = "SELECT * FROM 1_clients WHERE id IN ("+ids+")";
+	var myquery = "SELECT * FROM 1_clients WHERE id IN ("+ids+") ORDER by model";
     pool.query(myquery, function (err, rows, fields) {
   		rows = correct_dates( rows );
 	  	response.send(rows);
