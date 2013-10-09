@@ -88,7 +88,7 @@ myApp.controller('loginCtrl', function ($scope, $resource, $rootScope, $location
       	localStorage.setItem("user_last_email",$scope.reg_user.email);
         //$scope.fpk.jsRefreshUserInfo();
         //$scope.init_first();
-        $scope.init().done(function(){
+        $scope.fpk.init1().done(function(){
           window.location.hash = "#/fpk/clients";  
         });
         
