@@ -2188,12 +2188,35 @@ a {
     }
 }
 
+.model_trafic {
+    background: #EEE;
+    font-size: 12px;
+    color: #000;
+    b {
+        background: #FFF;
+        color: #000;
+        padding: 1px 15px;
+        border-radius: 5px;
+    }
+    td,th {
+        text-align: center;
+        border: 1px solid #CCC;
+    }
+    .model {
+        text-align: right;   
+        min-width: 8em;
+        font-weight: bold;
+    }
+    .manager {
+        background: #DDD;
+    }
+}
 
 .admin_cup {
     ul.admin_ul {
         list-style: none;
         padding: 0px;
-        padding-bottom: 600px;
+        padding-bottom: 20px;
         li {
             min-height: 36px;
             background: #EEE;

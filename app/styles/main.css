@@ -1663,10 +1663,29 @@ a {
   .stat_table .do_type_div:hover {
     background: #DDD; }
 
+.model_trafic {
+  background: #EEE;
+  font-size: 12px;
+  color: #000; }
+  .model_trafic b {
+    background: #FFF;
+    color: #000;
+    padding: 1px 15px;
+    border-radius: 5px; }
+  .model_trafic td, .model_trafic th {
+    text-align: center;
+    border: 1px solid #CCC; }
+  .model_trafic .model {
+    text-align: right;
+    min-width: 8em;
+    font-weight: bold; }
+  .model_trafic .manager {
+    background: #DDD; }
+
 .admin_cup ul.admin_ul {
   list-style: none;
   padding: 0px;
-  padding-bottom: 600px; }
+  padding-bottom: 20px; }
   .admin_cup ul.admin_ul li {
     min-height: 36px;
     background: #EEE;

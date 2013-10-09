@@ -33,7 +33,9 @@ myApp.controller('adminCtrl', function ($scope, $resource, $rootScope, $location
         $scope.fpk.models_array_show = _.filter($scope.fpk.models_array, function(el){ return ( (el.brand == $scope.fpk.brand) && (el.show == 1)); });
 
         myApi.jsGetManagerCupAdmin($scope).then(function(admin){
-            $scope.admin = admin;
+            $scope.admin = admin.admin;
+            $scope.admin_models = admin.admin_models;
+            //alert(admin.admin_models.length);
             dfd.resolve();
         })        
         return dfd.promise();
