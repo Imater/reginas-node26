@@ -9,6 +9,8 @@ myApp.controller('adminCtrl', function ($scope, $resource, $rootScope, $location
 
                 };
 
+    $scope.fpk.init1();
+
 
     $scope.jsDoTypeText = function(type) {
         if(type == "zv") return "Звонок";

@@ -415,7 +415,7 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
     return dfd.promise();
     }
 
-    $scope.init = function() {
+    $scope.fpk.init1 = function() {
         var dfd = $.Deferred();
         $scope.fpk.init = $scope.init_first();    
         $scope.fpk.init.done(function(){
@@ -428,7 +428,7 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
         return dfd.promise();
     }
 
-    $scope.init();
+    $scope.fpk.init1();
     
 
 
