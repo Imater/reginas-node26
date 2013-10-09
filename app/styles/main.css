@@ -1828,6 +1828,7 @@ a {
     text-align: center;
     border: 1px solid #DDD; }
   .reiting_table .narrow {
-    max-width: 7em; }
+    max-width: 7em;
+    cursor: pointer; }
   .reiting_table .manager {
     white-space: nowrap; }
