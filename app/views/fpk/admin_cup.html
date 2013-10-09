@@ -69,6 +69,29 @@
 		</tr>
 	</table>
 
+	<h3>Итоговый трафик по источникам рекламы</h3>
+
+	<table class="model_trafic">
+		<tr>
+			<th>Источник</th>
+			<th>Звонков (администратор)</th>
+			<th>Визитов (администратор)</th>
+			<th>Тестов (администратор)</th>
+			<th class="manager">Звонков (менеджер)</th>
+			<th class="manager">Визитов (менеджер)</th>
+			<th class="manager">Тестов (менеджер)</th>
+		</tr>
+		<tr ng-repeat="model in admin_commercials">
+			<td class="model">{{model.commercial}}</td>
+			<td>{{model.zv}}</td>
+			<td>{{model.vz}}</td>
+			<td>{{model.tst}}</td>
+			<td class="manager">{{model.zv_manager}}</td>
+			<td class="manager">{{model.vz_manager}}</td>
+			<td class="manager">{{model.tst_manager}}</td>
+		</tr>
+	</table>
+
 
 </div>
 

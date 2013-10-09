@@ -1678,7 +1678,8 @@ a {
   .model_trafic .model {
     text-align: right;
     min-width: 8em;
-    font-weight: bold; }
+    font-weight: bold;
+    max-width: 25em; }
   .model_trafic .manager {
     background: #DDD; }
 

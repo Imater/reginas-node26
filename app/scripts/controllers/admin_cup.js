@@ -35,6 +35,7 @@ myApp.controller('adminCtrl', function ($scope, $resource, $rootScope, $location
         myApi.jsGetManagerCupAdmin($scope).then(function(admin){
             $scope.admin = admin.admin;
             $scope.admin_models = admin.admin_models;
+            $scope.admin_commercials = admin.admin_commercials;
             //alert(admin.admin_models.length);
             dfd.resolve();
         })        
