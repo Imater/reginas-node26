@@ -1996,12 +1996,6 @@ function jsUpdateClient(client_id) {
 					answer.na_type = mydo.type;
 				}
 
-  				if(mydo.type == "Трейд-ин") {
-  					if(mydo.checked=="") {
-  						answer.bu = mydo.date2;
-  					}
-  				}
-
   				if(mydo.type == "Визит") {
   					if(!first_action && mydo.checked!="") {
   						answer.vz = mydo.date2;
@@ -2052,6 +2046,7 @@ function jsUpdateClient(client_id) {
   						if(answer.out==NO_DATE) {
   							answer.out = mydo.date2;
   							answer.out_reason = mydo.text;
+  							answer.bu = "";
   						}
 	  					if(!first_action) {
 	  						answer.vz = mydo.date2;
@@ -2064,6 +2059,7 @@ function jsUpdateClient(client_id) {
   					if(mydo.checked!="") {
   						if(answer.vd==NO_DATE) {
   							answer.vd = mydo.date2;
+  							answer.bu = "";
   						}
 	  					if(!first_action) {
 	  						answer.vz = mydo.date2;
@@ -2071,6 +2067,13 @@ function jsUpdateClient(client_id) {
 	  					}
   					}
   				}
+
+  				if(mydo.type == "Трейд-ин") {
+  					if( (answer.vd == "0000-00-00 00:00:00") && (answer.out=="0000-00-00 00:00:00") ) {
+  						answer.bu = mydo.date2;
+  					}
+  				}
+
 
   			});
 
