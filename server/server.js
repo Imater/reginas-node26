@@ -1036,6 +1036,7 @@ exports.jsGetManagerCupAdmin = function(request, response) {
 		    	clients = correct_dates(clients);
 		    	users.push({id:-2, fio: "Не менеджер"});
 		    	users.push({id:-1, fio: "Неохваченный трафик"});
+		    	users.push({id:-4, fio: "Отказ_от_общения"});
 		    	users.push({id:-3, fio: "Итого"});
 		    	var dfdArray = [];
 

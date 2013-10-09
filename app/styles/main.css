@@ -1683,6 +1683,10 @@ a {
     .admin_cup ul.admin_ul li .admin_col {
       display: inline-block;
       min-width: 13em; }
+    .admin_cup ul.admin_ul li .bold {
+      font-weight: bold; }
+      .admin_cup ul.admin_ul li .bold .icon-user {
+        opacity: 0.1; }
     .admin_cup ul.admin_ul li img {
       height: 17px;
       margin-top: -4px; }

@@ -2212,6 +2212,12 @@ a {
                 display: inline-block;
                 min-width: 13em;
             }
+            .bold {
+                font-weight: bold;
+                .icon-user {
+                    opacity: 0.1;
+                }
+            }
             img {
                 height: 17px;
                 margin-top: -4px;
