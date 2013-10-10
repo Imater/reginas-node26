@@ -1212,12 +1212,24 @@ height: 100%;
 
 #cards_search {
     position: absolute;
-    top: 15px;
+    top: 11px;
     right: 0px;
     width: 20em;
     input {
         background: #FFF;
         border-right: none;
+    }
+}
+
+.group_tabs {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border-color: #888;
+    .active a {
+        background: #888 !important;
+        border-bottom: none !important;
+        color: #000 !important;
+        border-color: #888 !important;
     }
 }
 
@@ -1387,8 +1399,18 @@ background-color: none !important;
 
 .clients_list {
     margin: 0px;
-    padding-left: 35px;
+    padding-left: 20px;
     margin-right: 10px;
+    list-style: none;
+    h3 {
+        color: #888;
+        font-size: 22px;
+        margin-top: 30px;
+        cursor: default;
+    }
+    li:first-child > h3 {
+        margin-top: 0px;
+    }
     .client_card {
         cursor: pointer;
         color: rgba(0,0,0,0.5);
@@ -1622,14 +1644,31 @@ background-color: none !important;
 
 
     }
-    .client_card:first-child .client_container {
+    // h3+.client_container {
+    //     border-top-left-radius: 5px;
+    //     border-top-right-radius: 5px;
+    // }
+    h3~.client_container {
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
     }
+    .last_element .client_container{
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;        
+    }
+
+
     .client_card:last-child .client_container {
         border-bottom-left-radius: 5px;
         border-bottom-right-radius: 5px;
     }
+    // .client_card + .client_card .client_container{
+    //     border-top-left-radius: 0px;
+    //     border-top-right-radius: 0px;
+    //     border-bottom-left-radius: 0px !important;
+    //     border-bottom-right-radius: 0px !important;        
+    // }
+
 }
 
 
@@ -2123,24 +2162,29 @@ a {
     padding: 25px 5px;
     z-index: 5;
     overflow-y: scroll;
-    max-height: 600px;
+    max-height: 650px;
     overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
     z-index: 10000;
     ol {
         padding: 5px;
     }
     background: url('../images/backgrounds/textile3.jpg');
+    background-size: 100px;
     border: 1px dashed #888;
+    h3 {
+        color: #888;
+    }
     .close_one_client {
         position: absolute;
-        right: -3px;
+        right: 10px;
         top: 4px;
         cursor: pointer;
         font-size: 14px;
         color: #CCC;
         border-radius: 30px;
         height: 25px;
-        width: 25px;
+        //width: 25px;
     }
     .close_one_client:hover {
         color: #FFF;

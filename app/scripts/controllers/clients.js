@@ -1,6 +1,6 @@
 //#fpk/clients
 
-myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment) {
+myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment, $timeout) {
 
  $scope.$routeSegment = $routeSegment;
 
@@ -60,12 +60,11 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
             angular.forEach(result, function(value, key){
               if($scope.fpk.clients) $scope.fpk.clients.push( value );  
             });
-            $scope.fpk.clients_distincts = $scope.fpk.clientsToFilter( $scope.fpk.clients );
-            $scope.fpk.clients_by_distinct = $scope.fpk.clientsByDistinct( $scope.fpk.clients, $scope.fpk.clients_distincts );
-
-            
-
             $scope.fpk.clients_current_i += 1;
+            $timeout(function() {
+                //$(".assign-list").dataTable();
+                $scope.fpk.jsRoundCorner();
+            });
 
           });
    };
@@ -110,16 +109,15 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
     scope: {
       local_clients: "=myAttr",
       time_now: "=timeNow",
-      distinct: "=myDistinct",
+      distinct: "@myDistinct",
       clients_by_distinct: "=clientsByDistinct"
     },
     link: function ($scope, elm, attrs, clients) {
 
-
         $scope.fpk = $scope.$parent.fpk;
         $scope.$routeSegment = $routeSegment;
 
- //       $scope.time_now = fpkCtrl.get_time_now();
+//       $scope.time_now = fpkCtrl.get_time_now();
 
 /*        $scope.models = $scope.$parent.models;
         $scope.models_array = $scope.$parent.models_array;

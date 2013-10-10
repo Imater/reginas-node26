@@ -1134,7 +1134,7 @@ myApp.directive('colorChange', function() {
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
-var LIST_LENGTH = 100; //кол-во загружаемых клиентов за один раз
+var LIST_LENGTH = 200; //кол-во загружаемых клиентов за один раз
 
 
 myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment, $timeout) {
@@ -1209,7 +1209,16 @@ $scope.getSMS = function(sms) {
   var type_do = sms.type;
 
   myApi.getClientsByDoType($scope, type_do, today).then(function(answer){
-    console.info("clients", answer);
+    console.info("sns", sms);
+
+    if( ["dg","vd", "out", "zv", "vz", "tst"].indexOf(sms.type)!=-1 ) { 
+      answer = _.sortBy(answer, function(client){ return client.model });
+      $scope.fpk.clientsgroupby_one = "model";
+    } else if(sms.type=="vd_plan") { 
+      answer = _.sortBy(answer, function(client){ return -client.icon2 });
+      $scope.fpk.clientsgroupby_one = "icon2";
+    }
+
     $scope.fpk.one_client = answer;
     $scope.fpk.show_one_client = true;
   });
@@ -1336,9 +1345,11 @@ $scope.fpk.jsFioShort = function(fio, need_surname) {
 
 
 //фильтр для выбора уникальных групп менеджеров или дат
- $scope.fpk.jsGetDistinctTitle = function(distinct) {
-    var group_by = $scope.fpk.clientsgroupby;
-    var answer = distinct[group_by];
+ $scope.fpk.jsGetDistinctTitle = function(client, distinct) {
+//    var group_by = $scope.fpk.clientsgroupby;
+    var group_by = (distinct=="clients")?$scope.fpk.clientsgroupby:$scope.fpk.clientsgroupby_one;
+
+    var answer = client[group_by];
     if( (group_by == "vd") || (group_by == "out") ) {
       answer = answer.substr(0,7);
       var an = answer.split("-");
@@ -1350,14 +1361,18 @@ $scope.fpk.jsFioShort = function(fio, need_surname) {
         answer = "Модель не указана";
       }
     } else if (group_by == "manager_id") {
-      if(distinct.manager_id == -1) {
+      if(client.manager_id == -1) {
           answer = "Менеджер не указан";
         } else {
         answer = _.find($scope.fpk.all_managers, function(manager){
-          return manager.id == distinct.manager_id;
+          return manager.id == client.manager_id;
         });
-        if(answer) answer = answer.fio;
+        if(answer) answer = $scope.fpk.jsFioShort(answer.fio,"name");
       }
+    } else if (group_by == "icon2") {
+      answer = answer + " — вероятность выдачи в этом месяце";
+    } else if (group_by == "icon") {
+      answer = answer + " — желание клиента";
     }
     return answer;
  }        
@@ -1372,10 +1387,18 @@ $scope.fpk.jsFioShort = function(fio, need_surname) {
 
     myApi.getClient( $scope, $scope.fpk.clients_query ).then(function(result){
         $scope.fpk.clients = result;
-        $scope.fpk.clients_distincts = $scope.fpk.clientsToFilter( $scope.fpk.clients );
-        $scope.fpk.clients_by_distinct = $scope.fpk.clientsByDistinct( $scope.fpk.clients, $scope.fpk.clients_distincts );
+        //$scope.fpk.clients_distincts = $scope.fpk.clientsToFilter( $scope.fpk.clients );
+        //$scope.fpk.clients_by_distinct = $scope.fpk.clientsByDistinct( $scope.fpk.clients, $scope.fpk.clients_distincts );
+        $timeout(function() {
+            //$(".assign-list").dataTable();
+            $scope.fpk.jsRoundCorner();
+        });
     });
  }
+
+$scope.fpk.jsRoundCorner = function(){
+  $("h3").parent(".client_card").prev(".client_card").addClass("last_element");  
+}
 
 
  //клик в меню
@@ -1385,9 +1408,10 @@ $scope.fpk.jsFioShort = function(fio, need_surname) {
             window.location.hash = menu_item.href;
             return true;
           }
-          $scope.fpk.clientsgroupby = menu_item.group_by; 
           $scope.searchstring = "";
           $scope.fpk.leftmenu.current_filter = menu_item.filter;  
+          $scope.fpk.clients = [];
+          $scope.fpk.clientsgroupby = menu_item.group_by; 
           $scope.fpk.jsRefreshClients();
 
           $('#cards_scrollable').scrollTop(0);
@@ -1395,6 +1419,7 @@ $scope.fpk.jsFioShort = function(fio, need_surname) {
 
  
  $scope.jsSelectGroup = function(new_group) {
+  $scope.fpk.clients = [];
   $scope.fpk.clientsgroupby = new_group;
   $scope.fpk.jsRefreshClients();
  }
@@ -1407,6 +1432,7 @@ $scope.fpk.jsFioShort = function(fio, need_surname) {
             console.info("client = ", client);
             $scope.fpk.one_client = client;
             $scope.fpk.show_one_client = true;
+            $scope.fpk.clientsgroupby_one = "";
             $scope.fpk.one_client[0]._visible = true;
             $scope.fpk.one_client[0]._edit = true;
             setTimeout(function(){
@@ -1420,54 +1446,30 @@ $scope.fpk.jsFioShort = function(fio, need_surname) {
   });
  }
 
-  $scope.fpk.clientsByDistinct = function(clients, distincts) {
-    var answer = {};
-    var compare;
-    $.each(distincts, function(i, dist){
-      var index = dist[ $scope.fpk.clientsgroupby ];
-      if( ($scope.fpk.clientsgroupby == "vd") || ($scope.fpk.clientsgroupby == "out") ) index = dist[ $scope.fpk.clientsgroupby ].substr(0,7);
-
-      answer[ index ] = _.filter(clients, function(client){
-        if( ($scope.fpk.clientsgroupby == "vd") || ($scope.fpk.clientsgroupby == "out") ) {
-          compare = (client[ $scope.fpk.clientsgroupby ].substr(0,7) == dist[ $scope.fpk.clientsgroupby ].substr(0,7) );
-        } else {
-          compare = (client[ $scope.fpk.clientsgroupby ] == dist[ $scope.fpk.clientsgroupby ] );  
-        }
-        
-
-        return compare;
-      });
-    });
-
+  $scope.fpk.jsGroupName = function( group_name ){
+    var answer = group_name;
+    if(group_name=="manager_id") answer = "Менеджер";
+    if(group_name=="model") answer = "Модель";
+    if(group_name=="icon") answer = "Желание";
+    if(group_name=="icon2") answer = "Вероятность выдачи в этом месяце";
     return answer;
   }
 
-  var indexedTeams = [];       
-  $scope.fpk.clientsToFilter = function(clients) {
-        indexedTeams = [];
+  //функция группировки по выбранному полю
+  $scope.fpk.jsGroupExpression1 = function(clients, $index, distinct){
+    var group_name = (distinct=="clients")?$scope.fpk.clientsgroupby:$scope.fpk.clientsgroupby_one;
 
-        //console.info("make_group", $scope.fpk.clientsgroupby);
+    var now_field = clients[$index][group_name];
+    var old_field = clients[$index-1]?clients[$index-1][group_name]:"tram";
 
-        var answer = _.filter(clients, function(client){
-
-          if( ($scope.fpk.clientsgroupby == 'vd') || ($scope.fpk.clientsgroupby == 'out') ) {
-            if( indexedTeams.indexOf(client[ $scope.fpk.clientsgroupby ].substr(0,7))==-1) {
-              indexedTeams.push(client[ $scope.fpk.clientsgroupby ].substr(0,7));
-              return true;
-            }
-
-          } else {
-            if(indexedTeams.indexOf(client[$scope.fpk.clientsgroupby])==-1) {
-              indexedTeams.push(client[$scope.fpk.clientsgroupby]);
-              return true;
-            }
-
-          }
-
-
-        });
-        return answer;
-  }        
+    if( ["vd","out","dg"].indexOf(group_name) != -1 ) {
+      if( ( now_field.substr(0,7) != old_field.substr(0,7) ) ) return 10;
+    } else {
+      if ( now_field != old_field ) return 20;  
+    }
+    
+  }
+  
 
 
  //если таблица выдач, то порядок клиентов обратный

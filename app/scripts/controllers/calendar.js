@@ -7,7 +7,8 @@ myApp.controller('calendarCtrl', function ($scope, $resource, $rootScope, $locat
                 items : [
                   {id:10, title:"Календарь дел", group_by: "manager", href:"/fpk/calendar"},
                   {id:11, title:"Журнал выдач", group_by: "manager", href:"/fpk/calendar/vd"},
-                  {id:12, title:"Журнал тестов", group_by: "manager", href:"/fpk/calendar/tst"}
+                  {id:12, title:"Журнал тестов", group_by: "manager", href:"/fpk/calendar/tst"},
+                  {id:12, title:"Журнал кредитов", group_by: "manager", href:"/fpk/calendar/credit"}
                   ]
                 };
 
@@ -107,6 +108,9 @@ myApp.controller('calendarCtrl', function ($scope, $resource, $rootScope, $locat
      }
      if(window.location.hash.indexOf("/tst")!=-1) {
       var calendar_do_type = "tst";
+     }
+     if(window.location.hash.indexOf("/credit")!=-1) {
+      var calendar_do_type = "credit";
      }
 
      myApi.getDoCalendar($scope, start, end, calendar_do_type).then(function(events){

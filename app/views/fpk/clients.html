@@ -4,17 +4,30 @@
 
                 <div id="cards_header" >                  
                     <div class="btn-group col-sm-3" style="display:none">
-                        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                          Груп: {{clientsgroupby}}
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                          Группировка: {{fpk.jsGroupName(fpk.clientsgroupby)}}
                           <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
                           <li role="presentation" class="dropdown-header">Группировать:</li>                 
-                          <li ng-click="jsSelectGroup('manager');"><a href="#"><span class='hot_key'>alt + 1</span>по менеджеру</a></li>
+                          <li ng-click="jsSelectGroup('manager_id');"><a href="#"><span class='hot_key'>alt + 1</span>по менеджеру</a></li>
                           <li ng-click="jsSelectGroup('model');"><a href="#"><span class='hot_key'>alt + 2</span>по модели</a></li>
+                          <li ng-click="jsSelectGroup('icon');"><a href="#"><span class='hot_key'>alt + 3</span>по желанию клиента</a></li>
+                          <li ng-click="jsSelectGroup('icon2');"><a href="#"><span class='hot_key'>alt + 4</span>по вероятности выдачи в этом месяце</a></li>
                         </ul>
 
                     </div>
+
+
+                    <ul class="nav nav-tabs group_tabs">
+                      <li ng-class="{active:(fpk.clientsgroupby=='manager_id')}" ng-click="jsSelectGroup('manager_id');"><a>Менеджер</a></li>
+                      <li ng-class="{active:(fpk.clientsgroupby=='model')}" ng-click="jsSelectGroup('model');"><a>Модель</a></li>
+                      <li ng-class="{active:(fpk.clientsgroupby=='icon')}" ng-click="jsSelectGroup('icon');"><a>Желание</a></li>
+                      <li ng-class="{active:(fpk.clientsgroupby=='icon2')}" ng-click="jsSelectGroup('icon2');"><a>Вероятность выдачи</a></li>
+                      <li ng-if="fpk.clientsgroupby=='vd'" ng-class="{active:(fpk.clientsgroupby=='vd')}" ng-click="jsSelectGroup('vd');"><a>Месяц</a></li>
+                      <li ng-if="fpk.clientsgroupby=='out'" ng-class="{active:(fpk.clientsgroupby=='out')}" ng-click="jsSelectGroup('out');"><a>Месяц</a></li>
+                    </ul> 
+
 
                     <div class="btn-group col-sm-2" style="display:none">
                         <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
@@ -29,6 +42,10 @@
                           <li><a href="#">по дате создания</a></li>
                         </ul>
                     </div>
+
+
+
+
 
 
                     <div class="input-group col-sm-3" id="cards_search">
@@ -48,15 +65,17 @@
                 <div style="clear:both;"></div>
                 <!-- <button ng-click="myPagingFunction()">Load More...</button> -->
 
-              <ul class="group_title">
+                  <div client-list="fpk.clients" time-now="time_now" my-attr="fpk.clients" my-distinct="clients" clients-by-distinct="fpk.clients_by_distinct"></div>
+
+
+<!--               <ul class="group_title">
                 <li ng-repeat="distinct in fpk.clients_distincts"><h2>{{fpk.jsGetDistinctTitle(distinct)}}</h2>
 
-                  <div client-list="fpk.clients" time-now="time_now" my-attr="fpk.clients" my-distinct="distinct" clients-by-distinct="fpk.clients_by_distinct"></div>
                   
 
                 </li>
               </ul>
-
+ -->
                 </li>
               </ul>
 

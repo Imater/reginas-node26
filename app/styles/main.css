@@ -891,12 +891,22 @@ body {
 
 #cards_search {
   position: absolute;
-  top: 15px;
+  top: 11px;
   right: 0px;
   width: 20em; }
   #cards_search input {
     background: #FFF;
     border-right: none; }
+
+.group_tabs {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border-color: #888; }
+  .group_tabs .active a {
+    background: #888 !important;
+    border-bottom: none !important;
+    color: #000 !important;
+    border-color: #888 !important; }
 
 #cards_header .btn-group {
   margin-bottom: 5px; }
@@ -1030,8 +1040,16 @@ body {
 
 .clients_list {
   margin: 0px;
-  padding-left: 35px;
-  margin-right: 10px; }
+  padding-left: 20px;
+  margin-right: 10px;
+  list-style: none; }
+  .clients_list h3 {
+    color: #888;
+    font-size: 22px;
+    margin-top: 30px;
+    cursor: default; }
+  .clients_list li:first-child > h3 {
+    margin-top: 0px; }
   .clients_list .client_card {
     cursor: pointer;
     color: rgba(0, 0, 0, 0.5); }
@@ -1200,9 +1218,12 @@ body {
             .clients_list .client_card .client_inside ul li.client_do_li .do_edit .do_types_button img {
               width: 12px;
               margin-right: 10px; }
-  .clients_list .client_card:first-child .client_container {
+  .clients_list h3 ~ .client_container {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px; }
+  .clients_list .last_element .client_container {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px; }
   .clients_list .client_card:last-child .client_container {
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px; }
@@ -1612,23 +1633,26 @@ a {
   padding: 25px 5px;
   z-index: 5;
   overflow-y: scroll;
-  max-height: 600px;
+  max-height: 650px;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
   z-index: 10000;
   background: url("../images/backgrounds/textile3.jpg");
+  background-size: 100px;
   border: 1px dashed #888; }
   #new_client_div ol {
     padding: 5px; }
+  #new_client_div h3 {
+    color: #888; }
   #new_client_div .close_one_client {
     position: absolute;
-    right: -3px;
+    right: 10px;
     top: 4px;
     cursor: pointer;
     font-size: 14px;
     color: #CCC;
     border-radius: 30px;
-    height: 25px;
-    width: 25px; }
+    height: 25px; }
   #new_client_div .close_one_client:hover {
     color: #FFF; }
 

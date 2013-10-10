@@ -36,7 +36,7 @@
       <li><a href="#/fpk/reiting">Рейтинг менеджеров</a></li>
       <li><a href="#/fpk/settings/models">Настройки</a></li>
       <li class="dropdown">
-        <a  class="dropdown-toggle" data-toggle="dropdown">Фильтр: {{fpk.jsShowManagerFilter()}} <b class="caret"></b></a>
+        <a  class="dropdown-toggle" data-toggle="dropdown">Фильтр: {{fpk.jsFioShort(fpk.jsShowManagerFilter(),"name")}} <b class="caret"></b></a>
         <ul class="dropdown-menu">
           <li role="presentation" class="dropdown-header">Фильтровать по:</li>                   
           <li ng-click="jsSelectManager(-1)"><a><i class="icon-users"></i>Все менеджеры</a></li>
@@ -171,10 +171,10 @@
       <div class="" app-view-segment="1"></div>
 
       <div id="new_client_div" ng-if="fpk.show_one_client" resizablefull>
-          <div class="close_one_client" ng-click="jsCloseOneClient()"><i class="icon-cancel-1"></i></div>
+          <div class="close_one_client" ng-click="jsCloseOneClient()">закрыть <i class="icon-cancel-1"></i></div>
           <div class="one_client_container">
 
-            <div client-list="fpk.one_client" my-attr="fpk.one_client"></div>
+            <div client-list="fpk.one_client" my-attr="fpk.one_client" my-distinct="one_client"></div>
             
           </div>
       </div>

@@ -1,8 +1,10 @@
   <!-- {{jsGetDistinctTitle(distinct)}} -->
                 <!-- | filter:filterDistinct | orderBy:clientsgroupby:jsOrder(clientsgroupby) -->
 
-        <ol class="clients_list clearfix noselectable">
-                  <li ng-repeat="client in jsClientsInDistinct()" class="client_card" myid="{{client.id}}">
+        <ul class="clients_list clearfix noselectable" ng-init="first_num=0">
+
+                  <li ng-repeat="client in local_clients" class="client_card" myid="{{client.id}}">
+                  <h3 ng-if="fpk.jsGroupExpression1(local_clients, $index, distinct)">{{fpk.jsGetDistinctTitle(client, distinct)}}</h3>
 
                         <div class="client_container" ng-click="jsOpenClient(client);">
                            <div class="client_car" title="{{client.status}}" style="background:-webkit-gradient(linear, right top, left top, color-stop({{fpk.car_status[client.status].procent}}, #2b365a), color-stop({{fpk.car_status[client.status].procent}}, #516F8F)) !important;">
@@ -17,7 +19,9 @@
 
                            <div class="datemini" time-now="time_now" date-type="client" ng-model="client.na_date" title="{{client.na_date}}"></div> 
                            <div class="client_fio">{{client.fio}}</div> 
-                           <div class="client_manager" ng-if="$routeSegment.startsWith('s1.stat')">{{fpk.jsFioShort( fpk.jsFindInArray(fpk.all_managers,"id",client.manager_id).fio,"name")}}</div>
+
+                           <div class="client_manager" ng-if="(fpk.clientsgroupby!='manager_id'&&fpk.manager_filter==-1)||(distinct=='one_client')">{{fpk.jsFioShort( fpk.jsFindInArray(fpk.all_managers,"id",client.manager_id).fio,"name")}}</div>
+
                            <div ng-if="client.out_reason.length&&client.out_reason.length>9" class="out_reason">{{client.out_reason}}</div>
                         </div>      
                         <div ng-if="client._visible == true" class="client_inside selectable" jq-show-effect="client._visible == true" jq-options="{type:'slide', duration:200, delay:200, hideImmediately: true}" style="display:none;">
@@ -27,7 +31,7 @@
                               Вероятность выдачи в этом месяце: <img ng-click="jsPlanRotate(client,'icon2');$event.stopPropagation();" ng-src="images/progress/progres-{{client.icon2}}.gif">
                             </div>
                             <i class='icon-phone'></i>{{client.phone1}} {{client.phone11}}<span ng-if="client.phone2">, </span>{{client.phone2}} {{client.phone22}}<span ng-if="client.phone3">,</span> {{client.phone3}} {{client.phone33}} {{client.phone4}} {{client.phone44}}
-                            <span ng-if="client.adress"><br>{{client.adress}}</span>
+                            <span ng-if="client.adress" class="client_adress"><br>{{client.adress}}</span>
                             <span ng-if="client.cost"><br><i class='icon-dollar'></i>{{client.cost}} руб.</span>
                             <br>
                             <span ng-if="client.creditmanager">[оплата: <b>{{client.creditmanager}}</b>]<br></span>
@@ -397,5 +401,5 @@
                         </div>
 
 
-            </li>
-        </ol>
+                  </li>
+        </ul>

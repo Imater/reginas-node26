@@ -274,12 +274,12 @@ exports.findCalendar = function(request,response) {
 	} else if(calendar_do_type == "tst") {
 		insert_sql += " 1_do.`type` = 'Тест-драйв' AND ";
 		checked_sql = "";
+	} else if(calendar_do_type == "credit") {
+		insert_sql += " 1_do.`type` = 'Кредит' AND ";
+		checked_sql = "";
 	}
 
-	console.info("insert_sql",insert_sql);
-
     pool.query('SELECT 1_do.*, 1_clients.fio, 1_clients.icon2, 1_models.short, 1_users.fio man FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model LEFT JOIN 1_users ON 1_do.manager_id = 1_users.id WHERE '+insert_sql+' 1_do.brand = ? AND 1_do.date2>= ? AND 1_do.date2<= ? '+checked_sql, [ brand, start_date, end_date] , function (err, rows, fields) {
-    		console.info(rows, err);
     		rows = correct_dates(rows);
 		    response.send(rows);
   	});	
@@ -571,11 +571,16 @@ exports.findAllClients = function(request, response) {
 
 	f_filter = jsMakeClientFilter(filter, manager);
 
+	if(filter.group_by == "model") filter.group_by = "model` DESC, `manager_id";
+
+	if(filter.group_by == "icon") filter.group_by = "icon` DESC, `manager_id";
+
+	if(filter.group_by == "icon2") filter.group_by = "icon2` DESC, `model";
 
 	var f_limit = filter.limit ? ' LIMIT '+filter.limit.start+','+filter.limit.end : ' LIMIT 100';
 
 	var desc = "";
-	if( (filter.group_by == "vd") || (filter.group_by == "out") ) desc=" DESC";
+	if( ["vd","out","icon","icon2"].indexOf(filter.group_by)!=-1 ) desc=" DESC";
 
 	var f_order = filter.group_by ? ' ORDER BY `'+filter.group_by+'` '+desc+', `date` DESC' : '';
 
@@ -718,7 +723,7 @@ exports.findClientDoType = function(request, response) {
 	var type_do = request.query.type_do;
 
 	if(type_do == "vd_plan") {
-		var insert_sql = 'icon2 > 0 AND brand="'+brand_id+'" AND vd = "0000-00-00 00:00:00" ORDER by `icon2` DESC';
+		var insert_sql = 'icon2 > 0 AND brand="'+brand_id+'" AND vd = "0000-00-00 00:00:00" ORDER by `icon2` DESC, model';
 	} else {
 		var insert_sql = '`'+type_do+'` LIKE "'+today+'%" AND brand="'+brand_id+'" ORDER by `'+type_do+'` DESC';
 	}
@@ -1579,7 +1584,7 @@ exports.saveClient = function(request, response) {
 	var client_id = request.query.client_id;
 
  jsCheckToken(request.query.token).done(function(user_id){
-
+ 	changes.cost = changes.cost.replace(" ","").replace(" ","").replace(" ","");
 	query = "UPDATE 1_clients SET ? WHERE id = '"+client_id+"'";
 
     pool.query(query, changes, function (err, rows, fields) {
