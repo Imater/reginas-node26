@@ -1046,7 +1046,7 @@ body {
   .clients_list h3 {
     color: #888;
     font-size: 22px;
-    margin-top: 30px;
+    margin-top: 20px;
     cursor: default; }
   .clients_list li:first-child > h3 {
     margin-top: 0px; }

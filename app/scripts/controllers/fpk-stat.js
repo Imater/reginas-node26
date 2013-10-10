@@ -35,6 +35,7 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 		 	$scope.cup_selected = my_this;
 	 	}
 	    myApi.getCUPcars($scope, brand_id, do_type, today).then(function(cars){
+          $scope.fpk.clientsgroupby = "model";
 	      $scope.cup_clients = cars;
 	    });
 	 }

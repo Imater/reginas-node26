@@ -201,13 +201,11 @@ function jsCheckToken(token) {
 	var dfd = new $.Deferred();
 	console.info("check_token");
     pool.query('SELECT *, NOW() FROM `oauth_access_tokens` WHERE access_token = ? AND expires >= DATE_ADD(NOW(), INTERVAL 3 HOUR) ', [token] , function (err, rows, fields) {
-	    	console.info("Q!!!!!!!!!!!!!!!!!!!!!!!!:",err, rows);
 
 		    if(rows && rows[0] && rows[0].user_id) {
 		    	dfd.resolve( parseInt( rows[0].user_id ) );
 
 			    pool.query('UPDATE 1_users SET lastvizit = NOW() WHERE id= ? ', [rows[0].user_id] , function (err, rows, fields) {
-			    	console.info("Q:",err, rows);
 			    });
 
 		    } else {
@@ -1945,7 +1943,7 @@ exports.loadStatCupCars = function(request, response) {
 	var do_type = request.query.do_type;
 	var brand_id = request.query.brand;
 
-	var myorder = "manager_id, model";
+	var myorder = "model,manager_id";
 
 	var filter = " true ";
 
