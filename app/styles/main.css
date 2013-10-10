@@ -1282,6 +1282,10 @@ body {
     height: 2.3em;
     padding: 3px 10px;
     cursor: pointer; }
+  #statistics h3 {
+    font-size: 15px;
+    margin: 3px;
+    margin-top: 7px; }
   #statistics table {
     margin-top: 0px;
     width: 100%;
