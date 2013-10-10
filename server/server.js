@@ -199,9 +199,17 @@ app.get("/api/v1/user_:user_id/time_:lasttime/:action", function(request, respon
 
 function jsCheckToken(token) {
 	var dfd = new $.Deferred();
-    pool.query('SELECT *, NOW() FROM `oauth_access_tokens` WHERE access_token = ? AND expires>=NOW()', [token] , function (err, rows, fields) {
+	console.info("check_token");
+    pool.query('SELECT *, NOW() FROM `oauth_access_tokens` WHERE access_token = ? AND expires >= DATE_ADD(NOW(), INTERVAL 3 HOUR) ', [token] , function (err, rows, fields) {
+	    	console.info("Q!!!!!!!!!!!!!!!!!!!!!!!!:",err, rows);
+
 		    if(rows && rows[0] && rows[0].user_id) {
 		    	dfd.resolve( parseInt( rows[0].user_id ) );
+
+			    pool.query('UPDATE 1_users SET lastvizit = NOW() WHERE id= ? ', [rows[0].user_id] , function (err, rows, fields) {
+			    	console.info("Q:",err, rows);
+			    });
+
 		    } else {
 		    	dfd.fail("Token invalid");
 		    	console.info("Token invalid");
@@ -545,12 +553,14 @@ exports.findAllClientsIds = function(request, response) {
 	var ids = request.query.ids;
 
 	var myquery = "SELECT * FROM 1_clients WHERE id IN ("+ids+") ORDER by model";
-    pool.query(myquery, function (err, rows, fields) {
-  		rows = correct_dates( rows );
-	  	response.send(rows);
-  	});	
 
-	console.info("IDS = ",ids);
+	jsCheckToken(request.query.token).done(function(user_id){
+
+	    pool.query(myquery, function (err, rows, fields) {
+	  		rows = correct_dates( rows );
+		  	response.send(rows);
+	  	});	
+	});
 
 }
 
@@ -576,10 +586,12 @@ exports.findAllClients = function(request, response) {
 
 	console.info("query = ", myquery);
 
-    pool.query(myquery, function (err, rows, fields) {
-  		rows = correct_dates( rows );
-	  	response.send(rows);
-  	});	
+	jsCheckToken(request.query.token).done(function(user_id){
+	    pool.query(myquery, function (err, rows, fields) {
+	  		rows = correct_dates( rows );
+		  	response.send(rows);
+	  	});	
+	});
 
 }
 
@@ -706,7 +718,7 @@ exports.findClientDoType = function(request, response) {
 	var type_do = request.query.type_do;
 
 	if(type_do == "vd_plan") {
-		var insert_sql = 'icon2 > 2 AND brand="'+brand_id+'" AND vd = "0000-00-00 00:00:00" ORDER by `icon2` DESC';
+		var insert_sql = 'icon2 > 0 AND brand="'+brand_id+'" AND vd = "0000-00-00 00:00:00" ORDER by `icon2` DESC';
 	} else {
 		var insert_sql = '`'+type_do+'` LIKE "'+today+'%" AND brand="'+brand_id+'" ORDER by `'+type_do+'` DESC';
 	}
@@ -719,10 +731,12 @@ exports.findClientDoType = function(request, response) {
 
 	console.info("query = ", myquery);
 
-    pool.query(myquery, function (err, rows, fields) {
-  			rows = correct_dates( rows );
-	  		response.send(rows);
-  	});	
+	jsCheckToken(request.query.token).done(function(user_id){
+	    pool.query(myquery, function (err, rows, fields) {
+	  			rows = correct_dates( rows );
+		  		response.send(rows);
+	  	});	
+	});
 
 }
 
@@ -894,7 +908,7 @@ exports.jsGetReiting = function(request, response) {
 		var cost = 600000;
 		if(client.cost>250000) {
 			cost = client.cost;
-			if(cost>1500000) cost = 1500000;
+			if(cost>2500000) cost = 2500000;
 		} else if (model && model.cost) {
 			cost = model.cost;
 		}

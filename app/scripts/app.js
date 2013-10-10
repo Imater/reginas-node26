@@ -189,8 +189,6 @@ angular.module('fpkApp').factory('oAuth2', function($window){
                 data = JSON.parse(oauth2);
                 var dif = jsNow() - (data.start_time + data.expires_in*1000);
                 
-                console.info(dif);
-
                 //проверяем, просрочен ли Token
                 if( dif > -10000 || !dif ) { 
                     my_this.jsRefreshToken($scope).done(function(data){
@@ -214,8 +212,6 @@ angular.module('fpkApp').factory('oAuth2', function($window){
         },
         jsRefreshToken: function($scope){
             var dfd = $.Deferred();
-
-            console.info("Start_refresh_token new");
 
             var oauth2 = localStorage.getItem( "oauth2" );
 
@@ -291,8 +287,7 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
 
     myIntervalFunction();
 
-    $rootScope.online = "SEX";
-    console.info("SET")
+    $rootScope.online = "offline";
 
     $rootScope.jsGetOnline = function(){
         return $rootScope.online;

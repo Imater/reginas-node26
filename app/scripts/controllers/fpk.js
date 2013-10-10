@@ -374,7 +374,6 @@ myApp.factory('socket', function($rootScope, $timeout) {
 			});
       socket.on('connect', function(){
         if($rootScope.jsStartSync) $rootScope.jsStartSync();
-        console.info("Server connected.");
         $timeout(function(){
           $rootScope.jsSetOnline(true);  
         },1);
@@ -1152,9 +1151,6 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
   }
 
 
-console.info("root", $rootScope);
-
-
 if($scope.fpk.jsLoadStat) $scope.fpk.jsLoadStat();
 
 $scope.fpk.jsCanEditClient = function(client) {
@@ -1369,7 +1365,6 @@ $scope.fpk.jsFioShort = function(fio, need_surname) {
 
  $scope.fpk.jsRefreshClients = function() {
     if(!$scope.fpk.clientsgroupby) return true;
-    console.info("jsRefreshClients");
     $scope.fpk.clients_current_i = 1;
 
     var query = angular.extend( {brand:$scope.fpk.brand, limit: {start:0, end:LIST_LENGTH}}, $scope.fpk.leftmenu.current_filter);
@@ -1393,7 +1388,6 @@ $scope.fpk.jsFioShort = function(fio, need_surname) {
           $scope.fpk.clientsgroupby = menu_item.group_by; 
           $scope.searchstring = "";
           $scope.fpk.leftmenu.current_filter = menu_item.filter;  
-          console.info("SELECT LEFT MENU=", menu_item, $index);
           $scope.fpk.jsRefreshClients();
 
           $('#cards_scrollable').scrollTop(0);

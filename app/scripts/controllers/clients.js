@@ -2,9 +2,7 @@
 
 myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment) {
 
-    console.info("start clientsCtrl");
-
-    $scope.$routeSegment = $routeSegment;
+ $scope.$routeSegment = $routeSegment;
 
  $scope.fpk.today_date = toMysql( (new Date()) ).substr(0,10);
 
@@ -407,7 +405,6 @@ function DoCtrl($scope, myApi) { //контроллер дел
        }
      });
 
-     console.info("DIF = ", changes);
 
      if(changed) {
         console.info("cl_id=",$scope.client.id);
