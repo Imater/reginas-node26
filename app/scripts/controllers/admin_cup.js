@@ -9,7 +9,7 @@ myApp.controller('adminCtrl', function ($scope, $resource, $rootScope, $location
 
                 };
 
-    $scope.fpk.init1();
+    //$scope.fpk.init1();
 
 
     $scope.jsDoTypeText = function(type) {
