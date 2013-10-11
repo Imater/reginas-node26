@@ -10,8 +10,11 @@ var md5 = require('MD5');
 var stat_cache = {};
 var _ = require('underscore');
 
+var restApi = require("./rest-api.js");
+
 var Pool = require('mysql-simple-pool');
-var pool = new Pool(100, {
+
+global.pool = new Pool(100, {
   host     : '127.0.0.1',
   user     : 'root',
   password : 'See6thoh',
@@ -253,35 +256,7 @@ exports.findDoById = function(request,response) {
   	});	
 }
 
-exports.findCalendar = function(request,response) {
-	var user_id = request.query.user_id;
-	var start_date = request.query.start_date;
-	var end_date = request.query.end_date;
-	var brand = request.query.brand;
-	var manager_id = request.query.manager;
 
-	var calendar_do_type = request.query.calendar_do_type;
-	checked_sql = ' AND 1_do.checked = "0000-00-00 00:00:00" ';
-
-	var insert_sql = " true AND ";
-	if(manager_id>0) insert_sql = "true AND 1_do.manager_id = '"+manager_id+"' AND ";
-
-	if(calendar_do_type == "vd") {
-		insert_sql += " 1_do.`type` = 'Выдача' AND ";
-		checked_sql = "";
-	} else if(calendar_do_type == "tst") {
-		insert_sql += " 1_do.`type` = 'Тест-драйв' AND ";
-		checked_sql = "";
-	} else if(calendar_do_type == "credit") {
-		insert_sql += " 1_do.`type` = 'Кредит' AND ";
-		checked_sql = "";
-	}
-
-    pool.query('SELECT 1_do.*, 1_clients.fio, 1_clients.icon2, 1_models.short, 1_users.fio man FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model LEFT JOIN 1_users ON 1_do.manager_id = 1_users.id WHERE '+insert_sql+' 1_do.brand = ? AND 1_do.date2>= ? AND 1_do.date2<= ? '+checked_sql, [ brand, start_date, end_date] , function (err, rows, fields) {
-    		rows = correct_dates(rows);
-		    response.send(rows);
-  	});	
-}
 
 exports.getDo = function(request,response) {
 	var user_id = request.query.user_id;
@@ -495,7 +470,7 @@ exports.loadAllBig = function(request, response) {
   	});	
 }
 
-function correct_dates( rows, no_zero_dates ) {
+global.correct_dates = function( rows, no_zero_dates ) {
 	var fields = ['date', 'zv', 'vz', 'tst', 'dg', 'vd', 'out', 'checked', 'changed', 'created', 'date1', 'date2', 'hostcheck', 'remind', 'na_date'];
 
 	if(!rows) return rows;
@@ -2574,7 +2549,7 @@ app.delete('/api/v1/client/:id', database.removeClient );
 
 
 app.get('/api/v1/do/:id', database.findDoById );
-app.get('/api/v1/calendar', database.findCalendar );
+app.get('/api/v1/calendar', restApi.findCalendar );
 app.delete('/api/v1/do/:id', database.removeDo );
 
 app.get('/api/v1/stat_table', database.loadStatTable );
