@@ -1582,7 +1582,7 @@ exports.saveClient = function(request, response) {
 	var client_id = request.query.client_id;
 
  jsCheckToken(request.query.token).done(function(user_id){
- 	changes.cost = changes.cost.replace(" ","").replace(" ","").replace(" ","");
+ 	if(changes.cost) changes.cost = changes.cost.replace(" ","").replace(" ","").replace(" ","");
 	query = "UPDATE 1_clients SET ? WHERE id = '"+client_id+"'";
 
     pool.query(query, changes, function (err, rows, fields) {
