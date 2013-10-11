@@ -1185,7 +1185,7 @@ socket.on("loadstat", function(){
   $timeout(function(){    
     $scope.fpk.jsLoadStat();
     $rootScope.$broadcast("loadstat");
-  },30+parseInt(Math.random()*60));
+  },230+parseInt(Math.random()*60));
 });
 
 
