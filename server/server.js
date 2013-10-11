@@ -76,9 +76,9 @@ var the_socket;
 
 function Report(socket) {
 	//Обрабатываем данные синхронизации
-	this.loadstat = function(){
+	this.loadstat = function(user_id){
+	 	_sqllog({manager: user_id?user_id:"", text:"broadcast.emit( 'loadstat' )"});
 		socket.broadcast.emit( 'loadstat' );
-		console.info("push");
 	}
 	this.sync_answer = function(data, user_id) {
 		var dfdArray = [];
@@ -1743,7 +1743,7 @@ exports.removeClient = function(request, response) {
 		  	console.info({rows:rows, err: err});
 			stat_cache = {}; //обнуляем кеш
 			setTimeout(function(){
-					report.loadstat();
+					report.loadstat(user_id);
 			},30);
 
 		  });
@@ -2117,7 +2117,7 @@ function jsUpdateClient(client_id) {
     			console.info("client_id="+client_id+" OK: ", rows.affectedRows);
 				stat_cache = {}; //обнуляем кеш
 				setTimeout(function(){
-					report.loadstat();
+					report.loadstat("client_id = "+client_id);
 				},30);
 	  			
   			});	
@@ -2185,12 +2185,26 @@ exports.regNewUser = function(request, response) {
 
 }
 
+function _sqllog(params) {
+
+	params.date1 = params.date1?params.date1: tomysql( new Date );
+	params.ip = params.request?(params.request.connection.remoteAddress+ " : " +params.request.headers['user-agent']):"";
+	if(params.request) delete params.request;
+
+	pool.query('INSERT INTO `1_log` SET ?',[params], function (err, rows, fields) {
+		console.info(err, rows);
+	});	
+
+}
+
 exports.loadUserInfo = function(request, response) {
- 	console.info("USER_ID?:", request.query.token);
+
+
 	var brand = request.query.brand;
 	
 
  jsCheckToken(request.query.token).done(function(user_id){
+ 	_sqllog({manager: user_id, request: request, text:"Запрос информации loadUserInfo"});
  	console.info("USER_ID:", user_id);
 	pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone FROM `1_users` WHERE id = ? LIMIT 1',[user_id], function (err, user, fields) {		
 		pool.query('SELECT active, id, brand, email, fio, message_on, user_group FROM `1_users` ORDER BY brand, fio', function (err, users, fields) {

@@ -1184,7 +1184,7 @@ $scope.fpk.jsCanEditDo = function(client, mydo) {
 socket.on("loadstat", function(){
   $timeout(function(){    
     $scope.fpk.jsLoadStat();
-    $rootScope.$broadcast("loadstat");
+    //$rootScope.$broadcast("loadstat");
   },230+parseInt(Math.random()*60));
 });
 

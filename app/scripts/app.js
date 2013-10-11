@@ -204,7 +204,11 @@ angular.module('fpkApp').factory('oAuth2', function($window){
                 
             } else {
                  //window.location.href = "./login.php?dont_have_token";
-                 window.location.hash = "#/user/login";
+                 console.info("No Token!!!");
+                 if( window.location.hash && (window.location.hash.indexOf("/user/")==-1) ) {
+                    window.location.hash = "#/user/login";   
+                 }
+                 
                  //alert("redirect to login page");
             }
             return dfd.promise();    
