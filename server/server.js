@@ -1538,12 +1538,10 @@ exports.saveDo = function(request, response) {
 	console.info("F = ",query, changes);
 
     pool.query(query, changes, function (err, rows, fields) {
-    	console.info("rows = ", rows, err);
 	  	jsUpdateClient(client_id).done(function(client_id){
 			query = "SELECT * FROM 1_clients WHERE id = '"+client_id+"'";
     		pool.query(query, changes, function (err, clients, fields) {
     			clients = correct_dates(clients);
-    			console.info("SELECT CLIENT");
 		  		response.send(clients);
 		  	});
 	  	});
@@ -2507,7 +2505,17 @@ exports.loadStatTable = function(request, response) {
 	
 }
 
+exports.sendSMS = function(request, response) {
+	var Sms = require('node-smsc').Smsc,
+    sms = new Sms('imater', '990990', {sender: 'Reginas-FPK'});
 
+	sms.list({phone: '79227444440', text: 'Привет милый Женька!'}, function (err, result) {
+	    console.log('Error: %s, result: %s', err, result);
+	    response.send(result);
+	});
+
+    
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -2562,7 +2570,7 @@ app.get('/api/v1/client/update/:id', database.updateClient );
 
 app.get('/api/v1/clients_export', database.exportClients );
 
-
+app.get('/api/v1/sms', database.sendSMS );
 
 app.get('/api/v1/stat', database.loadStat );
 app.get('/api/v1/stat/all', database.loadStatAll );

@@ -376,6 +376,8 @@ function DoCtrl($scope, myApi) { //контроллер дел
       var now = toMysql( (new Date()) );
 
       $scope.do.checked = ($scope.do.checked==NO_DATE)?now:NO_DATE ;
+
+      $scope.jsDoSave();
    }
 
    $scope.setFocusInWhile = function(obj, $event) {
