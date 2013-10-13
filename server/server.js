@@ -2556,7 +2556,7 @@ exports.checkSMS = function(request, response) {
 			var dots = "";
 			if(the_do.text>80) dots = "..";
 
-			var text = the_do.type + " "+time+ ". "+ the_do.text.substr(0,80).dots+ ". "+the_do.fio+" "+the_do.phone1+"";
+			var text = the_do.type + " "+time+ ". "+ the_do.text.substr(0,80)+dots+ ". "+the_do.fio+" "+the_do.phone1+"";
 			sms_texts.push({phone: the_do.phone, text: text});
 			ids += the_do.id+",";
 
