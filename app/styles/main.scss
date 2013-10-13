@@ -1773,6 +1773,7 @@ background-color: none !important;
                 height: 30px;
                 min-width: 1em;
                 text-align: center;
+                white-space: nowrap;
                 border-bottom: 1px solid #AAA;
                 b {
                     -moz-transition: all 0.2s;
@@ -1796,6 +1797,16 @@ background-color: none !important;
                     border-bottom: 1px solid #FFF;
                     cursor: pointer;
                 }
+                b.b_left {
+                    border-top-right-radius: 0px;
+                    border-bottom-right-radius: 0px;
+                }
+                b.b_right {
+                    border-top-left-radius: 0px;
+                    border-bottom-left-radius: 0px;
+                    background: darken($cnt_background,5%);
+                    color: #AAA;
+                }
                 b.changed{
                         -moz-transition: all 1s;
                         -webkit-transition: all 1s;
@@ -1812,12 +1823,12 @@ background-color: none !important;
                 }
             }
             .active b {
-                background: #b75d26;
+                background: #264c1a;
             }
             .cup_icon {
                 text-align: right;
                 padding-left: 10px;
-                width: 2em;
+                width: 0em;
                 img {
                     width: 14px;
                     opacity: 0.7;
@@ -1829,20 +1840,25 @@ background-color: none !important;
                 }
             }
             .cup_plan_b {
-                font-size: 11px;
                 color: #888;
-                min-width: 3em;
+                display: none;
                 text-align: right;
             }
             .first_td {
                 padding-left: 5px;
             }
             .last_td {
-                padding-right: 5px;
+                padding-left: 15px;
+                padding-right: 0px;
                 b {
-                    text-align: left;
-                    min-width: 14em;
-                    font-size: 11px;
+                    text-align: center;
+                    min-width: 4em;
+                }
+                img {
+                    width: 14px;
+                    opacity: 0.2;
+                    margin-top: -2px;
+                    margin-right: 3px;
                 }
             }
         }

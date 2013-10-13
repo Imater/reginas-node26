@@ -1808,8 +1808,15 @@ exports.loadStatCup = function(request, response) {
     					zvonok: 0,
     					zvonok_month: 0,
 
+    					zvonok_admin: 0,
+    					zvonok_month_admin: 0,
+
+
     					vizit: 0,
     					vizit_month: 0,
+
+    					vizit_admin: 0,
+    					vizit_month_admin: 0,
 
     					test: 0,
     					test_month: 0,
@@ -1828,11 +1835,32 @@ exports.loadStatCup = function(request, response) {
 			if(cup_element) cup_element.cup[field_name] += 1;
     	}
 
-
+    pool.query('SELECT * FROM 1_doadmin WHERE date1 LIKE ?', [today_month+"%"], function (err, do_admin, fields){
+    	do_admin = correct_dates(do_admin);
    	    pool.query('SELECT id, brand, zv, vz, tst, dg, vd, `out`, icon2 FROM `1_clients` WHERE'+
    	    	' zv LIKE "'+today_month+'%" OR vz LIKE "'+today_month+'%" OR tst LIKE "'+today_month+'%" OR dg LIKE "'+today_month+'%" OR vd LIKE "'+today_month+'%" OR `out` LIKE "'+today_month+'%" OR (icon2 > 2 AND vd = "0000-00-00 00:00:00")',  function (err, cars, fields) {
    	    		cars = correct_dates(cars,"zero_date");
    	    		//console.info("cars",cars);
+
+   	    		$.each(do_admin, function(i, do_adm){
+   	    			//Звонки
+   	    			if( (do_adm['type']=="zv") &&
+   	    				(do_adm.date1.indexOf(today_month)!=-1) ) {
+   	    				jsCupIncrement(brands, do_adm.brand, "zvonok_month_admin");
+   	    				if( (do_adm.date1.indexOf(today_date)!=-1) ) {
+   	    					jsCupIncrement(brands, do_adm.brand, "zvonok_admin");
+   	    				}
+   	    			}
+   	    			//Визиты
+   	    			if( (do_adm['type']=="vz") &&
+   	    				(do_adm.date1.indexOf(today_month)!=-1) ) {
+   	    				jsCupIncrement(brands, do_adm.brand, "vizit_month_admin");
+   	    				if( (do_adm.date1.indexOf(today_date)!=-1) ) {
+   	    					jsCupIncrement(brands, do_adm.brand, "vizit_admin");
+   	    				}
+   	    			}
+
+   	    		});
 
    	    		$.each(cars, function(i, car){
 
@@ -1907,6 +1935,7 @@ exports.loadStatCup = function(request, response) {
    	    		response.send(answer);
    	    });
 
+    });
 
 	  	
   	});	//1_brands
