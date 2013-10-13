@@ -1615,6 +1615,12 @@ exports.saveAdmin = function(request, response) {
 
     pool.query(query, changes, function (err, rows, fields) {
   		response.send({affectedRows: rows.affectedRows});
+
+		stat_cache = {}; //обнуляем кеш
+		setTimeout(function(){
+			report.loadstat(user_id);
+		},30);
+
   //		stat_cache = {}; //обнуляем кеш
   	});	
   });
