@@ -9,6 +9,7 @@
       <span class="icon-bar"></span>
     </button>
     <a class="navbar-brand"><img src="images/logo-mini.png" width="50px" height="18px">Регинас</a>
+
   </div>
 
 
@@ -41,7 +42,7 @@
           <li role="presentation" class="dropdown-header">Фильтровать по:</li>                   
           <li ng-click="jsSelectManager(-1)"><a><i class="icon-users"></i>Все менеджеры</a></li>
           <li role="presentation" class="dropdown-header">Менеджеры:</li>                   
-          <li ng-click="jsSelectManager(manager.id)" ng-repeat="manager in fpk.managers | onlyManager:true"><a><i class="icon-user"></i>{{manager.fio}}</a></li>
+          <li ng-click="jsSelectManager(manager.id)" ng-repeat="manager in fpk.managers | onlyManager:true"><a><i class="icon-user"></i>{{fpk.jsFioShort(manager.fio,"name")}}</a></li>
           <li class="dropdown-submenu"><a >Остальные</a>
            <ul class="dropdown-menu">
             <li ng-click="jsSelectManager(manager.id)" ng-repeat="manager in fpk.managers | onlyManager:false"><a >{{manager.fio}}</a></li>
@@ -62,7 +63,7 @@
     <div id="panel_left_header">
 <!-- {{fpk.users_groups}} -->
 
-      <a href="#/user/login" title="{{fpk.jsFindInArray(fpk.users_groups, 'id', fpk.the_user.user_group ).title}}"><i class="icon-user"></i>{{fpk.the_user.fio}}<b ng-if="jsGetOnline()"> - online</b><b ng-if="!jsGetOnline()"> - offline</b></a>
+      <a href="#/user/login" title="{{fpk.jsFindInArray(fpk.users_groups, 'id', fpk.the_user.user_group ).title}}"><i class="icon-user"></i>{{fpk.jsFioShort(fpk.the_user.fio)}}<b ng-if="jsGetOnline()"> - выход</b><b ng-if="!jsGetOnline()"> - offline</b></a>
 
     </div>
 
@@ -215,7 +216,7 @@
           <ul>
             <li ng-repeat="sms in fpk.cup_sms | orderBy:'order'" title="{{sms.title}}" ng-click="getSMS(sms)" ng-class="{active: (sms == sms_active)}">
                 <img class="img_{{sms.type}}" ng-src="/images/do_type/{{sms.icon}}" width="14px">
-                <span class="sms" color-change="sms" ng-if="!sms.plan">{{sms.day}} ({{sms.month}})</span>
+                <span class="sms odometer" color-change="sms" ng-if="!sms.plan">{{sms.day}} ({{sms.month}})</span>
                 <span class="sms" ng-if="sms.plan">{{sms.plan.plan5}} + {{sms.plan.plan4}} + {{sms.plan.plan3}}</span>
             </li>
           </ul>

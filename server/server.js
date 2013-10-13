@@ -202,7 +202,7 @@ app.get("/api/v1/user_:user_id/time_:lasttime/:action", function(request, respon
 
 function jsCheckToken(token) {
 	var dfd = new $.Deferred();
-	console.info("check_token");
+	//console.info("check_token");
     pool.query('SELECT *, NOW() FROM `oauth_access_tokens` WHERE access_token = ? AND expires >= DATE_ADD(NOW(), INTERVAL 3 HOUR) ', [token] , function (err, rows, fields) {
 
 		    if(rows && rows[0] && rows[0].user_id) {
@@ -228,7 +228,7 @@ exports.findAllMessages = function(request,response) {
 		    var tm = ( (new Date()).getTime() );
 			
 		    collection.find({user_id:user_id, del:0}).toArray(function (err, rows, fields) {
-			    console.info( ( (new Date()).getTime() ) -tm);
+			    //console.info( ( (new Date()).getTime() ) -tm);
 				response.send(rows);
 		  	});	
 
@@ -267,7 +267,7 @@ exports.getDo = function(request,response) {
 		var insert_sql = "";
 		if(manager_id>0) insert_sql = "1_do.manager_id = '"+manager_id+"' AND ";
 		var query = 'SELECT 1_do.*, 1_clients.id, 1_clients.fio, 1_models.short, 1_users.fio man FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model  LEFT JOIN 1_users ON 1_do.manager_id = 1_users.id WHERE '+insert_sql+' 1_do.brand = ? AND 1_do.date2<= DATE_ADD(NOW(), INTERVAL 31 DAY) AND 1_do.checked = "0000-00-00 00:00:00" ORDER by date2';
-		console.info(query);
+		//console.info(query);
 	    pool.query(query, [ brand ] , function (err, rows, fields) {
 	    		rows = correct_dates(rows);
 			    response.send(rows);
@@ -304,7 +304,7 @@ exports.searchString = function(request,response) {
 	var brand = request.query.brand;
 	var search = request.query.search;
 
-	console.info("HI:",request.query);
+	//console.info("HI:",request.query);
 
 	pool.query("SELECT DISTINCT(client) FROM 1_do WHERE brand = '"+brand+"' AND (text LIKE '%"+search+"%' OR comment LIKE '%"+search+"%') LIMIT 2000", 
 		function (err, clients) {
@@ -328,7 +328,7 @@ exports.searchString = function(request,response) {
 	    					'adress like ?'+
 	    					')) LIMIT 2000', [brand, sr, sr, sr, sr, sr, sr, sr, sr] , function (err, rows, fields) {
 	    		rows = correct_dates(rows);
-	    		console.info(err);
+	    		//console.info(err);
 			    response.send(rows);
 	  	});	
 
@@ -343,7 +343,7 @@ exports.getAutocomplete = function(request,response) {
 	var search = request.query.searchtext;
 
 
-	console.info("HI:",request.query, search);
+	//console.info("HI:",request.query, search);
 
 		var sr = (search+"%");
 
@@ -355,7 +355,7 @@ exports.getAutocomplete = function(request,response) {
 	    					'phone4 like ?'+
 	    					')) LIMIT 20', [brand, sr, sr, sr, sr, sr] , function (err, rows, fields) {
 	    		rows = correct_dates(rows);
-	    		console.info(err);
+	    		//console.info(err);
 			    response.send(rows);
 	  	});	
 
@@ -379,7 +379,7 @@ exports.newMessage = function(request,response) {
 			    //response.send(rows);
 			    var new_id = rows.insertId;
 
-			    console.info(post_data.lastTime);
+			    //console.info(post_data.lastTime);
 			    pool.query('SELECT * FROM `4_chat` WHERE id = ? OR ((user_id = ? OR to_user_id = ?) AND (change_time> ?)) ', [new_id, post_data.user_id, post_data.user_id, post_data.lastTime] , function (err, rows, fields) {
 					    response.send(rows);
 				});	
@@ -395,7 +395,7 @@ exports.newMessage = function(request,response) {
 
 exports.saveFile = function(request, response) {
 
-	console.info(request.files);
+	//console.info(request.files);
 
         var path = request.files.file.path;
         fs.readFile(path, function(err, file_buffer){
@@ -446,7 +446,7 @@ exports.loadAllFromMySQL = function(request, response) {
     pool.query('SELECT * FROM `tree`', function (err, rows, fields) {
 
 		$.each(rows, function(i, el){
-			console.info("d",toMysql(el.date1));
+			//console.info("d",toMysql(el.date1));
 			el.date1 = toMysql( el.date1 );
 			el.date2 = toMysql( el.date2 );
 			el.did = toMysql( el.did );
@@ -562,7 +562,7 @@ exports.findAllClients = function(request, response) {
 
 //	console.info("MANAGER",manager, f_filter);
 
-	console.info("query = ", myquery);
+	//console.info("query = ", myquery);
 
 	jsCheckToken(request.query.token).done(function(user_id){
 	    pool.query(myquery, function (err, rows, fields) {
@@ -595,7 +595,7 @@ exports.addNewClient = function(request, response) {
  	};
 
 	query = "INSERT INTO 1_clients SET ?";
-	console.info("Добавляю новго клиента", brand_id, manager_id, add_do_array, values);
+	//console.info("Добавляю новго клиента", brand_id, manager_id, add_do_array, values);
 
     pool.query(query, values, function (err, rows, fields) {
     	var insert_id = rows.insertId;
@@ -613,7 +613,7 @@ exports.addNewClient = function(request, response) {
 		    	
 	    	})
     	}
-    	console.info("ADDED rows = ", rows, err);
+    	//console.info("ADDED rows = ", rows, err);
   	});	
   });
 }
@@ -625,7 +625,7 @@ function jsAddDoToClient(client_id, do_type, brand_id, user_id, manager_id, i) {
 	var time_now = tomysql( now );
 
 	var text, type;
-	console.info("do_type", do_type);
+	//console.info("do_type", do_type);
 	if(do_type == "vz") {
 		text = "Визит "+jsGetHourMinutes( now );
 		type = "Визит";
@@ -659,7 +659,7 @@ function jsAddDoToClient(client_id, do_type, brand_id, user_id, manager_id, i) {
 	query = "INSERT INTO 1_do SET ?";
     pool.query(query, values, function (err, rows, fields) {
     	dfd.resolve(rows);
-    	console.info("Добавил дело: ",rows,err);
+    	//console.info("Добавил дело: ",rows,err);
     });
 
 	return dfd.promise();
@@ -673,7 +673,7 @@ exports.findClient = function(request, response) {
 
 	var myquery = 'SELECT * FROM `1_clients` WHERE id = ? LIMIT 1';
 
-	console.info("query = ", myquery);
+	//console.info("query = ", myquery);
 
     pool.query(myquery, [client_id], function (err, rows, fields) {
     	pool.query('SELECT * FROM `1_do` WHERE client = ? ORDER by date2 DESC, id DESC', [client_id], function (err, does, fields) {
@@ -707,7 +707,7 @@ exports.findClientDoType = function(request, response) {
 
 	var myquery = 'SELECT * FROM `1_clients` WHERE '+insert_sql+' LIMIT 5000';
 
-	console.info("query = ", myquery);
+	//console.info("query = ", myquery);
 
 	jsCheckToken(request.query.token).done(function(user_id){
 	    pool.query(myquery, function (err, rows, fields) {
@@ -752,7 +752,7 @@ exports.loadStat = function(request, response) {
 	var brand_id = request.query.brand;
 	var today = request.query.today;
 	var manager_id = request.query.manager;
-	console.info("manager_stat", manager_id);
+	//console.info("manager_stat", manager_id);
 	var cache_id = md5(brand_id + manager_id + today);
 
 	if(!stat_cache[brand_id]) {
@@ -762,7 +762,7 @@ exports.loadStat = function(request, response) {
 
 	if( stat_cache[brand_id][ cache_id ] ) {
 		response.send( stat_cache[brand_id][ cache_id ] );
-		console.info("Stat from cache "+cache_id+", brand = ", brand_id);
+		//console.info("Stat from cache "+cache_id+", brand = ", brand_id);
 	} else {
 
 		if(manager_id>0) {
@@ -778,7 +778,7 @@ exports.loadStat = function(request, response) {
 
 
 				var myquery = 'SELECT count(*) cnt FROM `1_clients` WHERE ' + manager_sql + f_filter + " true ";			
-				console.info(myquery);
+				//console.info(myquery);
 
 				var dfd = (function(){
 					var dfd = $.Deferred();
@@ -939,7 +939,7 @@ exports.jsGetReiting = function(request, response) {
 		    	});
 		  		
 		    	$.each(clients, function(i, client){
-		    		console.info(client.out);
+		    		//console.info(client.out);
 		    		if( (client.vd >= start_today_date_sql) && 
 		    			(client.vd <= today_date_sql) && 
 		    			(client.out=='') ) {
@@ -996,7 +996,7 @@ exports.jsGetReiting = function(request, response) {
 		    		}
 
 		    		if( (client.na_date=='') && (client.out=='') ) {
-		    			console.info("na", client);
+		    			//console.info("na", client);
 		    			jsIncrement(answer, client.manager_id, "no_na_count");
 		    			var cost = jsFindCost(client, models);
 		    			jsIncrement(answer, client.manager_id, "no_na_sum", cost);
@@ -1048,7 +1048,7 @@ exports.jsGetManagerCupAdmin = function(request, response) {
   	}
 
   	function jsAdminIncrementCommercial(commercials, commercial_id, field_name) {
-  			console.info("-", commercials, commercial_id, field_name);
+  			//console.info("-", commercials, commercial_id, field_name);
 			var cup_element = _.find(commercials, function(el){ return el.commercial_id == commercial_id; });
 			if(cup_element) {
 				if(cup_element[ field_name ]=="") cup_element[ field_name ] = 0;
@@ -1065,7 +1065,7 @@ exports.jsGetManagerCupAdmin = function(request, response) {
 
     pool.query('SELECT * FROM `1_commercials` ORDER by title', [brand], function (err, commercials, fields) {
     pool.query('SELECT * FROM `1_models` WHERE brand = ? AND `show`=1 ORDER by model', [brand], function (err, models, fields) {
-    	console.info("err",err)
+    	//console.info("err",err)
 	    pool.query('SELECT * FROM `1_users` WHERE brand = ? AND user_group IN (5,6) ORDER by id', [brand], function (err, users, fields) {
 		    pool.query('SELECT * FROM `1_doadmin` WHERE brand = ? AND date1 LIKE ? ORDER by date1 DESC', [brand, today], function (err, do_admin, fields) {
 			    pool.query('SELECT * FROM `1_clients` WHERE brand = ? AND zv LIKE ? OR vz LIKE ? OR tst LIKE ?', [brand, today, today, today], function (err, clients, fields) {
@@ -1130,9 +1130,9 @@ exports.jsGetManagerCupAdmin = function(request, response) {
 			    	});
 
 			    	$.each(clients, function(i, client){
-			    		console.info(client.id);
+			    		//console.info(client.id);
 				    		if( client.zv.indexOf(today_date)!=-1 ) {
-				    			console.info("!!!",client.model, client);
+				    			//console.info("!!!",client.model, client);
 				    			jsAdminIncrementModel(admin_models, client.model, "zv_manager");
 				    			jsAdminIncrementCommercial(admin_commercials, client.commercial_id, "zv_manager")
 				    			if(jsAdminIncrement(users, client.manager_id, "zv_manager")) {
@@ -1141,7 +1141,7 @@ exports.jsGetManagerCupAdmin = function(request, response) {
 				    			
 				    		}
 				    		if( client.vz.indexOf(today_date)!=-1 ) {
-				    			console.info("!?!",client.model);
+				    			//console.info("!?!",client.model);
 				    			jsAdminIncrementModel(admin_models, client.model, "vz_manager");
 				    			jsAdminIncrementCommercial(admin_commercials, client.commercial_id, "vz_manager")
 				    			if( jsAdminIncrement(users, client.manager_id, "vz_manager") ) {
@@ -1156,7 +1156,7 @@ exports.jsGetManagerCupAdmin = function(request, response) {
 				    				jsAdminIncrement(users, -3, "tst_manager");	
 				    			}
 				    			
-				    			console.info(client.tst, client.manager_id);
+				    			//console.info(client.tst, client.manager_id);
 				    		}
 			    	});
 
@@ -1535,7 +1535,7 @@ exports.saveDo = function(request, response) {
  jsCheckToken(request.query.token).done(function(user_id){
 
 	query = "UPDATE 1_do SET ? WHERE id = '"+id+"'";
-	console.info("F = ",query, changes);
+	//console.info("F = ",query, changes);
 
     pool.query(query, changes, function (err, rows, fields) {
 	  	jsUpdateClient(client_id).done(function(client_id){
@@ -1574,7 +1574,7 @@ exports.newAdmin = function(request, response) {
 
 	var today_datetime = today + " " + tomysql( new Date ).split(" ")[1];
 
-	console.info("!",manager_id, do_type);
+	//console.info("!",manager_id, do_type);
 
  jsCheckToken(request.query.token).done(function(user_id){
 
@@ -1591,7 +1591,7 @@ exports.newAdmin = function(request, response) {
     pool.query(query, changes, function (err, rows, fields) {
     	var insert_id = rows.insertId;
   		response.send({insertId: insert_id});
-  		console.info(err, rows);
+  		//console.info(err, rows);
   	});
 
   });
@@ -1623,7 +1623,7 @@ exports.newDo = function(request, response) {
 	var manager_id = request.query.manager;
 
 
-	console.info(request.query, brand_id);
+	//console.info(request.query, brand_id);
 
  jsCheckToken(request.query.token).done(function(user_id){
  	if(manager_id == -1) manager_id = user_id;
@@ -1632,7 +1632,7 @@ exports.newDo = function(request, response) {
     pool.query(query, [ manager_id, client_id, do_type, do_type, brand_id, user_id ], function (err, rows, fields) {
     	var insert_id = rows.insertId;
     	response.send({insert_id: insert_id});
-    	console.info("ADDED rows = ", rows, err);
+    	//console.info("ADDED rows = ", rows, err);
   	});	
   });
 
@@ -1654,7 +1654,7 @@ exports.newModel = function(request, response) {
 
  var brand_id = request.query.brand;
 
- console.info(brand_id);
+ //console.info(brand_id);
 
  jsCheckToken(request.query.token).done(function(user_id){
     pool.query('INSERT INTO `1_models` SET `brand` = ?, `model` = "Новая модель", `cost` = 0, `show` = 1, `short` = "Новая"',[brand_id], function (err, rows, fields) {
@@ -1670,7 +1670,7 @@ exports.saveModel = function(request, response) {
  var model_id = request.query.model_id;
  var changes = request.body.changes;
 
- console.info("Сохраняю",brand_id, changes);
+ //console.info("Сохраняю",brand_id, changes);
 
  jsCheckToken(request.query.token).done(function(user_id){
    $.each(changes, function(i, ch){
@@ -1707,13 +1707,13 @@ exports.removeClient = function(request, response) {
 
  var client_id = request.query.client_id;
 
- console.info(client_id);
+ //console.info(client_id);
 
  jsCheckToken(request.query.token).done(function(user_id){
     pool.query('DELETE FROM 1_do WHERE client = ?',[client_id], function (err, rows, fields) {
 		  pool.query('DELETE FROM `1_clients` WHERE id = ?',[client_id], function (err, rows, fields) {
 		  	response.send({rows:rows, err: err});
-		  	console.info({rows:rows, err: err});
+		  	//console.info({rows:rows, err: err});
 			stat_cache = {}; //обнуляем кеш
 			setTimeout(function(){
 					report.loadstat(user_id);
@@ -1747,7 +1747,7 @@ exports.removeDo = function(request, response) {
     pool.query('DELETE FROM 1_do WHERE id = ? LIMIT 1',[do_id], function (err, rows, fields) {
     	jsUpdateClient(clients[0].client).then(function(){
 		  	response.send({rows:rows, err: err});
-		  	console.info({rows:rows, err: err});    		
+		  	//console.info({rows:rows, err: err});    		
     	});
   	});	
    });
@@ -1778,13 +1778,13 @@ exports.loadStatCup = function(request, response) {
 
 	if( stat_cache[brand_id][ cache_id ] ) {
 		response.send( stat_cache[brand_id][ cache_id ] );
-		console.info("Stat from cache "+cache_id+", brand = ", brand_id);
+		//console.info("Stat from cache "+cache_id+", brand = ", brand_id);
 	} else {
 
 
 
   pool.query('SELECT * FROM `1_plan` WHERE `month` = "'+today_month+'"', function (err, plans, fields) {
-  		console.info(plans);
+  		//console.info(plans);
     pool.query('SELECT * FROM `1_brands` WHERE `Show` = 1', function (err, brands, fields) {
 
     	$.each(brands, function(i, brand){
@@ -1826,7 +1826,7 @@ exports.loadStatCup = function(request, response) {
    	    pool.query('SELECT id, brand, zv, vz, tst, dg, vd, `out`, icon2 FROM `1_clients` WHERE'+
    	    	' zv LIKE "'+today_month+'%" OR vz LIKE "'+today_month+'%" OR tst LIKE "'+today_month+'%" OR dg LIKE "'+today_month+'%" OR vd LIKE "'+today_month+'%" OR `out` LIKE "'+today_month+'%" OR (icon2 > 2 AND vd = "0000-00-00 00:00:00")',  function (err, cars, fields) {
    	    		cars = correct_dates(cars,"zero_date");
-   	    		console.info("cars",cars);
+   	    		//console.info("cars",cars);
 
    	    		$.each(cars, function(i, car){
 
@@ -1958,7 +1958,7 @@ exports.loadStatCupCars = function(request, response) {
 
   var query = 'SELECT * FROM `1_clients` WHERE '+filter+' AND brand="'+brand_id+'" ORDER by '+myorder;
 
-  console.info(do_type, query);	
+  //console.info(do_type, query);	
 
 
   pool.query(query, function (err, cars, fields) {
@@ -2087,7 +2087,7 @@ function jsUpdateClient(client_id) {
     		pool.query(query, answer, function (err, rows, fields) {
 
     			dfd.resolve( client_id );
-    			console.info("client_id="+client_id+" OK: ", rows.affectedRows);
+    			//console.info("client_id="+client_id+" OK: ", rows.affectedRows);
 				stat_cache = {}; //обнуляем кеш
 				setTimeout(function(){
 					report.loadstat("client_id = "+client_id);
@@ -2120,18 +2120,18 @@ exports.updateClient = function(request, response) {
 
   $.when.apply(null, dfdArray).done(function(){
   	response.send("ok");
-  	console.info("ok");
+  	//console.info("ok");
   });
 }
 
 exports.regNewUser = function(request, response) {
 	var reg_user = request.body.reg_user;
-	console.info(reg_user);
+	//console.info(reg_user);
 
 	pool.query('SELECT count(*) cnt FROM `1_users` WHERE email = ?',[reg_user.email], function (err, exist_users, fields) {
-		console.info(exist_users);
+		//console.info(exist_users);
 		if(exist_users[0].cnt>0) { //если такой пользователь уже есть
-			console.info("user_exists");
+			//console.info("user_exists");
 			response.send("user_exists");
 		} else {
 
@@ -2149,7 +2149,7 @@ exports.regNewUser = function(request, response) {
 			};
 
 			pool.query('INSERT INTO `1_users` SET ?',[new_fields], function (err, rows, fields) {
-				console.info(rows);
+				//console.info(rows);
 				response.send(rows);
 			});
 		}
@@ -2165,7 +2165,7 @@ function _sqllog(params) {
 	if(params.request) delete params.request;
 
 	pool.query('INSERT INTO `1_log` SET ?',[params], function (err, rows, fields) {
-		console.info(err, rows);
+		//console.info(err, rows);
 	});	
 
 }
@@ -2178,7 +2178,7 @@ exports.loadUserInfo = function(request, response) {
 
  jsCheckToken(request.query.token).done(function(user_id){
  	_sqllog({manager: user_id, request: request, text:"Запрос информации loadUserInfo"});
- 	console.info("USER_ID:", user_id);
+ 	//console.info("USER_ID:", user_id);
 	pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone FROM `1_users` WHERE id = ? LIMIT 1',[user_id], function (err, user, fields) {		
 		pool.query('SELECT active, id, brand, email, fio, message_on, user_group FROM `1_users` ORDER BY brand, fio', function (err, users, fields) {
 			pool.query('SELECT * FROM `1_commercials`', function (err, commercials, fields) {
@@ -2227,7 +2227,7 @@ exports.parseManagers = function(request, response) {
 
 				var txt_query = "UPDATE 1_clients SET manager_id = '"+manager_id+"' WHERE id='"+client.id+"'; ";
 				pool.query(txt_query, function (err, rows, fields) {
-						console.info([err, rows]);
+						//console.info([err, rows]);
 				});
 
 				//console.info("client = ", client.id, client.manager, manager_id );
@@ -2257,7 +2257,7 @@ exports.parseManagers2 = function(request, response) {
 
 				var txt_query = "UPDATE 1_do SET manager_id = '"+manager_id+"' WHERE id='"+client.id+"'; ";
 				pool.query(txt_query, function (err, rows, fields) {
-						console.info([err, rows]);
+						//console.info([err, rows]);
 				});
 
 				//console.info("client = ", client.id, client.manager, manager_id );
@@ -2268,7 +2268,7 @@ exports.parseManagers2 = function(request, response) {
 }
 
 exports.parseEmail = function(request, response) {
-	console.info("parseEmail");
+	//console.info("parseEmail");
 	pool.query('SELECT * FROM `1_users`', function (err, sql_users, fields) {
 		$.each(sql_users, function(i, user){
 			var right_md5 = md5( user.email.toLowerCase() + "990990");
@@ -2276,7 +2276,7 @@ exports.parseEmail = function(request, response) {
 			if(user.md5email != right_md5) {
 				
 				pool.query('UPDATE `1_users` SET md5email="'+right_md5+'" WHERE id="'+user.id+'" LIMIT 1', function (err, row, fields) {
-					console.info(user.email,user.md5email, right_md5, row );
+					//console.info(user.email,user.md5email, right_md5, row );
 				});
 			}
 
@@ -2322,7 +2322,7 @@ exports.loadStatTable = function(request, response) {
 
 	if(true && stat_cache[brand_id][cache_id]) {
 		response.send( stat_cache[brand_id][cache_id] );
-		console.info("Stat table from Cache");
+		//console.info("Stat table from Cache");
 	} else {
 
 		var answer = {};
@@ -2509,10 +2509,50 @@ exports.sendSMS = function(request, response) {
 	var Sms = require('node-smsc').Smsc,
     sms = new Sms('imater', '990990', {sender: 'Reginas-FPK'});
 
+   if(false)
 	sms.list({phone: '79227444440', text: 'Привет милый Женька!'}, function (err, result) {
 	    console.log('Error: %s, result: %s', err, result);
 	    response.send(result);
 	});
+
+
+
+
+var nodemailer = require("nodemailer");
+
+// create reusable transport method (opens pool of SMTP connections)
+var smtpTransport = nodemailer.createTransport("SMTP",{
+    service: "Gmail",
+    auth: {
+        user: "fpk.reginas@gmail.com",
+        pass: "uuS4foos_VEuuS4foos_VE"
+    }
+});
+
+// setup e-mail data with unicode symbols
+var mailOptions = {
+    from: "Reginas-FPK ✔ <eugene.leonar@gmail.com>", // sender address
+    to: "box.valentina@gmail.com, eugene.leonar@gmail.com", // list of receivers
+    subject: "Привет милый Женька! ✔", // Subject line
+    text: "Как дела? ✔", // plaintext body
+    html: "<h1>Это письмо пришло из Reginas-FPK</h1><b>Я жирный ✔</b><hr><i>А я наклонный</i><br><img src='http://fpk.reginas.ru:8888/images/logo-mini.png'>" // html body
+}
+
+// send mail with defined transport object
+smtpTransport.sendMail(mailOptions, function(error, response){
+    if(error){
+        console.log(error);
+    }else{
+        console.log("Message sent: " + response.message);
+    }
+
+    // if you don't want to use this transport object anymore, uncomment following line
+    //smtpTransport.close(); // shut down the connection pool, no more messages
+});
+
+
+
+
 
     
 }
