@@ -1035,8 +1035,9 @@ body {
 #panel_left_content .left_menu li.active {
   border-top: 1px solid black;
   background: rgba(255, 255, 255, 0.7) !important;
+  font-weight: bold;
   box-shadow: inset 0px 0px 2px #000;
-  color: #000; }
+  color: #222; }
 
 .clients_list {
   margin: 0px;

@@ -1390,8 +1390,9 @@ background-color: none !important;
         li.active {
             border-top: 1px solid darken($left_panel_background,90%);
             background: rgba(255,255,255,0.7) !important;
+            font-weight: bold;
             box-shadow: inset 0px 0px 2px #000;
-            color: #000;
+            color: #222;
         }
     }
 }
