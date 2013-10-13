@@ -1163,6 +1163,12 @@ body {
             .clients_list .client_card .client_inside ul li.client_do_li .do_line .do_result {
               font-weight: normal;
               color: green; }
+            .clients_list .client_card .client_inside ul li.client_do_li .do_line .do_bell {
+              float: right;
+              margin-top: 2px; }
+            .clients_list .client_card .client_inside ul li.client_do_li .do_line .send {
+              color: green;
+              opacity: 0.4; }
           .clients_list .client_card .client_inside ul li.client_do_li .do_lock {
             float: right;
             color: #888;
@@ -1302,11 +1308,11 @@ body {
         text-align: center;
         border-bottom: 1px solid #AAA; }
         #statistics table tr td b {
-          -moz-transition: all 1s;
-          -webkit-transition: all 1s;
-          -ms-transition: all 1s;
-          -o-transition: all 1s;
-          transition: all 1s;
+          -moz-transition: all 0.2s;
+          -webkit-transition: all 0.2s;
+          -ms-transition: all 0.2s;
+          -o-transition: all 0.2s;
+          transition: all 0.2s;
           font-weight: normal;
           line-height: 1em;
           white-space: nowrap;

@@ -148,7 +148,22 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
 
 */
         
+        $scope.jsShowRemind = function(mydo) {
+          var answer = "выкл";
+          if(mydo.sms==5) answer = "за 5 минут";
+          if(mydo.sms==15) answer = "за 15 минут";
+          if(mydo.sms==30) answer = "за 30 минут";
+          if(mydo.sms==60) answer = "за 1 час";
+          if(mydo.sms==120) answer = "за 2 часа";
+          if(mydo.sms==360) answer = "за 6 часов";
+          if(mydo.sms==1440) answer = "за 24 часа";
+          return answer;
+        }
 
+        $scope.jsSetRemind = function(mydo, minutes) {
+          var answer = "выкл";
+          mydo.sms=minutes;
+        }
 
         $scope.fpk.models_array_show = _.filter($scope.fpk.models_array, function(el){ return ( (el.brand == $scope.fpk.brand) && (el.show == 1)); });
 

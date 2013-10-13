@@ -995,6 +995,7 @@ body {
                     color: #555;
                     margin-left: 5px;
                 }
+
             }
         }
     }
@@ -1555,6 +1556,14 @@ background-color: none !important;
                             font-weight: normal;
                             color: green;
                         }
+                        .do_bell {
+                            float:right;
+                            margin-top: 2px;
+                        }
+                        .send {
+                            color: green;
+                            opacity: 0.4;
+                        }
 
 
                     }
@@ -1766,11 +1775,11 @@ background-color: none !important;
                 text-align: center;
                 border-bottom: 1px solid #AAA;
                 b {
-                    -moz-transition: all 1s;
-                    -webkit-transition: all 1s;
-                    -ms-transition: all 1s;
-                    -o-transition: all 1s;
-                    transition: all 1s;
+                    -moz-transition: all 0.2s;
+                    -webkit-transition: all 0.2s;
+                    -ms-transition: all 0.2s;
+                    -o-transition: all 0.2s;
+                    transition: all 0.2s;
                     font-weight: normal;
                     line-height: 1em;
                     white-space: nowrap;

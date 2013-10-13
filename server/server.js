@@ -145,6 +145,8 @@ function jsFindById(id) {
 	return dfd.promise();
 }
 
+var report;
+
 io.sockets.on('connection', function(socket) {
 
 	report = new Report(socket);
@@ -178,6 +180,10 @@ io.set('log level', 3); // reduce logging
 
 
 database = exports;
+
+setInterval(function(){ 
+	database.checkSMS();
+}, 30000);
 
 app.get("/api/v1/user_:user_id/time_:lasttime/:action", function(request, response) {
   database.findAllContinents(request,function(err, results) {
@@ -471,7 +477,7 @@ exports.loadAllBig = function(request, response) {
 }
 
 global.correct_dates = function( rows, no_zero_dates ) {
-	var fields = ['date', 'zv', 'vz', 'tst', 'dg', 'vd', 'out', 'checked', 'changed', 'created', 'date1', 'date2', 'hostcheck', 'remind', 'na_date'];
+	var fields = ['date', 'zv', 'vz', 'tst', 'dg', 'vd', 'out', 'checked', 'changed', 'created', 'date1', 'date2', 'hostcheck', 'remind', 'na_date', 'now_time', 'remind_time'];
 
 	if(!rows) return rows;
 
@@ -2198,7 +2204,7 @@ exports.loadUserInfo = function(request, response) {
  	_sqllog({manager: user_id, request: request, text:"Запрос информации loadUserInfo"});
  	//console.info("USER_ID:", user_id);
 	pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone, brands FROM `1_users` WHERE id = ? LIMIT 1',[user_id], function (err, user, fields) {		
-		pool.query('SELECT active, id, brand, email, fio, message_on, user_group FROM `1_users` ORDER BY brand, fio', function (err, users, fields) {
+		pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone FROM `1_users` ORDER BY brand, fio', function (err, users, fields) {
 			pool.query('SELECT * FROM `1_commercials`', function (err, commercials, fields) {
 			    pool.query('SELECT * FROM `1_users_group`', function (err, users_group, fields) {
 		  			//response.send({models:models, brands: brands, users_group: users_group });
@@ -2527,19 +2533,59 @@ exports.loadStatTable = function(request, response) {
 }
 
 exports.sendSMS = function(request, response) {
+
+};
+
+exports.checkSMS = function(request, response) {
+
+	var sms_texts = [];
+
 	var Sms = require('node-smsc').Smsc,
     sms = new Sms('imater', '990990', {sender: 'Reginas-FPK'});
 
-   if(false)
-	sms.list({phone: '79227444440', text: 'Привет милый Женька!'}, function (err, result) {
-	    console.log('Error: %s, result: %s', err, result);
-	    response.send(result);
+	var query = "SELECT DATE_ADD(NOW(), INTERVAL 1_do.sms MINUTE) now_time, date2 remind_time, 1_users.phone, 1_clients.phone1, 1_clients.fio, 1_do.*  FROM 1_do LEFT JOIN 1_users ON 1_users.id=1_do.manager_id LEFT JOIN 1_clients ON 1_clients.id = 1_do.client WHERE sms>0 AND checked = '0000-00-00 00:00:00' AND sms_send = 0 AND DATE_ADD(NOW(), INTERVAL 1_do.sms MINUTE) > date2";
+
+	pool.query(query, function (err, mydo, fields) {
+		mydo = correct_dates(mydo);
+		var ids = "";
+		$.each(mydo, function(i,the_do){
+			//var t_time = the_do.remind_time.toString().split(" ")[1];
+			//var time1 = t_time[0]+":"+t_time[1];
+			var time = the_do.remind_time.toString().split(" ")[1].substr(0,5);
+
+			var dots = "";
+			if(the_do.text>80) dots = "..";
+
+			var text = the_do.type + " "+time+ ". "+ the_do.text.substr(0,80).dots+ ". "+the_do.fio+" "+the_do.phone1+"";
+			sms_texts.push({phone: the_do.phone, text: text});
+			ids += the_do.id+",";
+
+		});
+		ids += "0";
+
+		if(sms_texts.length) {
+			console.info(sms_texts);
+			sms.list(sms_texts, function (err, result) {
+			    console.info( err, result );
+			    if(result.cnt>0) {
+			    	
+			    	query = "UPDATE 1_do SET sms_send = 1 WHERE id IN ("+ids+")";
+					pool.query(query, function (err, rows, fields) {
+						if(rows) {
+							jsSendMail("Отправил SMS: "+ids, JSON.stringify(sms_texts));
+						}
+					});
+			    }
+			    
+			});				
+		}
+
+
 	});
 
+	
 
-
-
-var nodemailer = require("nodemailer");
+/*var nodemailer = require("nodemailer");
 
 // create reusable transport method (opens pool of SMTP connections)
 var smtpTransport = nodemailer.createTransport("SMTP",{
@@ -2570,12 +2616,50 @@ smtpTransport.sendMail(mailOptions, function(error, response){
     // if you don't want to use this transport object anymore, uncomment following line
     //smtpTransport.close(); // shut down the connection pool, no more messages
 });
-
+*/
 
 
 
 
     
+}
+
+function jsSendMail(title, text){
+
+var nodemailer = require("nodemailer");
+
+// create reusable transport method (opens pool of SMTP connections)
+var smtpTransport = nodemailer.createTransport("SMTP",{
+    service: "Gmail",
+    auth: {
+        user: "fpk.reginas@gmail.com",
+        pass: "uuS4foos_VEuuS4foos_VE"
+    }
+});
+
+// setup e-mail data with unicode symbols
+var mailOptions = {
+    from: "Reginas-FPK ✔ <fpk.reginas@gmail.com>", // sender address
+    to: "eugene.leonar@gmail.com", // list of receivers
+    subject: title, // Subject line
+    //text: text, // plaintext body
+    html: text // html body
+}
+
+// send mail with defined transport object
+smtpTransport.sendMail(mailOptions, function(error, response){
+    if(error){
+        console.log(error);
+    }else{
+        console.log("Message sent: " + response.message);
+    }
+
+    // if you don't want to use this transport object anymore, uncomment following line
+    //smtpTransport.close(); // shut down the connection pool, no more messages
+});
+
+
+
 }
 
 
