@@ -1221,8 +1221,11 @@ exports.jsGetManagerCupAdmin = function(request, response) {
 			    			if(mydo.manager_id != -3) jsAdminIncrement(users, -3, "vz2_admin", mydo.date1);
 			    			if(mydo.manager_id != -3) jsAdminIncrement(users, -5, "vz2_admin", mydo.date1);
 			    		}
-	 					var cup_element = _.find(admin, function(el){ return el.manager_id == mydo.manager_id; });
-	 					if(cup_element) cup_element.mydo.push( mydo );
+
+			    		if(mydo.date1.indexOf(today_date)!=-1) {
+	 						var cup_element = _.find(admin, function(el){ return el.manager_id == mydo.manager_id; });	 
+	 						if(cup_element) cup_element.mydo.push( mydo );
+	 					}
 
 			    	});
 
