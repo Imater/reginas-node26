@@ -52,8 +52,8 @@
 	<table class="model_trafic">
 		<tr>
 			<th></th>
-			<th colspan="3">Данные администратора</th>
-			<th colspan="5"class="manager">Данные менеджера</th>
+			<th colspan="3">Администратор — день (месяц)</th>
+			<th colspan="5"class="manager">Менеджер — день (месяц)</th>
 		</tr>
 		<tr>
 			<th>Модель</th>
@@ -68,14 +68,14 @@
 		</tr>
 		<tr ng-repeat="model in admin_models">
 			<td class="model">{{model.model}}</td>
-			<td>{{model.zv}}</td>
-			<td>{{model.vz}}</td>
-			<td>{{model.vz2_admin}}</td>
-			<td class="manager">{{model.zv_manager}}</td>
-			<td class="manager">{{model.vz_manager}}</td>
-			<td class="manager">{{model.tst_manager}}</td>
-			<td class="manager">{{model.contacts}}</td>
-			<td class="manager">{{model.out}}</td>
+			<td><span ng-if="model.zv_month||model.zv"><b>{{model.zv}}</b> ({{model.zv_month}})</span></td>
+			<td><span ng-if="model.vz_month||model.vz"><b>{{model.vz}}</b> ({{model.vz_month}})</span></td>
+			<td><span ng-if="model.vz2_admin_month||model.vz2_admin"><b>{{model.vz2_admin}}</b> ({{model.vz2_admin_month}})</span></td>
+			<td class="manager"><span ng-if="model.zv_manager||model.zv_manager_month"><b>{{model.zv_manager}}</b> ({{model.zv_manager_month}})</span></td>
+			<td class="manager"><span ng-if="model.vz_manager||model.vz_manager_month"><b>{{model.vz_manager}}</b> ({{model.vz_manager_month}})</td>
+			<td class="manager"><span ng-if="model.tst_manager||model.tst_manager_month"><b>{{model.tst_manager}}</b> ({{model.tst_manager_month}})</td>
+			<td class="manager"><span ng-if="model.contacts||model.contacts_month"><b>{{model.contacts}}</b> ({{model.contacts_month}})</td>
+			<td class="manager"><span ng-if="model.out_manager||model.out_month"><b>{{model.out}}</b> ({{model.out_month}})</td>
 		</tr>
 	</table>
 
@@ -100,14 +100,14 @@
 		</tr>
 		<tr ng-repeat="model in admin_commercials">
 			<td class="model">{{model.commercial}}</td>
-			<td>{{model.zv}}</td>
-			<td>{{model.vz}}</td>
-			<td>{{model.vz2_admin}}</td>
-			<td class="manager">{{model.zv_manager}}</td>
-			<td class="manager">{{model.vz_manager}}</td>
-			<td class="manager">{{model.tst_manager}}</td>
-			<td class="manager">{{model.contacts}}</td>
-			<td class="manager">{{model.out}}</td>
+			<td><span ng-if="model.zv_month||model.zv"><b>{{model.zv}}</b> ({{model.zv_month}})</span></td>
+			<td><span ng-if="model.vz_month||model.vz"><b>{{model.vz}}</b> ({{model.vz_month}})</span></td>
+			<td><span ng-if="model.vz2_admin_month||model.vz2_admin"><b>{{model.vz2_admin}}</b> ({{model.vz2_admin_month}})</span></td>
+			<td class="manager"><span ng-if="model.zv_manager||model.zv_manager_month"><b>{{model.zv_manager}}</b> ({{model.zv_manager_month}})</span></td>
+			<td class="manager"><span ng-if="model.vz_manager||model.vz_manager_month"><b>{{model.vz_manager}}</b> ({{model.vz_manager_month}})</td>
+			<td class="manager"><span ng-if="model.tst_manager||model.tst_manager_month"><b>{{model.tst_manager}}</b> ({{model.tst_manager_month}})</td>
+			<td class="manager"><span ng-if="model.contacts||model.contacts_month"><b>{{model.contacts}}</b> ({{model.contacts_month}})</td>
+			<td class="manager"><span ng-if="model.out_manager||model.out_month"><b>{{model.out}}</b> ({{model.out_month}})</td>
 		</tr>
 	</table>
 
