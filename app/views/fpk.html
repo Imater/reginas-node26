@@ -33,10 +33,11 @@
       </li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
-      <li><a href="#/fpk/admin_cup">Трафик</a></li>
-      <li><a href="#/fpk/reiting">Рейтинг менеджеров</a></li>
-      <li><a href="#/fpk/settings/models">Настройки</a></li>
-      <li class="dropdown">
+      <li ng-if="!fpk.the_user.rights.isInside"><a>Ограниченный доступ (вы зашли из интернета)</a></li>
+      <li ng-if="fpk.inside"><a href="#/fpk/admin_cup">Трафик</a></li>
+      <li ng-if="fpk.inside"><a href="#/fpk/reiting">Рейтинг менеджеров</a></li>
+      <li ng-if="fpk.inside&&fpk.the_user.rights[0].can_edit_models"><a href="#/fpk/settings/models">Настройки</a></li>
+      <li class="dropdown" ng-if="fpk.inside">
         <a  class="dropdown-toggle" data-toggle="dropdown">Фильтр: {{fpk.jsFioShort(fpk.jsShowManagerFilter(),"name")}} <b class="caret"></b></a>
         <ul class="dropdown-menu">
           <li role="presentation" class="dropdown-header">Фильтровать по:</li>                   
@@ -63,8 +64,7 @@
     <div id="panel_left_header">
 <!-- {{fpk.users_groups}} -->
 
-      <a href="#/user/login" title="{{fpk.jsFindInArray(fpk.users_groups, 'id', fpk.the_user.user_group ).title}}"><i class="icon-user"></i>{{fpk.jsFioShort(fpk.the_user.fio)}}<b ng-if="jsGetOnline()"> - выход</b><b ng-if="!jsGetOnline()"> - offline</b></a>
-
+      <a href="#/user/login" title="{{fpk.jsFindInArray(fpk.users_groups, 'id', fpk.the_user.user_group ).title}}"><i class="icon-user"></i>{{fpk.jsFioShort(fpk.the_user.fio,'name')}}<b ng-if="jsGetOnline()"> - выход</b><b ng-if="!jsGetOnline()"> - offline</b></a>
     </div>
 
     <div id="panel_left_content" class="noselectable">
@@ -101,11 +101,11 @@
                 <div class="btn-group">
                     <button type="button" class="btn btn-cloud btn-default dropdown-toggle" data-toggle="dropdown" ng-class="{ 'synced': sync.did, 'syncing': sync.syncing }">
                       <img ng-if="fpk.brands[fpk.brand]" height="16px" width="25.6px" ng-src="images/logos/{{fpk.brands[fpk.brand].logo}}"></img>
-                      <span class="caret"></span>
+                      <span class="caret" ng-if="jsGetBrands()"></span>
                     </button>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" ng-if="jsGetBrands()">
                       <li role="presentation" class="dropdown-header">Выбор бренда:</li>                   
-                      <li ng-repeat="the_brand in fpk.brands | orderBy:'title'"><a ng-click="jsSelectBrand(the_brand.id)"><img height="16px" width="25.6px" style="margin-right:10px;" ng-src="images/logos/{{the_brand.logo}}"></img>{{the_brand.title}}</a></li>
+                      <li ng-repeat="the_brand in jsGetBrands() | orderBy:'title'"><a ng-click="jsSelectBrand(the_brand.id)"><img height="16px" width="25.6px" style="margin-right:10px;" ng-src="images/logos/{{the_brand.logo}}"></img>{{the_brand.title}}</a></li>
                     </ul>
                   </div>
                 </div>
@@ -121,7 +121,7 @@
 
                   <a href="#/fpk/calendar" ng-class="{active: $routeSegment.startsWith('s1.calendar')}" type="button" class="btn btn-default">Календарь</a>
 
-                  <a href="#/fpk/statistic" ng-class="{active: $routeSegment.startsWith('s1.stat')}" type="button" class="btn btn-default">Статистика</a>
+                  <a href="#/fpk/statistic" ng-class="{active: $routeSegment.startsWith('s1.stat')}" type="button" class="btn btn-default" ng-if="fpk.inside">Статистика</a>
 
                 </div>
             </div>
@@ -139,7 +139,7 @@
 
                         <a href="#/fpk/calendar" ng-class="{active: $routeSegment.startsWith('s1.calendar')}" type="button" class="btn btn-default">Календарь</a>
 
-                        <a href="#/fpk/statistic" ng-class="{active: $routeSegment.startsWith('s1.stat')}" type="button" class="btn btn-default">Статистика</a>
+                        <a href="#/fpk/statistic" ng-class="{active: $routeSegment.startsWith('s1.stat')}" type="button" class="btn btn-default" ng-if="fpk.inside">Статистика</a>
                     </ul>
                   </div>
                 </div>
@@ -226,7 +226,7 @@
             <i class="icon-left-open-1"></i>
         </div>
 
-    <!-- <font color="black" ng-bind-html="fpk.showfpk()"></font> -->
+    <font color="black" ng-bind-html="fpk.showfpk()"></font>
     </div> <!-- footer -->
 
 

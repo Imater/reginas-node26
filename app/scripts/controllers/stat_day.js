@@ -13,6 +13,7 @@ myApp.controller('statDayCtrl', function ($scope, $resource, $rootScope, $locati
     $scope.jsGetClientsDay = function(){
 		myApi.getClientsDay($scope).then(function(day_clients){
 	        $scope.fpk.clientsgroupby = "";
+	        $scope.fpk.clientsgroupby_one = "";
 			$scope.day_clients = day_clients;
 		});    	
     }

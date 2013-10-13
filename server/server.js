@@ -2170,6 +2170,24 @@ function _sqllog(params) {
 
 }
 
+//Проверяем откуда мы зашли, изнутри сети или снаружи
+function jsIsInside(params){
+	var ip = params.request.connection.remoteAddress;
+	if( (params.user[0].user_group == 1) || //учредитель
+		(params.user[0].user_group == 2) || //директор
+		(params.user[0].user_group == 3) || //руководитель отдела продаж
+		(params.user[0].user_group == 10) || //админ системы
+		(/192.168.200/.test(ip)) ||
+		(/62.165.38/.test(ip)) ||
+		(/5.79.218/.test(ip)) ||
+		(/127.0.0.1/.test(ip)) ||
+		(/37.1/.test(ip)) ) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 exports.loadUserInfo = function(request, response) {
 
 
@@ -2179,12 +2197,15 @@ exports.loadUserInfo = function(request, response) {
  jsCheckToken(request.query.token).done(function(user_id){
  	_sqllog({manager: user_id, request: request, text:"Запрос информации loadUserInfo"});
  	//console.info("USER_ID:", user_id);
-	pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone FROM `1_users` WHERE id = ? LIMIT 1',[user_id], function (err, user, fields) {		
+	pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone, brands FROM `1_users` WHERE id = ? LIMIT 1',[user_id], function (err, user, fields) {		
 		pool.query('SELECT active, id, brand, email, fio, message_on, user_group FROM `1_users` ORDER BY brand, fio', function (err, users, fields) {
 			pool.query('SELECT * FROM `1_commercials`', function (err, commercials, fields) {
 			    pool.query('SELECT * FROM `1_users_group`', function (err, users_group, fields) {
 		  			//response.send({models:models, brands: brands, users_group: users_group });
-					response.send({user: user, users: users, commercials: commercials, users_group: users_group});
+
+		  			var isInsideVar = jsIsInside({request: request, user: user});
+
+					response.send({user: user, users: users, commercials: commercials, users_group: users_group, isInside: isInsideVar});
 	  			});
 			});
 		});

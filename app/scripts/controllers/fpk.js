@@ -1153,6 +1153,41 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
 
 if($scope.fpk.jsLoadStat) $scope.fpk.jsLoadStat();
 
+$scope.fpk.brands_cache = "";
+
+$scope.jsGetBrands = function() {
+  if(!$scope.fpk.brands) return false;
+
+  if($scope.fpk.brands_cache != "") {
+    return $scope.fpk.brands_cache;
+  }
+
+  var allow_brands = $scope.fpk.the_user.rights[0].brands;
+
+  var brands = [];
+  console.info("brands = ", allow_brands);
+
+  if(!allow_brands.length) {
+    brands = _.find($scope.fpk.brands, function(brand){
+      brand.id == $scope.fpk.the_user.brand;
+    });
+  } else if ( allow_brands.indexOf("*")!=-1 ) {
+    brands = $scope.fpk.brands;
+  } else if ( allow_brands.indexOf("-")!=-1 ) {
+    brands = $scope.fpk.brands;
+  } else if (true) {
+    alert(1);
+    brands = _.filter($scope.fpk.brands, function(brand){
+      return (allow_brands.indexOf(brand.id) != -1);
+    });
+  }
+  
+  $scope.fpk.brands_cache = brands;
+  return brands;
+  //$scope.fpk.the_user.rights[0].brands  
+}
+
+
 $scope.fpk.jsCanEditClient = function(client) {
    var can_edit_all_client = $scope.fpk.the_user.rights[0].can_edit_all_client;
 
@@ -1199,6 +1234,10 @@ $scope.$routeSegment = $routeSegment;
 
 
 $scope.getSMS = function(sms) {
+  if(!$scope.fpk.inside) {
+    alert("Вам недоступна статистика, вы зашли из интернета");
+    return false;
+  }
   //sms.do_type;
   if($scope.sms_active == sms) {
     var today = $scope.fpk.today_date.substr(0,7);

@@ -399,6 +399,20 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
                 return user_group.id == $scope.fpk.the_user.user_group;
               });
 
+              //перекрываем права пользователя указанные в группе, правами из таблицы пользователей
+              if( $scope.fpk.the_user.brands ) {
+                $scope.fpk.the_user.rights[0].brands = $scope.fpk.the_user.brands?JSON.parse($scope.fpk.the_user.brands):[];
+              } else {
+                $scope.fpk.the_user.rights[0].brands = $scope.fpk.the_user.rights[0].brands?JSON.parse($scope.fpk.the_user.rights[0].brands):[];
+              }
+
+
+              $scope.fpk.the_user.rights.isInside = user.isInside;
+              $scope.fpk.inside = user.isInside;
+              if(!user.isInside) {
+                $scope.fpk.manager_filter = user.user[0].id;
+              }
+
 
 
           dfd.resolve();

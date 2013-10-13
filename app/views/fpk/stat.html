@@ -32,9 +32,8 @@
         	<td ng-class="{active:(cup_selected == brand.id+'prognoz')}" title="Прогноз выдач: выданые + вероятные + средневероятные + маловероятные"  ng-click="loadCupCar(brand.id, 'prognoz', brand.id+'prognoz')" class="last_td"><b>{{brand.cup.prognoz_5 + brand.cup.prognoz_4 + brand.cup.prognoz_3 + brand.cup.vidacha_month}} = {{brand.cup.vidacha_month}} + {{brand.cup.prognoz_5}} + {{brand.cup.prognoz_4}} + {{brand.cup.prognoz_3}}</b></td>
         </tr>
         </table>
-        <hr>
+        <br>
         <div client-list="cup_clients" my-attr="cup_clients" my-distinct="clients"></div>
-        <hr>
         <!-- <ng-include src="'views/client_list.html'"></ng-include> -->
 
     </div>
