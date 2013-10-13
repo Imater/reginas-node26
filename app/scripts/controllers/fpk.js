@@ -811,7 +811,6 @@ myApp.factory('myApi', function($http, $q, oAuth2){
       oAuth2.jsGetToken($scope).done(function(token){
 
         $http({url:'/api/v1/stat/cup/day',method: "GET", isArray: true, params: { token: token, today: $scope.fpk.today_date, brand: $scope.fpk.brand, manager: $scope.fpk.manager_filter }}).then(function(result){
-            console.info("CLIENTS RECIVED: ",result.data);
             dfd.resolve(result.data);
         });
       });

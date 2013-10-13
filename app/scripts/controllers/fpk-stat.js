@@ -2,7 +2,7 @@
 
 myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment, $timeout) {
 
- 	$scope.fpk.leftmenu = { active:8,
+ 	$scope.fpk.leftmenu = { active:10,
                 items : [
                   {id:10, title:"Холдинг", href: "/fpk/statistic", segment: "s1.statistic"},
                   {id:11, title:"Подробная таблица", href: "/fpk/stat_table", segment: "s1.stat_table"},

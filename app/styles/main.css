@@ -1034,9 +1034,9 @@ body {
     border-top: 1px solid #3b3b3b !important; }
 #panel_left_content .left_menu li.active {
   border-top: 1px solid black;
-  border-top: 1px solid lighter(#242d3b, 10%);
-  background: rgba(0, 0, 0, 0.1) !important;
-  background-image: url("../images/backgrounds/grain.png"); }
+  background: rgba(255, 255, 255, 0.7) !important;
+  box-shadow: inset 0px 0px 2px #000;
+  color: #000; }
 
 .clients_list {
   margin: 0px;
