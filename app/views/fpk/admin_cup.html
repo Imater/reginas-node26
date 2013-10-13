@@ -26,11 +26,12 @@
 					</span>
 				</div>
 
-				<div class="admin_col" ng-click="jsAddAdminDo(a.manager_id, 'tst');$event.stopPropagation();">
-					<img src="images/do_type/1test-drive.png">
+				<div class="admin_col" ng-click="jsAddAdminDo(a.manager_id, 'vz2');$event.stopPropagation();">
+					<img src="images/do_type/1vizit.png" class="second"> 
 					<span class="round">
-					 	{{a.tst_admin}} {{jsSign(a.tst_admin, a.tst_manager)}} {{a.tst_manager}}
+					 	{{a.vz2_admin}}
 					</span>
+					<font color="#CCC">- вторичный визит</font>
 				</div>
 			</li>
 			<div class="admin_content" ng-if="a._visible">
@@ -50,22 +51,31 @@
 
 	<table class="model_trafic">
 		<tr>
+			<th></th>
+			<th colspan="3">Данные администратора</th>
+			<th colspan="5"class="manager">Данные менеджера</th>
+		</tr>
+		<tr>
 			<th>Модель</th>
-			<th>Звонков (администратор)</th>
-			<th>Визитов (администратор)</th>
-			<th>Тестов (администратор)</th>
-			<th class="manager">Звонков (менеджер)</th>
-			<th class="manager">Визитов (менеджер)</th>
-			<th class="manager">Тестов (менеджер)</th>
+			<th>Звонки</th>
+			<th>Визиты</th>
+			<th>Вторичные визиты</th>
+			<th class="manager">Звонки</th>
+			<th class="manager">Визиты</th>
+			<th class="manager">Тесты</th>
+			<th class="manager">Взяли контакты</th>
+			<th class="manager">Нет контактов (Out)</th>
 		</tr>
 		<tr ng-repeat="model in admin_models">
 			<td class="model">{{model.model}}</td>
 			<td>{{model.zv}}</td>
 			<td>{{model.vz}}</td>
-			<td>{{model.tst}}</td>
+			<td>{{model.vz2_admin}}</td>
 			<td class="manager">{{model.zv_manager}}</td>
 			<td class="manager">{{model.vz_manager}}</td>
 			<td class="manager">{{model.tst_manager}}</td>
+			<td class="manager">{{model.contacts}}</td>
+			<td class="manager">{{model.out}}</td>
 		</tr>
 	</table>
 
@@ -73,22 +83,31 @@
 
 	<table class="model_trafic">
 		<tr>
+			<th></th>
+			<th colspan="3">Данные администратора</th>
+			<th colspan="5"class="manager">Данные менеджера</th>
+		</tr>
+		<tr>
 			<th>Источник</th>
-			<th>Звонков (администратор)</th>
-			<th>Визитов (администратор)</th>
-			<th>Тестов (администратор)</th>
-			<th class="manager">Звонков (менеджер)</th>
-			<th class="manager">Визитов (менеджер)</th>
-			<th class="manager">Тестов (менеджер)</th>
+			<th>Звонки</th>
+			<th>Визиты</th>
+			<th>Вторичные визиты</th>
+			<th class="manager">Звонки</th>
+			<th class="manager">Визиты</th>
+			<th class="manager">Тесты</th>
+			<th class="manager">Взяли контакты</th>
+			<th class="manager">Нет контактов (Out)</th>
 		</tr>
 		<tr ng-repeat="model in admin_commercials">
 			<td class="model">{{model.commercial}}</td>
 			<td>{{model.zv}}</td>
 			<td>{{model.vz}}</td>
-			<td>{{model.tst}}</td>
+			<td>{{model.vz2_admin}}</td>
 			<td class="manager">{{model.zv_manager}}</td>
 			<td class="manager">{{model.vz_manager}}</td>
 			<td class="manager">{{model.tst_manager}}</td>
+			<td class="manager">{{model.contacts}}</td>
+			<td class="manager">{{model.out}}</td>
 		</tr>
 	</table>
 
@@ -108,8 +127,8 @@
               </button>
               <ul class="dropdown-menu pull-right" role="menu">
               	<li ng-click="edit_mydo.type='zv'"><a>Звонок</a></li>
-              	<li ng-click="edit_mydo.type='vz'"><a>Визит</a></li>
-              	<li ng-click="edit_mydo.type='tst'"><a>Тест-драйв</a></li>
+              	<li ng-click="edit_mydo.type='vz'"><a>Визит первичный</a></li>
+              	<li ng-click="edit_mydo.type='vz2'"><a>Визит вторичный</a></li>
               </ul>
             </div>
 

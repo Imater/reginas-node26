@@ -14,7 +14,8 @@ myApp.controller('adminCtrl', function ($scope, $resource, $rootScope, $location
 
     $scope.jsDoTypeText = function(type) {
         if(type == "zv") return "Звонок";
-        if(type == "vz") return "Визит";
+        if(type == "vz") return "Визит первичный";
+        if(type == "vz2") return "Визит вторичный";
         if(type == "tst") return "Тест-драйв";
     }
 
