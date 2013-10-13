@@ -1619,6 +1619,7 @@ exports.saveAdmin = function(request, response) {
 		stat_cache = {}; //обнуляем кеш
 		setTimeout(function(){
 			report.loadstat(user_id);
+			console.info("load_stat", user_id);
 		},30);
 
   //		stat_cache = {}; //обнуляем кеш
