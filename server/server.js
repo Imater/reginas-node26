@@ -1746,6 +1746,13 @@ exports.deleteAdmin = function(request, response) {
  jsCheckToken(request.query.token).done(function(user_id){
 	  pool.query('DELETE FROM `1_doadmin` WHERE id = ?',[mydo_id], function (err, rows, fields) {
 	  	response.send({rows:rows, err: err});
+
+		stat_cache = {}; //обнуляем кеш
+		setTimeout(function(){
+			report.loadstat(user_id);
+			console.info("load_stat", user_id);
+		},30);
+
 	  });
   });
 
