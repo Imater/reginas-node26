@@ -1176,7 +1176,6 @@ $scope.jsGetBrands = function() {
   } else if ( allow_brands.indexOf("-")!=-1 ) {
     brands = $scope.fpk.brands;
   } else if (true) {
-    alert(1);
     brands = _.filter($scope.fpk.brands, function(brand){
       return (allow_brands.indexOf(brand.id) != -1);
     });

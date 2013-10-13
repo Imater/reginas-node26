@@ -33,7 +33,7 @@
       </li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
-      <li ng-if="!fpk.the_user.rights.isInside"><a>Ограниченный доступ (вы зашли из интернета)</a></li>
+      <li ng-if="!fpk.the_user.rights.isInside"><a>Ограниченный доступ (вы зашли не с рабочей сети)</a></li>
       <li ng-if="fpk.inside"><a href="#/fpk/admin_cup">Трафик</a></li>
       <li ng-if="fpk.inside"><a href="#/fpk/reiting">Рейтинг менеджеров</a></li>
       <li ng-if="fpk.inside&&fpk.the_user.rights[0].can_edit_models"><a href="#/fpk/settings/models">Настройки</a></li>
