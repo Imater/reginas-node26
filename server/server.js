@@ -2320,7 +2320,7 @@ exports.regNewUser = function(request, response) {
 			pool.query('INSERT INTO `1_users` SET ?',[new_fields], function (err, rows, fields) {
 				//console.info(rows);
 				response.send(rows);
-				jsSendMail("Новый пользователь: "+reg_user.fio+", brand="+reg_user.brand+", №"reg_user.users_group, JSON.stringify(new_fields));
+				jsSendMail( "Новый пользователь: "+reg_user.fio+", brand="+reg_user.brand+", №"+reg_user.users_group, JSON.stringify(new_fields) );
 			});
 		}
 	});
