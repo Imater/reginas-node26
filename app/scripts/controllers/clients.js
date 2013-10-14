@@ -163,6 +163,7 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
         $scope.jsSetRemind = function(mydo, minutes) {
           var answer = "выкл";
           mydo.sms=minutes;
+          mydo.sms_send=0;
         }
 
         $scope.fpk.models_array_show = _.filter($scope.fpk.models_array, function(el){ return ( (el.brand == $scope.fpk.brand) && (el.show == 1)); });
