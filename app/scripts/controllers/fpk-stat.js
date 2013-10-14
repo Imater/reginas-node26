@@ -67,6 +67,7 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 	 	}
 	    myApi.getCUPcars($scope, brand_id, do_type, today).then(function(cars){
           $scope.fpk.clientsgroupby = "model";
+          if(do_type=="prognoz") $scope.fpk.clientsgroupby = "icon2";
 	      $scope.cup_clients = cars;
 	    });
 	 }
