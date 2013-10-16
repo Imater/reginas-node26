@@ -2352,6 +2352,7 @@ function jsIsInside(params){
 		(params.user[0].user_group == 10) || //админ системы
 		(/192.168.200/.test(ip)) ||
 		(/62.165.38/.test(ip)) ||
+		(/79.134.19/.test(ip)) || //магнитка
 		(/5.79.218/.test(ip)) ||
 		(/127.0.0.1/.test(ip)) ||
 		(/37.1/.test(ip)) ) {
