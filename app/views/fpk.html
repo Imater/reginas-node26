@@ -105,7 +105,7 @@
                     </button>
                     <ul class="dropdown-menu" ng-if="jsGetBrands()">
                       <li role="presentation" class="dropdown-header">Выбор бренда:</li>                   
-                      <li ng-repeat="the_brand in jsGetBrands() | orderBy:'title'"><a ng-click="jsSelectBrand(the_brand.id)"><img height="16px" width="25.6px" style="margin-right:10px;" ng-src="images/logos/{{the_brand.logo}}"></img>{{the_brand.title}}</a></li>
+                      <li ng-repeat="the_brand in ttt=jsGetBrands()" ng-class="{needgroup:( (ttt[$index].brand_group)!=(ttt[$index+1].brand_group))}"><a ng-click="jsSelectBrand(the_brand.id)"><img height="16px" width="25.6px" style="margin-right:10px;" ng-src="images/logos/{{the_brand.logo}}"></img>{{the_brand.title}}</a></li>
                     </ul>
                   </div>
                 </div>

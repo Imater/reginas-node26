@@ -1889,3 +1889,9 @@ a {
     cursor: pointer; }
   .reiting_table .manager {
     white-space: nowrap; }
+
+tr.needgroup td {
+  border-top: 20px solid #000; }
+
+li.needgroup {
+  margin-bottom: 20px; }

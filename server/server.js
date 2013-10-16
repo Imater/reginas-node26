@@ -46,7 +46,7 @@ var mdb, collection;
 
 /*app.configure(function() {*/
 
-app.configure(function(){
+/*app.configure(function(){
   app.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     return next();
@@ -54,7 +54,7 @@ app.configure(function(){
   app.use(express.static(__dirname + '/public'));
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
-
+*/
 /*    app.use(express.static(__dirname + '/public'));
     app.header("Access-Control-Allow-Origin", "*");
 });*/
@@ -1928,7 +1928,7 @@ exports.loadStatCup = function(request, response) {
 
   pool.query('SELECT * FROM `1_plan` WHERE `month` = "'+today_month+'"', function (err, plans, fields) {
   		//console.info(plans);
-    pool.query('SELECT * FROM `1_brands` WHERE `Show` = 1', function (err, brands, fields) {
+    pool.query('SELECT * FROM `1_brands` WHERE `Show` = 1 ORDER by brand_group, title', function (err, brands, fields) {
 
     	$.each(brands, function(i, brand){
 			var plan = _.find(plans, function(el){ return el.brand == brand.id; });

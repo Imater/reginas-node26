@@ -1179,7 +1179,9 @@ $scope.jsGetBrands = function() {
       return (allow_brands.indexOf(brand.id) != -1);
     });
   }
-  
+  brands = _.sortBy(brands, function(brand){
+    return brand.brand_group+brand.title;
+  });
   $scope.fpk.brands_cache = brands;
   return brands;
   //$scope.fpk.the_user.rights[0].brands  

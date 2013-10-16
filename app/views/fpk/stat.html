@@ -14,8 +14,8 @@
         <a class="pull-right" ng-click="getCUPtable();fpk.jsLoadStat();">Обновить (данные на {{fpk.stat_load_time}})</a>
         <br><br>
         <table>
-        <tr ng-repeat="brand in cup | orderBy:'brandname':true">
-        	<td class="first_td"><img style="width:32px;" title="{{brand.title}}" ng-src="images/logos/{{brand.logo}}"></td>
+        <tr ng-repeat="brand in cup" ng-class="{needgroup:( (cup[$index].brand_group)!=(cup[$index-1].brand_group))}">
+        	<td class="first_td"><img style="width:32px;" title="{{brand.title}}" ng-src="images/logos/{{brand.logo}}">
         	<td class="cup_icon"><img src="images/do_type/1dogovor.png"></td>
         	<td ng-class="{active:(cup_selected == brand.id+'dg')}" title="Договора за день (за месяц)" ng-click="loadCupCar(brand.id, 'dg', brand.id+'dg')"><b color-change="brand.cup.dogovor">{{brand.cup.dogovor}} ({{brand.cup.dogovor_month}})</b></td>
         	<td class="cup_icon"><img src="images/do_type/1vidacha.png"></td>
