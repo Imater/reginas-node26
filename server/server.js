@@ -2936,8 +2936,8 @@ app.delete('/api/v1/message/:id', database.findMessageById );
 
 app.configure(function() {
 	app.use(express.compress());
-    app.use( express.static(__dirname + '/../app/images', {maxAge: 31557600000}) );
-    app.use( express.static(__dirname + '/../app/images/do_type', {maxAge: 31557600000}) );
+    app.use( express.static(__dirname + '/../app/images', {maxAge: 86400000}) );
+    app.use( express.static(__dirname + '/../app/images/do_type', {maxAge: 86400000}) );
     app.use( express.static(__dirname + '/../app') );
 });
 
