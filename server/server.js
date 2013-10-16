@@ -183,7 +183,7 @@ database = exports;
 
 setInterval(function(){ 
 	database.checkSMS();
-}, 30000);
+}, 60000);
 
 app.get("/api/v1/user_:user_id/time_:lasttime/:action", function(request, response) {
   database.findAllContinents(request,function(err, results) {
