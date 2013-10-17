@@ -52,7 +52,7 @@ app.configure(function(){
     if(/png/.test(req.url)) {
     	res.setHeader("Cache-Control", "public, max-age=17280000");
     } else {
-    	res.setHeader("Cache-Control", "public, max-age=900000");    	
+    	res.setHeader("Cache-Control", "public, max-age=1000");    	
     }
 
     return next();
