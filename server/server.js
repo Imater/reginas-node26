@@ -49,10 +49,12 @@ var mdb, collection;
 app.configure(function(){
   app.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
-    if(/png/.test(req.url)) {
+    if(/.(png|jpg|jpeg|woff)/ig.test(req.url)) {
     	res.setHeader("Cache-Control", "public, max-age=17280000");
+    } else if(/.(js|css|html|json)/.test(req.url)) {
+    	res.setHeader("Cache-Control", "public, max-age=900000");    	
     } else {
-    	res.setHeader("Cache-Control", "public, max-age=1000");    	
+    	res.setHeader("Cache-Control", "public, max-age=500");    	
     }
 
     return next();
