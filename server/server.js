@@ -2976,9 +2976,10 @@ exports.sendSMS = function(request, response) {
 };
 
 exports.checkSMS = function(request, response) {
+
 	var hour = (new Date).getHours();
 	
-	if( (hour > 0) && (hour < 7) ) return false;
+	if( (hour >= 0) && (hour < 7) ) return false;
 
 	var sms_texts = [];
 
