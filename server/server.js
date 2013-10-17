@@ -2976,13 +2976,16 @@ exports.sendSMS = function(request, response) {
 };
 
 exports.checkSMS = function(request, response) {
+	var hour = (new Date).getHours();
+	
+	if( (hour > 0) && (hour < 7) ) return false;
 
 	var sms_texts = [];
 
 	var Sms = require('node-smsc').Smsc,
     sms = new Sms('imater', '990990', {sender: 'Reginas-FPK'});
 
-	var query = "SELECT DATE_ADD(NOW(), INTERVAL 1_do.sms MINUTE) now_time, date2 remind_time, 1_users.phone, 1_clients.phone1, 1_clients.fio, 1_do.*  FROM 1_do LEFT JOIN 1_users ON 1_users.id=1_do.manager_id LEFT JOIN 1_clients ON 1_clients.id = 1_do.client WHERE sms>0 AND checked = '0000-00-00 00:00:00' AND sms_send = 0 AND DATE_ADD(NOW(), INTERVAL 1_do.sms MINUTE) > date2";
+	var query = "SELECT 1_u.fio myhost, DATE_ADD(NOW(), INTERVAL 1_do.sms MINUTE) now_time, date2 remind_time, 1_users.phone, 1_clients.phone1, 1_clients.fio, 1_do.*  FROM 1_do LEFT JOIN 1_users ON 1_users.id=1_do.manager_id LEFT JOIN 1_clients ON 1_clients.id = 1_do.client LEFT JOIN 1_users 1_u ON 1_u.id = 1_do.host_id AND 1_do.host_id!=1_do.manager_id WHERE sms>0 AND checked = '0000-00-00 00:00:00' AND sms_send = 0 AND DATE_ADD(NOW(), INTERVAL 1_do.sms MINUTE) > date2";
 
 	pool.query(query, function (err, mydo, fields) {
 		mydo = correct_dates(mydo);
@@ -2990,12 +2993,18 @@ exports.checkSMS = function(request, response) {
 		$.each(mydo, function(i,the_do){
 			//var t_time = the_do.remind_time.toString().split(" ")[1];
 			//var time1 = t_time[0]+":"+t_time[1];
+			var host = "";
+			console.info("HOST",the_do);
+			if(the_do.myhost) {
+				var host = ". Поручил: "+the_do.myhost.split(" ")[0];
+			}
+
 			var time = the_do.remind_time.toString().split(" ")[1].substr(0,5);
 
 			var dots = "";
 			if(the_do.text>80) dots = "..";
 
-			var text = the_do.type + " "+time+ ". "+ the_do.text.substr(0,80)+dots+ ". "+the_do.fio+" "+the_do.phone1+"";
+			var text = the_do.type + " "+time+ ". "+ the_do.text.substr(0,80)+dots+ ". "+the_do.fio+" "+the_do.phone1+"" + host;
 			sms_texts.push({phone: the_do.phone, text: text});
 			ids += the_do.id+",";
 
@@ -3003,7 +3012,7 @@ exports.checkSMS = function(request, response) {
 		ids += "0";
 
 		if(sms_texts.length) {
-			//console.info(sms_texts);
+			console.info(sms_texts);
 			sms.list(sms_texts, function (err, result) {
 			    console.info( err, result );
 			    if(result.cnt>0) {
