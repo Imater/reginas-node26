@@ -46,15 +46,21 @@ var mdb, collection;
 
 /*app.configure(function() {*/
 
-/*app.configure(function(){
+app.configure(function(){
   app.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
+    if(/png/.test(req.url)) {
+    	res.setHeader("Cache-Control", "public, max-age=17280000");
+    } else {
+    	res.setHeader("Cache-Control", "public, max-age=900000");    	
+    }
+
     return next();
   });
-  app.use(express.static(__dirname + '/public'));
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+//  app.use(express.static(__dirname + '/public'));
+  //app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
-*/
+
 /*    app.use(express.static(__dirname + '/public'));
     app.header("Access-Control-Allow-Origin", "*");
 });*/
