@@ -1,6 +1,8 @@
 if( /reginas/.test(window.location.hostname) ) var add = ":8880"
 else add = "";
 
+if( /62.165.36.130/.test(window.location.hostname) ) var add = ":8880";
+
 var oauth2server = "http://"+window.location.hostname+add+"/";
 
 
