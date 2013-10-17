@@ -2,21 +2,6 @@
 
 var NO_DATE = '0000-00-00 00:00:00';
 
-var uagent = navigator.userAgent.toLowerCase();
-if(uagent.search("iphone") > -1)
-setTimeout(function(){
-	$("#cards_scrollable").scroll(function(){
-
-		setTimeout(function(){
-			var top = $("#cards_scrollable").scrollTop();
-			if(top > 75) $("body").addClass("fav_hide");
-			if(top < 5) $("body").removeClass("fav_hide");
-		},50);
-
-	});
-},2000);
-
-
 
 /*i18n.init({lng:"ru"},function(t) {
   // translate nav

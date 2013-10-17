@@ -108,6 +108,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#33ffffff', e
 
 }
 
+html {
+}
+
+
 body {
     background: #fafafa;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -153,6 +157,7 @@ body {
     width:$panel_width;
     left:0px;
     z-index:0;
+    min-height: 450px;
 
     #panel_left_header {
         height: $header_height;
@@ -226,6 +231,7 @@ body {
     right:$panel_width;
     z-index:1;
     min-width: 300px;
+    min-height: 350px;
     box-shadow: -1px 0px 7px #000;
 
     #panel_center_header {
@@ -237,7 +243,11 @@ body {
         text-shadow: 0px 1px 0px #000;
         text-align: center;
 
-
+        .dropdown-menu {
+            a {
+                color :#000;
+            }
+        }
             .menu_mini {
                 position: absolute;
                 left:7px;
@@ -2522,3 +2532,5 @@ li.needgroup {
         text-decoration: underline;
     }
 }
+
+//color: #FFF;
