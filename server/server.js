@@ -2994,7 +2994,6 @@ exports.checkSMS = function(request, response) {
 			//var t_time = the_do.remind_time.toString().split(" ")[1];
 			//var time1 = t_time[0]+":"+t_time[1];
 			var host = "";
-			console.info("HOST",the_do);
 			if(the_do.myhost) {
 				var host = ". Поручил: "+the_do.myhost.split(" ")[0];
 			}
@@ -3012,9 +3011,7 @@ exports.checkSMS = function(request, response) {
 		ids += "0";
 
 		if(sms_texts.length) {
-			console.info(sms_texts);
 			sms.list(sms_texts, function (err, result) {
-			    console.info( err, result );
 			    if(result.cnt>0) {
 			    	
 			    	query = "UPDATE 1_do SET sms_send = 1 WHERE id IN ("+ids+")";
