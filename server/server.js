@@ -47,6 +47,8 @@ var mdb, collection;
 /*app.configure(function() {*/
 
 app.configure(function(){
+  
+  app.use(express.compress());
   app.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     if(/.(png|jpg|jpeg|woff)/ig.test(req.url)) {
