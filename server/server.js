@@ -782,7 +782,7 @@ exports.loadStat = function(request, response) {
 
 	if( global.stat_cache[brand_id][ cache_id ] ) {
 		response.send( global.stat_cache[brand_id][ cache_id ] ); //статистика кешируется нижняя и левая
-		console.info("Stat from cache "+cache_id+", brand = ", brand_id,global.stat_cache);
+		//console.info("Stat from cache "+cache_id+", brand = ", brand_id,global.stat_cache);
 	} else {
 
 		if(manager_id>0) {
@@ -2042,7 +2042,7 @@ exports.deleteAdmin = function(request, response) {
 
 		setTimeout(function(){
 			report.loadstat(user_id);
-			console.info("load_stat", user_id);
+			//console.info("load_stat", user_id);
 		},5);
 
 	  });
@@ -2724,7 +2724,7 @@ exports.loadStatTable = function(request, response) {
 					var do_type = "dg";
 					//console.info(car.fio, col.col);
 					var month = (col.col>1)?col.col:'0'+col.col;
-					console.info("DO_MONTH",month, car[do_type]);
+					//console.info("DO_MONTH",month, car[do_type]);
 					if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
 						return true;
 					} else {
@@ -2838,7 +2838,7 @@ exports.loadStatTable = function(request, response) {
 			});
 
 
-			console.info("BRAND:", brand_id);
+			//console.info("BRAND:", brand_id);
 			pool.query('SELECT * FROM `1_clients` WHERE brand=?',[brand_id], function (err, cars, fields) {
 				cars = correct_dates(cars, "no_zero_dates");
 				
@@ -2902,7 +2902,7 @@ exports.checkSMS = function(request, response) {
 		ids += "0";
 
 		if(sms_texts.length) {
-			console.info(sms_texts);
+			//console.info(sms_texts);
 			sms.list(sms_texts, function (err, result) {
 			    console.info( err, result );
 			    if(result.cnt>0) {
