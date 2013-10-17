@@ -51,6 +51,7 @@ myApp.controller('adminCtrl', function ($scope, $resource, $rootScope, $location
         myApi.jsGetManagerCupAdminReport($scope).then(function(admin){
             $scope.admin_models = admin.admin_models;
             $scope.admin_commercials = admin.admin_commercials;
+            $scope.admin_users = admin.admin_users;
             //alert(admin.admin_models.length);
             dfd.resolve();
         })        
@@ -87,6 +88,7 @@ myApp.controller('adminCtrl', function ($scope, $resource, $rootScope, $location
 
     $scope.$watchCollection("[fpk.brand, fpk.today_date]",function(){
         $scope.jsLoadAdmin();
+        if($scope.admin_models) $scope.jsLoadAdminReport();
     })
 
     $scope.jsSign = function(a, b) {
