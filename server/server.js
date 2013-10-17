@@ -46,7 +46,7 @@ var mdb, collection;
 
 /*app.configure(function() {*/
 
-/*app.configure(function(){
+app.configure(function(){
   app.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     return next();
@@ -54,7 +54,7 @@ var mdb, collection;
   app.use(express.static(__dirname + '/public'));
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
-*/
+
 /*    app.use(express.static(__dirname + '/public'));
     app.header("Access-Control-Allow-Origin", "*");
 });*/
