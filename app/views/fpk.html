@@ -32,11 +32,11 @@
         </ul>
       </li>
     </ul>
-    <ul class="nav navbar-nav navbar-right">
+    <ul class="nav navbar-nav navbar-right top_header_filter">
       <li ng-if="!fpk.the_user.rights.isInside"><a>Ограниченный доступ (вы зашли не с рабочей сети)</a></li>
-      <li ng-if="fpk.inside"><a href="#/fpk/admin_cup">Трафик</a></li>
-      <li ng-if="fpk.inside"><a href="#/fpk/reiting">Рейтинг менеджеров</a></li>
-      <li ng-if="fpk.inside&&fpk.the_user.rights[0].can_edit_models"><a href="#/fpk/settings/models">Настройки</a></li>
+      <li ng-if="fpk.inside"><a href="#/fpk/admin_cup" ng-class="{active: $routeSegment.startsWith('s1.admin_cup')}" >Трафик</a></li>
+      <li ng-if="fpk.inside"><a href="#/fpk/reiting"  ng-class="{active: $routeSegment.startsWith('s1.reiting')}">Рейтинг менеджеров</a></li>
+      <li ng-if="fpk.inside&&fpk.the_user.rights[0].can_edit_models"  ng-class="{active: $routeSegment.startsWith('s1.settings')}"><a href="#/fpk/settings/models">Настройки</a></li>
       <li class="dropdown" ng-if="fpk.inside">
         <a  class="dropdown-toggle" data-toggle="dropdown">Фильтр: {{fpk.jsFioShort(fpk.jsShowManagerFilter(),"name")}} <b class="caret"></b></a>
         <ul class="dropdown-menu">

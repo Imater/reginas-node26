@@ -35,6 +35,20 @@ myApp.controller('adminCtrl', function ($scope, $resource, $rootScope, $location
 
         myApi.jsGetManagerCupAdmin($scope).then(function(admin){
             $scope.admin = admin.admin;
+//            $scope.admin_models = admin.admin_models;
+  //          $scope.admin_commercials = admin.admin_commercials;
+            //alert(admin.admin_models.length);
+            dfd.resolve();
+        })        
+        return dfd.promise();
+    }
+
+
+    $scope.jsLoadAdminReport = function(){
+        var dfd = $.Deferred();
+        $scope.fpk.models_array_show = _.filter($scope.fpk.models_array, function(el){ return ( (el.brand == $scope.fpk.brand) && (el.show == 1)); });
+
+        myApi.jsGetManagerCupAdminReport($scope).then(function(admin){
             $scope.admin_models = admin.admin_models;
             $scope.admin_commercials = admin.admin_commercials;
             //alert(admin.admin_models.length);

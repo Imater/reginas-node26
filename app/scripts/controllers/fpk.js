@@ -18,13 +18,13 @@ setTimeout(function(){
 
 
 
-i18n.init({lng:"ru"},function(t) {
+/*i18n.init({lng:"ru"},function(t) {
   // translate nav
   $("body").i18n();
   // programatical access
   // var appName = t("4tree");
 });
-
+*/
 var myApp = angular.module('fpkApp');
 
 
@@ -659,6 +659,14 @@ myApp.factory('myApi', function($http, $q, oAuth2){
 
       return dfd.promise;
     },
+    jsGetManagerCupAdminReport: function($scope, searchtext) {
+      var dfd = $q.defer();
+        $http({url:'/api/v1/stat/admin_cup/managers_report',method: "GET", params: { brand: $scope.fpk.brand, today: $scope.fpk.today_date}}).then(function(result){
+          dfd.resolve(result.data);
+        });
+
+      return dfd.promise;
+    },
     getAutocomplete: function($scope, searchtext) {
       var dfd = $q.defer();
         $http({url:'/api/v1/autocomplete',method: "GET", params: { brand: $scope.fpk.brand, searchtext: searchtext }}).then(function(result){
@@ -918,7 +926,7 @@ myApp.factory('myApi', function($http, $q, oAuth2){
 
       oAuth2.jsGetToken($scope).done(function(token){
 
-        $http({url:'/api/v1/client/'+client_id,method: "DELETE", isArray: true, params: { token: token, client_id: client_id }}).then(function(result){
+        $http({url:'/api/v1/client/'+client_id,method: "DELETE", isArray: true, params: { token: token, client_id: client_id, brand: $scope.fpk.brand }}).then(function(result){
             console.info("CLIENT DELETE: ",result.data);
             dfd.resolve(result.data);
         });
@@ -933,7 +941,7 @@ myApp.factory('myApi', function($http, $q, oAuth2){
 
       oAuth2.jsGetToken($scope).done(function(token){
 
-        $http({url:'/api/v1/admin/'+mydo_id,method: "DELETE", isArray: true, params: { token: token, mydo_id: mydo_id }}).then(function(result){
+        $http({url:'/api/v1/admin/'+mydo_id,method: "DELETE", isArray: true, params: { token: token, mydo_id: mydo_id, brand: $scope.fpk.brand }}).then(function(result){
             console.info("ADMIN DELETE: ",result.data);
             dfd.resolve(result.data);
         });
@@ -948,7 +956,7 @@ myApp.factory('myApi', function($http, $q, oAuth2){
 
       oAuth2.jsGetToken($scope).done(function(token){
 
-        $http({url:'/api/v1/do/'+do_id,method: "DELETE", isArray: true, params: { token: token, do_id: do_id }}).then(function(result){
+        $http({url:'/api/v1/do/'+do_id,method: "DELETE", isArray: true, params: { token: token, do_id: do_id, brand: $scope.fpk.brand }}).then(function(result){
             console.info("DO DELETE: ",result.data);
             dfd.resolve(result.data);
         });

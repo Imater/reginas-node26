@@ -47,6 +47,11 @@
 		  </div>
 		</ul>
 	</div>
+
+  <button class="btn btn-success" ng-click="jsLoadAdminReport()"><span ng-if="!admin_models">Показать</span> <span ng-if="admin_models">Обновить</span> отчёты по трафику</button>
+
+  <div ng-show="admin_models||admin_commercials">
+
 	<h3>Итоговый трафик по моделям</h3>
 
 	<table class="model_trafic">
@@ -111,6 +116,7 @@
 		</tr>
 	</table>
 
+  </div>
 
 </div>
 

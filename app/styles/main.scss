@@ -2515,3 +2515,10 @@ tr.needgroup {
 li.needgroup {
     margin-bottom: 20px;
 }
+
+.top_header_filter {
+    a.active {
+        color: #FFF !important;
+        text-decoration: underline;
+    }
+}
