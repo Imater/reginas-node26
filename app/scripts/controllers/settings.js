@@ -21,9 +21,11 @@ myApp.controller('settingsCtrl', function ($scope, $resource, $rootScope, $locat
  
  $scope.jsRefreshModels = function(){
    //alert("refresh models");
+   console.info("ALL",$scope.fpk.models_array, $scope.fpk.brand );
    $scope.myData = _.filter($scope.fpk.models_array, function(model){
-      return (model.brand == $scope.fpk.brand);
+      return (model.brand == $scope.fpk.brand.toString());
    });  
+   console.info("LOCAL",$scope.myData );
  }
 
  $scope.jsRefreshModels();

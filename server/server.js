@@ -46,7 +46,7 @@ var mdb, collection;
 
 /*app.configure(function() {*/
 
-app.configure(function(){
+/*app.configure(function(){
   app.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     return next();
@@ -54,7 +54,7 @@ app.configure(function(){
   app.use(express.static(__dirname + '/public'));
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
-
+*/
 /*    app.use(express.static(__dirname + '/public'));
     app.header("Access-Control-Allow-Origin", "*");
 });*/
@@ -1777,6 +1777,7 @@ exports.newDo = function(request, response) {
 exports.loadModels = function(request, response) {
     
     pool.query('SELECT * FROM `1_models` ORDER by model', function (err, models, fields) {
+	   	console.info("MODELS",models);
 	    pool.query('SELECT * FROM `1_brands` ORDER by title', function (err, brands, fields) {
 		    pool.query('SELECT * FROM `1_users_group`', function (err, users_group, fields) {
 	  			response.send({models:models, brands: brands, users_group: users_group });
