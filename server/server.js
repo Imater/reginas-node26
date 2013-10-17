@@ -46,15 +46,25 @@ var mdb, collection;
 
 /*app.configure(function() {*/
 
-/*app.configure(function(){
+app.configure(function(){
+  
+  app.use(express.compress());
   app.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
+    if(/.(png|jpg|jpeg|woff|gif)/ig.test(req.url)) {
+    	res.setHeader("Cache-Control", "public, max-age=17280000");
+    } else if(/.(js|css|html|json)/.test(req.url)) {
+    	res.setHeader("Cache-Control", "public, max-age=900000");    	
+    } else {
+    	res.setHeader("Cache-Control", "public, max-age=500");    	
+    }
+
     return next();
   });
-  app.use(express.static(__dirname + '/public'));
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+//  app.use(express.static(__dirname + '/public'));
+  //app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
-*/
+
 /*    app.use(express.static(__dirname + '/public'));
     app.header("Access-Control-Allow-Origin", "*");
 });*/
@@ -183,7 +193,7 @@ database = exports;
 
 setInterval(function(){ 
 	database.checkSMS();
-}, 30000);
+}, 60000);
 
 app.get("/api/v1/user_:user_id/time_:lasttime/:action", function(request, response) {
   database.findAllContinents(request,function(err, results) {
@@ -1777,7 +1787,6 @@ exports.newDo = function(request, response) {
 exports.loadModels = function(request, response) {
     
     pool.query('SELECT * FROM `1_models` ORDER by model', function (err, models, fields) {
-	   	console.info("MODELS",models);
 	    pool.query('SELECT * FROM `1_brands` ORDER by title', function (err, brands, fields) {
 		    pool.query('SELECT * FROM `1_users_group`', function (err, users_group, fields) {
 	  			response.send({models:models, brands: brands, users_group: users_group });

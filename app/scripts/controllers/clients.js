@@ -273,7 +273,7 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
               client.do = value;
               client._visible = true;
               var new_do = _.find(client.do, function(el){ return el.id == insert_id; });
-              if(new_do) new_do._visible = true;
+              new_do._visible = true;
               setTimeout(function(){
                 $("li[mydoid='"+insert_id+"'] textarea:first").focus().select();
               },1);
