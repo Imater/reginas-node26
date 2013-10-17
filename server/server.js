@@ -3079,7 +3079,7 @@ var smtpTransport = nodemailer.createTransport("SMTP",{
 // setup e-mail data with unicode symbols
 var mailOptions = {
     from: "Reginas-FPK ✔ <fpk.reginas@gmail.com>", // sender address
-    to: "eugene.leonar@gmail.com", // list of receivers
+    to: "fpk.reginas@gmail.com", // list of receivers
     subject: title, // Subject line
     //text: text, // plaintext body
     html: text // html body
