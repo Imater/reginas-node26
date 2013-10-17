@@ -3,6 +3,10 @@ else add = "";
 
 var oauth2server = "http://"+window.location.hostname+add+"/";
 
+$(function() {
+    FastClick.attach(document.body);
+});
+
 
 angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 'ui.redactor.multi', 'ui.calendar', "ng", "infinite-scroll", "monospaced.elastic", 'route-segment', 'view-segment', 'ngGrid'])
     .config(function ($routeProvider, $locationProvider, $compileProvider, $routeSegmentProvider) {
