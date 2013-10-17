@@ -5,7 +5,7 @@ if( /62.165.36.130/.test(window.location.hostname) ) var add = ":8880";
 
 var oauth2server = "http://"+window.location.hostname+add+"/";
 
-console.info("HOST:", window.location.hostname);
+console.info("HOST:", window.location.hostname, oauth2server);
 
 
 angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 'ui.redactor.multi', 'ui.calendar', "ng", "infinite-scroll", "monospaced.elastic", 'route-segment', 'view-segment', 'ngGrid'])
