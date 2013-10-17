@@ -51,7 +51,7 @@ app.configure(function(){
   app.use(express.compress());
   app.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
-    if(/.(png|jpg|jpeg|woff)/ig.test(req.url)) {
+    if(/.(png|jpg|jpeg|woff|gif)/ig.test(req.url)) {
     	res.setHeader("Cache-Control", "public, max-age=17280000");
     } else if(/.(js|css|html|json)/.test(req.url)) {
     	res.setHeader("Cache-Control", "public, max-age=900000");    	
