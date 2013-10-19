@@ -19,18 +19,7 @@ require("./isProduction.js");
 var Pool = require('mysql-simple-pool');
 
 
-var os=require('os');
-var ifaces=os.networkInterfaces();
-for (var dev in ifaces) {
-  var alias=0;
-  ifaces[dev].forEach(function(details){
-    if (details.family=='IPv4') {
-      console.log(dev+(alias?':'+alias:''),details.address, isProduction);
-      ++alias;
-    }
-  });
-}
-
+if(!isProduction) console.info("Development mode");
 
 global.pool = new Pool(100, {
   host     : '127.0.0.1',
@@ -469,9 +458,25 @@ function twoDigits(d) {
 }
 //Перевожу дату new Date в mySQL формат
 function tomysql(dat) {
+	dat = new Date(dat);
 	if(dat == "0000-00-00 00:00:00") return dat;
     return dat.getFullYear() + "-" + twoDigits(1 + dat.getMonth()) + "-" + twoDigits(dat.getDate()) + " " + twoDigits(dat.getHours()) + ":" + twoDigits(dat.getMinutes()) + ":" + twoDigits(dat.getSeconds());
 };
+
+function frommysql(mysql_string)
+{ 
+   if(mysql_string == "") return false;
+   
+   if(typeof mysql_string === 'string')
+   {
+      var t = mysql_string.split(/[- :]/);
+
+      //when t[3], t[4] and t[5] are missing they defaults to zero
+      return new Date(t[0], t[1] - 1, t[2], t[3] || 0, t[4] || 0, t[5] || 0);          
+   }
+
+   return null;   
+}
 
 
 exports.loadAllFromMySQL = function(request, response) {
@@ -3130,6 +3135,81 @@ smtpTransport.sendMail(mailOptions, function(error, response){
 }
 
 
+exports.loadJsonCup = function(request, response) {
+
+	var brand = request.query.brand;
+
+	console.info(brand);
+
+	var answer = {dg:[],
+				  vd:[],
+				 out:[]};
+
+
+	var query = "SELECT dg, vd, `out` FROM 1_clients WHERE (dg!='0000-00-00 00:00:00' OR `out`!='0000-00-00 00:00:00' OR vd!='0000-00-00 00:00:00') AND brand = "+brand;
+	pool.query(query, function (err, clients, fields) {
+
+			clients = correct_dates(clients, 'no_zero_dates');
+
+			var distinct_days = {dg:{}, vd: {}, out: {}};
+
+			$.each(clients, function(i,client) {
+
+				if(client.dg != "") {
+					var day = client.dg.split(" ")[0];
+					if(!distinct_days.dg[day]) {
+						distinct_days.dg[day] = {cnt:0};
+					}
+					distinct_days.dg[day].cnt += 1;
+					
+				}
+
+				if(client.vd != "") {
+					var day = client.vd.split(" ")[0];
+					if(!distinct_days.vd[day]) {
+						distinct_days.vd[day] = {cnt:0};
+					}
+					distinct_days.vd[day].cnt += 1;
+					
+				}
+				
+
+				if( (client.out != "") && (client.dg!="") ) {
+					var day = client.out.split(" ")[0];
+					if(!distinct_days.out[day]) {
+						distinct_days.out[day] = {cnt:0};
+					}
+					distinct_days.out[day].cnt += 1;
+					
+				}
+
+			});
+
+			$.each(distinct_days.dg, function(key, day) {
+				answer.dg.push( [frommysql(key+" 00:00:00").getTime(), day.cnt] );
+			});
+
+			answer.dg = _.sortBy(answer.dg, function(el){ return el[0] });
+
+			$.each(distinct_days.vd, function(key, day) {
+				answer.vd.push( [frommysql(key+" 00:00:00").getTime(), day.cnt] );
+			});
+
+			answer.vd = _.sortBy(answer.vd, function(el){ return el[0] });
+
+			$.each(distinct_days.out, function(key, day) {
+				answer.out.push( [frommysql(key+" 00:00:00").getTime(), day.cnt] );
+			});
+
+			answer.out = _.sortBy(answer.out, function(el){ return el[0] });
+
+
+
+		response.send(answer);
+	});
+
+};
+
 ////////////////////////////////////////////////////////////////////////////////////////
                                        ////////
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -3161,6 +3241,8 @@ app.get('/api/v1/bigdata', database.loadAllBig)
 app.get('/api/v1/bigdata2', database.loadAllBig2)
 
 app.get('/api/v1/client_ids', database.findAllClientsIds );
+
+app.get('/api/v1/json/cup', database.loadJsonCup );
 
 app.get('/api/v1/client', database.findAllClients );
 app.get('/api/v1/client/:id', database.findClient );
