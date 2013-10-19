@@ -3152,9 +3152,15 @@ exports.loadJsonCup = function(request, response) {
 
 			var distinct_days = {dg:{}, vd: {}, out: {}};
 
+			var tomorrow = tomysql(new Date((new Date).getTime()+24*60*60*1000));
+
+			distinct_days.dg[tomorrow] = {cnt:0};
+			distinct_days.vd[tomorrow] = {cnt:0};
+			distinct_days.out[tomorrow] = {cnt:0};
+
 			$.each(clients, function(i,client) {
 
-				if(client.dg != "") {
+				if(client.dg >= "2013-10-01") {
 					var day = client.dg.split(" ")[0];
 					if(!distinct_days.dg[day]) {
 						distinct_days.dg[day] = {cnt:0};
@@ -3169,7 +3175,7 @@ exports.loadJsonCup = function(request, response) {
 					
 				}
 
-				if(client.vd != "") {
+				if(client.vd >= "2013-10-01") {
 					var day = client.vd.split(" ")[0];
 					if(!distinct_days.dg[day]) {
 						distinct_days.dg[day] = {cnt:0};
@@ -3185,7 +3191,7 @@ exports.loadJsonCup = function(request, response) {
 				}
 				
 
-				if( (client.out != "") && (client.dg!="") ) {
+				if( (client.out >= "2013-10-01") && (client.dg!="") ) {
 					var day = client.out.split(" ")[0];
 					if(!distinct_days.dg[day]) {
 						distinct_days.dg[day] = {cnt:0};

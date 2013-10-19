@@ -49,7 +49,7 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 					series : [{
 						name : 'Договора',
 						data : data.dg,
-						type : 'area',
+						type : 'areaspline',
 						threshold : null,
 						tooltip : {
 							valueDecimals : 0
@@ -67,7 +67,7 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 					},{
 						name : 'Выдачи',
 						data : data.vd,
-						type : 'area',
+						type : 'areaspline',
 						threshold : null,
 						tooltip : {
 							valueDecimals : 0
