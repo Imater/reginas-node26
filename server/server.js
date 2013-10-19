@@ -3152,11 +3152,17 @@ exports.loadJsonCup = function(request, response) {
 
 			var distinct_days = {dg:{}, vd: {}, out: {}};
 
-			var tomorrow = tomysql(new Date((new Date).getTime()+24*60*60*1000));
+			var today = tomysql(new Date((new Date).getTime()+0*24*60*60*1000));
+			var tommorow = tomysql(new Date((new Date).getTime()+1*24*60*60*1000));
 
-			distinct_days.dg[tomorrow] = {cnt:0};
-			distinct_days.vd[tomorrow] = {cnt:0};
-			distinct_days.out[tomorrow] = {cnt:0};
+			distinct_days.dg[today] = {cnt:0};
+			distinct_days.vd[today] = {cnt:0};
+			distinct_days.out[today] = {cnt:0};
+
+			distinct_days.dg[tommorow] = {cnt:0};
+			distinct_days.vd[tommorow] = {cnt:0};
+			distinct_days.out[tommorow] = {cnt:0};
+
 
 			$.each(clients, function(i,client) {
 
