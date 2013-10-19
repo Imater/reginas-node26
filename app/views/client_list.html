@@ -276,7 +276,7 @@
 
 
                                 <div class="do_text">
-                                  {{do.text}}  {{do.checked}}
+                                  {{do.text}}
                                   <span ng-if="do.host_id!=client.manager_id && do.host_id>0">[Поручил: <i class="icon-user"></i>{{fpk.jsFioShort(fpk.jsFindInArray(fpk.all_managers,"id",do.host_id).fio)}}]</span>
                                   <span ng-if="do.manager_id!=client.manager_id && do.manager_id>0">[Исполнитель: <i class="icon-user"></i>{{fpk.jsFioShort(fpk.jsFindInArray(fpk.all_managers,"id",do.manager_id).fio)}}]</span>
                                   <span ng-if="do.comment" class="do_result"><br>Результат: {{do.comment}}</span>
