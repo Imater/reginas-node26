@@ -1,6 +1,6 @@
 //#fpk/stat
 
-myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment, $timeout) {
+myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment, $timeout, $http) {
 
  	$scope.fpk.leftmenu = { active:10,
                 items : [
@@ -26,32 +26,30 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 
 
 	$scope.LoadJsonByDay = function() {
-		$.getJSON('/api/v1/json/cup?brand='+$scope.fpk.brand).done(function(data) {
+//		$.getJSON('/api/v1/json/cup?brand='+$scope.fpk.brand).done(function(data) {
 
+        $http({url:'/api/v1/json/cup',method: "GET", params: { brand: $scope.fpk.brand, today: $scope.fpk.today_date}}).then(function(result){
+
+        		var data = result.data;
 				// Create the chart
 				$scope.chartConfig = {
 					exporting: {
 						enabled: true
 					},
-					xAxis: {
+   					xAxis: {
 						range: 1 * 30 * 24 * 3600 * 1000
 					},
 					rangeSelector : {
-						//selected : 1
+						selected : 1
 					},
-					legend: {
-					            align: 'right',
-					            verticalAlign: 'top',
-					            x: 0,
-					            y: 100
-					        },					useHighStocks: true,
+					useHighStocks: true,
 					title : {
-						text : 'Динамика '+$scope.fpk.brands[$scope.fpk.brand].title
+						text : 'Динамика — '+$scope.fpk.brands[$scope.fpk.brand].title
 					},
 					series : [{
 						name : 'Договора',
 						data : data.dg,
-						type : 'areaspline',
+						type : 'area',
 						threshold : null,
 						tooltip : {
 							valueDecimals : 0
@@ -69,7 +67,7 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 					},{
 						name : 'Выдачи',
 						data : data.vd,
-						type : 'areaspline',
+						type : 'area',
 						threshold : null,
 						tooltip : {
 							valueDecimals : 0
@@ -87,16 +85,23 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 					},{
 						name : 'Расторжения',
 						data : data.out,
-						type : 'column',
+						type : 'line',
 						threshold : null,
 						tooltip : {
 							valueDecimals : 0
 						},
 						color: '#89585b',
+						fillColor : {
+							linearGradient : {
+								x1: 0, 
+								y1: 0, 
+								x2: 0, 
+								y2: 1
+							},
+							stops : [[0, Highcharts.getOptions().colors[3]], [1, 'rgba(0,0,0,0)']]
+						}
 					}]
 				};
-			}).fail(function(err){
-				console.info(err);
 			});
 
 	};

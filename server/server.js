@@ -458,7 +458,7 @@ function twoDigits(d) {
 }
 //Перевожу дату new Date в mySQL формат
 function tomysql(dat) {
-	dat = new Date(dat);
+	//dat = new Date(dat);
 	if(dat == "0000-00-00 00:00:00") return dat;
     return dat.getFullYear() + "-" + twoDigits(1 + dat.getMonth()) + "-" + twoDigits(dat.getDate()) + " " + twoDigits(dat.getHours()) + ":" + twoDigits(dat.getMinutes()) + ":" + twoDigits(dat.getSeconds());
 };
@@ -515,6 +515,7 @@ global.correct_dates = function( rows, no_zero_dates ) {
 	var fields = ['date', 'zv', 'vz', 'tst', 'dg', 'vd', 'out', 'checked', 'changed', 'created', 'date1', 'date2', 'hostcheck', 'remind', 'na_date', 'now_time', 'remind_time'];
 
 	if(!rows) return rows;
+
 
 	$.each(rows, function(j,el){
 		$.each(fields, function(i, field){
@@ -3139,8 +3140,6 @@ exports.loadJsonCup = function(request, response) {
 
 	var brand = request.query.brand;
 
-	console.info(brand);
-
 	var answer = {dg:[],
 				  vd:[],
 				 out:[]};
@@ -3160,14 +3159,26 @@ exports.loadJsonCup = function(request, response) {
 					if(!distinct_days.dg[day]) {
 						distinct_days.dg[day] = {cnt:0};
 					}
+					if(!distinct_days.vd[day]) {
+						distinct_days.vd[day] = {cnt:0};
+					}
+					if(!distinct_days.out[day]) {
+						distinct_days.out[day] = {cnt:0};
+					}
 					distinct_days.dg[day].cnt += 1;
 					
 				}
 
 				if(client.vd != "") {
 					var day = client.vd.split(" ")[0];
+					if(!distinct_days.dg[day]) {
+						distinct_days.dg[day] = {cnt:0};
+					}
 					if(!distinct_days.vd[day]) {
 						distinct_days.vd[day] = {cnt:0};
+					}
+					if(!distinct_days.out[day]) {
+						distinct_days.out[day] = {cnt:0};
 					}
 					distinct_days.vd[day].cnt += 1;
 					
@@ -3176,6 +3187,12 @@ exports.loadJsonCup = function(request, response) {
 
 				if( (client.out != "") && (client.dg!="") ) {
 					var day = client.out.split(" ")[0];
+					if(!distinct_days.dg[day]) {
+						distinct_days.dg[day] = {cnt:0};
+					}
+					if(!distinct_days.vd[day]) {
+						distinct_days.vd[day] = {cnt:0};
+					}
 					if(!distinct_days.out[day]) {
 						distinct_days.out[day] = {cnt:0};
 					}

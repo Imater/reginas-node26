@@ -1369,7 +1369,8 @@ body {
         display: none;
         text-align: right; }
       #statistics table tr .first_td {
-        padding-left: 5px; }
+        padding-left: 5px;
+        cursor: pointer; }
       #statistics table tr .last_td {
         padding-left: 15px;
         padding-right: 0px; }
