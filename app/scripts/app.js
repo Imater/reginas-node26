@@ -370,6 +370,8 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
 
     }
 
+
+
     $scope.fpk.init = new $.Deferred();
 
      $scope.fpk.jsRefreshUserInfo = function(dont_select_brand) {
@@ -445,6 +447,13 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
         $scope.fpk.init.done(function(){
             $scope.fpk.jsLoadModelsFromServer().then(function(){
                 $scope.fpk.jsRefreshDo($scope);
+                 $scope.$watch("fpk.brand", function(val, newVal){
+                    if(val!=newVal) {
+                        $scope.fpk.jsRefreshDo($scope);    
+                    }
+                    
+                });
+
                 dfd.resolve();
             });
 

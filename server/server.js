@@ -64,6 +64,8 @@ app.configure(function(){
     	res.setHeader("Cache-Control", "public, max-age=17280000");
     } else if( /\.(js|css|html|json)/.test(req.url) && !(/localhost/.test(req.headers.host)) ) {
     	res.setHeader("Cache-Control", "public, max-age=0");    	
+    } else if( /bower_components/ig.test(req.url) && !(/localhost/.test(req.headers.host)) ) {
+    	res.setHeader("Cache-Control", "public, max-age=280000");    	
     } else {
     	res.setHeader("Cache-Control", "public, max-age=0");    	
     }

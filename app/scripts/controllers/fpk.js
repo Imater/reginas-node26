@@ -1358,6 +1358,7 @@ $scope.fpk.jsFioShort = function(fio, need_surname) {
     $("#myfullcalendar").fullCalendar("refetchEvents");
  }
 
+
  $scope.jsCloseOneClient = function(){
     $scope.fpk.show_one_client = false;
     $scope.sms_active = false;
