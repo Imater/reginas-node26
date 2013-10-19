@@ -63,7 +63,7 @@ app.configure(function(){
     if(/.(png|jpg|jpeg|woff|gif)/ig.test(req.url)) {
     	res.setHeader("Cache-Control", "public, max-age=17280000");
     } else if( /.(js|css|html|json)/.test(req.url) && !(/localhost/.test(req.headers.host)) ) {
-    	res.setHeader("Cache-Control", "public, max-age=180000");    	
+    	res.setHeader("Cache-Control", "public, max-age=5000");    	
     } else {
     	res.setHeader("Cache-Control", "public, max-age=0");    	
     }
