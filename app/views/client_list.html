@@ -266,7 +266,7 @@
 
 
                           <ul>
-                            <li ng-repeat="do in client.do | orderBy: ['date2','id']: true" class="client_do_li" ng-controller="DoCtrl" myindex={{$index}} mydoid="{{do.id}}">
+                            <li ng-repeat="do in client.do | orderBy: ['_date2','id']: true" class="client_do_li" ng-controller="DoCtrl" myindex={{$index}} mydoid="{{do.id}}">
                               <div class="do_line" ng-click="jsEditDo(client, do)" ng-class="{'did':do.checked!='0000-00-00 00:00:00'}">
                                 <div class="datemini"  time-now="time_now" date-type="do" ng-model="do.date2" title="{{do.date2}}"></div>
                                 <span ng-if="do.sms>0&&do.checked=='0000-00-00 00:00:00'" class="do_bell" ng-class="{send:do.sms_send}" title="Установлено SMS напоминание"><i class="icon-bell-1"></i></span>

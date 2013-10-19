@@ -405,11 +405,11 @@ function DoCtrl($scope, myApi) { //контроллер дел
    };
 
 
-   $scope.jsDoSave = function(elm, scope) {
+   $scope.jsDoSave = function(all_client_do) {
      var changes = {id: $scope.do.id};
      var changed = false;
 
-     console.info("!",elm, scope);
+     $scope.do._date2 = $scope.do.date2;
 
      $(".do_date2:focus").blur();
 

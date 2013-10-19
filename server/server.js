@@ -277,7 +277,7 @@ exports.findMessageById = function(request,response) {
 
 exports.findDoById = function(request,response) {
 	var user_id = request.query.user_id;
-    pool.query('SELECT * FROM `1_do` WHERE client = ? ORDER by date2 DESC, id DESC', [request.params.id] , function (err, rows, fields) {
+    pool.query('SELECT *, date2 _date2 FROM `1_do` WHERE client = ? ORDER by date2 DESC, id DESC', [request.params.id] , function (err, rows, fields) {
     		rows = correct_dates(rows);
 		    response.send(rows);
   	});	
