@@ -173,7 +173,7 @@ angular.module('highcharts-ng', [])
           if (newSeries === oldSeries) return;
           processSeries(chart, newSeries);
           chart.redraw();
-          chart.setSize(800,500);
+          chart.setSize(750,450);
         }, true);
 
 
