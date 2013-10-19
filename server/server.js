@@ -3215,19 +3215,19 @@ exports.loadJsonCup = function(request, response) {
 			});
 
 			$.each(distinct_days.dg, function(key, day) {
-				answer.dg.push( [frommysql(key+" 00:00:00").getTime(), day.cnt] );
+				answer.dg.push( [frommysql(key+" 15:00:00").getTime(), day.cnt] );
 			});
 
 			answer.dg = _.sortBy(answer.dg, function(el){ return el[0] });
 
 			$.each(distinct_days.vd, function(key, day) {
-				answer.vd.push( [frommysql(key+" 00:00:00").getTime(), day.cnt] );
+				answer.vd.push( [frommysql(key+" 15:00:00").getTime(), day.cnt] );
 			});
 
 			answer.vd = _.sortBy(answer.vd, function(el){ return el[0] });
 
 			$.each(distinct_days.out, function(key, day) {
-				answer.out.push( [frommysql(key+" 00:00:00").getTime(), day.cnt] );
+				answer.out.push( [frommysql(key+" 15:00:00").getTime(), day.cnt] );
 			});
 
 			answer.out = _.sortBy(answer.out, function(el){ return el[0] });
