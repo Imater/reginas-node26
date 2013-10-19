@@ -37,19 +37,7 @@
         </tr>
         </table>
         <br>
-    <ul class="nav nav-tabs">
-      <li ng-class="{active:(cup_tab=='clients')}" ng-click="cup_tab='clients'"><a>Клиенты</a></li>
-      <li ng-class="{active:(cup_tab=='by_day')}" ng-click="cup_tab='by_day'"><a>Динамика продаж</a></li>
-    </ul>   
-
-        <div ng-show="cup_tab=='clients'">
-            <div client-list="cup_clients" my-attr="cup_clients" my-distinct="clients"></div>
-        </div>
-
-        <div ng-show="cup_tab=='by_day'" style="width: 800px">
-            <br>
-            <highchart id="chart1" config="chartConfig" class="span9" ></highchart>
-        </div>
+        <div client-list="cup_clients" my-attr="cup_clients" my-distinct="clients"></div>
         <!-- <ng-include src="'views/client_list.html'"></ng-include> -->
 
     </div>

@@ -1109,7 +1109,7 @@ myApp.directive('colorChange', function() {
             
             $('body').on("mousemove.my", jsMove);
             $('body').on("click.my1", jsMove);
-            $('body').on("touchstart", jsMove);
+            $('body').live("touchstart", jsMove);
           }
 
 
