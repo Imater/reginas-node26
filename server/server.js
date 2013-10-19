@@ -12,7 +12,25 @@ var _ = require('underscore');
 
 var restApi = require("./rest-api.js");
 
+global.isProduction = false;
+require("./isProduction.js");
+
+
 var Pool = require('mysql-simple-pool');
+
+
+var os=require('os');
+var ifaces=os.networkInterfaces();
+for (var dev in ifaces) {
+  var alias=0;
+  ifaces[dev].forEach(function(details){
+    if (details.family=='IPv4') {
+      console.log(dev+(alias?':'+alias:''),details.address, isProduction);
+      ++alias;
+    }
+  });
+}
+
 
 global.pool = new Pool(100, {
   host     : '127.0.0.1',
@@ -3012,6 +3030,8 @@ exports.checkSMS = function(request, response) {
 		ids += "0";
 
 		if(sms_texts.length) {
+
+		  if(isProduction) {
 			sms.list(sms_texts, function (err, result) {
 			    if(result.cnt>0) {
 			    	
@@ -3023,7 +3043,8 @@ exports.checkSMS = function(request, response) {
 					});
 			    }
 			    
-			});				
+			});
+		  }				
 		}
 
 

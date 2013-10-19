@@ -1,5 +1,7 @@
 //Все функции для Api Rest
 
+global.isProduction = true;
+
 exports.findCalendar = function(request,response) {
 	var user_id = request.query.user_id;
 	var start_date = request.query.start_date;
