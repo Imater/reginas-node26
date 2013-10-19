@@ -107,12 +107,11 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 	};
 
 	$scope.$watch('cup_tab', function(val, newVal){
-		if(newVal=="by_day") {
+		if((newVal=="by_day") && (val!=newVal)) {
 			$scope.LoadJsonByDay();
 		}
 	});
 
-	$scope.LoadJsonByDay();
 
 	$scope.getCUPtable = function() {
 	 myApi.getCUP($scope).then(function(cup){
@@ -143,6 +142,9 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 
         var time_split = toMysql( (new Date) ).split(" ")[1].split(":");
 	    $scope.fpk.stat_load_time = time_split[0]+":"+time_split[1];
+
+		$scope.LoadJsonByDay();
+
 	 });
 	};
 

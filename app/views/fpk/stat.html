@@ -46,7 +46,7 @@
             <div client-list="cup_clients" my-attr="cup_clients" my-distinct="clients"></div>
         </div>
 
-        <div ng-show="cup_tab=='by_day'" style="width: 750px;">
+        <div ng-show="(cup_tab=='by_day') && chartConfig" style="width: 750px;">
             <br>
             <highchart id="chart1" config="chartConfig" class="span9" ></highchart>
         </div>
