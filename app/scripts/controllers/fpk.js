@@ -1088,7 +1088,7 @@ myApp.directive('colorChange', function() {
           tm_change = setTimeout(function(){
               document.title = "ФПК ("+scope.fpk.the_user.fio.split(" ")[1]+" "+scope.fpk.the_user.fio.split(" ")[0][0]+".) — Регинас";
 
-              $('body').off(".my").off(".my1").off(".my2");
+              $('body').off(".my").off(".my1").off("touchstart");
               $(".changed").removeClass("changed");
           },50);
       }
@@ -1109,7 +1109,7 @@ myApp.directive('colorChange', function() {
             
             $('body').on("mousemove.my", jsMove);
             $('body').on("click.my1", jsMove);
-            $('body').on("touchstart.my2", jsMove);
+            $('body').live("touchstart", jsMove);
           }
 
 
