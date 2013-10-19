@@ -1083,6 +1083,16 @@ myApp.directive('colorChange', function() {
   return {
     link : function(scope, element, attrs) {
 
+      function jsMove(){
+          clearTimeout(tm_change);
+          tm_change = setTimeout(function(){
+              document.title = "ФПК ("+scope.fpk.the_user.fio.split(" ")[1]+" "+scope.fpk.the_user.fio.split(" ")[0][0]+".) — Регинас";
+
+              $('body').off(".my").off(".my1").off(".my2");
+              $(".changed").removeClass("changed");
+          },50);
+      }
+
       scope.$watch(attrs.colorChange, function(Val, newVal){
           if(Val != newVal) {
             document.title = "* ФПК ("+scope.fpk.the_user.fio.split(" ")[1]+" "+scope.fpk.the_user.fio.split(" ")[0][0]+".) — Регинас";
@@ -1096,15 +1106,10 @@ myApp.directive('colorChange', function() {
               element.addClass("changed");
             }
 
-            $('body').on("mousemove.my,click,touchdown", function(){
-                clearTimeout(tm_change);
-                tm_change = setTimeout(function(){
-                    document.title = "ФПК ("+scope.fpk.the_user.fio.split(" ")[1]+" "+scope.fpk.the_user.fio.split(" ")[0][0]+".) — Регинас";
-
-                    $('body').off(".my");
-                    $(".changed").removeClass("changed");
-                },200);
-            });
+            
+            $('body').on("mousemove.my", jsMove);
+            $('body').on("click.my1", jsMove);
+            $('body').on("touchstart.my2", jsMove);
           }
 
 
