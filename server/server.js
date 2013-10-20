@@ -3179,93 +3179,117 @@ exports.loadJsonCup = function(request, response) {
 
 	var brand = request.query.brand;
 
-	console.info(brand);
+	var cache_id = md5(brand);
 
-	var answer = {dg:[],
-				  vd:[],
-				 out:[]};
-
-
-	var query = "SELECT dg, vd, `out` FROM 1_clients WHERE (dg!='0000-00-00 00:00:00' OR `out`!='0000-00-00 00:00:00' OR vd!='0000-00-00 00:00:00') AND brand = "+brand;
-	pool.query(query, function (err, clients, fields) {
-
-			clients = correct_dates(clients, 'no_zero_dates');
-
-			var distinct_days = {dg:{}, vd: {}, out: {}};
+	if(!global.stat_cache_cup) {
+		global.stat_cache_cup = {};
+	}
 
 
-			$.each(clients, function(i,client) {
+	if( global.stat_cache_cup[ cache_id ] ) {
+		response.send( global.stat_cache_cup[ cache_id ] );
+		console.info("Stat from cache "+cache_id+", brand = ", brand);
+	} else {
 
-				if(client.dg >= "2013-10-01") {
-					var day = client.dg.split(" ")[0];
-					if(!distinct_days.dg[day]) {
-						distinct_days.dg[day] = {cnt:0};
+		console.info(brand);
+
+		var answer = {dg:[],
+					  vd:[],
+					 out:[]};
+
+		var sql_insert = "AND brand = "+brand;
+
+		if(brand == 0) sql_insert = "";
+
+		if(brand < 0) sql_insert = "AND 1_brands.brand_group = "+(-brand);
+
+		var query = "SELECT dg, vd, `out` FROM 1_clients LEFT JOIN 1_brands ON 1_clients.brand = 1_brands.id WHERE (dg!='0000-00-00 00:00:00' OR `out`!='0000-00-00 00:00:00' OR vd!='0000-00-00 00:00:00') "+sql_insert;
+		pool.query(query, function (err, clients, fields) {
+
+				clients = correct_dates(clients, 'no_zero_dates');
+
+				var distinct_days = {dg:{}, vd: {}, out: {}};
+
+
+				$.each(clients, function(i,client) {
+
+					if(client.dg >= "2013-10-01") {
+						var day = client.dg.split(" ")[0];
+						if(!distinct_days.dg[day]) {
+							distinct_days.dg[day] = {cnt:0};
+						}
+						if(!distinct_days.vd[day]) {
+							distinct_days.vd[day] = {cnt:0};
+						}
+						if(!distinct_days.out[day]) {
+							distinct_days.out[day] = {cnt:0};
+						}
+						distinct_days.dg[day].cnt += 1;
+						
 					}
-					if(!distinct_days.vd[day]) {
-						distinct_days.vd[day] = {cnt:0};
+
+					if(client.vd >= "2013-10-01") {
+						var day = client.vd.split(" ")[0];
+						if(!distinct_days.dg[day]) {
+							distinct_days.dg[day] = {cnt:0};
+						}
+						if(!distinct_days.vd[day]) {
+							distinct_days.vd[day] = {cnt:0};
+						}
+						if(!distinct_days.out[day]) {
+							distinct_days.out[day] = {cnt:0};
+						}
+						distinct_days.vd[day].cnt += 1;
+						
 					}
-					if(!distinct_days.out[day]) {
-						distinct_days.out[day] = {cnt:0};
-					}
-					distinct_days.dg[day].cnt += 1;
 					
-				}
 
-				if(client.vd >= "2013-10-01") {
-					var day = client.vd.split(" ")[0];
-					if(!distinct_days.dg[day]) {
-						distinct_days.dg[day] = {cnt:0};
+					if( (client.out >= "2013-10-01") && (client.dg!="") ) {
+						var day = client.out.split(" ")[0];
+						if(!distinct_days.dg[day]) {
+							distinct_days.dg[day] = {cnt:0};
+						}
+						if(!distinct_days.vd[day]) {
+							distinct_days.vd[day] = {cnt:0};
+						}
+						if(!distinct_days.out[day]) {
+							distinct_days.out[day] = {cnt:0};
+						}
+						distinct_days.out[day].cnt += 1;
+						
 					}
-					if(!distinct_days.vd[day]) {
-						distinct_days.vd[day] = {cnt:0};
-					}
-					if(!distinct_days.out[day]) {
-						distinct_days.out[day] = {cnt:0};
-					}
-					distinct_days.vd[day].cnt += 1;
-					
-				}
-				
 
-				if( (client.out >= "2013-10-01") && (client.dg!="") ) {
-					var day = client.out.split(" ")[0];
-					if(!distinct_days.dg[day]) {
-						distinct_days.dg[day] = {cnt:0};
-					}
-					if(!distinct_days.vd[day]) {
-						distinct_days.vd[day] = {cnt:0};
-					}
-					if(!distinct_days.out[day]) {
-						distinct_days.out[day] = {cnt:0};
-					}
-					distinct_days.out[day].cnt += 1;
-					
-				}
+				});
 
-			});
+				$.each(distinct_days.dg, function(key, day) {
+					answer.dg.push( [frommysql(key+" 23:59:59").getTime()+10000, day.cnt] );
+				});
 
-			$.each(distinct_days.dg, function(key, day) {
-				answer.dg.push( [frommysql(key+" 23:59:59").getTime()+10000, day.cnt] );
-			});
+				answer.dg = _.sortBy(answer.dg, function(el){ return el[0] });
 
-			answer.dg = _.sortBy(answer.dg, function(el){ return el[0] });
+				$.each(distinct_days.vd, function(key, day) {
+					answer.vd.push( [frommysql(key+" 23:59:59").getTime()+10000, day.cnt] );
+				});
 
-			$.each(distinct_days.vd, function(key, day) {
-				answer.vd.push( [frommysql(key+" 23:59:59").getTime()+10000, day.cnt] );
-			});
+				answer.vd = _.sortBy(answer.vd, function(el){ return el[0] });
 
-			answer.vd = _.sortBy(answer.vd, function(el){ return el[0] });
+				$.each(distinct_days.out, function(key, day) {
+					answer.out.push( [frommysql(key+" 23:59:59").getTime()+10000, day.cnt] );
+				});
 
-			$.each(distinct_days.out, function(key, day) {
-				answer.out.push( [frommysql(key+" 23:59:59").getTime()+10000, day.cnt] );
-			});
-
-			answer.out = _.sortBy(answer.out, function(el){ return el[0] });
+				answer.out = _.sortBy(answer.out, function(el){ return el[0] });
 
 
+			if(!global.stat_cache_cup) {
+				global.stat_cache_cup = {};
+			}
 
-		response.send(answer);
-	});
+
+			global.stat_cache_cup[ cache_id ] = answer;
+
+			response.send(answer);
+		});
+	}
 
 };
 

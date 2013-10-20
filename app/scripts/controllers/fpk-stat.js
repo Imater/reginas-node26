@@ -29,6 +29,9 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 //		$.getJSON('/api/v1/json/cup?brand='+$scope.fpk.brand).done(function(data) {
 
         $http({url:'/api/v1/json/cup',method: "GET", params: { brand: $scope.fpk.brand, today: $scope.fpk.today_date}}).then(function(result){
+        		console.info($scope.fpk.brand);
+
+        		var title = ($scope.fpk.brand>0)?$scope.fpk.brands[$scope.fpk.brand].title:"Итого";
 
         		var data = result.data;
 				// Create the chart
@@ -44,7 +47,7 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 					},
 					useHighStocks: true,
 					title : {
-						text : 'Динамика — '+$scope.fpk.brands[$scope.fpk.brand].title
+						text : 'Динамика — '+title
 					},
 					series : [{
 						name : 'Договора',
