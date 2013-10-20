@@ -1302,6 +1302,29 @@ body {
     width: 100%;
     max-width: 980px;
     min-width: 680px; }
+    #statistics table i {
+      display: none; }
+    #statistics table tr.needgroup td {
+      border-top: 0px solid #000; }
+    #statistics table .is_sum {
+      background: none !important;
+      height: 10px !important; }
+      #statistics table .is_sum i {
+        display: inline-block;
+        position: absolute;
+        text-align: right;
+        margin-left: -20px;
+        font-size: 10px;
+        color: #000; }
+      #statistics table .is_sum td {
+        height: 10px !important; }
+      #statistics table .is_sum b {
+        background: none !important;
+        border: none !important;
+        opacity: 0.5;
+        padding: 0px !important; }
+      #statistics table .is_sum img {
+        opacity: 0 !important; }
     #statistics table tr {
       background: #eeeeee;
       color: #000; }
@@ -1894,9 +1917,6 @@ a {
     cursor: pointer; }
   .reiting_table .manager {
     white-space: nowrap; }
-
-tr.needgroup td {
-  border-top: 20px solid #000; }
 
 li.needgroup {
   margin-bottom: 20px; }

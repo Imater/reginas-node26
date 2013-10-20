@@ -1775,6 +1775,43 @@ background-color: none !important;
         width: 100%;
         max-width: 980px;
         min-width: 680px;
+        i {
+            display: none;
+        }
+        tr.needgroup {
+            td {
+                border-top: 0px solid #000;
+            }
+
+        }
+
+        .is_sum {
+            background: none !important;
+            height: 10px !important;
+            i {
+                display: inline-block;
+                position: absolute;
+                text-align: right;
+                margin-left: -20px;
+                font-size: 10px;
+                color: #000;
+            }
+            td {
+                height: 10px !important;
+            }
+            b {
+                background: none !important;
+                border: none !important;
+                opacity: 0.5;
+                padding: 0px !important;
+            }
+            img {
+                opacity: 0 !important;
+            }
+        }
+
+
+
         tr {
             background: $panel_background;
             color: #000;
@@ -2516,12 +2553,6 @@ margin-bottom: 0px !important;
     }
 }
 
-tr.needgroup {
-    td {
-        border-top: 20px solid #000;
-    }
-
-}
 
 li.needgroup {
     margin-bottom: 20px;

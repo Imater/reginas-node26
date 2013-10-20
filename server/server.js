@@ -2240,6 +2240,10 @@ exports.loadStatCup = function(request, response) {
   pool.query('SELECT * FROM `1_plan` WHERE `month` = "'+today_month+'"', function (err, plans, fields) {
   		//console.info(plans);
     pool.query('SELECT * FROM `1_brands` WHERE `Show` = 1 ORDER by brand_group, title', function (err, brands, fields) {
+    	brands.push({id: -1, title: "Итого №1", brand_group: 1, logo: "logo-seyho.png"});
+    	brands.push({id: -2, title: "Итого №2", brand_group: 2, logo: "logo-seyho.png"});
+    	brands.push({id: -3, title: "Итого №3", brand_group: 3, logo: "logo-seyho.png"});
+    	brands.push({id: 0, title: "Итого", brand_group: 4,logo: "logo-seyho.png"});
 
     	$.each(brands, function(i, brand){
 			var plan = _.find(plans, function(el){ return el.brand == brand.id; });
@@ -2281,6 +2285,20 @@ exports.loadStatCup = function(request, response) {
     	function jsCupIncrement(brands, brand_id, field_name) {
 			var cup_element = _.find(brands, function(el){ return el.id == brand_id; });
 			if(cup_element) cup_element.cup[field_name] += 1;
+
+			console.info(cup_element.brand_group);
+
+			var cup_element = _.find(brands, function(el){ return el.id == -cup_element.brand_group; });
+			if(cup_element) cup_element.cup[field_name] += 1;
+
+			var cup_element = _.find(brands, function(el){ return el.id == 0; });
+			if(cup_element) cup_element.cup[field_name] += 1;
+
+    	}
+
+    	function jsFindBrandGroup(brand_id) {
+			var cup_element = _.find(brands, function(el){ return el.id == brand_id; });
+
     	}
 
     pool.query('SELECT * FROM 1_doadmin WHERE date1 LIKE ?', [today_month+"%"], function (err, do_admin, fields){
@@ -2375,10 +2393,16 @@ exports.loadStatCup = function(request, response) {
 
    	    		});
 
+
+				brands = _.sortBy(brands, function(br){ return (br.brand_group) });
+
    	    		answer = {brands: brands, cars: ""};
 				if(!global.stat_cache_cup) {
 					global.stat_cache_cup = {};
 				}
+
+				//console.info(answer);
+
    	    		global.stat_cache_cup[ cache_id ] = answer;
    	    		response.send(answer);
    	    });
