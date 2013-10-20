@@ -37,7 +37,7 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 						enabled: true
 					},
    					xAxis: {
-						range: 1 * 30 * 24 * 3600 * 1000
+						range: 1.2 * 30 * 24 * 3600 * 1000
 					},
 					rangeSelector : {
 						selected : 1
