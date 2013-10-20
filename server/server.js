@@ -2048,6 +2048,7 @@ exports.saveAdmin = function(request, response) {
 		//global.stat_cache = {}; //обнуляем кеш
   		jsClearCacheByBrand( request.query.brand );
 
+  	if(false)
 		setTimeout(function(){
 			report.loadstat(user_id);
 		},5);
