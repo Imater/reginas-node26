@@ -733,7 +733,7 @@ exports.findClient = function(request, response) {
 	//console.info("query = ", myquery);
 
     pool.query(myquery, [client_id], function (err, rows, fields) {
-    	pool.query('SELECT * FROM `1_do` WHERE client = ? ORDER by date2 DESC, id DESC', [client_id], function (err, does, fields) {
+    	pool.query('SELECT *, date2 _date2 FROM `1_do` WHERE client = ? ORDER by date2 DESC, id DESC', [client_id], function (err, does, fields) {
     		if(rows.length) {
     		does = correct_dates( does );
   			rows = correct_dates( rows );
