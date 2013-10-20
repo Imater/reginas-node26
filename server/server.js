@@ -179,7 +179,7 @@ io.sockets.on('connection', function(socket) {
 
 
 	socket.on('sync', function(data) {
-		jsCheckToken(data.token).done(function(user_id){
+		jsCheckToken(data.token, response).done(function(user_id){
 				report.sync_answer(data, user_id);
 		});
 		
@@ -228,10 +228,10 @@ app.get("/api/v1/user_:user_id/time_:lasttime/:action", function(request, respon
 }
 */
 
-function jsCheckToken(token) {
+function jsCheckToken(token, response) {
 	var dfd = new $.Deferred();
 	//console.info("check_token");
-    pool.query('SELECT *, NOW() FROM `oauth_access_tokens` WHERE access_token = ? AND expires >= DATE_ADD(NOW(), INTERVAL 3 HOUR) ', [token] , function (err, rows, fields) {
+    pool.query('SELECT *, NOW() FROM `oauth_access_tokens` WHERE access_token = ? AND expires >= DATE_ADD(NOW(), INTERVAL 0 HOUR) ', [token] , function (err, rows, fields) {
 
 		    if(rows && rows[0] && rows[0].user_id) {
 		    	dfd.resolve( parseInt( rows[0].user_id ) );
@@ -241,6 +241,7 @@ function jsCheckToken(token) {
 
 		    } else {
 		    	dfd.fail("Token invalid");
+		    	response.send(401);
 		    	console.info("Token invalid");
 		    }
   	});	
@@ -249,7 +250,7 @@ function jsCheckToken(token) {
 }
 
 exports.findAllMessages = function(request,response) {
-	jsCheckToken(request.query.token).done(function(user_id){
+	jsCheckToken(request.query.token, response).done(function(user_id){
 		if(user_id) {
 		    var collection = mdb.collection('myalldata');		
 
@@ -304,7 +305,7 @@ exports.getDo = function(request,response) {
 
 	}
 	
-	jsCheckToken(request.query.token).done(function(user_id){
+	jsCheckToken(request.query.token, response).done(function(user_id){
 		var insert_sql = "";
 		if(manager_id>0) insert_sql = "1_do.manager_id = '"+manager_id+"' AND ";
 		var query = 'SELECT 1_do.*, 1_clients.id, 1_clients.fio, 1_models.short, 1_users.fio man FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model  LEFT JOIN 1_users ON 1_do.manager_id = 1_users.id WHERE '+insert_sql+' 1_do.brand = ? AND 1_do.date2<= DATE_ADD(NOW(), INTERVAL 31 DAY) AND 1_do.checked = "0000-00-00 00:00:00" '+insert_sql2+' ORDER by date2';
@@ -585,7 +586,7 @@ exports.findAllClientsIds = function(request, response) {
 
 	var myquery = "SELECT * FROM 1_clients WHERE id IN ("+ids+") ORDER by model";
 
-	jsCheckToken(request.query.token).done(function(user_id){
+	jsCheckToken(request.query.token, response).done(function(user_id){
 
 	    pool.query(myquery, function (err, rows, fields) {
 	  		rows = correct_dates( rows );
@@ -622,7 +623,7 @@ exports.findAllClients = function(request, response) {
 
 	//console.info("query = ", myquery);
 
-	jsCheckToken(request.query.token).done(function(user_id){
+	jsCheckToken(request.query.token, response).done(function(user_id){
 	    pool.query(myquery, function (err, rows, fields) {
 	  		rows = correct_dates( rows );
 		  	response.send(rows);
@@ -639,7 +640,7 @@ exports.addNewClient = function(request, response) {
 	var manager_id = request.query.manager;
 
 
- jsCheckToken(request.query.token).done(function(user_id){
+ jsCheckToken(request.query.token, response).done(function(user_id){
 
  	if( !(manager_id>0) ) manager_id = user_id;
 
@@ -767,7 +768,7 @@ exports.findClientDoType = function(request, response) {
 
 	//console.info("query = ", myquery);
 
-	jsCheckToken(request.query.token).done(function(user_id){
+	jsCheckToken(request.query.token, response).done(function(user_id){
 	    pool.query(myquery, function (err, rows, fields) {
 	  			rows = correct_dates( rows );
 		  		response.send(rows);
@@ -1957,7 +1958,7 @@ exports.saveDo = function(request, response) {
 	var changes = JSON.parse(request.query.changes);
 	var client_id = request.query.client_id;
 
- jsCheckToken(request.query.token).done(function(user_id){
+ jsCheckToken(request.query.token, response).done(function(user_id){
 
 	query = "UPDATE 1_do SET ? WHERE id = '"+id+"'";
 	//console.info("F = ",query, changes);
@@ -1989,7 +1990,7 @@ exports.saveClient = function(request, response) {
 	var client_id = request.query.client_id;
 	var brand_id = request.query.brand;
 
- jsCheckToken(request.query.token).done(function(user_id){
+ jsCheckToken(request.query.token, response).done(function(user_id){
  	if(changes.cost) changes.cost = changes.cost.toString().replace(" ","").replace(" ","").replace(" ","");
 	query = "UPDATE 1_clients SET ? WHERE id = '"+client_id+"'";
 
@@ -2011,7 +2012,7 @@ exports.newAdmin = function(request, response) {
 
 	//console.info("!",manager_id, do_type);
 
- jsCheckToken(request.query.token).done(function(user_id){
+ jsCheckToken(request.query.token, response).done(function(user_id){
 
  	var changes = {
  		type: do_type,
@@ -2038,7 +2039,7 @@ exports.saveAdmin = function(request, response) {
 	var changes = request.body.changes;
 	var mydo_id = changes.id;
 
- jsCheckToken(request.query.token).done(function(user_id){
+ jsCheckToken(request.query.token, response).done(function(user_id){
 
 	query = "UPDATE 1_doadmin SET ? WHERE id = '"+mydo_id+"'";
 
@@ -2069,7 +2070,7 @@ exports.newDo = function(request, response) {
 
 	//console.info(request.query, brand_id);
 
- jsCheckToken(request.query.token).done(function(user_id){
+ jsCheckToken(request.query.token, response).done(function(user_id){
  	if(manager_id == -1) manager_id = user_id;
 	query = "INSERT INTO 1_do SET manager_id = ?, client = ?, type = ?, text = ?, brand = ?, date2 = DATE_ADD(NOW(), INTERVAL 5 MINUTE), host_id = ? ";
 
@@ -2100,7 +2101,7 @@ exports.newModel = function(request, response) {
 
  //console.info(brand_id);
 
- jsCheckToken(request.query.token).done(function(user_id){
+ jsCheckToken(request.query.token, response).done(function(user_id){
     pool.query('INSERT INTO `1_models` SET `brand` = ?, `model` = "Новая модель", `cost` = 0, `show` = 1, `short` = "Новая"',[brand_id], function (err, rows, fields) {
 		response.send({rows:rows, err: err});
   	});	
@@ -2116,7 +2117,7 @@ exports.saveModel = function(request, response) {
 
  //console.info("Сохраняю",brand_id, changes);
 
- jsCheckToken(request.query.token).done(function(user_id){
+ jsCheckToken(request.query.token, response).done(function(user_id){
    $.each(changes, function(i, ch){
     	pool.query('UPDATE `1_models` SET ? WHERE id = "'+ch.id+'"',[ch], function (err, rows, fields) {
 			response.send({rows:rows, err: err});
@@ -2132,7 +2133,7 @@ exports.deleteModel = function(request, response) {
  var brand_id = request.query.brand;
  var del_id = request.query.del_id;
 
- jsCheckToken(request.query.token).done(function(user_id){
+ jsCheckToken(request.query.token, response).done(function(user_id){
     pool.query('SELECT count(*) cnt FROM `1_clients` WHERE model = ?',[del_id], function (err, rows, fields) {
     	if(rows[0].cnt>0) {
     	  response.send({rows:rows, err: err});	
@@ -2153,7 +2154,7 @@ exports.removeClient = function(request, response) {
 
  //console.info(client_id);
 
- jsCheckToken(request.query.token).done(function(user_id){
+ jsCheckToken(request.query.token, response).done(function(user_id){
     pool.query('DELETE FROM 1_do WHERE client = ?',[client_id], function (err, rows, fields) {
 		  pool.query('DELETE FROM `1_clients` WHERE id = ?',[client_id], function (err, rows, fields) {
 		  	response.send({rows:rows, err: err});
@@ -2176,7 +2177,7 @@ exports.deleteAdmin = function(request, response) {
  var brand_id = request.query.brand;
  var mydo_id = request.query.mydo_id;
 
- jsCheckToken(request.query.token).done(function(user_id){
+ jsCheckToken(request.query.token, response).done(function(user_id){
 	  pool.query('DELETE FROM `1_doadmin` WHERE id = ?',[mydo_id], function (err, rows, fields) {
 	  	response.send({rows:rows, err: err});
 
@@ -2197,7 +2198,7 @@ exports.removeDo = function(request, response) {
 
  var do_id = request.query.do_id;
 
- jsCheckToken(request.query.token).done(function(user_id){
+ jsCheckToken(request.query.token, response).done(function(user_id){
   pool.query('SELECT client FROM 1_do WHERE id = ? LIMIT 1',[do_id], function (err, clients, fields) {
     pool.query('DELETE FROM 1_do WHERE id = ? LIMIT 1',[do_id], function (err, rows, fields) {
     	jsUpdateClient(clients[0].client).then(function(){
@@ -2704,7 +2705,7 @@ exports.loadUserInfo = function(request, response) {
 	var brand = request.query.brand;
 	
 
- jsCheckToken(request.query.token).done(function(user_id){
+ jsCheckToken(request.query.token, response).done(function(user_id){
  	_sqllog({manager: user_id, request: request, text:"Запрос информации loadUserInfo"});
  	//console.info("USER_ID:", user_id);
 	pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone, brands FROM `1_users` WHERE id = ? LIMIT 1',[user_id], function (err, user, fields) {		
