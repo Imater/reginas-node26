@@ -290,11 +290,24 @@ exports.getDo = function(request,response) {
 	var brand = request.query.brand;
 	var manager_id = request.query.manager;
 
+	var left_menu = request.query.left_menu;
+
+	console.info(left_menu);
+
+	var insert_sql2 = '';
+	if(left_menu==3) {
+		insert_sql2 = ' AND 1_do.type = "Кредит" ';	
+	} else if (left_menu==5) {
+		insert_sql2 = ' AND 1_do.type = "Трейд-ин" ';	
+	} else {
+
+	}
+	
 	jsCheckToken(request.query.token).done(function(user_id){
 		var insert_sql = "";
 		if(manager_id>0) insert_sql = "1_do.manager_id = '"+manager_id+"' AND ";
-		var query = 'SELECT 1_do.*, 1_clients.id, 1_clients.fio, 1_models.short, 1_users.fio man FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model  LEFT JOIN 1_users ON 1_do.manager_id = 1_users.id WHERE '+insert_sql+' 1_do.brand = ? AND 1_do.date2<= DATE_ADD(NOW(), INTERVAL 31 DAY) AND 1_do.checked = "0000-00-00 00:00:00" ORDER by date2';
-		//console.info(query);
+		var query = 'SELECT 1_do.*, 1_clients.id, 1_clients.fio, 1_models.short, 1_users.fio man FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model  LEFT JOIN 1_users ON 1_do.manager_id = 1_users.id WHERE '+insert_sql+' 1_do.brand = ? AND 1_do.date2<= DATE_ADD(NOW(), INTERVAL 31 DAY) AND 1_do.checked = "0000-00-00 00:00:00" '+insert_sql2+' ORDER by date2';
+		console.info(query);
 	    pool.query(query, [ brand ] , function (err, rows, fields) {
 	    		rows = correct_dates(rows);
 			    response.send(rows);
@@ -459,7 +472,7 @@ function twoDigits(d) {
     return d.toString();
 }
 //Перевожу дату new Date в mySQL формат
-function tomysql(dat) {
+global.tomysql = function(dat) {
 	//dat = new Date(dat);
 	if(dat == "0000-00-00 00:00:00") return dat;
     return dat.getFullYear() + "-" + twoDigits(1 + dat.getMonth()) + "-" + twoDigits(dat.getDate()) + " " + twoDigits(dat.getHours()) + ":" + twoDigits(dat.getMinutes()) + ":" + twoDigits(dat.getSeconds());

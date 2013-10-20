@@ -2940,7 +2940,7 @@ function AgendaView(element, calendar, viewName) {
 		buildDayTable();
 		
 		slotLayer =
-			$("<div style='position:absolute;z-index:2;left:0;width:100%'/>")
+			$("<div class='skeleton1' style='position:absolute;z-index:2;left:0;width:100%'/>")
 				.appendTo(element);
 				
 		if (opt('allDaySlot')) {
@@ -2977,7 +2977,7 @@ function AgendaView(element, calendar, viewName) {
 		}
 		
 		slotScroller =
-			$("<div style='position:absolute;width:100%;overflow-x:hidden;overflow-y:auto'/>")
+			$("<div  class='skeleton2' style='position:absolute;width:100%;overflow-x:hidden;overflow-y:auto'/>")
 				.appendTo(slotLayer);
 				
 		slotContainer =

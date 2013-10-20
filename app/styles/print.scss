@@ -1,0 +1,87 @@
+@page {
+	size: auto;
+	margin: 0mm;	
+}
+
+#panel_left {
+	display: none;
+}
+
+#panel_center {
+	left: 0px !important;
+	right: 0px !important;
+	position: static;
+}
+
+.cards_scrollable {
+	position: static;
+	overflow: inherit;
+}
+
+.scrollable_div {
+	position: static;
+	overflow: inherit;
+}
+
+#center_footer {
+	display: none;
+}
+
+#panel_right {
+	display: none;
+}
+
+#panel_top {
+	display: none;
+}
+
+#panel_center_header {
+	display: none;
+}
+
+#cards_header {
+	display: none;
+}
+
+.datemini {
+	border: 1px solid #888;
+}
+
+.client_car {
+	border: 1px solid #888 !important;
+}
+
+#statistics {
+	position: static;
+	table tr td b {
+		border: 1px solid #888 !important;
+	}
+	a.pull-right {
+		display: none;
+	}
+}
+
+td.model,th.model {
+	max-width: 3em !important;
+}
+
+#myfullcalendar {
+    position: static !important;
+	overflow: inherit;
+	height: auto !important;
+	.fc-content {
+		height: auto !important;
+	}
+	.fc-view {
+		height: auto !important;
+	}
+}
+
+.skeleton2, .skeleton1 {
+    position: static !important;
+	overflow: inherit;
+	height: auto !important;
+
+}
+
+

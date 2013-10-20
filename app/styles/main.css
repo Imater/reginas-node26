@@ -1904,3 +1904,6 @@ li.needgroup {
 .top_header_filter a.active {
   color: #FFF !important;
   text-decoration: underline; }
+
+.skeleton2 {
+  -webkit-overflow-scrolling: touch; }

@@ -675,7 +675,7 @@ myApp.factory('myApi', function($http, $q, oAuth2){
       var dfd = $q.defer();
 
       oAuth2.jsGetToken($scope).done(function(token){
-        $http({url:'/api/v1/do',method: "GET", params: { token: token, brand: $scope.fpk.brand, manager: $scope.fpk.manager_filter}}).then(function(result){
+        $http({url:'/api/v1/do',method: "GET", params: { token: token, brand: $scope.fpk.brand, manager: $scope.fpk.manager_filter, left_menu: $scope.fpk.leftmenu?$scope.fpk.leftmenu.active:'' }}).then(function(result){
           dfd.resolve(result.data);
         });
       });
@@ -1454,6 +1454,13 @@ $scope.fpk.jsRoundCorner = function(){
 
           $('#cards_scrollable').scrollTop(0);
  }
+
+ $scope.$watch('fpk.leftmenu.active', function(val, newVal){
+  console.info("V",val, newVal);
+    if(val!=newVal) {
+      if( (val == 3) || (newVal == 3) || (val == 5) || (newVal == 5) ) $scope.fpk.jsRefreshDo($scope);   
+    }
+ });
 
  
  $scope.jsSelectGroup = function(new_group) {
