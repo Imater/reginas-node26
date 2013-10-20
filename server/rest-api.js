@@ -51,7 +51,7 @@ exports.findCalendar = function(request,response) {
 
 	function f2(){
 		var dfd = new $.Deferred();
-		   pool.query('SELECT 1_do.*, 1_clients.fio, 1_clients.icon2, 1_models.short, 1_users.fio man FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model LEFT JOIN 1_users ON 1_do.manager_id = 1_users.id WHERE '+insert_sql+' 1_do.brand = ? AND ((1_do.date2>= ? AND 1_do.date2<= ?) OR (icon2>2 AND vd="0000-00-00 00:00:00") ) '+checked_sql+' LIMIT 2', [ brand, start_date, end_date] , function (err, rows, fields) {
+		   pool.query('SELECT 1_do.*, 1_clients.fio, 1_clients.icon2, 1_models.short, 1_users.fio man FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model LEFT JOIN 1_users ON 1_do.manager_id = 1_users.id WHERE '+insert_sql+' 1_do.brand = ? AND ((1_do.date2>= ? AND 1_do.date2<= ?) OR (icon2>2 AND vd="0000-00-00 00:00:00") ) '+checked_sql+'', [ brand, start_date, end_date] , function (err, rows, fields) {
 
 		    		rows = correct_dates(rows);
 				    dfd.resolve(rows);
