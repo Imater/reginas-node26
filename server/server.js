@@ -8,6 +8,7 @@ var	NO_DATE = '0000-00-00 00:00:00';
 var mysql      = require('mysql');
 var md5 = require('MD5');
 global.stat_cache = {};
+global.stat_cache_cup = {};
 var _ = require('underscore');
 
 var restApi = require("./rest-api.js");
@@ -1978,6 +1979,7 @@ function jsClearCacheByBrand(brand_id) {
 
   	if(global.stat_cache && global.stat_cache[brand_id] ) {
   		delete global.stat_cache[brand_id]; //обнуляем кеш
+  		global.stat_cache_cup = {};
   	}
 
 }
@@ -2223,13 +2225,13 @@ exports.loadStatCup = function(request, response) {
 	var brand_id = request.query.brand;
 	var cache_id = md5(JSON.stringify(request.query) + brand_id);
 
-	if(!global.stat_cache[brand_id]) {
-		global.stat_cache[brand_id] = {};
+	if(!global.stat_cache_cup) {
+		global.stat_cache_cup = {};
 	}
 
 
-	if( global.stat_cache[brand_id][ cache_id ] ) {
-		response.send( global.stat_cache[brand_id][ cache_id ] );
+	if( global.stat_cache_cup[ cache_id ] ) {
+		response.send( global.stat_cache_cup[ cache_id ] );
 		//console.info("Stat from cache "+cache_id+", brand = ", brand_id);
 	} else {
 
@@ -2374,10 +2376,10 @@ exports.loadStatCup = function(request, response) {
    	    		});
 
    	    		answer = {brands: brands, cars: ""};
-				if(!global.stat_cache[brand_id]) {
-					global.stat_cache[brand_id] = {};
+				if(!global.stat_cache_cup) {
+					global.stat_cache_cup = {};
 				}
-   	    		global.stat_cache[brand_id][ cache_id ] = answer;
+   	    		global.stat_cache_cup[ cache_id ] = answer;
    	    		response.send(answer);
    	    });
 
