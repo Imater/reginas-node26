@@ -112,7 +112,6 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 		}
 	});
 
-
 	$scope.getCUPtable = function() {
 	 myApi.getCUP($scope).then(function(cup){
 
@@ -179,8 +178,13 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 		$scope.LoadJsonByDay();
   	});
 
+	var tm_loadstat;
 	$rootScope.$on("loadstat", function(){
-		$scope.getCUPtable();	
+		clearTimeout(tm_loadstat);
+		tm_loadstat = setTimeout(function(){
+			$scope.getCUPtable();		
+		}, 15000)
+		
 	});
 
 

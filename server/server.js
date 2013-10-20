@@ -2286,8 +2286,6 @@ exports.loadStatCup = function(request, response) {
 			var cup_element = _.find(brands, function(el){ return el.id == brand_id; });
 			if(cup_element) cup_element.cup[field_name] += 1;
 
-			console.info(cup_element.brand_group);
-
 			var cup_element = _.find(brands, function(el){ return el.id == -cup_element.brand_group; });
 			if(cup_element) cup_element.cup[field_name] += 1;
 
@@ -3180,6 +3178,8 @@ smtpTransport.sendMail(mailOptions, function(error, response){
 exports.loadJsonCup = function(request, response) {
 
 	var brand = request.query.brand;
+
+	console.info(brand);
 
 	var answer = {dg:[],
 				  vd:[],
