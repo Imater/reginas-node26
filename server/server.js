@@ -105,9 +105,9 @@ function Report(socket) {
 	this.loadstat = function(user_id){
 		clearTimeout(tm_emit);
 		tm_emit = setTimeout(function(){
-		 	_sqllog({manager: user_id?user_id:"", text:"broadcast.emit( 'loadstat' )"});
+		 	//_sqllog({manager: user_id?user_id:"", text:"broadcast.emit( 'loadstat' )"});
 			socket.broadcast.emit( 'loadstat' );
-		},15000);
+		},5000);
 	}
 	this.sync_answer = function(data, user_id) {
 		var dfdArray = [];
