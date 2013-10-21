@@ -1,0 +1,566 @@
+<table cellspacing="0" cellpadding="0" class="main">
+  <tbody><tr>
+    <td colspan="3" class="header">
+      <img src="/images/excel_vba_macro_small_green.jpg" alt="eXcellence-team" id="small-green-x">
+      <img src="/images/excellence.gif" alt="eXcellence" id="excellence"><br>
+    </td><td>
+  </td></tr>
+  <tr>
+    <td class="left-sidebar">
+      	<div class="block">
+	  <div class="block-header">Навигация</div>
+	  <img src="/images/office_logo.gif" usemap="#map1" alt="Планета Excel">
+	  <map name="map1">
+	    <area shape="rect" coords="26,18,3,1" href="javascript:addbookmark()" alt="макросы Excel">
+	    <area shape="rect" coords="54,18,31,2" href="mailto:info@excel-team.ru" alt="формулы Excel">
+	    <area shape="rect" coords="84,18,61,1" href="/" alt="макросы VBA">
+	  </map>
+	  <div class="divider"></div>
+	  <div class="block_content">
+	    <div>
+	      <ul class="links">
+          <li> <a href="/">О нас</a></li>
+          <li> <span class="link_topic">Наши проекты:</span>
+            <ul class="links">
+              <li><a href="office_vba.php">Бизнес задачи</a></li>
+              <li><a href="web_design.php">Интернет решения</a></li>
+              <li><a href="system_hardware.php">Системные задачи</a></li>
+              <li><a href="utils.php">Инструменты</a></li>
+            </ul>
+          </li>
+	      </ul>
+	    </div>
+	  </div>
+	</div>            
+        <div class="block">
+    <div class="block-header">Учебник Excel</div>
+	  <div class="block_content">
+      <div class="dict_topic">VBA</div><ul class="links2"><li><a href="/pervy_macros_excel.php">Ваш первый макрос</a></li><li><a href="/macro_recorder.php">Автоматическая запись макросов</a></li><li><a href="/object_model.php">Объектная модель Excel</a></li><li><a href="/workbooks.php">Рабочие книги excel</a></li><li><a href="/worksheets.php">Рабочие листы</a></li><li><a href="/cells.php">Ячейки и области</a></li><li><a href="/errors.php">Обработка ошибок VBA</a></li><li><a href="/events.php">События VBA</a></li><li><a href="/user_forms.php">Пользовательские формы</a></li><li><a href="/text_files.php">Текстовые файлы</a></li><li><a href="/win32api_vba.php">Win32 API в VBA</a></li><li><a href="/variable_type_vba.php">Информация о типе перепенной</a></li><li><a href="/for_next.php">Циклы For</a></li><li><a href="/do_while_until.php">Циклы Do/While/Until</a></li><li><a href="/vba_file_system.php">Файловая система</a></li><li><a href="/sendkeys.php">SendKeys</a></li><li><a href="/date_time_vba.php">Время и дата</a></li><li><a href="/with.php">Оператор With</a></li><li><a href="/vba_dialogs.php">Встроенные диалоги Excel</a></li><li><a href="/database_vba.php">Excel и базы данных</a></li><li><a href="/internal_properties.php">Встроенные свойства документов MSOffice</a></li><li><a href="/panels.php">Макросы и панель инструментов</a></li></ul>
+    </div>
+  </div>
+    </td>
+    <td class="content">
+      <div class="text">
+        <table class="excel" cellspacing="0"><thead>
+	<tr>
+		<th>&nbsp;</th>
+		<th style="width:32.4655436447px;">A</th>
+		<th style="width:39.2036753446px;">B</th>
+		<th style="width:70.5534893896px;">C</th>
+		<th style="width:70.5534893896px;">D</th>
+		<th style="width:64.9529643404px;">E</th>
+		<th style="width:97.4403850361px;">F</th>
+		<th style="width:64.9529643404px;">G</th>
+		<th style="width:90.7241303872px;">H</th>
+		<th style="width:70.5534893896px;">I</th></tr></thead>
+<tbody>
+
+	<tr style="height:43.6666666667px;">
+		<th>1</th>
+		<td style="text-align:center;border:1px solid;border-left-color:#000000;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;" colspan="2"><nobr>Номер<br>
+доверен-<br>
+ности</nobr></td>
+		<td style="text-align:center;border:1px solid;border-left-color:#000000;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;"><nobr>Дата<br>
+выдачи</nobr></td>
+		<td style="text-align:center;border:1px solid;border-left-color:#000000;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;"><nobr>Срок<br>
+действия</nobr></td>
+		<td style="text-align:center;border:1px solid;border-left-color:#000000;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;" colspan="3"><nobr>Должность и фамилия лица,<br>
+которому выдана доверенность</nobr></td>
+		<td style="text-align:center;border-right:1px solid;border-top:1px solid;border-bottom:1px solid;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;" colspan="2"><nobr>Расписка в получении<br>
+доверенности</nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>2</th>
+		<td style="text-align:center;border:1px solid;border-left-color:#000000;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;" colspan="2"><nobr>1</nobr></td>
+		<td style="text-align:center;border:1px solid;border-left-color:#000000;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;"><nobr>2</nobr></td>
+		<td style="text-align:center;border:1px solid;border-left-color:#000000;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;"><nobr>3</nobr></td>
+		<td style="text-align:center;border:1px solid;border-left-color:#000000;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;" colspan="3"><nobr>4</nobr></td>
+		<td style="text-align:center;border-right:1px solid;border-top:1px solid;border-bottom:1px solid;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;" colspan="2"><nobr>5</nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>3</th>
+		<td style="text-align:center;border-left:1px solid;border-top:1px solid;border-bottom:1px solid;border-left-color:#000000;border-top-color:#000000;border-bottom-color:#000000;"><nobr>&nbsp;</nobr></td>
+		<td style="text-align:center;border-right:1px solid;border-top:1px solid;border-bottom:1px solid;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;"><nobr>&nbsp;</nobr></td>
+		<td style="text-align:center;border:1px solid;border-left-color:#000000;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;"><nobr>&nbsp;</nobr></td>
+		<td style="text-align:center;border:1px solid;border-left-color:#000000;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;"><nobr>&nbsp;</nobr></td>
+		<td style="border:1px solid;border-left-color:#000000;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;" colspan="3"><nobr>&nbsp;</nobr></td>
+		<td style="border-top:1px solid;border-bottom:1px solid;border-top-color:#000000;border-bottom-color:#000000;"><nobr>&nbsp;</nobr></td>
+		<td style="border-right:1px solid;border-top:1px solid;border-bottom:1px solid;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;"><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:43.6666666667px;">
+		<th>4</th>
+		<td style="text-align:center;border:1px solid;border-left-color:#000000;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;" colspan="5"><nobr>Поставщик</nobr></td>
+		<td style="text-align:center;border:1px solid;border-left-color:#000000;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;" colspan="2"><nobr>Номер и дата наряда<br>
+(заменяющего наряд<br>
+документа) или извещения</nobr></td>
+		<td style="text-align:center;border-right:1px solid;border-top:1px solid;border-bottom:1px solid;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;" colspan="2"><nobr>Номер, дата документа,<br>
+подтверждающего<br>
+выполнение поручения</nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>5</th>
+		<td style="text-align:center;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-left-color:#000000;border-right-color:#000000;border-bottom-color:#000000;" colspan="5"><nobr>6</nobr></td>
+		<td style="text-align:center;border:1px solid;border-left-color:#000000;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;" colspan="2"><nobr>7</nobr></td>
+		<td style="text-align:center;border-right:1px solid;border-top:1px solid;border-bottom:1px solid;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;" colspan="2"><nobr>8</nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>6</th>
+		<td style="border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-left-color:#000000;border-right-color:#000000;border-bottom-color:#000000;" colspan="5"><nobr>&nbsp;</nobr></td>
+		<td style="border:1px solid;border-left-color:#000000;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;" colspan="2"><nobr>&nbsp;</nobr></td>
+		<td style="border-top:1px solid;border-bottom:1px solid;border-top-color:#000000;border-bottom-color:#000000;" colspan="2"><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:0px;">
+		<th>7</th>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>8</th>
+		<td style="text-align:center;border-top:1px solid;border-bottom:1px solid;border-top-color:#000000;border-bottom-color:#000000;" colspan="9"><nobr>Линия отреза</nobr></td></tr>
+
+	<tr style="height:0px;">
+		<th>9</th>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>10</th>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style="text-align:right;"><nobr>Типовая межотраслевая форма № М-2</nobr></td></tr>
+
+	<tr style="height:29.6666666667px;">
+		<th>11</th>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style="text-align:right;" colspan="3"><nobr>Утверждена постановлением<br>
+Госкомстата России от 30.10.97 № 71а</nobr></td></tr>
+
+	<tr style="height:0px;">
+		<th>12</th>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:17px;">
+		<th>13</th>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style="text-align:center;border-left:1px solid;border-right:1px solid;border-top:1px solid;border-left-color:#000000;border-right-color:#000000;border-top-color:#000000;"><nobr>Коды</nobr></td></tr>
+
+	<tr style="height:17px;">
+		<th>14</th>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style="text-align:right;"><nobr>Форма по ОКУД  </nobr></td>
+		<td style="text-align:center;border-left:2px solid;border-right:2px solid;border-top:2px solid;border-bottom:1px solid;border-left-color:#000000;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;"><nobr>0315001</nobr></td></tr>
+
+	<tr style="height:17px;">
+		<th>15</th>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style="text-align:right;"><nobr>по ОКПО  </nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:16px;">
+		<th>16</th>
+		<td style=""><nobr>Организация </nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style="font-family:Arial;font-size:10px;font-weight:bold;border-bottom:1px solid;border-bottom-color:#000000;" colspan="7"><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>17</th>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style="border-top:1px solid;border-top-color:#000000;"><nobr>&nbsp;</nobr></td>
+		<td style="border-top:1px solid;border-top-color:#000000;"><nobr>&nbsp;</nobr></td>
+		<td style="border-top:1px solid;border-top-color:#000000;"><nobr>&nbsp;</nobr></td>
+		<td style="border-top:1px solid;border-top-color:#000000;"><nobr>&nbsp;</nobr></td>
+		<td style="border-top:1px solid;border-top-color:#000000;"><nobr>&nbsp;</nobr></td>
+		<td style="border-top:1px solid;border-top-color:#000000;"><nobr>&nbsp;</nobr></td>
+		<td style="border-top:1px solid;border-top-color:#000000;"><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:22.6666666667px;">
+		<th>18</th>
+		<td style="font-family:Arial;text-align:center;font-size:14px;font-weight:bold;" colspan="9"><nobr>Доверенность №____</nobr></td></tr>
+
+	<tr style="height:0px;">
+		<th>19</th>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>20</th>
+		<td style=""><nobr> Дата выдачи </nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:0px;">
+		<th>21</th>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>22</th>
+		<td style="border-bottom:1px solid;border-bottom-color:#000000;" colspan="9"><nobr>Доверенность действительна по </nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>23</th>
+		<td style="border-bottom:1px solid;border-bottom-color:#000000;" colspan="9" rowspan="2"><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>24</th></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>25</th>
+		<td style="text-align:center;border-top:1px solid;border-top-color:#000000;" colspan="9"><nobr>наименование потребителя и его адрес</nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>26</th>
+		<td style="border-bottom:1px solid;border-bottom-color:#000000;" colspan="9" rowspan="2"><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>27</th></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>28</th>
+		<td style="text-align:center;border-top:1px solid;border-top-color:#000000;" colspan="9"><nobr>наименование плательщика и его адрес</nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>29</th>
+		<td style="" colspan="9"><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:0px;">
+		<th>30</th>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:0px;">
+		<th>31</th>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:0px;">
+		<th>32</th>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:15.6666666667px;">
+		<th>33</th>
+		<td style="" colspan="9"><nobr>Доверенность выдана: </nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>34</th>
+		<td style=""><nobr>Паспорт: серия ____ № __________</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>35</th>
+		<td style=""><nobr>Кем выдан</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>36</th>
+		<td style=""><nobr>Дата выдачи </nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:15.6666666667px;">
+		<th>37</th>
+		<td style="" colspan="9"><nobr>На получение от ООО «                          »</nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>38</th>
+		<td style=""><nobr>материальных ценностей по счету № ____ от _____________</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:0px;">
+		<th>39</th>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>40</th>
+		<td style="font-family:Arial;text-align:center;font-size:8px;font-weight:bold;" colspan="9"><nobr>ПЕРЕЧЕНЬ ТОВАРНО-МАТЕРИАЛЬНЫХ ЦЕННОСТЕЙ, ПОДЛЕЖАЩИХ ПОЛУЧЕНИЮ</nobr></td></tr>
+
+	<tr style="height:0px;">
+		<th>41</th>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:33.6666666667px;">
+		<th>42</th>
+		<td style="font-family:Arial;text-align:center;font-size:10px;font-weight:bold;border:1px solid;border-left-color:#000000;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;"><nobr>№<br>
+п/п</nobr></td>
+		<td style="font-family:Arial;text-align:center;font-size:10px;font-weight:bold;border-right:1px solid;border-top:1px solid;border-bottom:1px solid;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;" colspan="5"><nobr>Наименование</nobr></td>
+		<td style="font-family:Arial;text-align:center;font-size:10px;font-weight:bold;border-right:1px solid;border-top:1px solid;border-bottom:1px solid;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;"><nobr>Ед. изм.</nobr></td>
+		<td style="font-family:Arial;text-align:center;font-size:10px;font-weight:bold;border-right:1px solid;border-top:1px solid;border-bottom:1px solid;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;" colspan="2"><nobr>Количество<br>
+(прописью)</nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>43</th>
+		<td style="text-align:right;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-left-color:#000000;border-right-color:#000000;border-bottom-color:#000000;"><nobr>1</nobr></td>
+		<td style="border-right:1px solid;border-top:1px solid;border-bottom:1px solid;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;" colspan="5"><nobr>&nbsp;</nobr></td>
+		<td style="text-align:center;border-right:1px solid;border-top:1px solid;border-bottom:1px solid;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;"><nobr>Шт</nobr></td>
+		<td style="border-right:1px solid;border-bottom:1px solid;border-right-color:#000000;border-bottom-color:#000000;" colspan="2"><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>44</th>
+		<td style="text-align:right;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-left-color:#000000;border-right-color:#000000;border-bottom-color:#000000;"><nobr>2</nobr></td>
+		<td style="border-right:1px solid;border-top:1px solid;border-bottom:1px solid;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;" colspan="5"><nobr>&nbsp;</nobr></td>
+		<td style="text-align:center;border-right:1px solid;border-top:1px solid;border-bottom:1px solid;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;"><nobr>Шт</nobr></td>
+		<td style="border-right:1px solid;border-bottom:1px solid;border-right-color:#000000;border-bottom-color:#000000;" colspan="2"><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>45</th>
+		<td style="text-align:right;border-left:1px solid;border-right:1px solid;border-bottom:1px solid;border-left-color:#000000;border-right-color:#000000;border-bottom-color:#000000;"><nobr>3</nobr></td>
+		<td style="border-right:1px solid;border-top:1px solid;border-bottom:1px solid;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;" colspan="5"><nobr>&nbsp;</nobr></td>
+		<td style="text-align:center;border-right:1px solid;border-top:1px solid;border-bottom:1px solid;border-right-color:#000000;border-top-color:#000000;border-bottom-color:#000000;"><nobr>Шт</nobr></td>
+		<td style="border-right:1px solid;border-bottom:1px solid;border-right-color:#000000;border-bottom-color:#000000;" colspan="2"><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:13.3333333333px;">
+		<th>46</th>
+		<td style="text-align:right;"><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style="text-align:center;"><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:0px;">
+		<th>47</th>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:27px;">
+		<th>48</th>
+		<td style=""><nobr>Подпись лица, получившего доверенность ____________________________ удостоверяем.</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:36px;">
+		<th>49</th>
+		<td style=""><nobr>Руководитель предприятия_____________________ (____________)</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:26px;">
+		<th>50</th>
+		<td style=""><nobr>М.П.</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td></tr>
+
+	<tr style="height:26px;">
+		<th>51</th>
+		<td style=""><nobr>Главный бухгалтер____________________________ (____________)</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td>
+		<td style=""><nobr>&nbsp;</nobr></td></tr>
+</tbody></table>
+        	  <div class="adsense">
+	    <script type="text/javascript"><!--
+	      google_ad_client = "pub-6090430463089596";
+	      /* 468x60, создано 22.02.09 */
+	      google_ad_slot = "3236538849";
+	      google_ad_width = 468;
+	      google_ad_height = 60;
+	      //-->
+	    </script>
+	    <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script><ins style="display:inline-table;border:none;height:60px;margin:0;padding:0;position:relative;visibility:visible;width:468px;background-color:transparent"><ins id="aswift_0_anchor" style="display:block;border:none;height:60px;margin:0;padding:0;position:relative;visibility:visible;width:468px;background-color:transparent"><iframe width="468" height="60" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){w.location.replace(h)}}" id="aswift_0" name="aswift_0" style="left:0;position:absolute;top:0;"></iframe></ins></ins>
+	  </div>
+
+      </div>
+    </td>
+    <td class="right-sidebar">
+        <div class="block">
+    <div class="block-header">Информация</div>
+	  <div class="block_content">
+              <script type="text/javascript"><!--
+        google_ad_client = "pub-6090430463089596";
+        /* excel-team-sidebar */
+        google_ad_slot = "5731989437";
+        google_ad_width = 160;
+        google_ad_height = 600;
+        //-->
+        </script>
+        <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+        </script><ins style="display:inline-table;border:none;height:600px;margin:0;padding:0;position:relative;visibility:visible;width:160px;background-color:transparent"><ins id="aswift_1_anchor" style="display:block;border:none;height:600px;margin:0;padding:0;position:relative;visibility:visible;width:160px;background-color:transparent"><iframe width="160" height="600" frameborder="0" marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){w.location.replace(h)}}" id="aswift_1" name="aswift_1" style="left:0;position:absolute;top:0;"></iframe></ins></ins>
+
+    </div>
+  </div> 
+        <div class="block">
+    <div class="block-header">Новости</div>
+	  <div class="block_content">
+      <ul class="links2"><li><a href="/office_2010_besplatno.php">Покупатели Office 2007 получат Office 2010 бесплатно</a></li><li><a href="/microsoft_word.php">Microsoft оспорила судебный запрет на продажу Word</a></li><li><a href="/ibm_ms_office.php">IBM отказалась от MS Office</a></li><li><a href="/excel_worm.php">Уязвимость в Microsoft Excel</a></li><li><a href="/excel_3d.php">Excel можно использовать для создания 3D-графики</a></li></ul>
+    </div>
+  </div>      
+        <div class="block">
+    <div class="block-header">Статьи</div>
+	  <div class="block_content">
+      <ul class="links2"><li><a href="/forex_forum.php">Создание веб-сайтов</a></li><li><a href="/sajt_vizitka_put_k_uspjekhu.php">Сайт-визитка – путь к успеху</a></li><li><a href="/ispolzovanije_makrosov_v_microsoft_office_excel.php">Использование макросов в Microsoft Office Excel</a></li><li><a href="/pages/avtomatizatsiya_na_sluzhbe_biznesa.php">Автоматизация на службе бизнеса</a></li></ul>
+    </div>
+  </div>           
+    </td>
+  </tr>
+</tbody></table>

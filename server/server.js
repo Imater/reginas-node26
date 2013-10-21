@@ -101,9 +101,13 @@ var the_socket;
 
 function Report(socket) {
 	//Обрабатываем данные синхронизации
+	var tm_emit;
 	this.loadstat = function(user_id){
-	 	_sqllog({manager: user_id?user_id:"", text:"broadcast.emit( 'loadstat' )"});
-		socket.broadcast.emit( 'loadstat' );
+		clearTimeout(tm_emit);
+		tm_emit = setTimeout(function(){
+		 	_sqllog({manager: user_id?user_id:"", text:"broadcast.emit( 'loadstat' )"});
+			socket.broadcast.emit( 'loadstat' );
+		},15000);
 	}
 	this.sync_answer = function(data, user_id) {
 		var dfdArray = [];
