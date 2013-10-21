@@ -26,6 +26,8 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 
 
 	$scope.LoadJsonByDay = function() {
+	 if( $routeSegment.startsWith('s1.statistic') ) {
+
 //		$.getJSON('/api/v1/json/cup?brand='+$scope.fpk.brand).done(function(data) {
 
         $http({url:'/api/v1/json/cup',method: "GET", params: { brand: $scope.fpk.brand, today: $scope.fpk.today_date}}).then(function(result){
@@ -106,7 +108,7 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 					}]
 				};
 			});
-
+	 }
 	};
 
 	$scope.$watch('cup_tab', function(val, newVal){
@@ -150,7 +152,7 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 
 		 });
 		};
-	 	
+
 	 }
 
     $scope.fpk.init.done(function(){
