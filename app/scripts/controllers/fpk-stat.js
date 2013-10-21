@@ -116,39 +116,42 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 	});
 
 	$scope.getCUPtable = function() {
-	 myApi.getCUP($scope).then(function(cup){
+	 if( $routeSegment.startsWith('s1.statistic') ) {
+		 myApi.getCUP($scope).then(function(cup){
 
-		  var allow_brands = $scope.fpk.the_user.rights[0].brands;
+			  var allow_brands = $scope.fpk.the_user.rights[0].brands;
 
-		  var brands = [];
-		  console.info("brands = ", allow_brands);
+			  var brands = [];
+			  console.info("brands = ", allow_brands);
 
-		  if(!allow_brands.length) {
-		    brands = _.filter(cup.brands, function(brand){
-		      return (brand.id == $scope.fpk.the_user.brand);
-		    });
-		  } else if ( allow_brands.indexOf("*")!=-1 ) {
-		    brands = cup.brands;
-		  } else if ( allow_brands.indexOf("-")!=-1 ) {
-		    brands = cup.brands;
-		  } else if (true) {
-		    brands = _.filter(cup.brands, function(brand){
-		      return (allow_brands.indexOf(brand.id) != -1);
-		    });
-		    
-		  }
+			  if(!allow_brands.length) {
+			    brands = _.filter(cup.brands, function(brand){
+			      return (brand.id == $scope.fpk.the_user.brand);
+			    });
+			  } else if ( allow_brands.indexOf("*")!=-1 ) {
+			    brands = cup.brands;
+			  } else if ( allow_brands.indexOf("-")!=-1 ) {
+			    brands = cup.brands;
+			  } else if (true) {
+			    brands = _.filter(cup.brands, function(brand){
+			      return (allow_brands.indexOf(brand.id) != -1);
+			    });
+			    
+			  }
 
-	    $scope.cup = brands;
+		    $scope.cup = brands;
 
 
 
-        var time_split = toMysql( (new Date) ).split(" ")[1].split(":");
-	    $scope.fpk.stat_load_time = time_split[0]+":"+time_split[1];
+	        var time_split = toMysql( (new Date) ).split(" ")[1].split(":");
+		    $scope.fpk.stat_load_time = time_split[0]+":"+time_split[1];
 
-		$scope.LoadJsonByDay();
+			$scope.LoadJsonByDay();
 
-	 });
-	};
+		 });
+		};
+	 	
+	 }
 
     $scope.fpk.init.done(function(){
     	$scope.getCUPtable();	
