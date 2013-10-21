@@ -362,7 +362,6 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
         if($scope.fpk.right_panel_hide == false) {
           myApi.getDoToday(scope).then(function(answer){
             $scope.fpk.today_do = answer;
-            console.info("DO:",$scope.fpk.today_do);
           });
         } else {
             //$scope.fpk.today_do = [];
@@ -370,6 +369,15 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
 
     }
 
+    $scope.fpk.jsFioShort = function(fio, need_surname) {
+    //    console.info(fio,"fioshort");
+        if(!fio) return "";
+        var fio_sp = fio.split(" ");
+        var name = (fio_sp[1]?(fio_sp[1].substr(0,1)+"."):"");
+        if(need_surname == "name") var name = (fio_sp[1]?(fio_sp[1]+""):"");
+        var answer = fio_sp[0] + " "+ name + ((fio_sp[2]&&need_surname&&(need_surname!="name"))?(fio_sp[2].substr(0,1)+"."):"");
+        return answer;
+    }
 
 
     $scope.fpk.init = new $.Deferred();
@@ -377,11 +385,16 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
      $scope.fpk.jsRefreshUserInfo = function(dont_select_brand) {
         var dfd = new $.Deferred();
         myApi.loadUserInfo($scope).then(function(user){
-
           $scope.fpk.the_user = user.user[0];
           document.title = "ФПК ("+user.user[0].fio.split(" ")[1]+" "+user.user[0].fio.split(" ")[0][0]+".) — Регинас";
           if(!dont_select_brand) $scope.fpk.brand = user.user[0].brand; //бренд по умолчанию
           localStorage.setItem("brand", $scope.fpk.brand);
+
+          $.each(user.users, function(i, us){
+            us.fio_short = $scope.fpk.jsFioShort(us.fio);
+            us.fio_short_name = $scope.fpk.jsFioShort(us.fio, "name");
+          });
+
           $scope.fpk.managers = _.filter(user.users, function(user){
             return (user.brand == $scope.fpk.brand);
           });
@@ -568,7 +581,6 @@ angular.module("ngLocale", [], ["$provide", function ($provide) {
             matches = title.match(shablon);
             
             if(matches) {
-                console.info(matches);
                 shablon = /(\d{4})/g; 
                 matches2 = title.match(shablon); //найти год
             

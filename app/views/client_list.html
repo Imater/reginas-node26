@@ -20,7 +20,8 @@
                            <div class="datemini" time-now="time_now" date-type="client" ng-model="client.na_date" title="{{client.na_date}}"></div> 
                            <div class="client_fio">{{client.fio}}</div> 
 
-                           <div class="client_manager" ng-if="(fpk.clientsgroupby!='manager_id'&&fpk.manager_filter==-1)||(distinct=='one_client')">{{fpk.jsFioShort( fpk.jsFindInArray(fpk.all_managers,"id",client.manager_id).fio,"name")}}</div>
+                           <div class="client_manager" ng-if="(fpk.clientsgroupby!='manager_id'&&fpk.manager_filter==-1)||(distinct=='one_client')">{{fpk.jsFindInArray(fpk.all_managers,"id",client.manager_id).fio_short_name}}</div>
+
 
                            <div ng-if="client.out_reason.length&&client.out_reason.length>9" class="out_reason">{{client.out_reason}}</div>
                         </div>      
@@ -242,10 +243,10 @@
                               <div class="col-md-6 but selectmanager">
                                     <div class="btn-group dropup">
                                       <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                                        Менеджер: <b>{{fpk.jsFioShort(fpk.jsFindInArray(fpk.all_managers,"id",client.manager_id).fio)}}</b> <span class="caret"></span>
+                                        Менеджер: <b>{{fpk.jsFindInArray(fpk.all_managers,"id",client.manager_id).fio_short}}</b> <span class="caret"></span>
                                       </button>
                                       <ul class="dropdown-menu" role="menu">
-                                          <li ng-click="client.manager_id=manager.id; jsClientSave(client); " ng-repeat="manager in fpk.managers | onlyManager:true"><a><i class="icon-user"></i>{{manager.fio}}</a></li>
+                                          <li ng-click="client.manager_id=manager.id; jsClientSave(client); " ng-repeat="manager in fpk.managers | onlyManager:true"><a><i class="icon-user"></i>{{manager.fio_short_name}}</a></li>
 
                                             <li class="dropdown-submenu"><a>Остальные</a>
                                              <ul class="dropdown-menu">
@@ -277,8 +278,8 @@
 
                                 <div class="do_text">
                                   {{do.text}}
-                                  <span ng-if="do.host_id!=client.manager_id && do.host_id>0">[Поручил: <i class="icon-user"></i>{{fpk.jsFioShort(fpk.jsFindInArray(fpk.all_managers,"id",do.host_id).fio)}}]</span>
-                                  <span ng-if="do.manager_id!=client.manager_id && do.manager_id>0">[Исполнитель: <i class="icon-user"></i>{{fpk.jsFioShort(fpk.jsFindInArray(fpk.all_managers,"id",do.manager_id).fio)}}]</span>
+                                  <span ng-if="do.host_id!=client.manager_id && do.host_id>0">[Поручил: <i class="icon-user"></i>{{fpk.jsFindInArray(fpk.all_managers,"id",do.host_id).fio_short}}]</span>
+                                  <span ng-if="do.manager_id!=client.manager_id && do.manager_id>0">[Исполнитель: <i class="icon-user"></i>{{fpk.jsFindInArray(fpk.all_managers,"id",do.manager_id).fio_short}}]</span>
                                   <span ng-if="do.comment" class="do_result"><br>Результат: {{do.comment}}</span>
                                 </div>
                               </div>
@@ -301,7 +302,7 @@
                                       <div class="col-md-12">
                                         <div class="input-group input-group-sm">
                                           <span class="input-group-addon">Дело:</span>
-                                            <textarea placeholder="Введите описание дела..." class="do_text_input" return-on-blur="do_text" ng-model="do.text" ></textarea> 
+                                            <textarea placeholder="Введите описание дела..." class="do_text_input" return-on-blur2="do_text" ng-model="do.text" ></textarea> 
 
                                         </div>
                                       </div>
@@ -353,7 +354,7 @@
 
                                       <div class="col-md-4 do_types_button">
                                             <div class="btn-group">
-                                              <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" title="SMS придёт на телефон Исполнителю: {{fpk.jsFioShort(fpk.jsFindInArray(fpk.all_managers,'id',do.manager_id).phone)}}">
+                                              <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" title="SMS придёт на телефон Исполнителю: {{fpk.jsFindInArray(fpk.all_managers,'id',do.manager_id).phone}}">
                                                 <i class="icon-bell-1"></i>SMS нап.: <b>{{jsShowRemind(do)}}</b> <span class="caret"></span>
                                               </button>
                                               <ul class="dropdown-menu" role="menu">
@@ -395,14 +396,14 @@
                                       <div class="col-md-4">
                                             <div class="btn-group">
                                               <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                                                Исполнитель: <b>{{fpk.jsFioShort(fpk.jsFindInArray(fpk.all_managers,"id",do.manager_id).fio)}}</b> <span class="caret"></span>
+                                                Исполнитель: <b>{{fpk.jsFindInArray(fpk.all_managers,"id",do.manager_id).fio_short}}</b> <span class="caret"></span>
                                               </button>
                                               <ul class="dropdown-menu pull-right" role="menu">
-                                                  <li  ng-click="do.manager_id = manager.id" ng-repeat="manager in fpk.managers | onlyManager:true"><a><i class="icon-user"></i>{{manager.fio}}</a></li>
+                                                  <li  ng-click="do.manager_id = manager.id" ng-repeat="manager in fpk.managers | onlyManager:true"><a><i class="icon-user"></i>{{manager.fio_short_name}}</a></li>
 
                                                     <li class="dropdown-submenu"><a>Остальные</a>
                                                      <ul class="dropdown-menu">
-                                                      <li ng-click="do.manager_id = manager.id" ng-repeat="manager in fpk.managers | onlyManager:false"><a>{{manager.fio}}</a></li>
+                                                      <li ng-click="do.manager_id = manager.id" ng-repeat="manager in fpk.managers | onlyManager:false"><a>{{manager.fio_short_name}}</a></li>
                                                      </ul>
                                                     </li>
 

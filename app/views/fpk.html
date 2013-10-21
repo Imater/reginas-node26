@@ -38,12 +38,12 @@
       <li ng-if="fpk.inside"><a href="#/fpk/reiting"  ng-class="{active: $routeSegment.startsWith('s1.reiting')}">Рейтинг менеджеров</a></li>
       <li ng-if="fpk.inside&&fpk.the_user.rights[0].can_edit_models"  ng-class="{active: $routeSegment.startsWith('s1.settings')}"><a href="#/fpk/settings/models">Настройки</a></li>
       <li class="dropdown" ng-if="fpk.inside">
-        <a  class="dropdown-toggle" data-toggle="dropdown">Фильтр: {{fpk.jsFioShort(fpk.jsShowManagerFilter(),"name")}} <b class="caret"></b></a>
+        <a  class="dropdown-toggle" data-toggle="dropdown">Фильтр: {{fpk.jsShowManagerFilter()}} <b class="caret"></b></a>
         <ul class="dropdown-menu">
           <li role="presentation" class="dropdown-header">Фильтровать по:</li>                   
           <li ng-click="jsSelectManager(-1)"><a><i class="icon-users"></i>Все менеджеры</a></li>
           <li role="presentation" class="dropdown-header">Менеджеры:</li>                   
-          <li ng-click="jsSelectManager(manager.id)" ng-repeat="manager in fpk.managers | onlyManager:true"><a><i class="icon-user"></i>{{fpk.jsFioShort(manager.fio,"name")}}</a></li>
+          <li ng-click="jsSelectManager(manager.id)" ng-repeat="manager in fpk.managers | onlyManager:true"><a><i class="icon-user"></i>{{manager.fio_short_name}}</a></li>
           <li class="dropdown-submenu"><a >Остальные</a>
            <ul class="dropdown-menu">
             <li ng-click="jsSelectManager(manager.id)" ng-repeat="manager in fpk.managers | onlyManager:false"><a >{{manager.fio}}</a></li>

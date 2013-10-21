@@ -1151,7 +1151,6 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
 if($scope.fpk.jsLoadStat) $scope.fpk.jsLoadStat();
 
 $scope.fpk.brands_cache = "";
-
 $scope.jsGetBrands = function() {
   if(!$scope.fpk.brands) return false;
 
@@ -1162,7 +1161,6 @@ $scope.jsGetBrands = function() {
   var allow_brands = $scope.fpk.the_user.rights[0].brands;
 
   var brands = [];
-  console.info("brands = ", allow_brands);
 
   if(!allow_brands.length) {
     brands = _.find($scope.fpk.brands, function(brand){
@@ -1262,23 +1260,18 @@ $scope.getSMS = function(sms) {
 
 }
 
-$scope.fpk.jsFioShort = function(fio, need_surname) {
-    if(!fio) return "";
-    var fio_sp = fio.split(" ");
-    var name = (fio_sp[1]?(fio_sp[1].substr(0,1)+"."):"");
-    if(need_surname == "name") var name = (fio_sp[1]?(fio_sp[1]+""):"");
-    var answer = fio_sp[0] + " "+ name + ((fio_sp[2]&&need_surname&&(need_surname!="name"))?(fio_sp[2].substr(0,1)+"."):"");
-    return answer;
-}
+ 
+ $scope.fpk.jsFindInArray = _.memoize( function(myarray, fieldname, myid) {
 
- $scope.fpk.jsFindInArray = function(myarray, fieldname, myid) {
-  var answer = _.find(myarray, function(com){
-    if(com[fieldname]) {
-      return (com[fieldname] == myid);
-    }
-  });
-  return answer;
- }
+      var answer = _.find(myarray, function(com){
+        if(com[fieldname]) {
+          return (com[fieldname] == myid);
+        }
+      });
+      return answer;
+
+
+ }, function(a,b,c){ return a+b+c; } );
 
  $scope.fpk.jsShowManagerFilter = function() {
   if($scope.fpk.manager_filter == -1) {
@@ -1287,7 +1280,7 @@ $scope.fpk.jsFioShort = function(fio, need_surname) {
     var the_manager = _.find($scope.fpk.managers, function(manager) {
       return (manager.id == $scope.fpk.manager_filter );
     });
-    if(the_manager) return the_manager.fio;
+    if(the_manager) return the_manager.fio_short_name;
   }
  }
  
@@ -1456,7 +1449,6 @@ $scope.fpk.jsRoundCorner = function(){
  }
 
  $scope.$watch('fpk.leftmenu.active', function(val, newVal){
-  console.info("V",val, newVal);
     if(val!=newVal) {
       if( (val == 3) || (newVal == 3) || (val == 5) || (newVal == 5) ) $scope.fpk.jsRefreshDo($scope);   
     }
