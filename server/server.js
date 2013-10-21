@@ -2,12 +2,25 @@ var cluster = require('cluster');
 var http = require('http');
 var numCPUs = require('os').cpus().length;
 
+var worker;
+
 if (cluster.isMaster) {
   // Fork workers.
   console.info("numCpus", numCPUs);
   for (var i = 0; i < numCPUs; i++) {
-    cluster.fork();
+    worker = cluster.fork();
+
+	worker.on('message', function(msg) {
+      // we only want to intercept messages that have a chat property
+      if (msg.chat) {
+        console.log('Worker to master: ', msg.chat);
+        worker.send({ chat: 'Ok worker, Master got the message! Over and out!' });
+      }
+    });
+
   }
+
+
 
   cluster.on('exit', function(worker, code, signal) {
     console.log('worker ' + worker.process.pid + ' died');
@@ -18,6 +31,14 @@ if (cluster.isMaster) {
   });
 
 } else {
+
+
+process.on('message', function(msg) {
+    // we only want to intercept messages that have a chat property
+    if (msg.chat) {
+      console.log('Master to worker: ', msg.chat);
+    }
+  });	
 
 ////////////////////////////////////////////////////////////////////
 
@@ -132,7 +153,8 @@ function Report(socket) {
     tm_emit = setTimeout(function(){
       //_sqllog({manager: user_id?user_id:"", text:"broadcast.emit( 'loadstat' )"});
       socket.broadcast.emit( 'loadstat' );
-    },5000);
+
+    },5);
   }
   this.sync_answer = function(data, user_id) {
     var dfdArray = [];
