@@ -2572,3 +2572,150 @@ li.needgroup {
 .skeleton2 {
     -webkit-overflow-scrolling: touch;
 }
+
+#dover {
+    margin: 50px;
+    width: 60em;
+    .table_top {
+        width: 60em;
+       td {
+        border: 1px solid #000;
+        text-align: center;
+       } 
+       .table_wide {
+        width: 20em;
+       }
+    }    
+    .table_second {
+        width: 60em;
+       td, th {
+        border: 1px solid #000;
+        text-align: center;
+       } 
+       th {
+        border-top: none;
+        font-weight: normal;
+       }
+       .table_wide {
+        width: 20em;
+       }
+    }    
+    .dover_title {
+        font-size: 10px;
+        clear: both;
+    }
+    center i {
+        font-size: 9px;
+    }
+    .okud {
+        float: right;
+        clear: right;
+        border: 1px solid #000;
+        text-align: center;
+        width: 7em;
+        div {
+            border: 1px solid #000;
+            border-top: none;
+        }
+        div:first-child {
+            border-top: 1px solid #000;
+        }
+        span {
+            position: absolute;
+            text-align: right;
+            margin-left: -110px;
+        }
+
+    }
+    .organization {
+        text-align: center;
+        clear: both;
+        span {
+            max-width: 30em;        
+            b {
+                font-weight: normal;
+                text-decoration: underline;
+            }
+        }
+    }
+    .dover_title_main {
+        font-weight: bold;
+        text-align: center;
+        font-size: 14px;
+        margin-top: 10px;
+        b {
+            text-decoration: underline;
+        }
+    }
+    .table_date {
+        width: 15em;
+        text-align: right;
+        b {
+            text-decoration: underline;
+            font-weight: normal;
+        }
+    }
+    .potrebitel {
+        margin-top: 10px;
+        text-align: center;
+        b {
+            font-weight: normal;
+        }
+        border-bottom: 1px solid #000;
+    }
+    .rs {
+        text-align: center;
+        border-bottom: 1px solid #000;
+    }
+    .dover_man {
+        b {
+            font-weight: normal;
+            text-decoration: underline;
+            font-size: 12px;
+        }
+        span {
+            display: inline-block;
+            width: 40em;
+            white-space: nowrap;
+        }
+    }
+    .underline {
+            border-bottom: 1px solid #000; 
+            b {
+                display: inline-block;
+                width: 20em;
+                text-align: right;
+            } 
+            span {
+                width: 20em;
+            }
+    }
+    .table_main {
+        margin-top: 10px;
+        width: 60em;
+        td {
+            border: 1px solid #000;
+            text-align: center;
+        }
+    }
+}
+
+.page_break {
+     page-break-after: always;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
