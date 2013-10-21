@@ -10,7 +10,7 @@
   right: 0px !important;
   position: static; }
 
-.cards_scrollable {
+.cards_scrollable, #cards_scrollable {
   position: static;
   overflow: inherit; }
 
