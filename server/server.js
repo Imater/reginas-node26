@@ -1,10 +1,33 @@
+var cluster = require('cluster');
+var http = require('http');
+var numCPUs = require('os').cpus().length;
+
+if (cluster.isMaster) {
+  // Fork workers.
+  console.info("numCpus", numCPUs);
+  for (var i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
+
+  cluster.on('exit', function(worker, code, signal) {
+    console.log('worker ' + worker.process.pid + ' died');
+  });
+
+  cluster.on('fork', function(worker, address) {
+    console.info(worker.id);
+  });
+
+} else {
+
+////////////////////////////////////////////////////////////////////
+
 var express = require('express'),
-	app = express(),
-	fs = require("fs"),
-	server = require('http').createServer(app),
-	qs = require('querystring'),
-	io = require('socket.io').listen(server, {log:false});
-var	NO_DATE = '0000-00-00 00:00:00';
+  app = express(),
+  fs = require("fs"),
+  server = require('http').createServer(app),
+  qs = require('querystring'),
+  io = require('socket.io').listen(server, {log:false});
+var NO_DATE = '0000-00-00 00:00:00';
 var mysql      = require('mysql');
 var md5 = require('MD5');
 global.stat_cache = {};
@@ -35,7 +58,7 @@ mysqlconfig = {
   password : 'See6thoh',
   database : 'h116'
 };
-//connection.connect();	
+//connection.connect(); 
 var connection = mysql.createConnection(mysqlconfig);
 
 var $ = require('jquery');
@@ -62,14 +85,16 @@ app.configure(function(){
 
     res.setHeader("Access-Control-Allow-Origin", "*");
     if(/\.(png|jpg|jpeg|woff|gif)/ig.test(req.url)) {
-    	res.setHeader("Cache-Control", "public, max-age=17280000");
+      res.setHeader("Cache-Control", "public, max-age=17280000");
     } else if( /bower_components/ig.test(req.url) && !(/localhost/.test(req.headers.host)) ) {
-    	res.setHeader("Cache-Control", "public, max-age=280000");    	
+      res.setHeader("Cache-Control", "public, max-age=280000");     
     } else if( /\.(js|css|html|json)/.test(req.url) && !(/localhost/.test(req.headers.host)) ) {
-    	res.setHeader("Cache-Control", "public, max-age=0");    	
+      res.setHeader("Cache-Control", "public, max-age=0");      
     } else {
-    	res.setHeader("Cache-Control", "public, max-age=0");    	
+      res.setHeader("Cache-Control", "public, max-age=0");      
     }
+
+    res.setHeader("PROCESSOR", cluster.worker.id);      
 
     return next();
   });
@@ -100,106 +125,106 @@ var the_socket;
 
 
 function Report(socket) {
-	//Обрабатываем данные синхронизации
-	var tm_emit;
-	this.loadstat = function(user_id){
-		clearTimeout(tm_emit);
-		tm_emit = setTimeout(function(){
-		 	//_sqllog({manager: user_id?user_id:"", text:"broadcast.emit( 'loadstat' )"});
-			socket.broadcast.emit( 'loadstat' );
-		},5000);
-	}
-	this.sync_answer = function(data, user_id) {
-		var dfdArray = [];
-		var rows = {};
-		if(!user_id) {
-			socket.emit( 'sync_answer', {err: "Token invalid..."} );
-			return false;
-		};
-		$.each(data.notes, function(i,el) {
-			dfdArray.push( jsFindById(el.id).done(function(row){
-				rows[el.id] = row;
-			}) );
-		});
+  //Обрабатываем данные синхронизации
+  var tm_emit;
+  this.loadstat = function(user_id){
+    clearTimeout(tm_emit);
+    tm_emit = setTimeout(function(){
+      //_sqllog({manager: user_id?user_id:"", text:"broadcast.emit( 'loadstat' )"});
+      socket.broadcast.emit( 'loadstat' );
+    },5000);
+  }
+  this.sync_answer = function(data, user_id) {
+    var dfdArray = [];
+    var rows = {};
+    if(!user_id) {
+      socket.emit( 'sync_answer', {err: "Token invalid..."} );
+      return false;
+    };
+    $.each(data.notes, function(i,el) {
+      dfdArray.push( jsFindById(el.id).done(function(row){
+        rows[el.id] = row;
+      }) );
+    });
 
-		the_socket = socket;
-		$.when.apply( null, dfdArray ).then(function(){
-			//в rows теперь все данные из базы для изменённых заметок
-			//перебираем элементы, которые изменились позже базы
-			var dfdArray = [];
-			$.each(data.notes, function(i, el_client){
-				var el_server = rows[el_client.id][0];
-				if(el_client.changetime > el_server.changetime) {
-					//сохраняем данные в базе сервера
-					if (el_server.user_id == user_id) {
-						collection.update({id: el_server.id, user_id: user_id },{ $set: el_client }, function(err,rows){
-							if(rows) console.info("Сохранил - "+el_server.id);
-						});	
-					} else {
-						console.info("Чужая запись, не сохраняю. Пользователь: "+el_server.user_id);
+    the_socket = socket;
+    $.when.apply( null, dfdArray ).then(function(){
+      //в rows теперь все данные из базы для изменённых заметок
+      //перебираем элементы, которые изменились позже базы
+      var dfdArray = [];
+      $.each(data.notes, function(i, el_client){
+        var el_server = rows[el_client.id][0];
+        if(el_client.changetime > el_server.changetime) {
+          //сохраняем данные в базе сервера
+          if (el_server.user_id == user_id) {
+            collection.update({id: el_server.id, user_id: user_id },{ $set: el_client }, function(err,rows){
+              if(rows) console.info("Сохранил - "+el_server.id);
+            }); 
+          } else {
+            console.info("Чужая запись, не сохраняю. Пользователь: "+el_server.user_id);
 
-					}
+          }
 
 
 
-				} else {
-					//сохранять нельзя, данные уже изменились другим клиентом. Только бекап.
-					console.info("Данные в базе свежее, чем присланные: ", el_server.id);
-		
-				}
+        } else {
+          //сохранять нельзя, данные уже изменились другим клиентом. Только бекап.
+          console.info("Данные в базе свежее, чем присланные: ", el_server.id);
+    
+        }
 
-			});
-			the_socket.emit( 'sync_answer', {data: rows} );
-		});
+      });
+      the_socket.emit( 'sync_answer', {data: rows} );
+    });
 
-	} //sync_answer
+  } //sync_answer
 }
 
 //нахожу одну заметку в базе
 function jsFindById(id) {
-	var dfd = $.Deferred();
+  var dfd = $.Deferred();
 
     collection.find({id:id}).toArray(function (err, rows, fields) {
-		//response.send(rows);
-		dfd.resolve(rows);
-  	});	
+    //response.send(rows);
+    dfd.resolve(rows);
+    }); 
 
-/*	pool.query('SELECT * FROM `tree` WHERE id = ? LIMIT 1', [id], function (err, rows, fields) {
-		dfd.resolve(rows);
-  	});	
+/*  pool.query('SELECT * FROM `tree` WHERE id = ? LIMIT 1', [id], function (err, rows, fields) {
+    dfd.resolve(rows);
+    }); 
 */
-	return dfd.promise();
+  return dfd.promise();
 }
 
 var report;
 
 io.sockets.on('connection', function(socket) {
 
-	report = new Report(socket);
+  report = new Report(socket);
 
-	socket.on('createNote', function(data) {
-		socket.broadcast.emit('onNoteCreated', data);
-	});
+  socket.on('createNote', function(data) {
+    socket.broadcast.emit('onNoteCreated', data);
+  });
 
 
-	socket.on('sync', function(data) {
-		jsCheckToken(data.token, response).done(function(user_id){
-				report.sync_answer(data, user_id);
-		});
-		
-	});
+  socket.on('sync', function(data) {
+    jsCheckToken(data.token, response).done(function(user_id){
+        report.sync_answer(data, user_id);
+    });
+    
+  });
 
-	socket.on('updateNote', function(data) {
-		socket.broadcast.emit('onNoteUpdated', data);
-	});
+  socket.on('updateNote', function(data) {
+    socket.broadcast.emit('onNoteUpdated', data);
+  });
 
-	socket.on('moveNote', function(data){
-		socket.broadcast.emit('onNoteMoved', data);
-	});
+  socket.on('moveNote', function(data){
+    socket.broadcast.emit('onNoteMoved', data);
+  });
 
-	socket.on('deleteNote', function(data){
-		socket.broadcast.emit('onNoteDeleted', data);
-	});
+  socket.on('deleteNote', function(data){
+    socket.broadcast.emit('onNoteDeleted', data);
+  });
 });
 
 io.set('log level', 3); // reduce logging
@@ -208,7 +233,7 @@ io.set('log level', 3); // reduce logging
 database = exports;
 
 setInterval(function(){ 
-	database.checkSMS();
+  database.checkSMS();
 }, 60000);
 
 app.get("/api/v1/user_:user_id/time_:lasttime/:action", function(request, response) {
@@ -223,102 +248,102 @@ app.get("/api/v1/user_:user_id/time_:lasttime/:action", function(request, respon
 });
 
 /*exports.findAllMessages = function(request,response) {
-	var user_id = request.query.user_id;
+  var user_id = request.query.user_id;
     var tm = ( (new Date()).getTime() );
     pool.query('SELECT * FROM `tree` WHERE user_id = ? AND del="" LIMIT 60000', [user_id] , function (err, rows, fields) {
-		    console.info( ( (new Date()).getTime() ) -tm);
-		    response.send(rows);
-  	});	
+        console.info( ( (new Date()).getTime() ) -tm);
+        response.send(rows);
+    }); 
 }
 */
 
 function jsCheckToken(token, response) {
-	var dfd = new $.Deferred();
-	//console.info("check_token");
+  var dfd = new $.Deferred();
+
+  //console.info("check_token");
     pool.query('SELECT *, NOW() FROM `oauth_access_tokens` WHERE access_token = ? AND expires >= DATE_ADD(NOW(), INTERVAL 0 HOUR) ', [token] , function (err, rows, fields) {
 
-		    if(rows && rows[0] && rows[0].user_id) {
-		    	dfd.resolve( parseInt( rows[0].user_id ) );
+        if(rows && rows[0] && rows[0].user_id) {
+          dfd.resolve( parseInt( rows[0].user_id ) );
 
-			    pool.query('UPDATE 1_users SET lastvizit = NOW() WHERE id= ? ', [rows[0].user_id] , function (err, rows, fields) {
-			    });
+          pool.query('UPDATE 1_users SET lastvizit = NOW() WHERE id= ? ', [rows[0].user_id] , function (err, rows, fields) {
+          });
 
-		    } else {
-		    	dfd.fail("Token invalid");
-		    	response.send(401);
-		    	console.info("Token invalid");
-		    }
-  	});	
-  	return dfd.promise();
+        } else {
+          dfd.fail("Token invalid");
+          response.send(401);
+          console.info("Token invalid");
+        }
+    }); 
+    return dfd.promise();
 
 }
 
 exports.findAllMessages = function(request,response) {
-	jsCheckToken(request.query.token, response).done(function(user_id){
-		if(user_id) {
-		    var collection = mdb.collection('myalldata');		
+  jsCheckToken(request.query.token, response).done(function(user_id){
+    if(user_id) {
+        var collection = mdb.collection('myalldata');   
 
-		    var tm = ( (new Date()).getTime() );
-			
-		    collection.find({user_id:user_id, del:0}).toArray(function (err, rows, fields) {
-			    //console.info( ( (new Date()).getTime() ) -tm);
-				response.send(rows);
-		  	});	
+        var tm = ( (new Date()).getTime() );
+      
+        collection.find({user_id:user_id, del:0}).toArray(function (err, rows, fields) {
+          //console.info( ( (new Date()).getTime() ) -tm);
+        response.send(rows);
+        }); 
 
-		} else {
-			response.send("Error. Token is not valid...");	
-		}
-	});
+    } else {
+      response.send("Error. Token is not valid...");  
+    }
+  });
 }
 
 
 
 exports.findMessageById = function(request,response) {
-	var user_id = request.query.user_id;
+  var user_id = request.query.user_id;
     pool.query('SELECT * FROM `4_chat` WHERE id = ? AND user_id = ?', [request.params.id, user_id] , function (err, rows, fields) {
-		    response.send(rows);
-  	});	
+        response.send(rows);
+    }); 
 }
 
 
 exports.findDoById = function(request,response) {
-	var user_id = request.query.user_id;
+  var user_id = request.query.user_id;
     pool.query('SELECT *, date2 _date2 FROM `1_do` WHERE client = ? ORDER by date2 DESC, id DESC', [request.params.id] , function (err, rows, fields) {
-    		rows = correct_dates(rows);
-		    response.send(rows);
-  	});	
+        rows = correct_dates(rows);
+        response.send(rows);
+    }); 
 }
 
 
 
 exports.getDo = function(request,response) {
-	var user_id = request.query.user_id;
-	var brand = request.query.brand;
-	var manager_id = request.query.manager;
+  var user_id = request.query.user_id;
+  var brand = request.query.brand;
+  var manager_id = request.query.manager;
 
-	var left_menu = request.query.left_menu;
+  var left_menu = request.query.left_menu;
 
-	console.info(left_menu);
+  console.info(left_menu);
 
-	var insert_sql2 = '';
-	if(left_menu==3) {
-		insert_sql2 = ' AND 1_do.type = "Кредит" ';	
-	} else if (left_menu==5) {
-		insert_sql2 = ' AND 1_do.type = "Трейд-ин" ';	
-	} else {
+  var insert_sql2 = '';
+  if(left_menu==3) {
+    insert_sql2 = ' AND 1_do.type = "Кредит" '; 
+  } else if (left_menu==5) {
+    insert_sql2 = ' AND 1_do.type = "Трейд-ин" '; 
+  } else {
 
-	}
-	
-	jsCheckToken(request.query.token, response).done(function(user_id){
-		var insert_sql = "";
-		if(manager_id>0) insert_sql = "1_do.manager_id = '"+manager_id+"' AND ";
-		var query = 'SELECT 1_do.*, 1_clients.id, 1_clients.fio, 1_models.short, 1_users.fio man FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model  LEFT JOIN 1_users ON 1_do.manager_id = 1_users.id WHERE '+insert_sql+' 1_do.brand = ? AND 1_do.date2<= DATE_ADD(NOW(), INTERVAL 15 DAY) AND 1_do.checked = "0000-00-00 00:00:00" '+insert_sql2+' ORDER by date2';
-		console.info(query);
-	    pool.query(query, [ brand ] , function (err, rows, fields) {
-	    		rows = correct_dates(rows);
-			    response.send(rows);
-	  	});	
-	});
+  }
+  
+  jsCheckToken(request.query.token, response).done(function(user_id){
+    var insert_sql = "";
+    if(manager_id>0) insert_sql = "1_do.manager_id = '"+manager_id+"' AND ";
+    var query = 'SELECT 1_do.*, 1_clients.id, 1_clients.fio, 1_models.short, 1_users.fio man FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model  LEFT JOIN 1_users ON 1_do.manager_id = 1_users.id WHERE '+insert_sql+' 1_do.brand = ? AND 1_do.date2<= DATE_ADD(NOW(), INTERVAL 15 DAY) AND 1_do.checked = "0000-00-00 00:00:00" '+insert_sql2+' ORDER by date2';
+      pool.query(query, [ brand ] , function (err, rows, fields) {
+          rows = correct_dates(rows);
+          response.send(rows);
+      }); 
+  });
 }
 
 
@@ -334,105 +359,105 @@ connection.config.queryFormat = function (query, values) {
 };
 
 
-		connection.config.queryFormat = function (query, values) {
-		  if (!values) return query;
-		  return query.replace(/\:(\w+)/g, function (txt, key) {
-		    if (values.hasOwnProperty(key)) {
-		      return this.escape(values[key]);
-		    }
-		    return txt;
-		  }.bind(this));
-		};
+    connection.config.queryFormat = function (query, values) {
+      if (!values) return query;
+      return query.replace(/\:(\w+)/g, function (txt, key) {
+        if (values.hasOwnProperty(key)) {
+          return this.escape(values[key]);
+        }
+        return txt;
+      }.bind(this));
+    };
 
 
 exports.searchString = function(request,response) {
-	var user_id = request.query.user_id;
-	var brand = request.query.brand;
-	var search = request.query.search;
+  var user_id = request.query.user_id;
+  var brand = request.query.brand;
+  var search = request.query.search;
 
-	//console.info("HI:",request.query);
+  //console.info("HI:",request.query);
 
-	pool.query("SELECT DISTINCT(client) FROM 1_do WHERE brand = '"+brand+"' AND (text LIKE '%"+search+"%' OR comment LIKE '%"+search+"%') LIMIT 2000", 
-		function (err, clients) {
+  pool.query("SELECT DISTINCT(client) FROM 1_do WHERE brand = '"+brand+"' AND (text LIKE '%"+search+"%' OR comment LIKE '%"+search+"%') LIMIT 2000", 
+    function (err, clients) {
 
-		var ids = "(";
-		$.each(clients, function(i, cl){
-			ids += cl.client+",";
-		});
-		ids += " -1)";
+    var ids = "(";
+    $.each(clients, function(i, cl){
+      ids += cl.client+",";
+    });
+    ids += " -1)";
 
-		var sr = ("%"+search+"%");
+    var sr = ("%"+search+"%");
 
-	    pool.query('SELECT * FROM `1_clients` WHERE id IN '+ids+' OR (brand = ? AND `out`="0000-00-00 00:00:00" AND '+
-	    					'(fio like ? OR '+
-	    					'phone1 like ? OR '+
-	    					'phone2 like ? OR '+
-	    					'phone3 like ? OR '+
-	    					'phone4 like ? OR '+
-	    					'vin like ? OR '+
-	    					'comment like ? OR '+
-	    					'adress like ?'+
-	    					')) LIMIT 2000', [brand, sr, sr, sr, sr, sr, sr, sr, sr] , function (err, rows, fields) {
-	    		rows = correct_dates(rows);
-	    		//console.info(err);
-			    response.send(rows);
-	  	});	
+      pool.query('SELECT * FROM `1_clients` WHERE id IN '+ids+' OR (brand = ? AND `out`="0000-00-00 00:00:00" AND '+
+                '(fio like ? OR '+
+                'phone1 like ? OR '+
+                'phone2 like ? OR '+
+                'phone3 like ? OR '+
+                'phone4 like ? OR '+
+                'vin like ? OR '+
+                'comment like ? OR '+
+                'adress like ?'+
+                ')) LIMIT 2000', [brand, sr, sr, sr, sr, sr, sr, sr, sr] , function (err, rows, fields) {
+          rows = correct_dates(rows);
+          //console.info(err);
+          response.send(rows);
+      }); 
 
-	});
+  });
 
 }
 
 exports.getAutocomplete = function(request,response) {
 
-//	var user_id = request.query.user_id;
-	var brand = request.query.brand;
-	var search = request.query.searchtext;
+//  var user_id = request.query.user_id;
+  var brand = request.query.brand;
+  var search = request.query.searchtext;
 
 
-	//console.info("HI:",request.query, search);
+  //console.info("HI:",request.query, search);
 
-		var sr = (search+"%");
+    var sr = (search+"%");
 
-	    pool.query('SELECT phone1, phone2, phone3, phone4, 1_clients.fio, 1_users.fio manager, 1_models.short FROM `1_clients` LEFT JOIN `1_users` ON 1_users.id = 1_clients.manager_id LEFT JOIN `1_models` ON 1_models.id = 1_clients.model WHERE (1_clients.brand = ? AND `out`="0000-00-00 00:00:00" AND '+
-	    					'(1_clients.fio like ? OR '+
-	    					'phone1 like ? OR '+
-	    					'phone2 like ? OR '+
-	    					'phone3 like ? OR '+
-	    					'phone4 like ?'+
-	    					')) LIMIT 20', [brand, sr, sr, sr, sr, sr] , function (err, rows, fields) {
-	    		rows = correct_dates(rows);
-	    		//console.info(err);
-			    response.send(rows);
-	  	});	
+      pool.query('SELECT phone1, phone2, phone3, phone4, 1_clients.fio, 1_users.fio manager, 1_models.short FROM `1_clients` LEFT JOIN `1_users` ON 1_users.id = 1_clients.manager_id LEFT JOIN `1_models` ON 1_models.id = 1_clients.model WHERE (1_clients.brand = ? AND `out`="0000-00-00 00:00:00" AND '+
+                '(1_clients.fio like ? OR '+
+                'phone1 like ? OR '+
+                'phone2 like ? OR '+
+                'phone3 like ? OR '+
+                'phone4 like ?'+
+                ')) LIMIT 20', [brand, sr, sr, sr, sr, sr] , function (err, rows, fields) {
+          rows = correct_dates(rows);
+          //console.info(err);
+          response.send(rows);
+      }); 
 
 }
 
 
 
 exports.newMessage = function(request,response) {
-	var user_id = request.query.user_id;
-	var body = '';
-	request.on('data', function(data){
-		body += data;
-		if (body.length > 1e6) { 
+  var user_id = request.query.user_id;
+  var body = '';
+  request.on('data', function(data){
+    body += data;
+    if (body.length > 1e6) { 
                 // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
                 request.connection.destroy();
-        }		
-	});
-	request.on('end', function(data){
-		var post_data = JSON.parse(body);
-	    pool.query('INSERT INTO `4_chat` SET text = ?, user_id = ?, to_user_id = ?, change_time = ?', [post_data.text, post_data.user_id, post_data.to_user_id, post_data.change_time ] , function (err, rows, fields) {
-			    //response.send(rows);
-			    var new_id = rows.insertId;
+        }   
+  });
+  request.on('end', function(data){
+    var post_data = JSON.parse(body);
+      pool.query('INSERT INTO `4_chat` SET text = ?, user_id = ?, to_user_id = ?, change_time = ?', [post_data.text, post_data.user_id, post_data.to_user_id, post_data.change_time ] , function (err, rows, fields) {
+          //response.send(rows);
+          var new_id = rows.insertId;
 
-			    //console.info(post_data.lastTime);
-			    pool.query('SELECT * FROM `4_chat` WHERE id = ? OR ((user_id = ? OR to_user_id = ?) AND (change_time> ?)) ', [new_id, post_data.user_id, post_data.user_id, post_data.lastTime] , function (err, rows, fields) {
-					    response.send(rows);
-				});	
+          //console.info(post_data.lastTime);
+          pool.query('SELECT * FROM `4_chat` WHERE id = ? OR ((user_id = ? OR to_user_id = ?) AND (change_time> ?)) ', [new_id, post_data.user_id, post_data.user_id, post_data.lastTime] , function (err, rows, fields) {
+              response.send(rows);
+        }); 
 
 
-	  	});	
-	});
+      }); 
+  });
 
 }
 
@@ -441,17 +466,17 @@ exports.newMessage = function(request,response) {
 
 exports.saveFile = function(request, response) {
 
-	//console.info(request.files);
+  //console.info(request.files);
 
         var path = request.files.file.path;
         fs.readFile(path, function(err, file_buffer){
-        	var expire_date = ( new Date() );
-        	expire_date.setDate( (new Date()).getDate() + 365*2 );
+          var expire_date = ( new Date() );
+          expire_date.setDate( (new Date()).getDate() + 365*2 );
 
-        	var file_name = "myKey1234.png";
+          var file_name = "myKey1234.png";
 
             var params = {
-            	ACL: 'public-read',
+              ACL: 'public-read',
                 Bucket: 'upload.4tree.ru',
                 Key: file_name,
                 ContentType: request.files.file.type,
@@ -462,13 +487,13 @@ exports.saveFile = function(request, response) {
         });
 
 
-	var answer = {"filelink":"http://z6.d.sdska.ru/2-z6-7d6a8c21-213d-494b-a6b8-f71e9f761512.jpg",
-				  "filename":"File.jpg"};
+  var answer = {"filelink":"http://z6.d.sdska.ru/2-z6-7d6a8c21-213d-494b-a6b8-f71e9f761512.jpg",
+          "filename":"File.jpg"};
 
 
 
 
-	response.send(answer);
+  response.send(answer);
 }
 
 
@@ -479,8 +504,8 @@ function twoDigits(d) {
 }
 //Перевожу дату new Date в mySQL формат
 global.tomysql = function(dat) {
-	//dat = new Date(dat);
-	if(dat == "0000-00-00 00:00:00") return dat;
+  //dat = new Date(dat);
+  if(dat == "0000-00-00 00:00:00") return dat;
     return dat.getFullYear() + "-" + twoDigits(1 + dat.getMonth()) + "-" + twoDigits(dat.getDate()) + " " + twoDigits(dat.getHours()) + ":" + twoDigits(dat.getMinutes()) + ":" + twoDigits(dat.getSeconds());
 };
 
@@ -507,19 +532,19 @@ exports.loadAllFromMySQL = function(request, response) {
 
     pool.query('SELECT * FROM `tree`', function (err, rows, fields) {
 
-		$.each(rows, function(i, el){
-			//console.info("d",toMysql(el.date1));
-			el.date1 = toMysql( el.date1 );
-			el.date2 = toMysql( el.date2 );
-			el.did = toMysql( el.did );
-			el.adddate = toMysql( el.adddate );
-			//el.date1
-		    collection.insert(el, function(err, docs) {
-				response.send(docs);	
-			});
-		});
-	  	//response.send(r);
-  	});	
+    $.each(rows, function(i, el){
+      //console.info("d",toMysql(el.date1));
+      el.date1 = toMysql( el.date1 );
+      el.date2 = toMysql( el.date2 );
+      el.did = toMysql( el.did );
+      el.adddate = toMysql( el.adddate );
+      //el.date1
+        collection.insert(el, function(err, docs) {
+        response.send(docs);  
+      });
+    });
+      //response.send(r);
+    }); 
 }
 
 
@@ -528,28 +553,28 @@ exports.loadAllBig = function(request, response) {
 
     pool.query('SELECT * FROM `1_clients` WHERE brand=1', function (err, rows, fields) {
 
-	  	response.send(rows);
-  	});	
+      response.send(rows);
+    }); 
 }
 
 global.correct_dates = function( rows, no_zero_dates ) {
-	var fields = ['date', 'zv', 'vz', 'tst', 'dg', 'vd', 'out', 'checked', 'changed', 'created', 'date1', 'date2', 'hostcheck', 'remind', 'na_date', 'now_time', 'remind_time'];
+  var fields = ['date', 'zv', 'vz', 'tst', 'dg', 'vd', 'out', 'checked', 'changed', 'created', 'date1', 'date2', 'hostcheck', 'remind', 'na_date', 'now_time', 'remind_time'];
 
-	if(!rows) return rows;
+  if(!rows) return rows;
 
 
-	$.each(rows, function(j,el){
-		$.each(fields, function(i, field){
-			if(el[field]) {
-				if((no_zero_dates) && (el[field]==NO_DATE) ) {
-					el[field] = "";
-				} else {
-					el[field] = tomysql(el[field]);	
-				}
-				
-			}
-		});
-	});
+  $.each(rows, function(j,el){
+    $.each(fields, function(i, field){
+      if(el[field]) {
+        if((no_zero_dates) && (el[field]==NO_DATE) ) {
+          el[field] = "";
+        } else {
+          el[field] = tomysql(el[field]); 
+        }
+        
+      }
+    });
+  });
 
     return rows;
 }
@@ -558,226 +583,226 @@ global.correct_dates = function( rows, no_zero_dates ) {
 
 
 function jsNow() {
-	return (new Date).getTime();
+  return (new Date).getTime();
 }
 
 function jsMakeClientFilter(filter, manager_id) {
-	var f_filter = filter.brand ? "brand = "+parseInt(filter.brand)+" AND ":"";
+  var f_filter = filter.brand ? "brand = "+parseInt(filter.brand)+" AND ":"";
 
-	f_filter += filter.no_out ? '`out` = "'+NO_DATE+'" AND ' : '';
-	f_filter += filter.out ? '`out` != "'+NO_DATE+'" AND ' : '';
+  f_filter += filter.no_out ? '`out` = "'+NO_DATE+'" AND ' : '';
+  f_filter += filter.out ? '`out` != "'+NO_DATE+'" AND ' : '';
 
-	f_filter += filter.no_vd ? '`vd` = "'+NO_DATE+'" AND ' : '';
-	f_filter += filter.vd ? '`vd` != "'+NO_DATE+'" AND ' : '';
+  f_filter += filter.no_vd ? '`vd` = "'+NO_DATE+'" AND ' : '';
+  f_filter += filter.vd ? '`vd` != "'+NO_DATE+'" AND ' : '';
 
-	f_filter += filter.no_dg ? '`dg` = "'+NO_DATE+'" AND ' : '';
-	f_filter += filter.dg ? '`dg` != "'+NO_DATE+'" AND ' : '';
+  f_filter += filter.no_dg ? '`dg` = "'+NO_DATE+'" AND ' : '';
+  f_filter += filter.dg ? '`dg` != "'+NO_DATE+'" AND ' : '';
 
-	f_filter += filter.bu ? '`bu` != "'+NO_DATE+'" AND ' : '';
+  f_filter += filter.bu ? '`bu` != "'+NO_DATE+'" AND ' : '';
 
-	f_filter += (manager_id>0) ? ' manager_id = "'+manager_id+'" AND ' : '';
+  f_filter += (manager_id>0) ? ' manager_id = "'+manager_id+'" AND ' : '';
 
-	f_filter += filter.credit ? '`creditmanager` LIKE "Кредит -%" AND ' : '';
+  f_filter += filter.credit ? '`creditmanager` LIKE "Кредит -%" AND ' : '';
 
 
-	return f_filter;
+  return f_filter;
 }
 
 
 exports.findAllClientsIds = function(request, response) {
-	var manager = request.query.manager;
-	var ids = request.query.ids;
+  var manager = request.query.manager;
+  var ids = request.query.ids;
 
-	var myquery = "SELECT * FROM 1_clients WHERE id IN ("+ids+") ORDER by model";
+  var myquery = "SELECT * FROM 1_clients WHERE id IN ("+ids+") ORDER by model";
 
-	jsCheckToken(request.query.token, response).done(function(user_id){
+  jsCheckToken(request.query.token, response).done(function(user_id){
 
-	    pool.query(myquery, function (err, rows, fields) {
-	  		rows = correct_dates( rows );
-		  	response.send(rows);
-	  	});	
-	});
+      pool.query(myquery, function (err, rows, fields) {
+        rows = correct_dates( rows );
+        response.send(rows);
+      }); 
+  });
 
 }
 
 exports.findAllClients = function(request, response) {
 
-	var filter = request.query.filter ? JSON.parse(request.query.filter):{};
-	var manager = request.query.manager;
+  var filter = request.query.filter ? JSON.parse(request.query.filter):{};
+  var manager = request.query.manager;
 
-	f_filter = jsMakeClientFilter(filter, manager);
+  f_filter = jsMakeClientFilter(filter, manager);
 
-	if(filter.group_by == "model") filter.group_by = "model` DESC, `manager_id";
+  if(filter.group_by == "model") filter.group_by = "model` DESC, `manager_id";
 
-	if(filter.group_by == "icon") filter.group_by = "icon` DESC, `manager_id";
+  if(filter.group_by == "icon") filter.group_by = "icon` DESC, `manager_id";
 
-	if(filter.group_by == "icon2") filter.group_by = "icon2` DESC, `model";
+  if(filter.group_by == "icon2") filter.group_by = "icon2` DESC, `model";
 
-	var f_limit = filter.limit ? ' LIMIT '+filter.limit.start+','+filter.limit.end : ' LIMIT 100';
+  var f_limit = filter.limit ? ' LIMIT '+filter.limit.start+','+filter.limit.end : ' LIMIT 100';
 
-	var desc = "";
-	if( ["vd","out","icon","icon2"].indexOf(filter.group_by)!=-1 ) desc=" DESC";
+  var desc = "";
+  if( ["vd","out","icon","icon2"].indexOf(filter.group_by)!=-1 ) desc=" DESC";
 
-	var f_order = filter.group_by ? ' ORDER BY `'+filter.group_by+'` '+desc+', `date` DESC' : '';
+  var f_order = filter.group_by ? ' ORDER BY `'+filter.group_by+'` '+desc+', `date` DESC' : '';
 
 
-	var myquery = 'SELECT * FROM `1_clients` WHERE ' + f_filter + " true " + f_order + f_limit;
+  var myquery = 'SELECT * FROM `1_clients` WHERE ' + f_filter + " true " + f_order + f_limit;
 
-//	console.info("MANAGER",manager, f_filter);
+//  console.info("MANAGER",manager, f_filter);
 
-	//console.info("query = ", myquery);
+  //console.info("query = ", myquery);
 
-	jsCheckToken(request.query.token, response).done(function(user_id){
-	    pool.query(myquery, function (err, rows, fields) {
-	  		rows = correct_dates( rows );
-		  	response.send(rows);
-	  	});	
-	});
+  jsCheckToken(request.query.token, response).done(function(user_id){
+      pool.query(myquery, function (err, rows, fields) {
+        rows = correct_dates( rows );
+        response.send(rows);
+      }); 
+  });
 
 }
 
 //Добавление нового клиента с делами
 exports.addNewClient = function(request, response) {
 
-	var add_do_array = request.query.add_do_array;
-	var brand_id = request.query.brand;
-	var manager_id = request.query.manager;
+  var add_do_array = request.query.add_do_array;
+  var brand_id = request.query.brand;
+  var manager_id = request.query.manager;
 
 
  jsCheckToken(request.query.token, response).done(function(user_id){
 
- 	if( !(manager_id>0) ) manager_id = user_id;
+  if( !(manager_id>0) ) manager_id = user_id;
 
- 	var values = {
- 		fio: "Клиент " + jsGetHourMinutes( (new Date) ),
- 		date: tomysql( (new Date) ),
- 		brand: brand_id,
- 		manager_id: manager_id,
- 		model: -1,
- 		creditmanager: 'Неизвестно'
- 	};
+  var values = {
+    fio: "Клиент " + jsGetHourMinutes( (new Date) ),
+    date: tomysql( (new Date) ),
+    brand: brand_id,
+    manager_id: manager_id,
+    model: -1,
+    creditmanager: 'Неизвестно'
+  };
 
-	query = "INSERT INTO 1_clients SET ?";
-	//console.info("Добавляю новго клиента", brand_id, manager_id, add_do_array, values);
+  query = "INSERT INTO 1_clients SET ?";
+  //console.info("Добавляю новго клиента", brand_id, manager_id, add_do_array, values);
 
     pool.query(query, values, function (err, rows, fields) {
-    	var insert_id = rows.insertId;
-    	if(insert_id) {
-	      var dfdArray = [];
-	      if(add_do_array) {
-	    	$.each(add_do_array, function(i, do_type){
-	    		if(do_type!='false') dfdArray.push( jsAddDoToClient(insert_id, do_type, brand_id, user_id, manager_id, i) );
-	    	});
-	      }
-	    	$.when.apply(null, dfdArray).then(function(){
-	    		jsUpdateClient(insert_id).then(function(){
-	    			response.send({insert_id: insert_id});
-	    		});
-		    	
-	    	})
-    	}
-    	//console.info("ADDED rows = ", rows, err);
-  	});	
+      var insert_id = rows.insertId;
+      if(insert_id) {
+        var dfdArray = [];
+        if(add_do_array) {
+        $.each(add_do_array, function(i, do_type){
+          if(do_type!='false') dfdArray.push( jsAddDoToClient(insert_id, do_type, brand_id, user_id, manager_id, i) );
+        });
+        }
+        $.when.apply(null, dfdArray).then(function(){
+          jsUpdateClient(insert_id).then(function(){
+            response.send({insert_id: insert_id});
+          });
+          
+        })
+      }
+      //console.info("ADDED rows = ", rows, err);
+    }); 
   });
 }
 
 function jsAddDoToClient(client_id, do_type, brand_id, user_id, manager_id, i) {
-	var dfd = new $.Deferred();
+  var dfd = new $.Deferred();
 
-	var now = (new Date( (new Date).getTime()+i*60000 ));
-	var time_now = tomysql( now );
+  var now = (new Date( (new Date).getTime()+i*60000 ));
+  var time_now = tomysql( now );
 
-	var text, type;
-	//console.info("do_type", do_type);
-	if(do_type == "vz") {
-		text = "Визит "+jsGetHourMinutes( now );
-		type = "Визит";
-	} else if (do_type == "zv") {
-		text = "Звонок "+jsGetHourMinutes( now );
-		type = "Звонок";
-	} else if (do_type == "tst") {
-		text = "Тест-драйв "+jsGetHourMinutes( now );
-		type = "Тест-драйв";
-	} else if (do_type == "out") {
-		text = "OUT "+jsGetHourMinutes( now );
-		type = "OUT";
-	}
+  var text, type;
+  //console.info("do_type", do_type);
+  if(do_type == "vz") {
+    text = "Визит "+jsGetHourMinutes( now );
+    type = "Визит";
+  } else if (do_type == "zv") {
+    text = "Звонок "+jsGetHourMinutes( now );
+    type = "Звонок";
+  } else if (do_type == "tst") {
+    text = "Тест-драйв "+jsGetHourMinutes( now );
+    type = "Тест-драйв";
+  } else if (do_type == "out") {
+    text = "OUT "+jsGetHourMinutes( now );
+    type = "OUT";
+  }
 
-	var values = {
-		client: client_id,
-		brand: brand_id,
-		manager_id: manager_id,
-		date1: time_now,
-		date2: time_now,
-		checked: time_now,
-		created: time_now,
-		changed: time_now,
-		text: text,
-		type: type,
-		host_id: user_id
+  var values = {
+    client: client_id,
+    brand: brand_id,
+    manager_id: manager_id,
+    date1: time_now,
+    date2: time_now,
+    checked: time_now,
+    created: time_now,
+    changed: time_now,
+    text: text,
+    type: type,
+    host_id: user_id
 
 
-	};
+  };
 
-	query = "INSERT INTO 1_do SET ?";
+  query = "INSERT INTO 1_do SET ?";
     pool.query(query, values, function (err, rows, fields) {
-    	dfd.resolve(rows);
-    	//console.info("Добавил дело: ",rows,err);
+      dfd.resolve(rows);
+      //console.info("Добавил дело: ",rows,err);
     });
 
-	return dfd.promise();
+  return dfd.promise();
 }
 
 
 exports.findClient = function(request, response) {
 
-	var manager = request.query.manager;
-	var client_id = request.params.id;
+  var manager = request.query.manager;
+  var client_id = request.params.id;
 
-	var myquery = 'SELECT * FROM `1_clients` WHERE id = ? LIMIT 1';
+  var myquery = 'SELECT * FROM `1_clients` WHERE id = ? LIMIT 1';
 
-	//console.info("query = ", myquery);
+  //console.info("query = ", myquery);
 
     pool.query(myquery, [client_id], function (err, rows, fields) {
-    	pool.query('SELECT *, date2 _date2 FROM `1_do` WHERE client = ? ORDER by date2 DESC, id DESC', [client_id], function (err, does, fields) {
-    		if(rows.length) {
-    		does = correct_dates( does );
-  			rows = correct_dates( rows );
-  			rows[0].do = does;
-	  		response.send(rows);
-	  		}
-	  	});
-  	});	
+      pool.query('SELECT *, date2 _date2 FROM `1_do` WHERE client = ? ORDER by date2 DESC, id DESC', [client_id], function (err, does, fields) {
+        if(rows.length) {
+        does = correct_dates( does );
+        rows = correct_dates( rows );
+        rows[0].do = does;
+        response.send(rows);
+        }
+      });
+    }); 
 
 }
 
 //поиск клиентов по типу дела
 exports.findClientDoType = function(request, response) {
 
-	var brand_id = request.query.brand;
-	var today = request.query.today;
-	var type_do = request.query.type_do;
+  var brand_id = request.query.brand;
+  var today = request.query.today;
+  var type_do = request.query.type_do;
 
-	if(type_do == "vd_plan") {
-		var insert_sql = 'icon2 > 0 AND brand="'+brand_id+'" AND vd = "0000-00-00 00:00:00" ORDER by `icon2` DESC, model';
-	} else {
-		var insert_sql = '`'+type_do+'` LIKE "'+today+'%" AND brand="'+brand_id+'" ORDER by `'+type_do+'` DESC';
-	}
+  if(type_do == "vd_plan") {
+    var insert_sql = 'icon2 > 0 AND brand="'+brand_id+'" AND vd = "0000-00-00 00:00:00" ORDER by `icon2` DESC, model';
+  } else {
+    var insert_sql = '`'+type_do+'` LIKE "'+today+'%" AND brand="'+brand_id+'" ORDER by `'+type_do+'` DESC';
+  }
 
-	if(type_do == "out"){
-		var insert_sql = '`'+type_do+'` LIKE "'+today+'%" AND dg != "0000-00-00 00:00:00" AND brand="'+brand_id+'" ORDER by `'+type_do+'` DESC';
-	}
+  if(type_do == "out"){
+    var insert_sql = '`'+type_do+'` LIKE "'+today+'%" AND dg != "0000-00-00 00:00:00" AND brand="'+brand_id+'" ORDER by `'+type_do+'` DESC';
+  }
 
-	var myquery = 'SELECT * FROM `1_clients` WHERE '+insert_sql+' LIMIT 5000';
+  var myquery = 'SELECT * FROM `1_clients` WHERE '+insert_sql+' LIMIT 5000';
 
-	//console.info("query = ", myquery);
+  //console.info("query = ", myquery);
 
-	jsCheckToken(request.query.token, response).done(function(user_id){
-	    pool.query(myquery, function (err, rows, fields) {
-	  			rows = correct_dates( rows );
-		  		response.send(rows);
-	  	});	
-	});
+  jsCheckToken(request.query.token, response).done(function(user_id){
+      pool.query(myquery, function (err, rows, fields) {
+          rows = correct_dates( rows );
+          response.send(rows);
+      }); 
+  });
 
 }
 
@@ -786,9 +811,9 @@ exports.findClientDoType = function(request, response) {
 exports.loadStat = function(request, response) {
 
 
-	//var filter = request.query.filters ? JSON.parse(request.query.filters):{};
+  //var filter = request.query.filters ? JSON.parse(request.query.filters):{};
 
-	 var filter = { active:1,
+   var filter = { active:1,
                 items : [
                   {id:0, title:"В работе", group_by: "manager_id", 
                    filter: {no_out: true, no_dg: true, no_vd:true}},
@@ -810,273 +835,273 @@ exports.loadStat = function(request, response) {
                   ]
                 };
 
-	var dfdArray = [];
-	var answer = {};
+  var dfdArray = [];
+  var answer = {};
 
-	var brand_id = request.query.brand;
-	var today = request.query.today;
-	var manager_id = request.query.manager;
-	//console.info("manager_stat", manager_id);
-	var cache_id = md5(brand_id + manager_id + today);
-
-
-	if(!global.stat_cache[brand_id]) {
-		global.stat_cache[brand_id] = {};
-	}
+  var brand_id = request.query.brand;
+  var today = request.query.today;
+  var manager_id = request.query.manager;
+  //console.info("manager_stat", manager_id);
+  var cache_id = md5(brand_id + manager_id + today);
 
 
-	if( global.stat_cache[brand_id][ cache_id ] ) {
-		response.send( global.stat_cache[brand_id][ cache_id ] ); //статистика кешируется нижняя и левая
-		//console.info("Stat from cache "+cache_id+", brand = ", brand_id,global.stat_cache);
-	} else {
-
-		if(manager_id>0) {
-			var manager_sql = " manager_id = '"+manager_id+"' AND "
-		} else {
-			var manager_sql = "";			
-		}
-	if(filter.items)
-		$.each(filter.items, function(i, el){
-			if(el.filter) {
-				el.filter.brand = request.query.brand;
-				f_filter = jsMakeClientFilter(el.filter);	
+  if(!global.stat_cache[brand_id]) {
+    global.stat_cache[brand_id] = {};
+  }
 
 
-				var myquery = 'SELECT count(*) cnt FROM `1_clients` WHERE ' + manager_sql + f_filter + " true ";			
-				//console.info(myquery);
+  if( global.stat_cache[brand_id][ cache_id ] ) {
+    response.send( global.stat_cache[brand_id][ cache_id ] ); //статистика кешируется нижняя и левая
+    //console.info("Stat from cache "+cache_id+", brand = ", brand_id,global.stat_cache);
+  } else {
 
-				var dfd = (function(){
-					var dfd = $.Deferred();
+    if(manager_id>0) {
+      var manager_sql = " manager_id = '"+manager_id+"' AND "
+    } else {
+      var manager_sql = "";     
+    }
+  if(filter.items)
+    $.each(filter.items, function(i, el){
+      if(el.filter) {
+        el.filter.brand = request.query.brand;
+        f_filter = jsMakeClientFilter(el.filter); 
 
-				    pool.query(myquery, function (err, rows, fields) {
-						answer[ el.id ] = rows[0].cnt;
-						dfd.resolve();
-					});				
-					return dfd.promise();
-				})();	
 
-				dfdArray.push( dfd );
-			}
-		});	
+        var myquery = 'SELECT count(*) cnt FROM `1_clients` WHERE ' + manager_sql + f_filter + " true ";      
+        //console.info(myquery);
 
-		var result = [];
-		dfdArray.push( jsLoadStatSMS("dg", brand_id, today, result) );
-		dfdArray.push( jsLoadStatSMS("vd", brand_id, today, result) );
-		dfdArray.push( jsLoadStatSMS("vd_plan", brand_id, today, result) );
-		dfdArray.push( jsLoadStatSMS("out", brand_id, today, result) );
-		dfdArray.push( jsLoadStatSMS("zv", brand_id, today, result) );
-		dfdArray.push( jsLoadStatSMS("vz", brand_id, today, result) );
-		dfdArray.push( jsLoadStatSMS("tst", brand_id, today, result) );
+        var dfd = (function(){
+          var dfd = $.Deferred();
 
-		$.when.apply(null, dfdArray).then(function(){
-			answer = {left_stat: answer, sms: result};
-			if(!global.stat_cache[brand_id]) {
-				global.stat_cache[brand_id] = {};
-			}
-			global.stat_cache[brand_id][ cache_id ] = answer;
-			response.send(answer);	
-		})
-	};
-	
+            pool.query(myquery, function (err, rows, fields) {
+            answer[ el.id ] = rows[0].cnt;
+            dfd.resolve();
+          });       
+          return dfd.promise();
+        })(); 
+
+        dfdArray.push( dfd );
+      }
+    }); 
+
+    var result = [];
+    dfdArray.push( jsLoadStatSMS("dg", brand_id, today, result) );
+    dfdArray.push( jsLoadStatSMS("vd", brand_id, today, result) );
+    dfdArray.push( jsLoadStatSMS("vd_plan", brand_id, today, result) );
+    dfdArray.push( jsLoadStatSMS("out", brand_id, today, result) );
+    dfdArray.push( jsLoadStatSMS("zv", brand_id, today, result) );
+    dfdArray.push( jsLoadStatSMS("vz", brand_id, today, result) );
+    dfdArray.push( jsLoadStatSMS("tst", brand_id, today, result) );
+
+    $.when.apply(null, dfdArray).then(function(){
+      answer = {left_stat: answer, sms: result};
+      if(!global.stat_cache[brand_id]) {
+        global.stat_cache[brand_id] = {};
+      }
+      global.stat_cache[brand_id][ cache_id ] = answer;
+      response.send(answer);  
+    })
+  };
+  
 }
 
 var jsLoadStatSMS = function(type, brand_id, today, result) {
-	var dfd = $.Deferred();
-	var tmp = today.split("-");
-	var today_month = tmp[0]+"-"+tmp[1];
-	if( type != "vd_plan" ) {
-		if(type=="dg") var val = {type: type, icon: "1dogovor.png", day: 0, month: 0, title: "Договора", order: 0};
-		if(type=="vd") var val = {type: type, icon: "1vidacha.png", day: 0, month: 0, title: "Выдачи", order: 1};
-		if(type=="out") var val = {type: type, icon: "1out.png", day: 0, month: 0, title: "Расторжения", order: 3};
-		if(type=="zv") var val = {type: type, icon: "1zvonok.png", day: 0, month: 0, title: "Звонки первичные", order: 4};
-		if(type=="vz") var val = {type: type, icon: "1vizit.png", day: 0, month: 0, title: "Визиты первичные", order: 5};
-		if(type=="tst") var val = {type: type, icon: "1test-drive.png", day: 0, month: 0, title: "Тестдрайвы", order: 6};
+  var dfd = $.Deferred();
+  var tmp = today.split("-");
+  var today_month = tmp[0]+"-"+tmp[1];
+  if( type != "vd_plan" ) {
+    if(type=="dg") var val = {type: type, icon: "1dogovor.png", day: 0, month: 0, title: "Договора", order: 0};
+    if(type=="vd") var val = {type: type, icon: "1vidacha.png", day: 0, month: 0, title: "Выдачи", order: 1};
+    if(type=="out") var val = {type: type, icon: "1out.png", day: 0, month: 0, title: "Расторжения", order: 3};
+    if(type=="zv") var val = {type: type, icon: "1zvonok.png", day: 0, month: 0, title: "Звонки первичные", order: 4};
+    if(type=="vz") var val = {type: type, icon: "1vizit.png", day: 0, month: 0, title: "Визиты первичные", order: 5};
+    if(type=="tst") var val = {type: type, icon: "1test-drive.png", day: 0, month: 0, title: "Тестдрайвы", order: 6};
 
-		if(type=="out") {
-			var insert_sql = ' dg != "0000-00-00 00:00:00" AND';
-		} else {
-			var insert_sql = ' ';
-		}
+    if(type=="out") {
+      var insert_sql = ' dg != "0000-00-00 00:00:00" AND';
+    } else {
+      var insert_sql = ' ';
+    }
 
-		myquery = "SELECT count(*) cnt FROM `1_clients` WHERE "+insert_sql+" `"+type+"` LIKE '"+today_month+"%' AND brand = ? ";
-		pool.query(myquery, [brand_id], function (err, rows_month, fields) {
-			myquery = "SELECT count(*) cnt FROM `1_clients` WHERE "+insert_sql+" `"+type+"` LIKE '"+today+"%' AND brand = ? ";
-			pool.query(myquery, [brand_id], function (err, rows_day, fields) {
-				val["month"] = rows_month[0].cnt;
-				val["day"] = rows_day[0].cnt;
-				result.push( val );
-				dfd.resolve();
-			});
-		});
-	} else if (type=="vd_plan") {
-		var val = {type: type, icon: "1vidacha.png", day: 0, month: 0, title: "Запланированные выдачи", order: 2};
-		myquery = "SELECT icon2 FROM `1_clients` WHERE `icon2`>2 AND vd='0000-00-00 00:00:00' AND `out`='0000-00-00 00:00:00' AND brand = ? ";
-		pool.query(myquery, [brand_id], function (err, rows, fields) {
-			val["plan"] = { plan5: 0, plan4: 0, plan3: 0 };
-			$.each(rows, function(i, cl){
-				if( cl.icon2 == 3 ) val.plan.plan3 += 1;
-				if( cl.icon2 == 4 ) val.plan.plan4 += 1;
-				if( cl.icon2 == 5 ) val.plan.plan5 += 1;
-			});
-			result.push( val );
-			dfd.resolve();
-		});
-	}
-	return dfd.promise();
+    myquery = "SELECT count(*) cnt FROM `1_clients` WHERE "+insert_sql+" `"+type+"` LIKE '"+today_month+"%' AND brand = ? ";
+    pool.query(myquery, [brand_id], function (err, rows_month, fields) {
+      myquery = "SELECT count(*) cnt FROM `1_clients` WHERE "+insert_sql+" `"+type+"` LIKE '"+today+"%' AND brand = ? ";
+      pool.query(myquery, [brand_id], function (err, rows_day, fields) {
+        val["month"] = rows_month[0].cnt;
+        val["day"] = rows_day[0].cnt;
+        result.push( val );
+        dfd.resolve();
+      });
+    });
+  } else if (type=="vd_plan") {
+    var val = {type: type, icon: "1vidacha.png", day: 0, month: 0, title: "Запланированные выдачи", order: 2};
+    myquery = "SELECT icon2 FROM `1_clients` WHERE `icon2`>2 AND vd='0000-00-00 00:00:00' AND `out`='0000-00-00 00:00:00' AND brand = ? ";
+    pool.query(myquery, [brand_id], function (err, rows, fields) {
+      val["plan"] = { plan5: 0, plan4: 0, plan3: 0 };
+      $.each(rows, function(i, cl){
+        if( cl.icon2 == 3 ) val.plan.plan3 += 1;
+        if( cl.icon2 == 4 ) val.plan.plan4 += 1;
+        if( cl.icon2 == 5 ) val.plan.plan5 += 1;
+      });
+      result.push( val );
+      dfd.resolve();
+    });
+  }
+  return dfd.promise();
 }
 
 exports.jsGetReiting = function(request, response) {
 
-	var brand = request.query.brand;
-	var today = request.query.today+"%";
-	var today_date = request.query.today;
+  var brand = request.query.brand;
+  var today = request.query.today+"%";
+  var today_date = request.query.today;
 
-	var now = tomysql( (new Date) );
-	var current_time = now.split(" ")[1];
+  var now = tomysql( (new Date) );
+  var current_time = now.split(" ")[1];
 
-	var today_year = now.split("-")[0]+"%";
+  var today_year = now.split("-")[0]+"%";
 
-	var today_date_sql = request.query.today+" "+current_time;
+  var today_date_sql = request.query.today+" "+current_time;
 
-	var start_today = request.query.start_today+"%";
-	var start_today_date = request.query.start_today;
+  var start_today = request.query.start_today+"%";
+  var start_today_date = request.query.start_today;
 
-	var start_today_date_sql = request.query.start_today+" "+current_time;
+  var start_today_date_sql = request.query.start_today+" "+current_time;
 
     var answer = [];
 
     function jsFindCost(client, models) {
-    	var model = _.find(models, function(model) { return (model.id == client.model) });
+      var model = _.find(models, function(model) { return (model.id == client.model) });
 
-		var cost = 600000;
-		if(client.cost>250000) {
-			cost = client.cost;
-			if(cost>2500000) cost = 2500000;
-		} else if (model && model.cost) {
-			cost = model.cost;
-		}
-		return cost;
+    var cost = 600000;
+    if(client.cost>250000) {
+      cost = client.cost;
+      if(cost>2500000) cost = 2500000;
+    } else if (model && model.cost) {
+      cost = model.cost;
+    }
+    return cost;
 
     }
 
-  	function jsIncrement(managers, manager_id, field_name, cost) {
-			var cup_element = _.find(managers, function(el){ return el.manager_id == manager_id; });
-			if(cup_element) {
-				if(cup_element[ field_name ]=="") cup_element[ field_name ] = 0;
-				cup_element[ field_name ] += cost?cost:1;
-			}
-  	}
+    function jsIncrement(managers, manager_id, field_name, cost) {
+      var cup_element = _.find(managers, function(el){ return el.manager_id == manager_id; });
+      if(cup_element) {
+        if(cup_element[ field_name ]=="") cup_element[ field_name ] = 0;
+        cup_element[ field_name ] += cost?cost:1;
+      }
+    }
 
     pool.query('SELECT * FROM `1_users` WHERE brand = ? AND user_group IN (5,6) ORDER by id', [brand], function (err, users, fields) {
-	    pool.query('SELECT * FROM `1_models` WHERE brand = ?', [brand], function (err, models, fields) {
-		    pool.query('SELECT * FROM `1_clients` WHERE brand = ? AND zv LIKE ? OR vz LIKE ? OR tst LIKE ?', [brand, today_year, today_year, today_year], function (err, clients, fields) {
-		    	clients = correct_dates(clients,"date_null");
-		    	var dfdArray = [];
+      pool.query('SELECT * FROM `1_models` WHERE brand = ?', [brand], function (err, models, fields) {
+        pool.query('SELECT * FROM `1_clients` WHERE brand = ? AND zv LIKE ? OR vz LIKE ? OR tst LIKE ?', [brand, today_year, today_year, today_year], function (err, clients, fields) {
+          clients = correct_dates(clients,"date_null");
+          var dfdArray = [];
 
-		    	$.each(users, function(i, user){ //делаем пустой ответ
-		    		answer.push( {
-			            manager:user.fio,
-			            manager_id:user.id,
+          $.each(users, function(i, user){ //делаем пустой ответ
+            answer.push( {
+                  manager:user.fio,
+                  manager_id:user.id,
 
-			            vd_count: 0,
-			            dg_count: 0,
-			            tst_count: 0,
-			            vz_count: 0,
-			            rastorg_count: 0,
-			            no_na_count: 0,
+                  vd_count: 0,
+                  dg_count: 0,
+                  tst_count: 0,
+                  vz_count: 0,
+                  rastorg_count: 0,
+                  no_na_count: 0,
 
-			            vd_sum: 0,
-			            dg_sum: 0,
-			            tst_sum: 0,
-			            vz_sum: 0,
-			            rastorg_sum: 0,
-			            no_na_sum: 0,
+                  vd_sum: 0,
+                  dg_sum: 0,
+                  tst_sum: 0,
+                  vz_sum: 0,
+                  rastorg_sum: 0,
+                  no_na_sum: 0,
 
-			            vd_ids: '',
-			            dg_ids: '',
-			            tst_ids: '',
-			            vz_ids: '',
-			            rastorg_ids: '',
-			            no_na_ids: '',
+                  vd_ids: '',
+                  dg_ids: '',
+                  tst_ids: '',
+                  vz_ids: '',
+                  rastorg_ids: '',
+                  no_na_ids: '',
 
-			            reiting_sum: 0
-			        } );
-		    	});
-		  		
-		    	$.each(clients, function(i, client){
-		    		//console.info(client.out);
-		    		if( (client.vd >= start_today_date_sql) && 
-		    			(client.vd <= today_date_sql) && 
-		    			(client.out=='') ) {
-		    			jsIncrement(answer, client.manager_id, "vd_count");
-		    			var cost = jsFindCost(client, models);
-		    			jsIncrement(answer, client.manager_id, "vd_sum", cost);
-		    			jsIncrement(answer, client.manager_id, "vd_ids", ","+client.id);
+                  reiting_sum: 0
+              } );
+          });
+          
+          $.each(clients, function(i, client){
+            //console.info(client.out);
+            if( (client.vd >= start_today_date_sql) && 
+              (client.vd <= today_date_sql) && 
+              (client.out=='') ) {
+              jsIncrement(answer, client.manager_id, "vd_count");
+              var cost = jsFindCost(client, models);
+              jsIncrement(answer, client.manager_id, "vd_sum", cost);
+              jsIncrement(answer, client.manager_id, "vd_ids", ","+client.id);
 
-		    			jsIncrement(answer, client.manager_id, "reiting_sum", cost);
-		    		}
+              jsIncrement(answer, client.manager_id, "reiting_sum", cost);
+            }
 
-		    		if( (client.dg >= start_today_date_sql) && 
-		    			(client.dg <= today_date_sql) && 
-		    			(client.out=='') ) {
-		    			jsIncrement(answer, client.manager_id, "dg_count");
-		    			var cost = jsFindCost(client, models);
-		    			jsIncrement(answer, client.manager_id, "dg_sum", cost);
-		    			jsIncrement(answer, client.manager_id, "dg_ids", ","+client.id);
+            if( (client.dg >= start_today_date_sql) && 
+              (client.dg <= today_date_sql) && 
+              (client.out=='') ) {
+              jsIncrement(answer, client.manager_id, "dg_count");
+              var cost = jsFindCost(client, models);
+              jsIncrement(answer, client.manager_id, "dg_sum", cost);
+              jsIncrement(answer, client.manager_id, "dg_ids", ","+client.id);
 
-		    			jsIncrement(answer, client.manager_id, "reiting_sum", cost/2);
-		    		}
+              jsIncrement(answer, client.manager_id, "reiting_sum", cost/2);
+            }
 
-		    		if( (client.tst >= start_today_date_sql) && 
-		    			(client.tst <= today_date_sql) 
-		    			&& (client.out=='') ) {
-		    			jsIncrement(answer, client.manager_id, "tst_count");
-		    			var cost = jsFindCost(client, models);
-		    			jsIncrement(answer, client.manager_id, "tst_sum", cost);
-		    			jsIncrement(answer, client.manager_id, "tst_ids", ","+client.id);
+            if( (client.tst >= start_today_date_sql) && 
+              (client.tst <= today_date_sql) 
+              && (client.out=='') ) {
+              jsIncrement(answer, client.manager_id, "tst_count");
+              var cost = jsFindCost(client, models);
+              jsIncrement(answer, client.manager_id, "tst_sum", cost);
+              jsIncrement(answer, client.manager_id, "tst_ids", ","+client.id);
 
-		    			jsIncrement(answer, client.manager_id, "reiting_sum", cost/5);
-		    		}
+              jsIncrement(answer, client.manager_id, "reiting_sum", cost/5);
+            }
 
-		    		if( (client.vz >= start_today_date_sql) && 
-		    			(client.vz <= today_date_sql) 
-		    			&& (client.out=='') ) {
-		    			jsIncrement(answer, client.manager_id, "vz_count");
-		    			var cost = jsFindCost(client, models);
-		    			jsIncrement(answer, client.manager_id, "vz_sum", cost);
-		    			jsIncrement(answer, client.manager_id, "vz_ids", ","+client.id);
+            if( (client.vz >= start_today_date_sql) && 
+              (client.vz <= today_date_sql) 
+              && (client.out=='') ) {
+              jsIncrement(answer, client.manager_id, "vz_count");
+              var cost = jsFindCost(client, models);
+              jsIncrement(answer, client.manager_id, "vz_sum", cost);
+              jsIncrement(answer, client.manager_id, "vz_ids", ","+client.id);
 
-		    			jsIncrement(answer, client.manager_id, "reiting_sum", cost/10);
-		    		}
-
-
-		    		if( (client.out >= start_today_date_sql) && 
-		    			(client.out <= today_date_sql) &&
-		    			(client.out!='') && (client.dg!='') ) {
-		    			jsIncrement(answer, client.manager_id, "rastorg_count");
-		    			var cost = jsFindCost(client, models);
-		    			jsIncrement(answer, client.manager_id, "rastorg_sum", cost);
-		    			jsIncrement(answer, client.manager_id, "rastorg_ids", ","+client.id);
-		    			jsIncrement(answer, client.manager_id, "reiting_sum", -cost/3);
-		    		}
-
-		    		if( (client.na_date=='') && (client.out=='') ) {
-		    			//console.info("na", client);
-		    			jsIncrement(answer, client.manager_id, "no_na_count");
-		    			var cost = jsFindCost(client, models);
-		    			jsIncrement(answer, client.manager_id, "no_na_sum", cost);
-		    			jsIncrement(answer, client.manager_id, "no_na_ids", ","+client.id);
-		    			jsIncrement(answer, client.manager_id, "reiting_sum", -cost/5);
-		    		}
+              jsIncrement(answer, client.manager_id, "reiting_sum", cost/10);
+            }
 
 
-		    	});
+            if( (client.out >= start_today_date_sql) && 
+              (client.out <= today_date_sql) &&
+              (client.out!='') && (client.dg!='') ) {
+              jsIncrement(answer, client.manager_id, "rastorg_count");
+              var cost = jsFindCost(client, models);
+              jsIncrement(answer, client.manager_id, "rastorg_sum", cost);
+              jsIncrement(answer, client.manager_id, "rastorg_ids", ","+client.id);
+              jsIncrement(answer, client.manager_id, "reiting_sum", -cost/3);
+            }
 
-		    	response.send(answer);
-		    });	
-		});
+            if( (client.na_date=='') && (client.out=='') ) {
+              //console.info("na", client);
+              jsIncrement(answer, client.manager_id, "no_na_count");
+              var cost = jsFindCost(client, models);
+              jsIncrement(answer, client.manager_id, "no_na_sum", cost);
+              jsIncrement(answer, client.manager_id, "no_na_ids", ","+client.id);
+              jsIncrement(answer, client.manager_id, "reiting_sum", -cost/5);
+            }
+
+
+          });
+
+          response.send(answer);
+        }); 
     });
-	
+    });
+  
 }
 
 
@@ -1084,519 +1109,519 @@ exports.jsGetReiting = function(request, response) {
 
 exports.jsGetManagerCupAdmin = function(request, response) {
 
-	var brand = request.query.brand;
-	var today = request.query.today+"%";
-	var today_date = request.query.today;
-	var today_month1 = request.query.today.split("-");
-	today_month1 = today_month1[0]+"-"+today_month1[1];
-	var today_month = today_month1 + "%";
+  var brand = request.query.brand;
+  var today = request.query.today+"%";
+  var today_date = request.query.today;
+  var today_month1 = request.query.today.split("-");
+  today_month1 = today_month1[0]+"-"+today_month1[1];
+  var today_month = today_month1 + "%";
 
     var admin = [];
 
 
-  	function jsAdminIncrement(managers, manager_id, field_name, date1) {
+    function jsAdminIncrement(managers, manager_id, field_name, date1) {
 
 
-  			if( date1.indexOf(today_month1)!=-1 ) {
-				var cup_element = _.find(admin, function(el){ return el.manager_id == manager_id; });
-				if(cup_element) {
-					if(cup_element[ field_name+"_month" ]=="") cup_element[ field_name+"_month" ] = 0;
-					cup_element[ field_name+"_month" ] += 1;
-				} else {
-				}
-  			} 
+        if( date1.indexOf(today_month1)!=-1 ) {
+        var cup_element = _.find(admin, function(el){ return el.manager_id == manager_id; });
+        if(cup_element) {
+          if(cup_element[ field_name+"_month" ]=="") cup_element[ field_name+"_month" ] = 0;
+          cup_element[ field_name+"_month" ] += 1;
+        } else {
+        }
+        } 
 
-			if (date1.indexOf(today_date)!=-1) {
-				var cup_element = _.find(admin, function(el){ return el.manager_id == manager_id; });
-				if(cup_element) {
-					if(cup_element[ field_name ]=="") cup_element[ field_name ] = 0;
-					cup_element[ field_name ] += 1;
-					return true;
-				} else {
-					return false;
-				}
-			}
+      if (date1.indexOf(today_date)!=-1) {
+        var cup_element = _.find(admin, function(el){ return el.manager_id == manager_id; });
+        if(cup_element) {
+          if(cup_element[ field_name ]=="") cup_element[ field_name ] = 0;
+          cup_element[ field_name ] += 1;
+          return true;
+        } else {
+          return false;
+        }
+      }
 
-  	}
-
-
-
-	    pool.query('SELECT * FROM `1_users` WHERE brand = ? AND user_group IN (5,6) ORDER by id', [brand], function (err, users, fields) {
-		    pool.query('SELECT * FROM `1_doadmin` WHERE brand = ? AND date1 LIKE ? ORDER by date1 DESC', [brand, today_month], function (err, do_admin, fields) {
-			    pool.query('SELECT * FROM `1_clients` WHERE brand = ? AND (zv LIKE ? OR vz LIKE ? OR tst LIKE ?)', [brand, today_month, today_month, today_month], function (err, clients, fields) {
-			    	do_admin = correct_dates(do_admin);
-			    	clients = correct_dates(clients);
-			    	users.push({id:-2, fio: "Не менеджер"});
-			    	users.push({id:-1, fio: "Неохваченный трафик"});
-			    	users.push({id:-4, fio: "Отказ_от_общения"});
-			    	users.push({id:-3, fio: "Итого_по_менеджерам"});
-			    	users.push({id:-5, fio: "Общий трафик:"});
-			    	var dfdArray = [];
-
-			    	$.each(users, function(i, user){ //делаем пустой ответ, потом будем увеличивать нули по мере прохождения
-
-			    		admin.push( {
-				            manager:user.fio,
-				            manager_id:user.id,
-
-				            zv_admin: "",
-				            zv_manager: "",
-
-				            vz_admin: "",
-				            vz_manager: "",
-
-				            vz2_admin: "",
-
-				            tst_admin: "",
-				            tst_manager: "",
-
-				            mydo: []
-				        } );
-			    	});
-			  		
-			    	$.each(do_admin, function(i, mydo){	
-			    		if(mydo.type=='zv') { 
-			    			jsAdminIncrement(users, mydo.manager_id, "zv_admin", mydo.date1);
-
-			    			if(mydo.manager_id > 0) jsAdminIncrement(users, -3, "zv_admin", mydo.date1);
-			    			if(mydo.manager_id != -3) jsAdminIncrement(users, -5, "zv_admin", mydo.date1);
-			    		}
-			    		if(mydo.type=='vz') {
-			    			jsAdminIncrement(users, mydo.manager_id, "vz_admin", mydo.date1);
-			    			if(mydo.manager_id > 0) jsAdminIncrement(users, -3, "vz_admin", mydo.date1);
-			    			if(mydo.manager_id != -3) jsAdminIncrement(users, -5, "vz_admin", mydo.date1);
-			    		}
-			    		if(mydo.type=='tst') {
-			    			jsAdminIncrement(users, mydo.manager_id, "tst_admin", mydo.date1);
-			    			if(mydo.manager_id > 0) jsAdminIncrement(users, -3, "tst_admin", mydo.date1);
-			    		}
-			    		if(mydo.type=='vz2') {
-			    			jsAdminIncrement(users, mydo.manager_id, "vz2_admin", mydo.date1);
-			    			if(mydo.manager_id != -3) jsAdminIncrement(users, -3, "vz2_admin", mydo.date1);
-			    			if(mydo.manager_id != -3) jsAdminIncrement(users, -5, "vz2_admin", mydo.date1);
-			    		}
-
-			    		if(mydo.date1.indexOf(today_date)!=-1) {
-	 						var cup_element = _.find(admin, function(el){ return el.manager_id == mydo.manager_id; });	 
-	 						if(cup_element) cup_element.mydo.push( mydo );
-	 					}
-
-			    	});
-
-			    	$.each(clients, function(i, client){
-			    		//console.info(client.id);
+    }
 
 
-				    		if( client.zv.indexOf(today_month1)!=-1 ) {
-				    			//console.info("!!!",client.model, client);
 
-				    			if(jsAdminIncrement(users, client.manager_id, "zv_manager", client.zv)) {
-				    			   jsAdminIncrement(users, -3, "zv_manager", client.zv);	
-				    			   jsAdminIncrement(users, -5, "zv_manager", client.zv);	
-				    			}
-				    			
-				    		}
-				    		if( client.vz.indexOf(today_month1)!=-1 ) {
+      pool.query('SELECT * FROM `1_users` WHERE brand = ? AND user_group IN (5,6) ORDER by id', [brand], function (err, users, fields) {
+        pool.query('SELECT * FROM `1_doadmin` WHERE brand = ? AND date1 LIKE ? ORDER by date1 DESC', [brand, today_month], function (err, do_admin, fields) {
+          pool.query('SELECT * FROM `1_clients` WHERE brand = ? AND (zv LIKE ? OR vz LIKE ? OR tst LIKE ?)', [brand, today_month, today_month, today_month], function (err, clients, fields) {
+            do_admin = correct_dates(do_admin);
+            clients = correct_dates(clients);
+            users.push({id:-2, fio: "Не менеджер"});
+            users.push({id:-1, fio: "Неохваченный трафик"});
+            users.push({id:-4, fio: "Отказ_от_общения"});
+            users.push({id:-3, fio: "Итого_по_менеджерам"});
+            users.push({id:-5, fio: "Общий трафик:"});
+            var dfdArray = [];
 
-				    			if( jsAdminIncrement(users, client.manager_id, "vz_manager", client.vz) ) {
-				    				jsAdminIncrement(users, -3, "vz_manager", client.vz);
-				    				jsAdminIncrement(users, -5, "vz_manager", client.vz);
-				    			}
-				    			
-				    		}
-				    		if( client.tst.indexOf(today_month1)!=-1 ) {
-				    			
-				    			if( jsAdminIncrement(users, client.manager_id, "tst_manager", client.tst) ) {
-				    				jsAdminIncrement(users, -3, "tst_manager", client.tst);	
-				    			}
-				    			
-				    			//console.info(client.tst, client.manager_id);
-				    		}
-			    	});
+            $.each(users, function(i, user){ //делаем пустой ответ, потом будем увеличивать нули по мере прохождения
 
-			    	response.send({admin:admin});
-			    });	
-		    });
-	    });
-	
+              admin.push( {
+                    manager:user.fio,
+                    manager_id:user.id,
+
+                    zv_admin: "",
+                    zv_manager: "",
+
+                    vz_admin: "",
+                    vz_manager: "",
+
+                    vz2_admin: "",
+
+                    tst_admin: "",
+                    tst_manager: "",
+
+                    mydo: []
+                } );
+            });
+            
+            $.each(do_admin, function(i, mydo){ 
+              if(mydo.type=='zv') { 
+                jsAdminIncrement(users, mydo.manager_id, "zv_admin", mydo.date1);
+
+                if(mydo.manager_id > 0) jsAdminIncrement(users, -3, "zv_admin", mydo.date1);
+                if(mydo.manager_id != -3) jsAdminIncrement(users, -5, "zv_admin", mydo.date1);
+              }
+              if(mydo.type=='vz') {
+                jsAdminIncrement(users, mydo.manager_id, "vz_admin", mydo.date1);
+                if(mydo.manager_id > 0) jsAdminIncrement(users, -3, "vz_admin", mydo.date1);
+                if(mydo.manager_id != -3) jsAdminIncrement(users, -5, "vz_admin", mydo.date1);
+              }
+              if(mydo.type=='tst') {
+                jsAdminIncrement(users, mydo.manager_id, "tst_admin", mydo.date1);
+                if(mydo.manager_id > 0) jsAdminIncrement(users, -3, "tst_admin", mydo.date1);
+              }
+              if(mydo.type=='vz2') {
+                jsAdminIncrement(users, mydo.manager_id, "vz2_admin", mydo.date1);
+                if(mydo.manager_id != -3) jsAdminIncrement(users, -3, "vz2_admin", mydo.date1);
+                if(mydo.manager_id != -3) jsAdminIncrement(users, -5, "vz2_admin", mydo.date1);
+              }
+
+              if(mydo.date1.indexOf(today_date)!=-1) {
+              var cup_element = _.find(admin, function(el){ return el.manager_id == mydo.manager_id; });   
+              if(cup_element) cup_element.mydo.push( mydo );
+            }
+
+            });
+
+            $.each(clients, function(i, client){
+              //console.info(client.id);
+
+
+                if( client.zv.indexOf(today_month1)!=-1 ) {
+                  //console.info("!!!",client.model, client);
+
+                  if(jsAdminIncrement(users, client.manager_id, "zv_manager", client.zv)) {
+                     jsAdminIncrement(users, -3, "zv_manager", client.zv);  
+                     jsAdminIncrement(users, -5, "zv_manager", client.zv);  
+                  }
+                  
+                }
+                if( client.vz.indexOf(today_month1)!=-1 ) {
+
+                  if( jsAdminIncrement(users, client.manager_id, "vz_manager", client.vz) ) {
+                    jsAdminIncrement(users, -3, "vz_manager", client.vz);
+                    jsAdminIncrement(users, -5, "vz_manager", client.vz);
+                  }
+                  
+                }
+                if( client.tst.indexOf(today_month1)!=-1 ) {
+                  
+                  if( jsAdminIncrement(users, client.manager_id, "tst_manager", client.tst) ) {
+                    jsAdminIncrement(users, -3, "tst_manager", client.tst); 
+                  }
+                  
+                  //console.info(client.tst, client.manager_id);
+                }
+            });
+
+            response.send({admin:admin});
+          }); 
+        });
+      });
+  
 }
 
 
 exports.jsGetManagerCupAdminReport = function(request, response) {
 
-	var brand = request.query.brand;
-	var today = request.query.today+"%";
-	var today_date = request.query.today;
-	var today_month1 = request.query.today.split("-");
-	today_month1 = today_month1[0]+"-"+today_month1[1];
-	var today_month = today_month1 + "%";
+  var brand = request.query.brand;
+  var today = request.query.today+"%";
+  var today_date = request.query.today;
+  var today_month1 = request.query.today.split("-");
+  today_month1 = today_month1[0]+"-"+today_month1[1];
+  var today_month = today_month1 + "%";
 
     var admin = [];
 
     function hasContacts(client) {
-    	if( client && (client.phone1 || 
-    		client.phone2 ||
-    		client.phone3 ||
-    		client.phone4 ||
-    		client.email
-    		) ) {
-    		return true;
-    	} else {
-    		return false;
-    	}
+      if( client && (client.phone1 || 
+        client.phone2 ||
+        client.phone3 ||
+        client.phone4 ||
+        client.email
+        ) ) {
+        return true;
+      } else {
+        return false;
+      }
     }
 
-  	function jsAdminIncrement(managers, manager_id, field_name, date1) {
+    function jsAdminIncrement(managers, manager_id, field_name, date1) {
 
 
-  			if( date1.indexOf(today_month1)!=-1 ) {
-				var cup_element = _.find(admin, function(el){ return el.manager_id == manager_id; });
-				if(cup_element) {
-					if(cup_element[ field_name+"_month" ]=="") cup_element[ field_name+"_month" ] = 0;
-					cup_element[ field_name+"_month" ] += 1;
-				} else {
-				}
-  			} 
+        if( date1.indexOf(today_month1)!=-1 ) {
+        var cup_element = _.find(admin, function(el){ return el.manager_id == manager_id; });
+        if(cup_element) {
+          if(cup_element[ field_name+"_month" ]=="") cup_element[ field_name+"_month" ] = 0;
+          cup_element[ field_name+"_month" ] += 1;
+        } else {
+        }
+        } 
 
-			if (date1.indexOf(today_date)!=-1) {
-				var cup_element = _.find(admin, function(el){ return el.manager_id == manager_id; });
-				if(cup_element) {
-					if(cup_element[ field_name ]=="") cup_element[ field_name ] = 0;
-					cup_element[ field_name ] += 1;
-					return true;
-				} else {
-					return false;
-				}
-			}
+      if (date1.indexOf(today_date)!=-1) {
+        var cup_element = _.find(admin, function(el){ return el.manager_id == manager_id; });
+        if(cup_element) {
+          if(cup_element[ field_name ]=="") cup_element[ field_name ] = 0;
+          cup_element[ field_name ] += 1;
+          return true;
+        } else {
+          return false;
+        }
+      }
 
-  	}
+    }
 
-  	function jsAdminIncrementModel(models, model_id, field_name, date1) {
-
-
-		if( date1 && (date1.indexOf(today_month1)!=-1) ) {
-			var cup_element = _.find(models, function(el){ return el.model_id == model_id; });
-
-			if(cup_element) {
-				if(cup_element[ field_name+"_month" ]=="") cup_element[ field_name+"_month" ] = 0;
-				cup_element[ field_name+"_month" ] += 1;
-			} else {
-				jsAdminIncrementModel(models, -2, field_name+"_month");
-			}
-		}
-
-		if (!date1 || (date1.indexOf(today_date)!=-1) ) {
-			var cup_element = _.find(models, function(el){ return el.model_id == model_id; });
-
-			if(cup_element) {
-				if(cup_element[ field_name ]=="") cup_element[ field_name ] = 0;
-				cup_element[ field_name ] += 1;
-				return true;
-			} else {
-				jsAdminIncrementModel(models, -2, field_name);
-				return false;
-			}
-		}
-
-  	}
-
-  	function jsAdminIncrementCommercial(commercials, commercial_id, field_name, date1) {
-
-		if( date1 && (date1.indexOf(today_month1)!=-1) ) {
-			var cup_element = _.find(commercials, function(el){ return el.commercial_id == commercial_id; });
-			if(cup_element) {
-				if(cup_element[ field_name+"_month" ]=="") cup_element[ field_name+"_month" ] = 0;
-				cup_element[ field_name+"_month" ] += 1;
-			} else {
-				jsAdminIncrementCommercial(commercials, -2, field_name+"_month")				
-			}
-		}
-
-		if( !date1 || (date1.indexOf(today_date)!=-1) ) {
-			var cup_element = _.find(commercials, function(el){ return el.commercial_id == commercial_id; });
-			if(cup_element) {
-				if(cup_element[ field_name ]=="") cup_element[ field_name ] = 0;
-				cup_element[ field_name ] += 1;
-				return true;
-			} else {
-				jsAdminIncrementCommercial(commercials, -2, field_name)				
-				return false;
-			}
-		}
-  	}
+    function jsAdminIncrementModel(models, model_id, field_name, date1) {
 
 
-  	function jsAdminIncrementUser(users, user_id, field_name, date1) {
+    if( date1 && (date1.indexOf(today_month1)!=-1) ) {
+      var cup_element = _.find(models, function(el){ return el.model_id == model_id; });
 
-		if( date1 && (date1.indexOf(today_month1)!=-1) ) {
-			var cup_element = _.find(users, function(el){ return el.user_id == user_id; });
-			if(cup_element) {
-				if(cup_element[ field_name+"_month" ]=="") cup_element[ field_name+"_month" ] = 0;
-				cup_element[ field_name+"_month" ] += 1;
-			} else {
-				jsAdminIncrementUser(users, -2, field_name+"_month");				
-			}
-		}
+      if(cup_element) {
+        if(cup_element[ field_name+"_month" ]=="") cup_element[ field_name+"_month" ] = 0;
+        cup_element[ field_name+"_month" ] += 1;
+      } else {
+        jsAdminIncrementModel(models, -2, field_name+"_month");
+      }
+    }
 
-		if( !date1 || (date1.indexOf(today_date)!=-1) ) {
-			var cup_element = _.find(users, function(el){ return el.user_id == user_id; });
-			if(cup_element) {
-				if(cup_element[ field_name ]=="") cup_element[ field_name ] = 0;
-				cup_element[ field_name ] += 1;
-				return true;
-			} else {
-				jsAdminIncrementUser(users, -2, field_name);				
-				return false;
-			}
-		}
-  	}
+    if (!date1 || (date1.indexOf(today_date)!=-1) ) {
+      var cup_element = _.find(models, function(el){ return el.model_id == model_id; });
+
+      if(cup_element) {
+        if(cup_element[ field_name ]=="") cup_element[ field_name ] = 0;
+        cup_element[ field_name ] += 1;
+        return true;
+      } else {
+        jsAdminIncrementModel(models, -2, field_name);
+        return false;
+      }
+    }
+
+    }
+
+    function jsAdminIncrementCommercial(commercials, commercial_id, field_name, date1) {
+
+    if( date1 && (date1.indexOf(today_month1)!=-1) ) {
+      var cup_element = _.find(commercials, function(el){ return el.commercial_id == commercial_id; });
+      if(cup_element) {
+        if(cup_element[ field_name+"_month" ]=="") cup_element[ field_name+"_month" ] = 0;
+        cup_element[ field_name+"_month" ] += 1;
+      } else {
+        jsAdminIncrementCommercial(commercials, -2, field_name+"_month")        
+      }
+    }
+
+    if( !date1 || (date1.indexOf(today_date)!=-1) ) {
+      var cup_element = _.find(commercials, function(el){ return el.commercial_id == commercial_id; });
+      if(cup_element) {
+        if(cup_element[ field_name ]=="") cup_element[ field_name ] = 0;
+        cup_element[ field_name ] += 1;
+        return true;
+      } else {
+        jsAdminIncrementCommercial(commercials, -2, field_name)       
+        return false;
+      }
+    }
+    }
 
 
-  	var admin_models = [];
-  	var admin_commercials = [];
-  	var admin_users = [];
+    function jsAdminIncrementUser(users, user_id, field_name, date1) {
+
+    if( date1 && (date1.indexOf(today_month1)!=-1) ) {
+      var cup_element = _.find(users, function(el){ return el.user_id == user_id; });
+      if(cup_element) {
+        if(cup_element[ field_name+"_month" ]=="") cup_element[ field_name+"_month" ] = 0;
+        cup_element[ field_name+"_month" ] += 1;
+      } else {
+        jsAdminIncrementUser(users, -2, field_name+"_month");       
+      }
+    }
+
+    if( !date1 || (date1.indexOf(today_date)!=-1) ) {
+      var cup_element = _.find(users, function(el){ return el.user_id == user_id; });
+      if(cup_element) {
+        if(cup_element[ field_name ]=="") cup_element[ field_name ] = 0;
+        cup_element[ field_name ] += 1;
+        return true;
+      } else {
+        jsAdminIncrementUser(users, -2, field_name);        
+        return false;
+      }
+    }
+    }
+
+
+    var admin_models = [];
+    var admin_commercials = [];
+    var admin_users = [];
 
     pool.query('SELECT * FROM `1_commercials` ORDER by title', [brand], function (err, commercials, fields) {
     pool.query('SELECT * FROM `1_models` WHERE brand = ? AND `show`=1 ORDER by model', [brand], function (err, models, fields) {
-    	//console.info("err",err)
-	    pool.query('SELECT * FROM `1_users` WHERE brand = ? AND user_group IN (5,6) ORDER by id', [brand], function (err, users, fields) {
-		    pool.query('SELECT * FROM `1_doadmin` WHERE brand = ? AND date1 LIKE ? ORDER by date1 DESC', [brand, today_month], function (err, do_admin, fields) {
-			    pool.query('SELECT * FROM `1_clients` WHERE brand = ? AND (zv LIKE ? OR vz LIKE ? OR tst LIKE ? OR dg LIKE ? OR vd LIKE ?)', [brand, today_month, today_month, today_month, today_month, today_month], function (err, clients, fields) {
-			    	do_admin = correct_dates(do_admin);
-			    	clients = correct_dates(clients);
-			    	users.push({id:-2, fio: "Не менеджер"});
-			    	users.push({id:-1, fio: "Неохваченный трафик"});
-			    	users.push({id:-4, fio: "Отказ_от_общения"});
-			    	users.push({id:-3, fio: "Итого_по_менеджерам"});
-			    	users.push({id:-5, fio: "Общий трафик:"});
-			    	var dfdArray = [];
-			    	models.push({'id':"-2", 'short':"Не указана:"});
-			    	models.push({'id':"-5", 'short':"Итого:"});
-			    	$.each(models, function(i, model){
-			    		admin_models.push({model_id: model.id, model: model.short, zv: 0, vz: 0, tst: 0, zv_manager: 0, vz_manager: 0, tst_manager: 0, vz2_admin: 0, contacts:  0, out: 0, zv_month: 0, vz_month: 0, tst_month: 0, zv_manager_month: 0, vz_manager_month: 0, tst_manager_month: 0, vz2_admin_month: 0, contacts_month:  0, out_month: 0, dg:0, dg_month:0, vd:0, vd_month:0});
+      //console.info("err",err)
+      pool.query('SELECT * FROM `1_users` WHERE brand = ? AND user_group IN (5,6) ORDER by id', [brand], function (err, users, fields) {
+        pool.query('SELECT * FROM `1_doadmin` WHERE brand = ? AND date1 LIKE ? ORDER by date1 DESC', [brand, today_month], function (err, do_admin, fields) {
+          pool.query('SELECT * FROM `1_clients` WHERE brand = ? AND (zv LIKE ? OR vz LIKE ? OR tst LIKE ? OR dg LIKE ? OR vd LIKE ?)', [brand, today_month, today_month, today_month, today_month, today_month], function (err, clients, fields) {
+            do_admin = correct_dates(do_admin);
+            clients = correct_dates(clients);
+            users.push({id:-2, fio: "Не менеджер"});
+            users.push({id:-1, fio: "Неохваченный трафик"});
+            users.push({id:-4, fio: "Отказ_от_общения"});
+            users.push({id:-3, fio: "Итого_по_менеджерам"});
+            users.push({id:-5, fio: "Общий трафик:"});
+            var dfdArray = [];
+            models.push({'id':"-2", 'short':"Не указана:"});
+            models.push({'id':"-5", 'short':"Итого:"});
+            $.each(models, function(i, model){
+              admin_models.push({model_id: model.id, model: model.short, zv: 0, vz: 0, tst: 0, zv_manager: 0, vz_manager: 0, tst_manager: 0, vz2_admin: 0, contacts:  0, out: 0, zv_month: 0, vz_month: 0, tst_month: 0, zv_manager_month: 0, vz_manager_month: 0, tst_manager_month: 0, vz2_admin_month: 0, contacts_month:  0, out_month: 0, dg:0, dg_month:0, vd:0, vd_month:0});
 
-			    	});
+            });
 
-			    	commercials.push({id:-2, title:"Не указано:"});
-			    	commercials.push({id:-5, title:"Итого:"});
-			    	$.each(commercials, function(i, commercial){
-			    		admin_commercials.push({commercial_id: commercial.id, commercial: commercial.title, zv: 0, vz: 0, tst: 0, zv_manager: 0, vz_manager: 0, tst_manager: 0, vz2_admin: 0, contacts:  0, out: 0, zv_month: 0, vz_month: 0, tst_month: 0, zv_manager_month: 0, vz_manager_month: 0, tst_manager_month: 0, vz2_admin_month: 0, contacts_month:  0, out_month: 0, dg:0, dg_month:0, vd:0, vd_month:0});
+            commercials.push({id:-2, title:"Не указано:"});
+            commercials.push({id:-5, title:"Итого:"});
+            $.each(commercials, function(i, commercial){
+              admin_commercials.push({commercial_id: commercial.id, commercial: commercial.title, zv: 0, vz: 0, tst: 0, zv_manager: 0, vz_manager: 0, tst_manager: 0, vz2_admin: 0, contacts:  0, out: 0, zv_month: 0, vz_month: 0, tst_month: 0, zv_manager_month: 0, vz_manager_month: 0, tst_manager_month: 0, vz2_admin_month: 0, contacts_month:  0, out_month: 0, dg:0, dg_month:0, vd:0, vd_month:0});
 
-			    	});
-
-
-
-			    	$.each(users, function(i, user){ //делаем пустой ответ, потом будем увеличивать нули по мере прохождения
-
-			    		admin_users.push({user_id: user.id, fio: user.fio, zv: 0, vz: 0, tst: 0, zv_manager: 0, vz_manager: 0, tst_manager: 0, vz2_admin: 0, contacts:  0, out: 0, zv_month: 0, vz_month: 0, tst_month: 0, zv_manager_month: 0, vz_manager_month: 0, tst_manager_month: 0, vz2_admin_month: 0, contacts_month:  0, out_month: 0, dg:0, dg_month:0, vd:0, vd_month:0});
-
-
-			    		admin.push( {
-				            manager:user.fio,
-				            manager_id:user.id,
-
-				            zv_admin: "",
-				            zv_manager: "",
-
-				            vz_admin: "",
-				            vz_manager: "",
-
-				            vz2_admin: "",
-
-				            tst_admin: "",
-				            tst_manager: "",
-
-				            mydo: []
-				        } );
-			    	});
-			  		
-			    	$.each(do_admin, function(i, mydo){	
-
-
-			    		if(mydo.type=='zv') { 
-			    			jsAdminIncrement(users, mydo.manager_id, "zv_admin", mydo.date1);
-			    			jsAdminIncrementModel(admin_models, mydo.model, "zv", mydo.date1);
-			    			jsAdminIncrementModel(admin_models, -5, "zv", mydo.date1);
-
-			    			jsAdminIncrementCommercial(admin_commercials, mydo.commercial, "zv", mydo.date1);
-			    			jsAdminIncrementCommercial(admin_commercials, -5, "zv", mydo.date1);
-
-			    			jsAdminIncrementUser(admin_users, mydo.manager_id, "zv", mydo.date1);
-			    			jsAdminIncrementUser(admin_users, -5, "zv", mydo.date1);
-
-			    			if(mydo.manager_id > 0) jsAdminIncrement(users, -3, "zv_admin", mydo.date1);
-			    			if(mydo.manager_id != -3) jsAdminIncrement(users, -5, "zv_admin", mydo.date1);
-			    		}
-			    		if(mydo.type=='vz') {
-			    			jsAdminIncrement(users, mydo.manager_id, "vz_admin", mydo.date1);
-			    			jsAdminIncrementCommercial(admin_commercials, mydo.commercial, "vz", mydo.date1);
-			    			jsAdminIncrementCommercial(admin_commercials, -5, "vz", mydo.date1);
-
-			    			jsAdminIncrementUser(admin_users, mydo.manager_id, "vz", mydo.date1);
-			    			jsAdminIncrementUser(admin_users, -5, "vz", mydo.date1);
-
-			    			jsAdminIncrementModel(admin_models, mydo.model, "vz", mydo.date1);
-			    			jsAdminIncrementModel(admin_models, -5, "vz", mydo.date1);
-			    			if(mydo.manager_id > 0) jsAdminIncrement(users, -3, "vz_admin", mydo.date1);
-			    			if(mydo.manager_id != -3) jsAdminIncrement(users, -5, "vz_admin", mydo.date1);
-			    		}
-			    		if(mydo.type=='tst') {
-			    			jsAdminIncrement(users, mydo.manager_id, "tst_admin", mydo.date1);
-			    			jsAdminIncrementCommercial(admin_commercials, mydo.commercial, "tst", mydo.date1);
-			    			jsAdminIncrementCommercial(admin_commercials, -5, "tst", mydo.date1);
-
-			    			jsAdminIncrementUser(admin_users, mydo.manager_id, "tst", mydo.date1);
-			    			jsAdminIncrementUser(admin_users, -5, "tst", mydo.date1);
-
-			    			jsAdminIncrementModel(admin_models, mydo.model, "tst", mydo.date1);
-			    			jsAdminIncrementModel(admin_models, -5, "tst", mydo.date1);
-			    			if(mydo.manager_id > 0) jsAdminIncrement(users, -3, "tst_admin", mydo.date1);
-			    		}
-			    		if(mydo.type=='vz2') {
-			    			jsAdminIncrement(users, mydo.manager_id, "vz2_admin", mydo.date1);
-			    			jsAdminIncrementCommercial(admin_commercials, mydo.commercial, "vz2_admin", mydo.date1);
-			    			jsAdminIncrementCommercial(admin_commercials, -5, "vz2_admin", mydo.date1);
-
-			    			jsAdminIncrementUser(admin_users, mydo.manager_id, "vz2_admin", mydo.date1);
-			    			jsAdminIncrementUser(admin_users, -5, "vz2_admin", mydo.date1);
-
-			    			jsAdminIncrementModel(admin_models, mydo.model, "vz2_admin", mydo.date1)
-			    			jsAdminIncrementModel(admin_models, -5, "vz2_admin", mydo.date1);
-			    			if(mydo.manager_id != -3) jsAdminIncrement(users, -3, "vz2_admin", mydo.date1);
-			    			if(mydo.manager_id != -3) jsAdminIncrement(users, -5, "vz2_admin", mydo.date1);
-			    		}
-
-			    		if(mydo.date1.indexOf(today_date)!=-1) {
-	 						var cup_element = _.find(admin, function(el){ return el.manager_id == mydo.manager_id; });	 
-	 						if(cup_element) cup_element.mydo.push( mydo );
-	 					}
-
-			    	});
-
-			    	$.each(clients, function(i, client){
-			    		//console.info(client.id);
+            });
 
 
 
-				    		if( ( client.zv.indexOf(today_month1)!=-1 ) || ( client.vz.indexOf(today_month1)!=-1 )) {
+            $.each(users, function(i, user){ //делаем пустой ответ, потом будем увеличивать нули по мере прохождения
 
-				    			if( hasContacts(client) ) {
-				    				jsAdminIncrementModel(admin_models, client.model, "contacts", client.vz?client.vz:client.zv);
-				    				jsAdminIncrementModel(admin_models, -5, "contacts", client.vz?client.vz:client.zv);
-				    				jsAdminIncrementCommercial(admin_commercials, client.commercial_id, "contacts", client.vz?client.vz:client.zv);
-				    				jsAdminIncrementCommercial(admin_commercials, -5, "contacts", client.vz?client.vz:client.zv);
-
-				    				jsAdminIncrementUser(admin_users, client.manager_id, "contacts", client.vz?client.vz:client.zv);
-				    				jsAdminIncrementUser(admin_users, -5, "contacts", client.vz?client.vz:client.zv);
+              admin_users.push({user_id: user.id, fio: user.fio, zv: 0, vz: 0, tst: 0, zv_manager: 0, vz_manager: 0, tst_manager: 0, vz2_admin: 0, contacts:  0, out: 0, zv_month: 0, vz_month: 0, tst_month: 0, zv_manager_month: 0, vz_manager_month: 0, tst_manager_month: 0, vz2_admin_month: 0, contacts_month:  0, out_month: 0, dg:0, dg_month:0, vd:0, vd_month:0});
 
 
-				    			} else {
-				    				jsAdminIncrementModel(admin_models, client.model, "out", client.vz?client.vz:client.zv);
-				    				jsAdminIncrementModel(admin_models, -5, "out", client.vz?client.vz:client.zv);
-				    				jsAdminIncrementCommercial(admin_commercials, client.commercial_id, "out", client.vz?client.vz:client.zv);   	
-				    				jsAdminIncrementCommercial(admin_commercials, -5, "out", client.vz?client.vz:client.zv);
+              admin.push( {
+                    manager:user.fio,
+                    manager_id:user.id,
 
-				    				jsAdminIncrementUser(admin_users, client.manager_id, "out", client.vz?client.vz:client.zv);
-				    				jsAdminIncrementUser(admin_users, -5, "out", client.vz?client.vz:client.zv);
+                    zv_admin: "",
+                    zv_manager: "",
 
+                    vz_admin: "",
+                    vz_manager: "",
 
-				    			}
-				    		}
+                    vz2_admin: "",
 
-				    		if( client.dg.indexOf(today_month1)!=-1 ) {
-				    			//console.info("!!!",client.model, client);
-				    			jsAdminIncrementModel(admin_models, client.model, "dg", client.dg);
-			    				jsAdminIncrementModel(admin_models, -5, "dg", client.dg);
-				    			jsAdminIncrementCommercial(admin_commercials, client.commercial_id, "dg", client.dg)
-				    			jsAdminIncrementCommercial(admin_commercials, -5, "dg", client.dg)
+                    tst_admin: "",
+                    tst_manager: "",
 
-			    				jsAdminIncrementUser(admin_users, client.manager_id, "dg", client.dg);
-			    				jsAdminIncrementUser(admin_users, -5, "dg", client.dg);
-
-				    			if(jsAdminIncrement(users, client.manager_id, "dg", client.dg)) {
-				    			   jsAdminIncrement(users, -3, "dg", client.dg);	
-				    			   jsAdminIncrement(users, -5, "dg", client.dg);	
-				    			}
-				    			
-				    		}
-
-				    		if( client.vd.indexOf(today_month1)!=-1 ) {
-				    			//console.info("!!!",client.model, client);
-				    			jsAdminIncrementModel(admin_models, client.model, "vd", client.vd);
-			    				jsAdminIncrementModel(admin_models, -5, "vd", client.vd);
-				    			jsAdminIncrementCommercial(admin_commercials, client.commercial_id, "vd", client.vd)
-				    			jsAdminIncrementCommercial(admin_commercials, -5, "vd", client.vd)
-
-			    				jsAdminIncrementUser(admin_users, client.manager_id, "vd", client.vd);
-			    				jsAdminIncrementUser(admin_users, -5, "vd", client.vd);
-
-				    			if(jsAdminIncrement(users, client.manager_id, "vd", client.vd)) {
-				    			   jsAdminIncrement(users, -3, "vd", client.vd);	
-				    			   jsAdminIncrement(users, -5, "vd", client.vd);	
-				    			}
-				    			
-				    		}
+                    mydo: []
+                } );
+            });
+            
+            $.each(do_admin, function(i, mydo){ 
 
 
+              if(mydo.type=='zv') { 
+                jsAdminIncrement(users, mydo.manager_id, "zv_admin", mydo.date1);
+                jsAdminIncrementModel(admin_models, mydo.model, "zv", mydo.date1);
+                jsAdminIncrementModel(admin_models, -5, "zv", mydo.date1);
 
-				    		if( client.zv.indexOf(today_month1)!=-1 ) {
-				    			//console.info("!!!",client.model, client);
-				    			jsAdminIncrementModel(admin_models, client.model, "zv_manager", client.zv);
-			    				jsAdminIncrementModel(admin_models, -5, "zv_manager", client.zv);
-				    			jsAdminIncrementCommercial(admin_commercials, client.commercial_id, "zv_manager", client.zv)
+                jsAdminIncrementCommercial(admin_commercials, mydo.commercial, "zv", mydo.date1);
+                jsAdminIncrementCommercial(admin_commercials, -5, "zv", mydo.date1);
 
-			    				jsAdminIncrementUser(admin_users, client.manager_id, "zv_manager", client.zv);
-			    				jsAdminIncrementUser(admin_users, -5, "zv_manager", client.zv);
+                jsAdminIncrementUser(admin_users, mydo.manager_id, "zv", mydo.date1);
+                jsAdminIncrementUser(admin_users, -5, "zv", mydo.date1);
 
-				    			if(jsAdminIncrement(users, client.manager_id, "zv_manager", client.zv)) {
-				    			   jsAdminIncrement(users, -3, "zv_manager", client.zv);	
-				    			   jsAdminIncrement(users, -5, "zv_manager", client.zv);	
-				    			}
-				    			
-				    		}
-				    		if( client.vz.indexOf(today_month1)!=-1 ) {
-				    			//console.info("!?!",client.model);
-				    			jsAdminIncrementModel(admin_models, client.model, "vz_manager", client.vz);
-			    				jsAdminIncrementModel(admin_models, -5, "vz_manager", client.vz);
+                if(mydo.manager_id > 0) jsAdminIncrement(users, -3, "zv_admin", mydo.date1);
+                if(mydo.manager_id != -3) jsAdminIncrement(users, -5, "zv_admin", mydo.date1);
+              }
+              if(mydo.type=='vz') {
+                jsAdminIncrement(users, mydo.manager_id, "vz_admin", mydo.date1);
+                jsAdminIncrementCommercial(admin_commercials, mydo.commercial, "vz", mydo.date1);
+                jsAdminIncrementCommercial(admin_commercials, -5, "vz", mydo.date1);
 
-				    			jsAdminIncrementCommercial(admin_commercials, client.commercial_id, "vz_manager", client.vz);
-				    			jsAdminIncrementCommercial(admin_commercials, -5, "vz_manager", client.vz);
+                jsAdminIncrementUser(admin_users, mydo.manager_id, "vz", mydo.date1);
+                jsAdminIncrementUser(admin_users, -5, "vz", mydo.date1);
 
-			    				jsAdminIncrementUser(admin_users, client.manager_id, "vz_manager", client.vz);
-			    				jsAdminIncrementUser(admin_users, -5, "vz_manager", client.vz);
+                jsAdminIncrementModel(admin_models, mydo.model, "vz", mydo.date1);
+                jsAdminIncrementModel(admin_models, -5, "vz", mydo.date1);
+                if(mydo.manager_id > 0) jsAdminIncrement(users, -3, "vz_admin", mydo.date1);
+                if(mydo.manager_id != -3) jsAdminIncrement(users, -5, "vz_admin", mydo.date1);
+              }
+              if(mydo.type=='tst') {
+                jsAdminIncrement(users, mydo.manager_id, "tst_admin", mydo.date1);
+                jsAdminIncrementCommercial(admin_commercials, mydo.commercial, "tst", mydo.date1);
+                jsAdminIncrementCommercial(admin_commercials, -5, "tst", mydo.date1);
 
-				    			if( jsAdminIncrement(users, client.manager_id, "vz_manager", client.vz) ) {
-				    				jsAdminIncrement(users, -3, "vz_manager", client.vz);
-				    				jsAdminIncrement(users, -5, "vz_manager", client.vz);
-				    			}
-				    			
-				    		}
-				    		if( client.tst.indexOf(today_month1)!=-1 ) {
-				    			jsAdminIncrementCommercial(admin_commercials, client.commercial_id, "tst_manager", client.vz)
-				    			jsAdminIncrementCommercial(admin_commercials, -5, "tst_manager", client.tst);
+                jsAdminIncrementUser(admin_users, mydo.manager_id, "tst", mydo.date1);
+                jsAdminIncrementUser(admin_users, -5, "tst", mydo.date1);
 
-				    			jsAdminIncrementModel(admin_models, client.model, "tst_manager", client.tst);
-			    				jsAdminIncrementModel(admin_models, -5, "tst_manager", client.tst);
+                jsAdminIncrementModel(admin_models, mydo.model, "tst", mydo.date1);
+                jsAdminIncrementModel(admin_models, -5, "tst", mydo.date1);
+                if(mydo.manager_id > 0) jsAdminIncrement(users, -3, "tst_admin", mydo.date1);
+              }
+              if(mydo.type=='vz2') {
+                jsAdminIncrement(users, mydo.manager_id, "vz2_admin", mydo.date1);
+                jsAdminIncrementCommercial(admin_commercials, mydo.commercial, "vz2_admin", mydo.date1);
+                jsAdminIncrementCommercial(admin_commercials, -5, "vz2_admin", mydo.date1);
 
-			    				jsAdminIncrementUser(admin_users, client.manager_id, "tst_manager", client.tst);
-			    				jsAdminIncrementUser(admin_users, -5, "tst_manager", client.tst);
+                jsAdminIncrementUser(admin_users, mydo.manager_id, "vz2_admin", mydo.date1);
+                jsAdminIncrementUser(admin_users, -5, "vz2_admin", mydo.date1);
 
-				    			
-				    			if( jsAdminIncrement(users, client.manager_id, "tst_manager", client.tst) ) {
-				    				jsAdminIncrement(users, -3, "tst_manager", client.tst);	
-				    			}
-				    			
-				    			//console.info(client.tst, client.manager_id);
-				    		}
-			    	});
+                jsAdminIncrementModel(admin_models, mydo.model, "vz2_admin", mydo.date1)
+                jsAdminIncrementModel(admin_models, -5, "vz2_admin", mydo.date1);
+                if(mydo.manager_id != -3) jsAdminIncrement(users, -3, "vz2_admin", mydo.date1);
+                if(mydo.manager_id != -3) jsAdminIncrement(users, -5, "vz2_admin", mydo.date1);
+              }
 
-			    	response.send({admin:admin, admin_models: admin_models, admin_commercials: admin_commercials, admin_users: admin_users});
-			    });	
-		    });
-	    });
-	});
-	});
-	
+              if(mydo.date1.indexOf(today_date)!=-1) {
+              var cup_element = _.find(admin, function(el){ return el.manager_id == mydo.manager_id; });   
+              if(cup_element) cup_element.mydo.push( mydo );
+            }
+
+            });
+
+            $.each(clients, function(i, client){
+              //console.info(client.id);
+
+
+
+                if( ( client.zv.indexOf(today_month1)!=-1 ) || ( client.vz.indexOf(today_month1)!=-1 )) {
+
+                  if( hasContacts(client) ) {
+                    jsAdminIncrementModel(admin_models, client.model, "contacts", client.vz?client.vz:client.zv);
+                    jsAdminIncrementModel(admin_models, -5, "contacts", client.vz?client.vz:client.zv);
+                    jsAdminIncrementCommercial(admin_commercials, client.commercial_id, "contacts", client.vz?client.vz:client.zv);
+                    jsAdminIncrementCommercial(admin_commercials, -5, "contacts", client.vz?client.vz:client.zv);
+
+                    jsAdminIncrementUser(admin_users, client.manager_id, "contacts", client.vz?client.vz:client.zv);
+                    jsAdminIncrementUser(admin_users, -5, "contacts", client.vz?client.vz:client.zv);
+
+
+                  } else {
+                    jsAdminIncrementModel(admin_models, client.model, "out", client.vz?client.vz:client.zv);
+                    jsAdminIncrementModel(admin_models, -5, "out", client.vz?client.vz:client.zv);
+                    jsAdminIncrementCommercial(admin_commercials, client.commercial_id, "out", client.vz?client.vz:client.zv);    
+                    jsAdminIncrementCommercial(admin_commercials, -5, "out", client.vz?client.vz:client.zv);
+
+                    jsAdminIncrementUser(admin_users, client.manager_id, "out", client.vz?client.vz:client.zv);
+                    jsAdminIncrementUser(admin_users, -5, "out", client.vz?client.vz:client.zv);
+
+
+                  }
+                }
+
+                if( client.dg.indexOf(today_month1)!=-1 ) {
+                  //console.info("!!!",client.model, client);
+                  jsAdminIncrementModel(admin_models, client.model, "dg", client.dg);
+                  jsAdminIncrementModel(admin_models, -5, "dg", client.dg);
+                  jsAdminIncrementCommercial(admin_commercials, client.commercial_id, "dg", client.dg)
+                  jsAdminIncrementCommercial(admin_commercials, -5, "dg", client.dg)
+
+                  jsAdminIncrementUser(admin_users, client.manager_id, "dg", client.dg);
+                  jsAdminIncrementUser(admin_users, -5, "dg", client.dg);
+
+                  if(jsAdminIncrement(users, client.manager_id, "dg", client.dg)) {
+                     jsAdminIncrement(users, -3, "dg", client.dg);  
+                     jsAdminIncrement(users, -5, "dg", client.dg);  
+                  }
+                  
+                }
+
+                if( client.vd.indexOf(today_month1)!=-1 ) {
+                  //console.info("!!!",client.model, client);
+                  jsAdminIncrementModel(admin_models, client.model, "vd", client.vd);
+                  jsAdminIncrementModel(admin_models, -5, "vd", client.vd);
+                  jsAdminIncrementCommercial(admin_commercials, client.commercial_id, "vd", client.vd)
+                  jsAdminIncrementCommercial(admin_commercials, -5, "vd", client.vd)
+
+                  jsAdminIncrementUser(admin_users, client.manager_id, "vd", client.vd);
+                  jsAdminIncrementUser(admin_users, -5, "vd", client.vd);
+
+                  if(jsAdminIncrement(users, client.manager_id, "vd", client.vd)) {
+                     jsAdminIncrement(users, -3, "vd", client.vd);  
+                     jsAdminIncrement(users, -5, "vd", client.vd);  
+                  }
+                  
+                }
+
+
+
+                if( client.zv.indexOf(today_month1)!=-1 ) {
+                  //console.info("!!!",client.model, client);
+                  jsAdminIncrementModel(admin_models, client.model, "zv_manager", client.zv);
+                  jsAdminIncrementModel(admin_models, -5, "zv_manager", client.zv);
+                  jsAdminIncrementCommercial(admin_commercials, client.commercial_id, "zv_manager", client.zv)
+
+                  jsAdminIncrementUser(admin_users, client.manager_id, "zv_manager", client.zv);
+                  jsAdminIncrementUser(admin_users, -5, "zv_manager", client.zv);
+
+                  if(jsAdminIncrement(users, client.manager_id, "zv_manager", client.zv)) {
+                     jsAdminIncrement(users, -3, "zv_manager", client.zv);  
+                     jsAdminIncrement(users, -5, "zv_manager", client.zv);  
+                  }
+                  
+                }
+                if( client.vz.indexOf(today_month1)!=-1 ) {
+                  //console.info("!?!",client.model);
+                  jsAdminIncrementModel(admin_models, client.model, "vz_manager", client.vz);
+                  jsAdminIncrementModel(admin_models, -5, "vz_manager", client.vz);
+
+                  jsAdminIncrementCommercial(admin_commercials, client.commercial_id, "vz_manager", client.vz);
+                  jsAdminIncrementCommercial(admin_commercials, -5, "vz_manager", client.vz);
+
+                  jsAdminIncrementUser(admin_users, client.manager_id, "vz_manager", client.vz);
+                  jsAdminIncrementUser(admin_users, -5, "vz_manager", client.vz);
+
+                  if( jsAdminIncrement(users, client.manager_id, "vz_manager", client.vz) ) {
+                    jsAdminIncrement(users, -3, "vz_manager", client.vz);
+                    jsAdminIncrement(users, -5, "vz_manager", client.vz);
+                  }
+                  
+                }
+                if( client.tst.indexOf(today_month1)!=-1 ) {
+                  jsAdminIncrementCommercial(admin_commercials, client.commercial_id, "tst_manager", client.vz)
+                  jsAdminIncrementCommercial(admin_commercials, -5, "tst_manager", client.tst);
+
+                  jsAdminIncrementModel(admin_models, client.model, "tst_manager", client.tst);
+                  jsAdminIncrementModel(admin_models, -5, "tst_manager", client.tst);
+
+                  jsAdminIncrementUser(admin_users, client.manager_id, "tst_manager", client.tst);
+                  jsAdminIncrementUser(admin_users, -5, "tst_manager", client.tst);
+
+                  
+                  if( jsAdminIncrement(users, client.manager_id, "tst_manager", client.tst) ) {
+                    jsAdminIncrement(users, -3, "tst_manager", client.tst); 
+                  }
+                  
+                  //console.info(client.tst, client.manager_id);
+                }
+            });
+
+            response.send({admin:admin, admin_models: admin_models, admin_commercials: admin_commercials, admin_users: admin_users});
+          }); 
+        });
+      });
+  });
+  });
+  
 }
 
 
@@ -1605,97 +1630,97 @@ exports.loadStatDay = function(request, response) {
     var dfdArray = [];
     var answer = [];
 
-	var brand = request.query.brand;
-	var today = request.query.today+"%";
-	var manager_id = request.query.manager;
+  var brand = request.query.brand;
+  var today = request.query.today+"%";
+  var manager_id = request.query.manager;
 
-	if(manager_id==-1) {
-		var manager_sql = "";
-	} else {
-		var manager_sql = " AND manager_id = '"+manager_id+"' ";		
-	}
+  if(manager_id==-1) {
+    var manager_sql = "";
+  } else {
+    var manager_sql = " AND manager_id = '"+manager_id+"' ";    
+  }
 
     //Звонки
     dfdArray.push( (function(){
-    	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE zv LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model LIMIT 500', [today, brand], function (err, rows, fields) {
-	    	rows = correct_dates(rows);
-		  	answer.push( {title:"Звонки", order: 0, clients: rows, counts: rows.length} );
-	    	dfd.resolve();
-	  	});	    	
-    	return dfd.promise();
+      var dfd = $.Deferred();
+      pool.query('SELECT * FROM `1_clients` WHERE zv LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model LIMIT 500', [today, brand], function (err, rows, fields) {
+        rows = correct_dates(rows);
+        answer.push( {title:"Звонки", order: 0, clients: rows, counts: rows.length} );
+        dfd.resolve();
+      });       
+      return dfd.promise();
     })() );
 
     //Визиты
     dfdArray.push( (function(){
-    	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE vz LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
-	    	rows = correct_dates(rows);
-		  	answer.push( {title:"Визиты", order: 1, clients: rows, counts: rows.length} );
-	    	dfd.resolve();
-	  	});	    	
-    	return dfd.promise();
+      var dfd = $.Deferred();
+      pool.query('SELECT * FROM `1_clients` WHERE vz LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
+        rows = correct_dates(rows);
+        answer.push( {title:"Визиты", order: 1, clients: rows, counts: rows.length} );
+        dfd.resolve();
+      });       
+      return dfd.promise();
     })() );
 
 
     //Тестдрайвы
     dfdArray.push( (function(){
-    	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE tst LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
-	    	rows = correct_dates(rows);
-		  	answer.push( {title:"Тест-драйвы", order: 2, clients: rows, counts: rows.length} );
-	    	dfd.resolve();
-	  	});	    	
-    	return dfd.promise();
+      var dfd = $.Deferred();
+      pool.query('SELECT * FROM `1_clients` WHERE tst LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
+        rows = correct_dates(rows);
+        answer.push( {title:"Тест-драйвы", order: 2, clients: rows, counts: rows.length} );
+        dfd.resolve();
+      });       
+      return dfd.promise();
     })() );
 
     //Договора
     dfdArray.push( (function(){
-    	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE dg LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
-	    	rows = correct_dates(rows);
-		  	answer.push( {title:"Договора", order: 3, clients: rows, counts: rows.length} );
-	    	dfd.resolve();
-	  	});	    	
-    	return dfd.promise();
+      var dfd = $.Deferred();
+      pool.query('SELECT * FROM `1_clients` WHERE dg LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
+        rows = correct_dates(rows);
+        answer.push( {title:"Договора", order: 3, clients: rows, counts: rows.length} );
+        dfd.resolve();
+      });       
+      return dfd.promise();
     })() );
 
     //Выдачи
     dfdArray.push( (function(){
-    	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE vd LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
-	    	rows = correct_dates(rows);
-		  	answer.push( {title:"Выдачи", order: 4, clients: rows, counts: rows.length} );
-	    	dfd.resolve();
-	  	});	    	
-    	return dfd.promise();
+      var dfd = $.Deferred();
+      pool.query('SELECT * FROM `1_clients` WHERE vd LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
+        rows = correct_dates(rows);
+        answer.push( {title:"Выдачи", order: 4, clients: rows, counts: rows.length} );
+        dfd.resolve();
+      });       
+      return dfd.promise();
     })() );
 
     //Расторжения
     dfdArray.push( (function(){
-    	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE `out` LIKE ? AND dg != "0000-00-00 00:00:00" AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
-	    	rows = correct_dates(rows);
-		  	answer.push( {title:"Расторжения", order: 5, clients: rows, counts: rows.length} );
-	    	dfd.resolve();
-	  	});	    	
-    	return dfd.promise();
+      var dfd = $.Deferred();
+      pool.query('SELECT * FROM `1_clients` WHERE `out` LIKE ? AND dg != "0000-00-00 00:00:00" AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
+        rows = correct_dates(rows);
+        answer.push( {title:"Расторжения", order: 5, clients: rows, counts: rows.length} );
+        dfd.resolve();
+      });       
+      return dfd.promise();
     })() );
 
     //OUT
     dfdArray.push( (function(){
-    	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE `out` LIKE ? AND dg = "0000-00-00 00:00:00" AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
-	    	rows = correct_dates(rows);
-		  	answer.push( {title:"OUT", order: 6, clients: rows, counts: rows.length} );
-	    	dfd.resolve();
-	  	});	    	
-    	return dfd.promise();
+      var dfd = $.Deferred();
+      pool.query('SELECT * FROM `1_clients` WHERE `out` LIKE ? AND dg = "0000-00-00 00:00:00" AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
+        rows = correct_dates(rows);
+        answer.push( {title:"OUT", order: 6, clients: rows, counts: rows.length} );
+        dfd.resolve();
+      });       
+      return dfd.promise();
     })() );
 
 
     $.when.apply(null, dfdArray).then(function(){
-    	response.send( answer );
+      response.send( answer );
     });
 
 }
@@ -1705,9 +1730,9 @@ exports.loadStatAllDay = function(request, response) {
     var dfdArray = [];
     var answer = [];
 
-	var brand = request.query.brand;
-	var today = request.query.today+"%";
-	var manager_id = request.query.manager;
+  var brand = request.query.brand;
+  var today = request.query.today+"%";
+  var manager_id = request.query.manager;
 
 
     var day = {
@@ -1855,93 +1880,93 @@ exports.loadStatAllDay = function(request, response) {
     };
 
 
-	if(manager_id==-1) {
-		var manager_sql = "";
-	} else {
-		var manager_sql = " AND manager_id = '"+manager_id+"' ";		
-	}
+  if(manager_id==-1) {
+    var manager_sql = "";
+  } else {
+    var manager_sql = " AND manager_id = '"+manager_id+"' ";    
+  }
 
     //Звонки
     dfdArray.push( (function(){
-    	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE zv LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model LIMIT 500', [today, brand], function (err, rows, fields) {
-	    	rows = correct_dates(rows);
-		  	answer.push( {title:"Звонки", order: 0, clients: rows, counts: rows.length} );
-	    	dfd.resolve();
-	  	});	    	
-    	return dfd.promise();
+      var dfd = $.Deferred();
+      pool.query('SELECT * FROM `1_clients` WHERE zv LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model LIMIT 500', [today, brand], function (err, rows, fields) {
+        rows = correct_dates(rows);
+        answer.push( {title:"Звонки", order: 0, clients: rows, counts: rows.length} );
+        dfd.resolve();
+      });       
+      return dfd.promise();
     })() );
 
     //Визиты
     dfdArray.push( (function(){
-    	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE vz LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
-	    	rows = correct_dates(rows);
-		  	answer.push( {title:"Визиты", order: 1, clients: rows, counts: rows.length} );
-	    	dfd.resolve();
-	  	});	    	
-    	return dfd.promise();
+      var dfd = $.Deferred();
+      pool.query('SELECT * FROM `1_clients` WHERE vz LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
+        rows = correct_dates(rows);
+        answer.push( {title:"Визиты", order: 1, clients: rows, counts: rows.length} );
+        dfd.resolve();
+      });       
+      return dfd.promise();
     })() );
 
 
     //Тестдрайвы
     dfdArray.push( (function(){
-    	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE tst LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
-	    	rows = correct_dates(rows);
-		  	answer.push( {title:"Тест-драйвы", order: 2, clients: rows, counts: rows.length} );
-	    	dfd.resolve();
-	  	});	    	
-    	return dfd.promise();
+      var dfd = $.Deferred();
+      pool.query('SELECT * FROM `1_clients` WHERE tst LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
+        rows = correct_dates(rows);
+        answer.push( {title:"Тест-драйвы", order: 2, clients: rows, counts: rows.length} );
+        dfd.resolve();
+      });       
+      return dfd.promise();
     })() );
 
     //Договора
     dfdArray.push( (function(){
-    	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE dg LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
-	    	rows = correct_dates(rows);
-		  	answer.push( {title:"Договора", order: 3, clients: rows, counts: rows.length} );
-	    	dfd.resolve();
-	  	});	    	
-    	return dfd.promise();
+      var dfd = $.Deferred();
+      pool.query('SELECT * FROM `1_clients` WHERE dg LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
+        rows = correct_dates(rows);
+        answer.push( {title:"Договора", order: 3, clients: rows, counts: rows.length} );
+        dfd.resolve();
+      });       
+      return dfd.promise();
     })() );
 
     //Выдачи
     dfdArray.push( (function(){
-    	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE vd LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
-	    	rows = correct_dates(rows);
-		  	answer.push( {title:"Выдачи", order: 4, clients: rows, counts: rows.length} );
-	    	dfd.resolve();
-	  	});	    	
-    	return dfd.promise();
+      var dfd = $.Deferred();
+      pool.query('SELECT * FROM `1_clients` WHERE vd LIKE ? AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
+        rows = correct_dates(rows);
+        answer.push( {title:"Выдачи", order: 4, clients: rows, counts: rows.length} );
+        dfd.resolve();
+      });       
+      return dfd.promise();
     })() );
 
     //Расторжения
     dfdArray.push( (function(){
-    	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE `out` LIKE ? AND dg != "0000-00-00 00:00:00" AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
-	    	rows = correct_dates(rows);
-		  	answer.push( {title:"Расторжения", order: 5, clients: rows, counts: rows.length} );
-	    	dfd.resolve();
-	  	});	    	
-    	return dfd.promise();
+      var dfd = $.Deferred();
+      pool.query('SELECT * FROM `1_clients` WHERE `out` LIKE ? AND dg != "0000-00-00 00:00:00" AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
+        rows = correct_dates(rows);
+        answer.push( {title:"Расторжения", order: 5, clients: rows, counts: rows.length} );
+        dfd.resolve();
+      });       
+      return dfd.promise();
     })() );
 
     //OUT
     dfdArray.push( (function(){
-    	var dfd = $.Deferred();
-	    pool.query('SELECT * FROM `1_clients` WHERE `out` LIKE ? AND dg = "0000-00-00 00:00:00" AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
-	    	rows = correct_dates(rows);
-		  	answer.push( {title:"OUT", order: 6, clients: rows, counts: rows.length} );
-	    	dfd.resolve();
-	  	});	    	
-    	return dfd.promise();
+      var dfd = $.Deferred();
+      pool.query('SELECT * FROM `1_clients` WHERE `out` LIKE ? AND dg = "0000-00-00 00:00:00" AND brand = ? '+manager_sql+' ORDER by manager_id, model  LIMIT 500', [today, brand], function (err, rows, fields) {
+        rows = correct_dates(rows);
+        answer.push( {title:"OUT", order: 6, clients: rows, counts: rows.length} );
+        dfd.resolve();
+      });       
+      return dfd.promise();
     })() );
 
 
     $.when.apply(null, dfdArray).then(function(){
-    	response.send( day );
+      response.send( day );
     });
 
 }
@@ -1953,86 +1978,86 @@ exports.loadAllBig2 = function(request, response) {
 
     pool.query('SELECT * FROM `1_do` WHERE brand=1', function (err, rows, fields) {
 
-	  	response.send(rows);
-  	});	
+      response.send(rows);
+    }); 
 }
 
 exports.saveDo = function(request, response) {
-	var id = request.params.id;
-	var changes = JSON.parse(request.query.changes);
-	var client_id = request.query.client_id;
+  var id = request.params.id;
+  var changes = JSON.parse(request.query.changes);
+  var client_id = request.query.client_id;
 
  jsCheckToken(request.query.token, response).done(function(user_id){
 
-	query = "UPDATE 1_do SET ? WHERE id = '"+id+"'";
-	//console.info("F = ",query, changes);
+  query = "UPDATE 1_do SET ? WHERE id = '"+id+"'";
+  //console.info("F = ",query, changes);
 
     pool.query(query, changes, function (err, rows, fields) {
-	  	jsUpdateClient(client_id).done(function(client_id){
-			query = "SELECT * FROM 1_clients WHERE id = '"+client_id+"'";
-    		pool.query(query, changes, function (err, clients, fields) {
-    			clients = correct_dates(clients);
-		  		response.send(clients);
-		  	});
-	  	});
-  	});	
+      jsUpdateClient(client_id).done(function(client_id){
+      query = "SELECT * FROM 1_clients WHERE id = '"+client_id+"'";
+        pool.query(query, changes, function (err, clients, fields) {
+          clients = correct_dates(clients);
+          response.send(clients);
+        });
+      });
+    }); 
   });
 
 }
 
 function jsClearCacheByBrand(brand_id) {
 
-  	if(global.stat_cache && global.stat_cache[brand_id] ) {
-  		delete global.stat_cache[brand_id]; //обнуляем кеш
-  		global.stat_cache_cup = {};
-  	}
+    if(global.stat_cache && global.stat_cache[brand_id] ) {
+      delete global.stat_cache[brand_id]; //обнуляем кеш
+      global.stat_cache_cup = {};
+    }
 
 }
 
 exports.saveClient = function(request, response) {
-	var changes = request.body.changes;
-	var client_id = request.query.client_id;
-	var brand_id = request.query.brand;
+  var changes = request.body.changes;
+  var client_id = request.query.client_id;
+  var brand_id = request.query.brand;
 
  jsCheckToken(request.query.token, response).done(function(user_id){
- 	if(changes.cost) changes.cost = changes.cost.toString().replace(" ","").replace(" ","").replace(" ","");
-	query = "UPDATE 1_clients SET ? WHERE id = '"+client_id+"'";
+  if(changes.cost) changes.cost = changes.cost.toString().replace(" ","").replace(" ","").replace(" ","");
+  query = "UPDATE 1_clients SET ? WHERE id = '"+client_id+"'";
 
     pool.query(query, changes, function (err, rows, fields) {
-  		response.send({affectedRows: rows.affectedRows});
-  		jsClearCacheByBrand( request.query.brand );
-  	});	
+      response.send({affectedRows: rows.affectedRows});
+      jsClearCacheByBrand( request.query.brand );
+    }); 
   });
 
 }
 
 exports.newAdmin = function(request, response) {
-	var manager_id = request.query.manager_id;
-	var do_type = request.query.do_type;
-	var brand = request.query.brand;
-	var today = request.query.today;
+  var manager_id = request.query.manager_id;
+  var do_type = request.query.do_type;
+  var brand = request.query.brand;
+  var today = request.query.today;
 
-	var today_datetime = today + " " + tomysql( new Date ).split(" ")[1];
+  var today_datetime = today + " " + tomysql( new Date ).split(" ")[1];
 
-	//console.info("!",manager_id, do_type);
+  //console.info("!",manager_id, do_type);
 
  jsCheckToken(request.query.token, response).done(function(user_id){
 
- 	var changes = {
- 		type: do_type,
- 		manager_id: manager_id,
- 		date1: today_datetime,
- 		brand: brand
+  var changes = {
+    type: do_type,
+    manager_id: manager_id,
+    date1: today_datetime,
+    brand: brand
 
- 	};
+  };
 
-	query = "INSERT INTO `1_doadmin` SET ?";
+  query = "INSERT INTO `1_doadmin` SET ?";
 
     pool.query(query, changes, function (err, rows, fields) {
-    	var insert_id = rows.insertId;
-  		response.send({insertId: insert_id});
-  		//console.info(err, rows);
-  	});
+      var insert_id = rows.insertId;
+      response.send({insertId: insert_id});
+      //console.info(err, rows);
+    });
 
   });
 
@@ -2040,49 +2065,49 @@ exports.newAdmin = function(request, response) {
 
 
 exports.saveAdmin = function(request, response) {
-	var changes = request.body.changes;
-	var mydo_id = changes.id;
+  var changes = request.body.changes;
+  var mydo_id = changes.id;
 
  jsCheckToken(request.query.token, response).done(function(user_id){
 
-	query = "UPDATE 1_doadmin SET ? WHERE id = '"+mydo_id+"'";
+  query = "UPDATE 1_doadmin SET ? WHERE id = '"+mydo_id+"'";
 
     pool.query(query, changes, function (err, rows, fields) {
-  		response.send({affectedRows: rows.affectedRows});
+      response.send({affectedRows: rows.affectedRows});
 
-		//global.stat_cache = {}; //обнуляем кеш
-  		jsClearCacheByBrand( request.query.brand );
+    //global.stat_cache = {}; //обнуляем кеш
+      jsClearCacheByBrand( request.query.brand );
 
-  	if(false)
-		setTimeout(function(){
-			report.loadstat(user_id);
-		},5);
+    if(false)
+    setTimeout(function(){
+      report.loadstat(user_id);
+    },5);
 
-  //		global.stat_cache = {}; //обнуляем кеш
-  	});	
+  //    global.stat_cache = {}; //обнуляем кеш
+    }); 
   });
 
 }
 
 exports.newDo = function(request, response) {
-	var id = request.params.id;
-	var client_id = request.query.client_id;
-	var do_type = request.query.do_type;
-	var brand_id = request.query.brand;
-	var manager_id = request.query.manager;
+  var id = request.params.id;
+  var client_id = request.query.client_id;
+  var do_type = request.query.do_type;
+  var brand_id = request.query.brand;
+  var manager_id = request.query.manager;
 
 
-	//console.info(request.query, brand_id);
+  //console.info(request.query, brand_id);
 
  jsCheckToken(request.query.token, response).done(function(user_id){
- 	if(manager_id == -1) manager_id = user_id;
-	query = "INSERT INTO 1_do SET manager_id = ?, client = ?, type = ?, text = ?, brand = ?, date2 = DATE_ADD(NOW(), INTERVAL 5 MINUTE), host_id = ? ";
+  if(manager_id == -1) manager_id = user_id;
+  query = "INSERT INTO 1_do SET manager_id = ?, client = ?, type = ?, text = ?, brand = ?, date2 = DATE_ADD(NOW(), INTERVAL 5 MINUTE), host_id = ? ";
 
     pool.query(query, [ manager_id, client_id, do_type, do_type, brand_id, user_id ], function (err, rows, fields) {
-    	var insert_id = rows.insertId;
-    	response.send({insert_id: insert_id});
-    	//console.info("ADDED rows = ", rows, err);
-  	});	
+      var insert_id = rows.insertId;
+      response.send({insert_id: insert_id});
+      //console.info("ADDED rows = ", rows, err);
+    }); 
   });
 
 }
@@ -2090,12 +2115,12 @@ exports.newDo = function(request, response) {
 exports.loadModels = function(request, response) {
     
     pool.query('SELECT * FROM `1_models` ORDER by model', function (err, models, fields) {
-	    pool.query('SELECT * FROM `1_brands` ORDER by title', function (err, brands, fields) {
-		    pool.query('SELECT * FROM `1_users_group`', function (err, users_group, fields) {
-	  			response.send({models:models, brands: brands, users_group: users_group });
-	  		});
-	    });
-  	});	
+      pool.query('SELECT * FROM `1_brands` ORDER by title', function (err, brands, fields) {
+        pool.query('SELECT * FROM `1_users_group`', function (err, users_group, fields) {
+          response.send({models:models, brands: brands, users_group: users_group });
+        });
+      });
+    }); 
 
 }
 
@@ -2107,8 +2132,8 @@ exports.newModel = function(request, response) {
 
  jsCheckToken(request.query.token, response).done(function(user_id){
     pool.query('INSERT INTO `1_models` SET `brand` = ?, `model` = "Новая модель", `cost` = 0, `show` = 1, `short` = "Новая"',[brand_id], function (err, rows, fields) {
-		response.send({rows:rows, err: err});
-  	});	
+    response.send({rows:rows, err: err});
+    }); 
   });
 
 }
@@ -2123,9 +2148,9 @@ exports.saveModel = function(request, response) {
 
  jsCheckToken(request.query.token, response).done(function(user_id){
    $.each(changes, function(i, ch){
-    	pool.query('UPDATE `1_models` SET ? WHERE id = "'+ch.id+'"',[ch], function (err, rows, fields) {
-			response.send({rows:rows, err: err});
-  		});	
+      pool.query('UPDATE `1_models` SET ? WHERE id = "'+ch.id+'"',[ch], function (err, rows, fields) {
+      response.send({rows:rows, err: err});
+      }); 
    });
 
   });
@@ -2139,15 +2164,15 @@ exports.deleteModel = function(request, response) {
 
  jsCheckToken(request.query.token, response).done(function(user_id){
     pool.query('SELECT count(*) cnt FROM `1_clients` WHERE model = ?',[del_id], function (err, rows, fields) {
-    	if(rows[0].cnt>0) {
-    	  response.send({rows:rows, err: err});	
-    	} else {
-		  pool.query('DELETE FROM `1_models` WHERE id = ?',[del_id], function (err, rows, fields) {
-		  	response.send({rows:rows, err: err});
-		  });
-		  
-    	}
-  	});	
+      if(rows[0].cnt>0) {
+        response.send({rows:rows, err: err}); 
+      } else {
+      pool.query('DELETE FROM `1_models` WHERE id = ?',[del_id], function (err, rows, fields) {
+        response.send({rows:rows, err: err});
+      });
+      
+      }
+    }); 
   });
 
 }
@@ -2160,18 +2185,18 @@ exports.removeClient = function(request, response) {
 
  jsCheckToken(request.query.token, response).done(function(user_id){
     pool.query('DELETE FROM 1_do WHERE client = ?',[client_id], function (err, rows, fields) {
-		  pool.query('DELETE FROM `1_clients` WHERE id = ?',[client_id], function (err, rows, fields) {
-		  	response.send({rows:rows, err: err});
-		  	//console.info({rows:rows, err: err});
-			//global.stat_cache = {}; //обнуляем кеш
-	  		jsClearCacheByBrand( request.query.brand );
+      pool.query('DELETE FROM `1_clients` WHERE id = ?',[client_id], function (err, rows, fields) {
+        response.send({rows:rows, err: err});
+        //console.info({rows:rows, err: err});
+      //global.stat_cache = {}; //обнуляем кеш
+        jsClearCacheByBrand( request.query.brand );
 
-			setTimeout(function(){
-					report.loadstat(user_id);
-			},5);
+      setTimeout(function(){
+          report.loadstat(user_id);
+      },5);
 
-		  });
-  	});	
+      });
+    }); 
   });
 
 }
@@ -2182,18 +2207,18 @@ exports.deleteAdmin = function(request, response) {
  var mydo_id = request.query.mydo_id;
 
  jsCheckToken(request.query.token, response).done(function(user_id){
-	  pool.query('DELETE FROM `1_doadmin` WHERE id = ?',[mydo_id], function (err, rows, fields) {
-	  	response.send({rows:rows, err: err});
+    pool.query('DELETE FROM `1_doadmin` WHERE id = ?',[mydo_id], function (err, rows, fields) {
+      response.send({rows:rows, err: err});
 
-		//global.stat_cache = {}; //обнуляем кеш
- 		jsClearCacheByBrand( request.query.brand );
+    //global.stat_cache = {}; //обнуляем кеш
+    jsClearCacheByBrand( request.query.brand );
 
-		setTimeout(function(){
-			report.loadstat(user_id);
-			//console.info("load_stat", user_id);
-		},5);
+    setTimeout(function(){
+      report.loadstat(user_id);
+      //console.info("load_stat", user_id);
+    },5);
 
-	  });
+    });
   });
 
 }
@@ -2205,11 +2230,11 @@ exports.removeDo = function(request, response) {
  jsCheckToken(request.query.token, response).done(function(user_id){
   pool.query('SELECT client FROM 1_do WHERE id = ? LIMIT 1',[do_id], function (err, clients, fields) {
     pool.query('DELETE FROM 1_do WHERE id = ? LIMIT 1',[do_id], function (err, rows, fields) {
-    	jsUpdateClient(clients[0].client).then(function(){
-		  	response.send({rows:rows, err: err});
-		  	//console.info({rows:rows, err: err});    		
-    	});
-  	});	
+      jsUpdateClient(clients[0].client).then(function(){
+        response.send({rows:rows, err: err});
+        //console.info({rows:rows, err: err});        
+      });
+    }); 
    });
   });
 
@@ -2218,399 +2243,399 @@ exports.removeDo = function(request, response) {
 
 exports.loadStatAll = function(request, response) {
     pool.query('SELECT id, brand, model, creditmanager, zv, vz, tst, dg, vd, `out`, status, commercial, manager FROM `1_clients`', function (err, rows, fields) {
-    	rows = correct_dates(rows, "no_zero_date");
-	  	response.send(rows);
-  	});		
+      rows = correct_dates(rows, "no_zero_date");
+      response.send(rows);
+    });   
 }
 
 exports.loadStatCup = function(request, response) {
-	var today = request.query.today_date;
-	var today_date = today?today:"2013-07-16";
-	var today_month = today_date.substr(0,7);
+  var today = request.query.today_date;
+  var today_date = today?today:"2013-07-16";
+  var today_month = today_date.substr(0,7);
 
-	var brand_id = request.query.brand;
-	var cache_id = md5(JSON.stringify(request.query) + brand_id);
+  var brand_id = request.query.brand;
+  var cache_id = md5(JSON.stringify(request.query) + brand_id);
 
-	if(!global.stat_cache_cup) {
-		global.stat_cache_cup = {};
-	}
+  if(!global.stat_cache_cup) {
+    global.stat_cache_cup = {};
+  }
 
 
-	if( global.stat_cache_cup[ cache_id ] ) {
-		response.send( global.stat_cache_cup[ cache_id ] );
-		//console.info("Stat from cache "+cache_id+", brand = ", brand_id);
-	} else {
+  if( global.stat_cache_cup[ cache_id ] ) {
+    response.send( global.stat_cache_cup[ cache_id ] );
+    //console.info("Stat from cache "+cache_id+", brand = ", brand_id);
+  } else {
 
 
 
   pool.query('SELECT * FROM `1_plan` WHERE `month` = "'+today_month+'"', function (err, plans, fields) {
-  		//console.info(plans);
+      //console.info(plans);
     pool.query('SELECT * FROM `1_brands` WHERE `Show` = 1 ORDER by brand_group, title', function (err, brands, fields) {
-    	brands.push({id: -1, title: "Итого №1", brand_group: 1, logo: "logo-seyho.png"});
-    	brands.push({id: -2, title: "Итого №2", brand_group: 2, logo: "logo-seyho.png"});
-    	brands.push({id: -3, title: "Итого №3", brand_group: 3, logo: "logo-seyho.png"});
-    	brands.push({id: 0, title: "Итого", brand_group: 4,logo: "logo-seyho.png"});
+      brands.push({id: -1, title: "Итого №1", brand_group: 1, logo: "logo-seyho.png"});
+      brands.push({id: -2, title: "Итого №2", brand_group: 2, logo: "logo-seyho.png"});
+      brands.push({id: -3, title: "Итого №3", brand_group: 3, logo: "logo-seyho.png"});
+      brands.push({id: 0, title: "Итого", brand_group: 4,logo: "logo-seyho.png"});
 
-    	$.each(brands, function(i, brand){
-			var plan = _.find(plans, function(el){ return el.brand == brand.id; });
-    		brand.cup = { 
-    					dogovor: 0,
-    					dogovor_month: 0,
+      $.each(brands, function(i, brand){
+      var plan = _.find(plans, function(el){ return el.brand == brand.id; });
+        brand.cup = { 
+              dogovor: 0,
+              dogovor_month: 0,
 
-    					vidacha: 0,
-    					vidacha_month: 0,
+              vidacha: 0,
+              vidacha_month: 0,
 
-    					out: 0,
-    					out_month: 0,
+              out: 0,
+              out_month: 0,
 
-    					zvonok: 0,
-    					zvonok_month: 0,
+              zvonok: 0,
+              zvonok_month: 0,
 
-    					zvonok_admin: 0,
-    					zvonok_month_admin: 0,
+              zvonok_admin: 0,
+              zvonok_month_admin: 0,
 
 
-    					vizit: 0,
-    					vizit_month: 0,
+              vizit: 0,
+              vizit_month: 0,
 
-    					vizit_admin: 0,
-    					vizit_month_admin: 0,
+              vizit_admin: 0,
+              vizit_month_admin: 0,
 
-    					test: 0,
-    					test_month: 0,
+              test: 0,
+              test_month: 0,
 
-    					plan: plan?plan.plan:0,
+              plan: plan?plan.plan:0,
 
-    					prognoz_5: 0,
-    					prognoz_4: 0,
-    					prognoz_3: 0
+              prognoz_5: 0,
+              prognoz_4: 0,
+              prognoz_3: 0
 
-    					};
-    	});
+              };
+      });
 
-    	function jsCupIncrement(brands, brand_id, field_name) {
-			var cup_element = _.find(brands, function(el){ return el.id == brand_id; });
-			if(cup_element) cup_element.cup[field_name] += 1;
+      function jsCupIncrement(brands, brand_id, field_name) {
+      var cup_element = _.find(brands, function(el){ return el.id == brand_id; });
+      if(cup_element) cup_element.cup[field_name] += 1;
 
-			var cup_element = _.find(brands, function(el){ return el.id == -cup_element.brand_group; });
-			if(cup_element) cup_element.cup[field_name] += 1;
+      var cup_element = _.find(brands, function(el){ return el.id == -cup_element.brand_group; });
+      if(cup_element) cup_element.cup[field_name] += 1;
 
-			var cup_element = _.find(brands, function(el){ return el.id == 0; });
-			if(cup_element) cup_element.cup[field_name] += 1;
+      var cup_element = _.find(brands, function(el){ return el.id == 0; });
+      if(cup_element) cup_element.cup[field_name] += 1;
 
-    	}
+      }
 
-    	function jsFindBrandGroup(brand_id) {
-			var cup_element = _.find(brands, function(el){ return el.id == brand_id; });
+      function jsFindBrandGroup(brand_id) {
+      var cup_element = _.find(brands, function(el){ return el.id == brand_id; });
 
-    	}
+      }
 
     pool.query('SELECT * FROM 1_doadmin WHERE date1 LIKE ?', [today_month+"%"], function (err, do_admin, fields){
-    	do_admin = correct_dates(do_admin);
-   	    pool.query('SELECT id, brand, zv, vz, tst, dg, vd, `out`, icon2 FROM `1_clients` WHERE'+
-   	    	' zv LIKE "'+today_month+'%" OR vz LIKE "'+today_month+'%" OR tst LIKE "'+today_month+'%" OR dg LIKE "'+today_month+'%" OR vd LIKE "'+today_month+'%" OR `out` LIKE "'+today_month+'%" OR (icon2 > 2 AND vd = "0000-00-00 00:00:00")',  function (err, cars, fields) {
-   	    		cars = correct_dates(cars,"zero_date");
-   	    		//console.info("cars",cars);
+      do_admin = correct_dates(do_admin);
+        pool.query('SELECT id, brand, zv, vz, tst, dg, vd, `out`, icon2 FROM `1_clients` WHERE'+
+          ' zv LIKE "'+today_month+'%" OR vz LIKE "'+today_month+'%" OR tst LIKE "'+today_month+'%" OR dg LIKE "'+today_month+'%" OR vd LIKE "'+today_month+'%" OR `out` LIKE "'+today_month+'%" OR (icon2 > 2 AND vd = "0000-00-00 00:00:00")',  function (err, cars, fields) {
+            cars = correct_dates(cars,"zero_date");
+            //console.info("cars",cars);
 
-   	    		$.each(do_admin, function(i, do_adm){
-   	    			//Звонки
-   	    			if( (do_adm['type']=="zv") &&
-   	    				(do_adm.date1.indexOf(today_month)!=-1) ) {
-   	    				jsCupIncrement(brands, do_adm.brand, "zvonok_month_admin");
-   	    				if( (do_adm.date1.indexOf(today_date)!=-1) ) {
-   	    					jsCupIncrement(brands, do_adm.brand, "zvonok_admin");
-   	    				}
-   	    			}
-   	    			//Визиты
-   	    			if( (do_adm['type']=="vz") &&
-   	    				(do_adm.date1.indexOf(today_month)!=-1) ) {
-   	    				jsCupIncrement(brands, do_adm.brand, "vizit_month_admin");
-   	    				if( (do_adm.date1.indexOf(today_date)!=-1) ) {
-   	    					jsCupIncrement(brands, do_adm.brand, "vizit_admin");
-   	    				}
-   	    			}
+            $.each(do_admin, function(i, do_adm){
+              //Звонки
+              if( (do_adm['type']=="zv") &&
+                (do_adm.date1.indexOf(today_month)!=-1) ) {
+                jsCupIncrement(brands, do_adm.brand, "zvonok_month_admin");
+                if( (do_adm.date1.indexOf(today_date)!=-1) ) {
+                  jsCupIncrement(brands, do_adm.brand, "zvonok_admin");
+                }
+              }
+              //Визиты
+              if( (do_adm['type']=="vz") &&
+                (do_adm.date1.indexOf(today_month)!=-1) ) {
+                jsCupIncrement(brands, do_adm.brand, "vizit_month_admin");
+                if( (do_adm.date1.indexOf(today_date)!=-1) ) {
+                  jsCupIncrement(brands, do_adm.brand, "vizit_admin");
+                }
+              }
 
-   	    		});
+            });
 
-   	    		$.each(cars, function(i, car){
+            $.each(cars, function(i, car){
 
-   	    			//Договора
-   	    			if( (car.dg!="") &&
-   	    				(car.dg.indexOf(today_month)!=-1) ) {
-   	    				jsCupIncrement(brands, car.brand, "dogovor_month");
-   	    				if( (car.dg.indexOf(today_date)!=-1) ) {
-   	    					jsCupIncrement(brands, car.brand, "dogovor");
-   	    				}
-   	    			}
+              //Договора
+              if( (car.dg!="") &&
+                (car.dg.indexOf(today_month)!=-1) ) {
+                jsCupIncrement(brands, car.brand, "dogovor_month");
+                if( (car.dg.indexOf(today_date)!=-1) ) {
+                  jsCupIncrement(brands, car.brand, "dogovor");
+                }
+              }
 
-   	    			//Выдачи
-   	    			if( (car.vd!="") &&
-   	    				(car.vd.indexOf(today_month)!=-1) ) {
-   	    				jsCupIncrement(brands, car.brand, "vidacha_month");
-   	    				if( (car.vd.indexOf(today_date)!=-1) ) {
-   	    					jsCupIncrement(brands, car.brand, "vidacha");
-   	    				}
-   	    			}
+              //Выдачи
+              if( (car.vd!="") &&
+                (car.vd.indexOf(today_month)!=-1) ) {
+                jsCupIncrement(brands, car.brand, "vidacha_month");
+                if( (car.vd.indexOf(today_date)!=-1) ) {
+                  jsCupIncrement(brands, car.brand, "vidacha");
+                }
+              }
 
-   	    			//Расторжения
-   	    			if( (car.dg!="") && (car.out!="") && (car.vd=="") &&
-   	    				(car.out.indexOf(today_month)!=-1) ) {
-   	    				jsCupIncrement(brands, car.brand, "out_month");
-   	    				if( (car.out.indexOf(today_date)!=-1) ) {
-   	    					jsCupIncrement(brands, car.brand, "out");
-   	    				}
-   	    			}
+              //Расторжения
+              if( (car.dg!="") && (car.out!="") && (car.vd=="") &&
+                (car.out.indexOf(today_month)!=-1) ) {
+                jsCupIncrement(brands, car.brand, "out_month");
+                if( (car.out.indexOf(today_date)!=-1) ) {
+                  jsCupIncrement(brands, car.brand, "out");
+                }
+              }
 
-   	    			//Звонки (первичные)
-   	    			if( (car.zv!="") && 
-   	    				(car.zv.indexOf(today_month)!=-1) ) {
-   	    				jsCupIncrement(brands, car.brand, "zvonok_month");
-   	    				if( (car.zv.indexOf(today_date)!=-1) ) {
-   	    					jsCupIncrement(brands, car.brand, "zvonok");
-   	    				}
-   	    			}
+              //Звонки (первичные)
+              if( (car.zv!="") && 
+                (car.zv.indexOf(today_month)!=-1) ) {
+                jsCupIncrement(brands, car.brand, "zvonok_month");
+                if( (car.zv.indexOf(today_date)!=-1) ) {
+                  jsCupIncrement(brands, car.brand, "zvonok");
+                }
+              }
 
-   	    			//Визиты (первичные)
-   	    			if( (car.vz!="") && 
-   	    				(car.vz.indexOf(today_month)!=-1) ) {
-   	    				jsCupIncrement(brands, car.brand, "vizit_month");
-   	    				if( (car.vz.indexOf(today_date)!=-1) ) {
-   	    					jsCupIncrement(brands, car.brand, "vizit");
-   	    				}
-   	    			}
+              //Визиты (первичные)
+              if( (car.vz!="") && 
+                (car.vz.indexOf(today_month)!=-1) ) {
+                jsCupIncrement(brands, car.brand, "vizit_month");
+                if( (car.vz.indexOf(today_date)!=-1) ) {
+                  jsCupIncrement(brands, car.brand, "vizit");
+                }
+              }
 
-   	    			//Тесты
-   	    			if( (car.tst!="") && 
-   	    				(car.tst.indexOf(today_month)!=-1) ) {
-   	    				jsCupIncrement(brands, car.brand, "test_month");
-   	    				if( (car.tst.indexOf(today_date)!=-1) ) {
-   	    					jsCupIncrement(brands, car.brand, "test");
-   	    				}
-   	    			}
+              //Тесты
+              if( (car.tst!="") && 
+                (car.tst.indexOf(today_month)!=-1) ) {
+                jsCupIncrement(brands, car.brand, "test_month");
+                if( (car.tst.indexOf(today_date)!=-1) ) {
+                  jsCupIncrement(brands, car.brand, "test");
+                }
+              }
 
-   	    			//Прогнозы продаж icon
-   	    			if( (car.icon2>2) && (car.dg!="") && (car.vd=="") ) {
-   	    				if((car.icon2==5)) jsCupIncrement(brands, car.brand, "prognoz_5");
-   	    				if((car.icon2==4)) jsCupIncrement(brands, car.brand, "prognoz_4");
-   	    				if((car.icon2==3)) jsCupIncrement(brands, car.brand, "prognoz_3");
-   	    			}
+              //Прогнозы продаж icon
+              if( (car.icon2>2) && (car.dg!="") && (car.vd=="") ) {
+                if((car.icon2==5)) jsCupIncrement(brands, car.brand, "prognoz_5");
+                if((car.icon2==4)) jsCupIncrement(brands, car.brand, "prognoz_4");
+                if((car.icon2==3)) jsCupIncrement(brands, car.brand, "prognoz_3");
+              }
 
-   	    		});
+            });
 
 
-				brands = _.sortBy(brands, function(br){ return (br.brand_group) });
+        brands = _.sortBy(brands, function(br){ return (br.brand_group) });
 
-   	    		answer = {brands: brands, cars: ""};
-				if(!global.stat_cache_cup) {
-					global.stat_cache_cup = {};
-				}
+            answer = {brands: brands, cars: ""};
+        if(!global.stat_cache_cup) {
+          global.stat_cache_cup = {};
+        }
 
-				//console.info(answer);
+        //console.info(answer);
 
-   	    		global.stat_cache_cup[ cache_id ] = answer;
-   	    		response.send(answer);
-   	    });
+            global.stat_cache_cup[ cache_id ] = answer;
+            response.send(answer);
+        });
 
     });
 
-	  	
-  	});	//1_brands
-  }); //1_plan	
+      
+    }); //1_brands
+  }); //1_plan  
  } //else cache
 }
 
 exports.loadStatCupCars = function(request, response) {
-	var today = request.query.today_date;
-	var today_date = today?today:"2013-07-16";
-	var today_month = today_date.substr(0,7);
+  var today = request.query.today_date;
+  var today_date = today?today:"2013-07-16";
+  var today_month = today_date.substr(0,7);
 
-	var do_type = request.query.do_type;
-	var brand_id = request.query.brand;
+  var do_type = request.query.do_type;
+  var brand_id = request.query.brand;
 
-	var myorder = "model,manager_id";
+  var myorder = "model,manager_id";
 
-	var filter = " true ";
+  var filter = " true ";
 
 
   if(do_type=="dg") {
-  	filter = ' dg LIKE "'+today_date+'%"';
+    filter = ' dg LIKE "'+today_date+'%"';
   }
 
   if(do_type=="vd") {
-  	filter = ' vd LIKE "'+today_date+'%"';
+    filter = ' vd LIKE "'+today_date+'%"';
   }
 
   if(do_type=="out") {
-  	filter = ' dg != "'+NO_DATE+'" AND `out` LIKE "'+today_date+'%"';
+    filter = ' dg != "'+NO_DATE+'" AND `out` LIKE "'+today_date+'%"';
   }
 
   if(do_type=="zv") {
-  	filter = ' `zv` LIKE "'+today_date+'%"';
+    filter = ' `zv` LIKE "'+today_date+'%"';
   }
 
   if(do_type=="vz") {
-  	filter = ' `vz` LIKE "'+today_date+'%"';
+    filter = ' `vz` LIKE "'+today_date+'%"';
   }
 
   if(do_type=="tst") {
-  	filter = ' `tst` LIKE "'+today_date+'%"';
+    filter = ' `tst` LIKE "'+today_date+'%"';
   }
 
   if(do_type=="prognoz") {
-  	filter = ' vd = "'+NO_DATE+'" AND `out` = "'+NO_DATE+'" AND icon2 >= 3 ';
-  	var myorder = "icon2 DESC";
+    filter = ' vd = "'+NO_DATE+'" AND `out` = "'+NO_DATE+'" AND icon2 >= 3 ';
+    var myorder = "icon2 DESC";
   }
 
  if( filter == " true ") {
-	response.send();
- 	return true;
+  response.send();
+  return true;
  }
 
 
   var query = 'SELECT * FROM `1_clients` WHERE '+filter+' AND brand="'+brand_id+'" ORDER by '+myorder;
 
-  //console.info(do_type, query);	
+  //console.info(do_type, query); 
 
 
   pool.query(query, function (err, cars, fields) {
-  		cars = correct_dates(cars);
-  		response.send(cars);
+      cars = correct_dates(cars);
+      response.send(cars);
   });
 }
 
 function jsUpdateClient(client_id) {
-	var dfd = $.Deferred();
+  var dfd = $.Deferred();
 
 
  pool.query('SELECT * FROM `1_clients` WHERE 1_clients.id=?',[client_id], function (err, the_client, fields) {
-  	pool.query('SELECT * FROM `1_do` WHERE client=? ORDER by date2',[client_id], function (err, client_do, fields) {
-  			client_do = correct_dates(client_do, "no_zero_dates");
+    pool.query('SELECT * FROM `1_do` WHERE client=? ORDER by date2',[client_id], function (err, client_do, fields) {
+        client_do = correct_dates(client_do, "no_zero_dates");
 
-  			var answer = {
-  						 zv:"0000-00-00 00:00:00",
-  						 vz:"0000-00-00 00:00:00",
-  						 tst:"0000-00-00 00:00:00",
-  						 dg:"0000-00-00 00:00:00",
-  						 vd:"0000-00-00 00:00:00",
-  						 out:"0000-00-00 00:00:00",
-  						 bu:"0000-00-00 00:00:00",
-  						 na_id:"",
-  						 na_date:"0000-00-00 00:00:00",
-  						 na_title:"",
-  						 na_type:"",
-  						 out_reason:""
-  						 }
-
-
-  			var first_action = false;
-  			$.each(client_do, function(i,mydo){
-
-				if( (mydo.checked=="") && (answer.na_id=="") ) {
-					answer.na_id = mydo.id;
-					answer.na_date = mydo.date2;
-					answer.na_title = mydo.text;
-					answer.na_type = mydo.type;
-				}
-
-  				if(mydo.type == "Визит") {
-  					if(!first_action && mydo.checked!="") {
-  						answer.vz = mydo.date2;
-  						first_action = true;
-  					}
-  				}
-
-  				if(mydo.type == "Тест-драйв") {
-  					if(mydo.checked!="") {
-  						if(answer.tst==NO_DATE) {
-  							answer.tst = mydo.date2;
-  						}
-	  					if(!first_action) {
-	  						answer.vz = mydo.date2;
-	  						first_action = true;
-	  					}
-  					}
-  				}
-
-  				if(mydo.type == "Договор") {
-  					if(mydo.checked!="") {
-  						if(answer.dg==NO_DATE) {
-  							answer.dg = mydo.date2;
-  						}
-	  					if(!first_action) {
-	  						answer.vz = mydo.date2;
-	  						first_action = true;
-	  					}
-  					}
-  				}
-
-  				if(mydo.type == "Звонок") {
-  					if(!first_action && mydo.checked!="") {
-  						answer.zv = mydo.date2;
-  						first_action = true;
-  					}
-  				}
-
-  				if(mydo.type == "Кредит") {
-  					if(!first_action && mydo.checked!="") {
-  						answer.zv = mydo.date2;
-  						first_action = true;
-  					}
-  				}
-
-  				if(mydo.type == "OUT") {
-  					if(mydo.checked!="") {
-  						if(answer.out==NO_DATE) {
-  							answer.out = mydo.date2;
-  							answer.out_reason = mydo.text;
-  							answer.bu = "";
-  						}
-	  					if(!first_action) {
-	  						answer.vz = mydo.date2;
-	  						first_action = true;
-	  					}
-  					}
-  				}
-
-  				if(mydo.type == "Выдача") {
-  					if(mydo.checked!="") {
-  						if(answer.vd==NO_DATE) {
-  							answer.vd = mydo.date2;
-  							answer.bu = "";
-  						}
-	  					if(!first_action) {
-	  						answer.vz = mydo.date2;
-	  						first_action = true;
-	  					}
-  					}
-  				}
-
-  				if(mydo.type == "Трейд-ин") {
-  					if( (answer.vd == "0000-00-00 00:00:00") && (answer.out=="0000-00-00 00:00:00") ) {
-  						answer.bu = mydo.date2;
-  					}
-  				}
+        var answer = {
+               zv:"0000-00-00 00:00:00",
+               vz:"0000-00-00 00:00:00",
+               tst:"0000-00-00 00:00:00",
+               dg:"0000-00-00 00:00:00",
+               vd:"0000-00-00 00:00:00",
+               out:"0000-00-00 00:00:00",
+               bu:"0000-00-00 00:00:00",
+               na_id:"",
+               na_date:"0000-00-00 00:00:00",
+               na_title:"",
+               na_type:"",
+               out_reason:""
+               }
 
 
-  			});
+        var first_action = false;
+        $.each(client_do, function(i,mydo){
 
-			query = "UPDATE 1_clients SET ? WHERE id = '"+client_id+"'";
+        if( (mydo.checked=="") && (answer.na_id=="") ) {
+          answer.na_id = mydo.id;
+          answer.na_date = mydo.date2;
+          answer.na_title = mydo.text;
+          answer.na_type = mydo.type;
+        }
 
-    		pool.query(query, answer, function (err, rows, fields) {
+          if(mydo.type == "Визит") {
+            if(!first_action && mydo.checked!="") {
+              answer.vz = mydo.date2;
+              first_action = true;
+            }
+          }
 
-    			dfd.resolve( client_id );
-    			//console.info("client_id="+client_id+" OK: ", rows.affectedRows);
-		//		global.stat_cache = {}; //обнуляем кеш
-		 		jsClearCacheByBrand( the_client[0].brand );
+          if(mydo.type == "Тест-драйв") {
+            if(mydo.checked!="") {
+              if(answer.tst==NO_DATE) {
+                answer.tst = mydo.date2;
+              }
+              if(!first_action) {
+                answer.vz = mydo.date2;
+                first_action = true;
+              }
+            }
+          }
 
-				setTimeout(function(){
-					report.loadstat("client_id = "+client_id);
-				},5);
-	  			
-  			});	
+          if(mydo.type == "Договор") {
+            if(mydo.checked!="") {
+              if(answer.dg==NO_DATE) {
+                answer.dg = mydo.date2;
+              }
+              if(!first_action) {
+                answer.vz = mydo.date2;
+                first_action = true;
+              }
+            }
+          }
+
+          if(mydo.type == "Звонок") {
+            if(!first_action && mydo.checked!="") {
+              answer.zv = mydo.date2;
+              first_action = true;
+            }
+          }
+
+          if(mydo.type == "Кредит") {
+            if(!first_action && mydo.checked!="") {
+              answer.zv = mydo.date2;
+              first_action = true;
+            }
+          }
+
+          if(mydo.type == "OUT") {
+            if(mydo.checked!="") {
+              if(answer.out==NO_DATE) {
+                answer.out = mydo.date2;
+                answer.out_reason = mydo.text;
+                answer.bu = "";
+              }
+              if(!first_action) {
+                answer.vz = mydo.date2;
+                first_action = true;
+              }
+            }
+          }
+
+          if(mydo.type == "Выдача") {
+            if(mydo.checked!="") {
+              if(answer.vd==NO_DATE) {
+                answer.vd = mydo.date2;
+                answer.bu = "";
+              }
+              if(!first_action) {
+                answer.vz = mydo.date2;
+                first_action = true;
+              }
+            }
+          }
+
+          if(mydo.type == "Трейд-ин") {
+            if( (answer.vd == "0000-00-00 00:00:00") && (answer.out=="0000-00-00 00:00:00") ) {
+              answer.bu = mydo.date2;
+            }
+          }
 
 
-  			
-  	});
+        });
+
+      query = "UPDATE 1_clients SET ? WHERE id = '"+client_id+"'";
+
+        pool.query(query, answer, function (err, rows, fields) {
+
+          dfd.resolve( client_id );
+          //console.info("client_id="+client_id+" OK: ", rows.affectedRows);
+    //    global.stat_cache = {}; //обнуляем кеш
+        jsClearCacheByBrand( the_client[0].brand );
+
+        setTimeout(function(){
+          report.loadstat("client_id = "+client_id);
+        },5);
+          
+        }); 
+
+
+        
+    });
   });
 return dfd.promise();
  
@@ -2623,108 +2648,108 @@ exports.updateClient = function(request, response) {
 
   dfdArray.push(dfd);
   pool.query('SELECT id FROM `1_clients` LIMIT 3000000',[client_id], function (err, clients, fields) {
-  	 $.each(clients, function(i, cl){
-		dfdArray.push( jsUpdateClient(cl.id) );  	 	
-		dfd.resolve();
-  	 });
+     $.each(clients, function(i, cl){
+    dfdArray.push( jsUpdateClient(cl.id) );     
+    dfd.resolve();
+     });
 
-  		
+      
   });
 
   $.when.apply(null, dfdArray).done(function(){
-  	response.send("ok");
-  	//console.info("ok");
+    response.send("ok");
+    //console.info("ok");
   });
 }
 
 exports.regNewUser = function(request, response) {
-	var reg_user = request.body.reg_user;
-	//console.info(reg_user);
+  var reg_user = request.body.reg_user;
+  //console.info(reg_user);
 
-	pool.query('SELECT count(*) cnt FROM `1_users` WHERE email = ?',[reg_user.email], function (err, exist_users, fields) {
-		//console.info(exist_users);
-		if(exist_users[0].cnt>0) { //если такой пользователь уже есть
-			//console.info("user_exists");
-			response.send("user_exists");
-		} else {
+  pool.query('SELECT count(*) cnt FROM `1_users` WHERE email = ?',[reg_user.email], function (err, exist_users, fields) {
+    //console.info(exist_users);
+    if(exist_users[0].cnt>0) { //если такой пользователь уже есть
+      //console.info("user_exists");
+      response.send("user_exists");
+    } else {
 
-			var new_fields = {
-				fio: reg_user.fio,
-				user_group: reg_user.users_group,
-				email: reg_user.email,
-				md5email: reg_user.md5email,
-				password: reg_user.password,
-				brand: reg_user.brand,
-				active: 0,
-				md5password: reg_user.password,
-				phone: reg_user.phone
+      var new_fields = {
+        fio: reg_user.fio,
+        user_group: reg_user.users_group,
+        email: reg_user.email,
+        md5email: reg_user.md5email,
+        password: reg_user.password,
+        brand: reg_user.brand,
+        active: 0,
+        md5password: reg_user.password,
+        phone: reg_user.phone
 
-			};
+      };
 
-			pool.query('INSERT INTO `1_users` SET ?',[new_fields], function (err, rows, fields) {
-				//console.info(rows);
-				response.send(rows);
-				jsSendMail( "Новый пользователь: "+reg_user.fio+", brand="+reg_user.brand+", №"+reg_user.users_group, JSON.stringify(new_fields) );
-			});
-		}
-	});
+      pool.query('INSERT INTO `1_users` SET ?',[new_fields], function (err, rows, fields) {
+        //console.info(rows);
+        response.send(rows);
+        jsSendMail( "Новый пользователь: "+reg_user.fio+", brand="+reg_user.brand+", №"+reg_user.users_group, JSON.stringify(new_fields) );
+      });
+    }
+  });
 
 
 }
 
 function _sqllog(params) {
 
-	params.date1 = params.date1?params.date1: tomysql( new Date );
-	params.ip = params.request?(params.request.connection.remoteAddress+ " : " +params.request.headers['user-agent']):"";
-	if(params.request) delete params.request;
+  params.date1 = params.date1?params.date1: tomysql( new Date );
+  params.ip = params.request?(params.request.connection.remoteAddress+ " : " +params.request.headers['user-agent']):"";
+  if(params.request) delete params.request;
 
-	pool.query('INSERT INTO `1_log` SET ?',[params], function (err, rows, fields) {
-		//console.info(err, rows);
-	});	
+  pool.query('INSERT INTO `1_log` SET ?',[params], function (err, rows, fields) {
+    //console.info(err, rows);
+  }); 
 
 }
 
 //Проверяем откуда мы зашли, изнутри сети или снаружи
 function jsIsInside(params){
-	var ip = params.request.connection.remoteAddress;
-	if( (params.user[0].user_group == 1) || //учредитель
-		(params.user[0].user_group == 2) || //директор
-		(params.user[0].user_group == 3) || //руководитель отдела продаж
-		(params.user[0].user_group == 10) || //админ системы
-		(/192.168.200/.test(ip)) ||
-		(/62.165.38/.test(ip)) ||
-		(/79.134.19/.test(ip)) || //магнитка
-		(/5.79.218/.test(ip)) ||
-		(/127.0.0.1/.test(ip)) ||
-		(/37.1/.test(ip)) ) {
-		return true;
-	} else {
-		return false;
-	}
+  var ip = params.request.connection.remoteAddress;
+  if( (params.user[0].user_group == 1) || //учредитель
+    (params.user[0].user_group == 2) || //директор
+    (params.user[0].user_group == 3) || //руководитель отдела продаж
+    (params.user[0].user_group == 10) || //админ системы
+    (/192.168.200/.test(ip)) ||
+    (/62.165.38/.test(ip)) ||
+    (/79.134.19/.test(ip)) || //магнитка
+    (/5.79.218/.test(ip)) ||
+    (/127.0.0.1/.test(ip)) ||
+    (/37.1/.test(ip)) ) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 exports.loadUserInfo = function(request, response) {
 
 
-	var brand = request.query.brand;
-	
+  var brand = request.query.brand;
+  
 
  jsCheckToken(request.query.token, response).done(function(user_id){
- 	_sqllog({manager: user_id, request: request, text:"Запрос информации loadUserInfo"});
- 	//console.info("USER_ID:", user_id);
-	pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone, brands FROM `1_users` WHERE id = ? LIMIT 1',[user_id], function (err, user, fields) {		
-		pool.query('SELECT active, id, brand, fio, message_on, user_group, phone FROM `1_users` ORDER BY brand, fio', function (err, users, fields) {
-			pool.query('SELECT * FROM `1_commercials`', function (err, commercials, fields) {
-			    pool.query('SELECT * FROM `1_users_group`', function (err, users_group, fields) {
-		  			//response.send({models:models, brands: brands, users_group: users_group });
+  _sqllog({manager: user_id, request: request, text:"Запрос информации loadUserInfo"});
+  //console.info("USER_ID:", user_id);
+  pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone, brands FROM `1_users` WHERE id = ? LIMIT 1',[user_id], function (err, user, fields) {    
+    pool.query('SELECT active, id, brand, fio, message_on, user_group, phone FROM `1_users` ORDER BY brand, fio', function (err, users, fields) {
+      pool.query('SELECT * FROM `1_commercials`', function (err, commercials, fields) {
+          pool.query('SELECT * FROM `1_users_group`', function (err, users_group, fields) {
+            //response.send({models:models, brands: brands, users_group: users_group });
 
-		  			var isInsideVar = jsIsInside({request: request, user: user});
+            var isInsideVar = jsIsInside({request: request, user: user});
 
-					response.send({user: user, users: users, commercials: commercials, users_group: users_group, isInside: isInsideVar});
-	  			});
-			});
-		});
-	});
+          response.send({user: user, users: users, commercials: commercials, users_group: users_group, isInside: isInsideVar});
+          });
+      });
+    });
+  });
 
 
  });
@@ -2732,312 +2757,312 @@ exports.loadUserInfo = function(request, response) {
 
 
 exports.loadXLS = function(request, response) {
-	answer = {hi: "hello" };
-	var parseXlsx = require('excel');
+  answer = {hi: "hello" };
+  var parseXlsx = require('excel');
 
-	parseXlsx('1.xlsx', function(err, data) {
-    	if(err) throw err;
-    	// data is an array of arrays
-    	response.send( data );
-	});
-	
+  parseXlsx('1.xlsx', function(err, data) {
+      if(err) throw err;
+      // data is an array of arrays
+      response.send( data );
+  });
+  
 }
 
 exports.parseManagers = function(request, response) {
 
-	pool.query('SELECT id, fio, brand FROM `1_users`', function (err, sql_users, fields) {
-		var users = {};
-		$.each(sql_users, function(i, user){
-			if(!users[user.brand]) users[user.brand] = {};
-			users[user.brand][user.fio] = user;
-		});
+  pool.query('SELECT id, fio, brand FROM `1_users`', function (err, sql_users, fields) {
+    var users = {};
+    $.each(sql_users, function(i, user){
+      if(!users[user.brand]) users[user.brand] = {};
+      users[user.brand][user.fio] = user;
+    });
 
 
-		pool.query('SELECT id, manager, brand FROM `1_clients`', function (err, clients, fields) {
-			count = 0;
-			$.each(clients, function(i, client){
-				client.brand = parseInt(client.brand);
+    pool.query('SELECT id, manager, brand FROM `1_clients`', function (err, clients, fields) {
+      count = 0;
+      $.each(clients, function(i, client){
+        client.brand = parseInt(client.brand);
 
-				if(users[client.brand] && users[client.brand][client.manager]) var manager_id = users[client.brand][client.manager].id;
-				else var manager_id = -1;
+        if(users[client.brand] && users[client.brand][client.manager]) var manager_id = users[client.brand][client.manager].id;
+        else var manager_id = -1;
 
-				var txt_query = "UPDATE 1_clients SET manager_id = '"+manager_id+"' WHERE id='"+client.id+"'; ";
-				pool.query(txt_query, function (err, rows, fields) {
-						//console.info([err, rows]);
-				});
+        var txt_query = "UPDATE 1_clients SET manager_id = '"+manager_id+"' WHERE id='"+client.id+"'; ";
+        pool.query(txt_query, function (err, rows, fields) {
+            //console.info([err, rows]);
+        });
 
-				//console.info("client = ", client.id, client.manager, manager_id );
-			});
-		});	
+        //console.info("client = ", client.id, client.manager, manager_id );
+      });
+    }); 
 
-	});
+  });
 }
 
 exports.parseManagers2 = function(request, response) {
 
-	pool.query('SELECT id, fio, brand FROM `1_users`', function (err, sql_users, fields) {
-		var users = {};
-		$.each(sql_users, function(i, user){
-			if(!users[user.brand]) users[user.brand] = {};
-			users[user.brand][user.fio] = user;
-		});
+  pool.query('SELECT id, fio, brand FROM `1_users`', function (err, sql_users, fields) {
+    var users = {};
+    $.each(sql_users, function(i, user){
+      if(!users[user.brand]) users[user.brand] = {};
+      users[user.brand][user.fio] = user;
+    });
 
 
-		pool.query('SELECT id, manager, brand FROM `1_do`', function (err, clients, fields) {
-			count = 0;
-			$.each(clients, function(i, client){
-				client.brand = parseInt(client.brand);
+    pool.query('SELECT id, manager, brand FROM `1_do`', function (err, clients, fields) {
+      count = 0;
+      $.each(clients, function(i, client){
+        client.brand = parseInt(client.brand);
 
-				if(users[client.brand] && users[client.brand][client.manager]) var manager_id = users[client.brand][client.manager].id;
-				else var manager_id = -1;
+        if(users[client.brand] && users[client.brand][client.manager]) var manager_id = users[client.brand][client.manager].id;
+        else var manager_id = -1;
 
-				var txt_query = "UPDATE 1_do SET manager_id = '"+manager_id+"' WHERE id='"+client.id+"'; ";
-				pool.query(txt_query, function (err, rows, fields) {
-						//console.info([err, rows]);
-				});
+        var txt_query = "UPDATE 1_do SET manager_id = '"+manager_id+"' WHERE id='"+client.id+"'; ";
+        pool.query(txt_query, function (err, rows, fields) {
+            //console.info([err, rows]);
+        });
 
-				//console.info("client = ", client.id, client.manager, manager_id );
-			});
-		});	
+        //console.info("client = ", client.id, client.manager, manager_id );
+      });
+    }); 
 
-	});
+  });
 }
 
 exports.parseEmail = function(request, response) {
-	//console.info("parseEmail");
-	pool.query('SELECT * FROM `1_users`', function (err, sql_users, fields) {
-		$.each(sql_users, function(i, user){
-			var right_md5 = md5( user.email.toLowerCase() + "990990");
+  //console.info("parseEmail");
+  pool.query('SELECT * FROM `1_users`', function (err, sql_users, fields) {
+    $.each(sql_users, function(i, user){
+      var right_md5 = md5( user.email.toLowerCase() + "990990");
 
-			if(user.md5email != right_md5) {
-				
-				pool.query('UPDATE `1_users` SET md5email="'+right_md5+'" WHERE id="'+user.id+'" LIMIT 1', function (err, row, fields) {
-					//console.info(user.email,user.md5email, right_md5, row );
-				});
-			}
+      if(user.md5email != right_md5) {
+        
+        pool.query('UPDATE `1_users` SET md5email="'+right_md5+'" WHERE id="'+user.id+'" LIMIT 1', function (err, row, fields) {
+          //console.info(user.email,user.md5email, right_md5, row );
+        });
+      }
 
-		});
-		response.send(sql_users);
+    });
+    response.send(sql_users);
 
-	});
+  });
 }
 
 
 exports.exportClients = function(request, response) {
 
-	pool.query('SELECT * FROM `1_clients` WHERE brand = 1 OR brand = 13', function (err, clients, fields) {
-		var users = {};
-		clients = correct_dates(clients);
-		var txt1 = "";
-		$.each(clients[0], function(key, value){
-				if(value==NaN) key = ".";
-				if( !_.isFunction(key) ) txt1 += ""+key+";";
-		});
-		txt1 += "<br>";
-		$.each(clients, function(i, client){
-			$.each(client, function(key, value){
-				if(value==NaN) value = ".";
-				if( !_.isFunction(value) ) txt1 += ""+value+";";
-			});
-			txt1 += "<br>";
-		});
-    	response.send( txt1 );
-	});
+  pool.query('SELECT * FROM `1_clients` WHERE brand = 1 OR brand = 13', function (err, clients, fields) {
+    var users = {};
+    clients = correct_dates(clients);
+    var txt1 = "";
+    $.each(clients[0], function(key, value){
+        if(value==NaN) key = ".";
+        if( !_.isFunction(key) ) txt1 += ""+key+";";
+    });
+    txt1 += "<br>";
+    $.each(clients, function(i, client){
+      $.each(client, function(key, value){
+        if(value==NaN) value = ".";
+        if( !_.isFunction(value) ) txt1 += ""+value+";";
+      });
+      txt1 += "<br>";
+    });
+      response.send( txt1 );
+  });
 }
 
 
 exports.loadStatTable = function(request, response) {
 
-	var brand_id = request.query.brand;
+  var brand_id = request.query.brand;
 
-	var cache_id = md5( brand_id + "salt");
+  var cache_id = md5( brand_id + "salt");
 
-	if(!global.stat_cache[brand_id]) {
-		global.stat_cache[brand_id] = {};
-	}
+  if(!global.stat_cache[brand_id]) {
+    global.stat_cache[brand_id] = {};
+  }
 
-	if(true && global.stat_cache[brand_id][cache_id]) {
-		response.send( global.stat_cache[brand_id][cache_id] );
-	} else {
+  if(true && global.stat_cache[brand_id][cache_id]) {
+    response.send( global.stat_cache[brand_id][cache_id] );
+  } else {
 
-		var answer = {};
+    var answer = {};
 
-		pool.query('SELECT * FROM `1_models` WHERE brand=?',[brand_id], function (err, models, fields) {
-
-
-			var functions = [
-				{
-					do_type: "vd",
-					do_image: "1vidacha.png",
-					do_title: "Выдача",
-					value: 0, 
-					ids: [],
-					the_function: function(car, col){
-					var do_type = "vd";
-					//console.info(car.fio, col.col);
-					var month = (col.col>1)?col.col:'0'+col.col;
-					if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
-						return true;
-					} else {
-						return false;
-					}
-					
-					} 
-				},
-				{
-					do_type: "dg",
-					do_image: "1dogovor.png",
-					do_title: "Договора",
-					value: 0, 
-					ids: [],
-					the_function: function(car, col){
-					var do_type = "dg";
-					//console.info(car.fio, col.col);
-					var month = (col.col>1)?col.col:'0'+col.col;
-					//console.info("DO_MONTH",month, car[do_type]);
-					if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
-						return true;
-					} else {
-						return false;
-					}
-					
-					} 
-				},
-				{
-					do_type: "out",
-					do_image: "1out.png",
-					do_title: "Расторжения",
-					value: 0, 
-					ids: [],
-					the_function: function(car, col){
-					var do_type = "out";
-					//console.info(car.fio, col.col);
-					var month = (col.col>1)?col.col:'0'+col.col;
-					if( (car.dg=="") && (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
-						return true;
-					} else {
-						return false;
-					}
-					
-					} 
-				},
-				{
-					do_type: "tst",
-					do_image: "1test-drive.png",
-					do_title: "Тест-драйвы",
-					value: 0, 
-					ids: [],
-					the_function: function(car, col){
-					var do_type = "tst";
-					//console.info(car.fio, col.col);
-					var month = (col.col>1)?col.col:'0'+col.col;
-					if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
-						return true;
-					} else {
-						return false;
-					}
-					
-					} 
-				},
-				{
-					do_type: "vz",
-					do_image: "1vizit.png",
-					do_title: "Визиты",
-					value: 0, 
-					ids: [],
-					the_function: function(car, col){
-					var do_type = "vz";
-					//console.info(car.fio, col.col);
-					var month = (col.col>1)?col.col:'0'+col.col;
-					if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
-						return true;
-					} else {
-						return false;
-					}
-					
-					} 
-				},
-				{
-					do_type: "zv",
-					do_image: "1zvonok.png",
-					do_title: "Звонки",
-					value: 0, 
-					ids: [],
-					the_function: function(car, col){
-					var do_type = "zv";
-					//console.info(car.fio, col.col);
-					var month = (col.col>1)?col.col:'0'+col.col;
-					if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
-						return true;
-					} else {
-						return false;
-					}
-					
-					} 
-				}
-
-			]
+    pool.query('SELECT * FROM `1_models` WHERE brand=?',[brand_id], function (err, models, fields) {
 
 
-			var col_function_month = function(car, col){
-				//console.info(car.fio, col.col);
-				var month = (col.col>1)?col.col:'0'+col.col;
-				if( (car[do_type]) && (car[do_type].indexOf("2013-")!=-1) ) {
-					return true;
-				} else {
-					return false;
-				}
-				
-			};		
+      var functions = [
+        {
+          do_type: "vd",
+          do_image: "1vidacha.png",
+          do_title: "Выдача",
+          value: 0, 
+          ids: [],
+          the_function: function(car, col){
+          var do_type = "vd";
+          //console.info(car.fio, col.col);
+          var month = (col.col>1)?col.col:'0'+col.col;
+          if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
+            return true;
+          } else {
+            return false;
+          }
+          
+          } 
+        },
+        {
+          do_type: "dg",
+          do_image: "1dogovor.png",
+          do_title: "Договора",
+          value: 0, 
+          ids: [],
+          the_function: function(car, col){
+          var do_type = "dg";
+          //console.info(car.fio, col.col);
+          var month = (col.col>1)?col.col:'0'+col.col;
+          //console.info("DO_MONTH",month, car[do_type]);
+          if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
+            return true;
+          } else {
+            return false;
+          }
+          
+          } 
+        },
+        {
+          do_type: "out",
+          do_image: "1out.png",
+          do_title: "Расторжения",
+          value: 0, 
+          ids: [],
+          the_function: function(car, col){
+          var do_type = "out";
+          //console.info(car.fio, col.col);
+          var month = (col.col>1)?col.col:'0'+col.col;
+          if( (car.dg=="") && (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
+            return true;
+          } else {
+            return false;
+          }
+          
+          } 
+        },
+        {
+          do_type: "tst",
+          do_image: "1test-drive.png",
+          do_title: "Тест-драйвы",
+          value: 0, 
+          ids: [],
+          the_function: function(car, col){
+          var do_type = "tst";
+          //console.info(car.fio, col.col);
+          var month = (col.col>1)?col.col:'0'+col.col;
+          if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
+            return true;
+          } else {
+            return false;
+          }
+          
+          } 
+        },
+        {
+          do_type: "vz",
+          do_image: "1vizit.png",
+          do_title: "Визиты",
+          value: 0, 
+          ids: [],
+          the_function: function(car, col){
+          var do_type = "vz";
+          //console.info(car.fio, col.col);
+          var month = (col.col>1)?col.col:'0'+col.col;
+          if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
+            return true;
+          } else {
+            return false;
+          }
+          
+          } 
+        },
+        {
+          do_type: "zv",
+          do_image: "1zvonok.png",
+          do_title: "Звонки",
+          value: 0, 
+          ids: [],
+          the_function: function(car, col){
+          var do_type = "zv";
+          //console.info(car.fio, col.col);
+          var month = (col.col>1)?col.col:'0'+col.col;
+          if( (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
+            return true;
+          } else {
+            return false;
+          }
+          
+          } 
+        }
 
-			$.each(models, function(i, model){
-				var cols = [];
-				var fu;
-				for(var i=1; i<=12; i+=1) {
-/*					if(i==200) {
-						fu = col_function_month;
-					} else {
-						fu = col_function;
-					}
-*/					cols.push({
-							   col:i,
-							   do_types: jsClone(functions)
-							  });
-				}
-				if(!answer[model.id]) answer[ model.id ] = {cols:cols, model: model.model};			
-			});
+      ]
 
 
-			//console.info("BRAND:", brand_id);
-			pool.query('SELECT * FROM `1_clients` WHERE brand=?',[brand_id], function (err, cars, fields) {
-				cars = correct_dates(cars, "no_zero_dates");
-				
-				$.each(cars, function(k, car){
-					if( answer[car.model] ) {
-						$.each( answer[car.model].cols, function(l, col){
-							$.each(col.do_types, function(k, the_function){
-								if(the_function.the_function(car, col)) { 
-									the_function.value += 1;
-									//the_function.ids.push(car.id);
-								}
-							});
-							
+      var col_function_month = function(car, col){
+        //console.info(car.fio, col.col);
+        var month = (col.col>1)?col.col:'0'+col.col;
+        if( (car[do_type]) && (car[do_type].indexOf("2013-")!=-1) ) {
+          return true;
+        } else {
+          return false;
+        }
+        
+      };    
+
+      $.each(models, function(i, model){
+        var cols = [];
+        var fu;
+        for(var i=1; i<=12; i+=1) {
+/*          if(i==200) {
+            fu = col_function_month;
+          } else {
+            fu = col_function;
+          }
+*/          cols.push({
+                 col:i,
+                 do_types: jsClone(functions)
+                });
+        }
+        if(!answer[model.id]) answer[ model.id ] = {cols:cols, model: model.model};     
+      });
 
 
-						});
-					}
-				});	//cars	
-			
-					response.send(answer);
-					if(!global.stat_cache[brand_id]) {
-						global.stat_cache[brand_id] = {};
-					}
-					global.stat_cache[brand_id][cache_id] = answer;
+      //console.info("BRAND:", brand_id);
+      pool.query('SELECT * FROM `1_clients` WHERE brand=?',[brand_id], function (err, cars, fields) {
+        cars = correct_dates(cars, "no_zero_dates");
+        
+        $.each(cars, function(k, car){
+          if( answer[car.model] ) {
+            $.each( answer[car.model].cols, function(l, col){
+              $.each(col.do_types, function(k, the_function){
+                if(the_function.the_function(car, col)) { 
+                  the_function.value += 1;
+                  //the_function.ids.push(car.id);
+                }
+              });
+              
 
-				}); //cars
-		}); //model
-	}
-	
+
+            });
+          }
+        }); //cars  
+      
+          response.send(answer);
+          if(!global.stat_cache[brand_id]) {
+            global.stat_cache[brand_id] = {};
+          }
+          global.stat_cache[brand_id][cache_id] = answer;
+
+        }); //cars
+    }); //model
+  }
+  
 }
 
 exports.sendSMS = function(request, response) {
@@ -3046,62 +3071,62 @@ exports.sendSMS = function(request, response) {
 
 exports.checkSMS = function(request, response) {
 
-	var hour = (new Date).getHours();
-	
-	if( (hour >= 0) && (hour < 7) ) return false;
+  var hour = (new Date).getHours();
+  
+  if( (hour >= 0) && (hour < 7) ) return false;
 
-	var sms_texts = [];
+  var sms_texts = [];
 
-	var Sms = require('node-smsc').Smsc,
+  var Sms = require('node-smsc').Smsc,
     sms = new Sms('imater', '990990', {sender: 'Reginas-FPK'});
 
-	var query = "SELECT 1_u.fio myhost, DATE_ADD(NOW(), INTERVAL 1_do.sms MINUTE) now_time, date2 remind_time, 1_users.phone, 1_clients.phone1, 1_clients.fio, 1_do.*  FROM 1_do LEFT JOIN 1_users ON 1_users.id=1_do.manager_id LEFT JOIN 1_clients ON 1_clients.id = 1_do.client LEFT JOIN 1_users 1_u ON 1_u.id = 1_do.host_id AND 1_do.host_id!=1_do.manager_id WHERE sms>0 AND checked = '0000-00-00 00:00:00' AND sms_send = 0 AND DATE_ADD(NOW(), INTERVAL 1_do.sms MINUTE) > date2";
+  var query = "SELECT 1_u.fio myhost, DATE_ADD(NOW(), INTERVAL 1_do.sms MINUTE) now_time, date2 remind_time, 1_users.phone, 1_clients.phone1, 1_clients.fio, 1_do.*  FROM 1_do LEFT JOIN 1_users ON 1_users.id=1_do.manager_id LEFT JOIN 1_clients ON 1_clients.id = 1_do.client LEFT JOIN 1_users 1_u ON 1_u.id = 1_do.host_id AND 1_do.host_id!=1_do.manager_id WHERE sms>0 AND checked = '0000-00-00 00:00:00' AND sms_send = 0 AND DATE_ADD(NOW(), INTERVAL 1_do.sms MINUTE) > date2";
 
-	pool.query(query, function (err, mydo, fields) {
-		mydo = correct_dates(mydo);
-		var ids = "";
-		$.each(mydo, function(i,the_do){
-			//var t_time = the_do.remind_time.toString().split(" ")[1];
-			//var time1 = t_time[0]+":"+t_time[1];
-			var host = "";
-			if(the_do.myhost) {
-				var host = ". Поручил: "+the_do.myhost.split(" ")[0];
-			}
+  pool.query(query, function (err, mydo, fields) {
+    mydo = correct_dates(mydo);
+    var ids = "";
+    $.each(mydo, function(i,the_do){
+      //var t_time = the_do.remind_time.toString().split(" ")[1];
+      //var time1 = t_time[0]+":"+t_time[1];
+      var host = "";
+      if(the_do.myhost) {
+        var host = ". Поручил: "+the_do.myhost.split(" ")[0];
+      }
 
-			var time = the_do.remind_time.toString().split(" ")[1].substr(0,5);
+      var time = the_do.remind_time.toString().split(" ")[1].substr(0,5);
 
-			var dots = "";
-			if(the_do.text>80) dots = "..";
+      var dots = "";
+      if(the_do.text>80) dots = "..";
 
-			var text = the_do.type + " "+time+ ". "+ the_do.text.substr(0,80)+dots+ ". "+the_do.fio+" "+the_do.phone1+"" + host;
-			sms_texts.push({phone: the_do.phone, text: text});
-			ids += the_do.id+",";
+      var text = the_do.type + " "+time+ ". "+ the_do.text.substr(0,80)+dots+ ". "+the_do.fio+" "+the_do.phone1+"" + host;
+      sms_texts.push({phone: the_do.phone, text: text});
+      ids += the_do.id+",";
 
-		});
-		ids += "0";
+    });
+    ids += "0";
 
-		if(sms_texts.length) {
+    if(sms_texts.length) {
 
-		  if(isProduction) {
-			sms.list(sms_texts, function (err, result) {
-			    if(result.cnt>0) {
-			    	
-			    	query = "UPDATE 1_do SET sms_send = 1 WHERE id IN ("+ids+")";
-					pool.query(query, function (err, rows, fields) {
-						if(rows) {
-							jsSendMail("Отправил SMS: "+ids, JSON.stringify(sms_texts));
-						}
-					});
-			    }
-			    
-			});
-		  }				
-		}
+      if(isProduction) {
+      sms.list(sms_texts, function (err, result) {
+          if(result.cnt>0) {
+            
+            query = "UPDATE 1_do SET sms_send = 1 WHERE id IN ("+ids+")";
+          pool.query(query, function (err, rows, fields) {
+            if(rows) {
+              jsSendMail("Отправил SMS: "+ids, JSON.stringify(sms_texts));
+            }
+          });
+          }
+          
+      });
+      }       
+    }
 
 
-	});
+  });
 
-	
+  
 
 /*var nodemailer = require("nodemailer");
 
@@ -3183,119 +3208,119 @@ smtpTransport.sendMail(mailOptions, function(error, response){
 
 exports.loadJsonCup = function(request, response) {
 
-	var brand = request.query.brand;
+  var brand = request.query.brand;
 
-	var cache_id = md5(brand);
+  var cache_id = md5(brand);
 
-	if(!global.stat_cache_cup) {
-		global.stat_cache_cup = {};
-	}
-
-
-	if( global.stat_cache_cup[ cache_id ] ) {
-		response.send( global.stat_cache_cup[ cache_id ] );
-		console.info("Stat from cache "+cache_id+", brand = ", brand);
-	} else {
-
-		console.info(brand);
-
-		var answer = {dg:[],
-					  vd:[],
-					 out:[]};
-
-		var sql_insert = "AND brand = "+brand;
-
-		if(brand == 0) sql_insert = "";
-
-		if(brand < 0) sql_insert = "AND 1_brands.brand_group = "+(-brand);
-
-		var query = "SELECT dg, vd, `out` FROM 1_clients LEFT JOIN 1_brands ON 1_clients.brand = 1_brands.id WHERE (dg!='0000-00-00 00:00:00' OR `out`!='0000-00-00 00:00:00' OR vd!='0000-00-00 00:00:00') "+sql_insert;
-		pool.query(query, function (err, clients, fields) {
-
-				clients = correct_dates(clients, 'no_zero_dates');
-
-				var distinct_days = {dg:{}, vd: {}, out: {}};
+  if(!global.stat_cache_cup) {
+    global.stat_cache_cup = {};
+  }
 
 
-				$.each(clients, function(i,client) {
+  if( global.stat_cache_cup[ cache_id ] ) {
+    response.send( global.stat_cache_cup[ cache_id ] );
+    console.info("Stat from cache "+cache_id+", brand = ", brand);
+  } else {
 
-					if(client.dg >= "2013-10-01") {
-						var day = client.dg.split(" ")[0];
-						if(!distinct_days.dg[day]) {
-							distinct_days.dg[day] = {cnt:0};
-						}
-						if(!distinct_days.vd[day]) {
-							distinct_days.vd[day] = {cnt:0};
-						}
-						if(!distinct_days.out[day]) {
-							distinct_days.out[day] = {cnt:0};
-						}
-						distinct_days.dg[day].cnt += 1;
-						
-					}
+    console.info(brand);
 
-					if(client.vd >= "2013-10-01") {
-						var day = client.vd.split(" ")[0];
-						if(!distinct_days.dg[day]) {
-							distinct_days.dg[day] = {cnt:0};
-						}
-						if(!distinct_days.vd[day]) {
-							distinct_days.vd[day] = {cnt:0};
-						}
-						if(!distinct_days.out[day]) {
-							distinct_days.out[day] = {cnt:0};
-						}
-						distinct_days.vd[day].cnt += 1;
-						
-					}
-					
+    var answer = {dg:[],
+            vd:[],
+           out:[]};
 
-					if( (client.out >= "2013-10-01") && (client.dg!="") ) {
-						var day = client.out.split(" ")[0];
-						if(!distinct_days.dg[day]) {
-							distinct_days.dg[day] = {cnt:0};
-						}
-						if(!distinct_days.vd[day]) {
-							distinct_days.vd[day] = {cnt:0};
-						}
-						if(!distinct_days.out[day]) {
-							distinct_days.out[day] = {cnt:0};
-						}
-						distinct_days.out[day].cnt += 1;
-						
-					}
+    var sql_insert = "AND brand = "+brand;
 
-				});
+    if(brand == 0) sql_insert = "";
 
-				$.each(distinct_days.dg, function(key, day) {
-					answer.dg.push( [frommysql(key+" 23:59:59").getTime()+10000, day.cnt] );
-				});
+    if(brand < 0) sql_insert = "AND 1_brands.brand_group = "+(-brand);
 
-				answer.dg = _.sortBy(answer.dg, function(el){ return el[0] });
+    var query = "SELECT dg, vd, `out` FROM 1_clients LEFT JOIN 1_brands ON 1_clients.brand = 1_brands.id WHERE (dg!='0000-00-00 00:00:00' OR `out`!='0000-00-00 00:00:00' OR vd!='0000-00-00 00:00:00') "+sql_insert;
+    pool.query(query, function (err, clients, fields) {
 
-				$.each(distinct_days.vd, function(key, day) {
-					answer.vd.push( [frommysql(key+" 23:59:59").getTime()+10000, day.cnt] );
-				});
+        clients = correct_dates(clients, 'no_zero_dates');
 
-				answer.vd = _.sortBy(answer.vd, function(el){ return el[0] });
-
-				$.each(distinct_days.out, function(key, day) {
-					answer.out.push( [frommysql(key+" 23:59:59").getTime()+10000, day.cnt] );
-				});
-
-				answer.out = _.sortBy(answer.out, function(el){ return el[0] });
+        var distinct_days = {dg:{}, vd: {}, out: {}};
 
 
-			if(!global.stat_cache_cup) {
-				global.stat_cache_cup = {};
-			}
+        $.each(clients, function(i,client) {
+
+          if(client.dg >= "2013-10-01") {
+            var day = client.dg.split(" ")[0];
+            if(!distinct_days.dg[day]) {
+              distinct_days.dg[day] = {cnt:0};
+            }
+            if(!distinct_days.vd[day]) {
+              distinct_days.vd[day] = {cnt:0};
+            }
+            if(!distinct_days.out[day]) {
+              distinct_days.out[day] = {cnt:0};
+            }
+            distinct_days.dg[day].cnt += 1;
+            
+          }
+
+          if(client.vd >= "2013-10-01") {
+            var day = client.vd.split(" ")[0];
+            if(!distinct_days.dg[day]) {
+              distinct_days.dg[day] = {cnt:0};
+            }
+            if(!distinct_days.vd[day]) {
+              distinct_days.vd[day] = {cnt:0};
+            }
+            if(!distinct_days.out[day]) {
+              distinct_days.out[day] = {cnt:0};
+            }
+            distinct_days.vd[day].cnt += 1;
+            
+          }
+          
+
+          if( (client.out >= "2013-10-01") && (client.dg!="") ) {
+            var day = client.out.split(" ")[0];
+            if(!distinct_days.dg[day]) {
+              distinct_days.dg[day] = {cnt:0};
+            }
+            if(!distinct_days.vd[day]) {
+              distinct_days.vd[day] = {cnt:0};
+            }
+            if(!distinct_days.out[day]) {
+              distinct_days.out[day] = {cnt:0};
+            }
+            distinct_days.out[day].cnt += 1;
+            
+          }
+
+        });
+
+        $.each(distinct_days.dg, function(key, day) {
+          answer.dg.push( [frommysql(key+" 23:59:59").getTime()+10000, day.cnt] );
+        });
+
+        answer.dg = _.sortBy(answer.dg, function(el){ return el[0] });
+
+        $.each(distinct_days.vd, function(key, day) {
+          answer.vd.push( [frommysql(key+" 23:59:59").getTime()+10000, day.cnt] );
+        });
+
+        answer.vd = _.sortBy(answer.vd, function(el){ return el[0] });
+
+        $.each(distinct_days.out, function(key, day) {
+          answer.out.push( [frommysql(key+" 23:59:59").getTime()+10000, day.cnt] );
+        });
+
+        answer.out = _.sortBy(answer.out, function(el){ return el[0] });
 
 
-			global.stat_cache_cup[ cache_id ] = answer;
+      if(!global.stat_cache_cup) {
+        global.stat_cache_cup = {};
+      }
 
-			response.send(answer);
-		});
-	}
+
+      global.stat_cache_cup[ cache_id ] = answer;
+
+      response.send(answer);
+    });
+  }
 
 };
 
@@ -3407,7 +3432,7 @@ app.delete('/api/v1/message/:id', database.findMessageById );
 
 
 app.configure(function() {
-	app.use(express.compress());
+  app.use(express.compress());
     app.use( express.static(__dirname + '/../app/images', {maxAge: 86400000}) );
     app.use( express.static(__dirname + '/../app/images/do_type', {maxAge: 86400000}) );
     app.use( express.static(__dirname + '/../app') );
@@ -3420,56 +3445,56 @@ exports.findAllContinents = function(request,cb) {
   if(!query.t) query.t = 0;
 
   if(params.action=="save_message") {
-  			  pool.query('SELECT * FROM `4_chat` WHERE user_id=? OR to_user_id=?', [params.user_id,params.user_id] , function (err, rows, fields) {
-		    // close connection first
-		    //closeConnection(connection);
-		    // done: call callback with results
-		    //    connection.end();
-			//находим поле, где перечислены все друзья текущего пользователя
+          pool.query('SELECT * FROM `4_chat` WHERE user_id=? OR to_user_id=?', [params.user_id,params.user_id] , function (err, rows, fields) {
+        // close connection first
+        //closeConnection(connection);
+        // done: call callback with results
+        //    connection.end();
+      //находим поле, где перечислены все друзья текущего пользователя
 
-		    cb(err, rows);
+        cb(err, rows);
 
   });
   }
 
   if(params.action=="users") {
-		  pool.query('SELECT * FROM `4_users`', [params.lasttime] , function (err, rows, fields) {
-		    // close connection first
-		    //closeConnection(connection);
-		    // done: call callback with results
-		    //    connection.end();
-			//находим поле, где перечислены все друзья текущего пользователя
-			var myfrends = "";
-			for ( var key in rows ) {
-			    if ( Object.prototype.hasOwnProperty.call(rows, key) ) {
-			        var el = rows[key];
-			        if(el.id == params.user_id) myfrends = el.frends;
-			    }
-			};
-			
-			//проставляем поле - является ли этот человек нашим другом
-			for ( var key in rows ) {
-			    if ( Object.prototype.hasOwnProperty.call(rows, key) ) {
-			        var el = rows[key];
-			        if(myfrends.indexOf(el.id) != -1) el.is_my_frend = true;
-			        else el.is_my_frend = false;
-			    }
-			};		
+      pool.query('SELECT * FROM `4_users`', [params.lasttime] , function (err, rows, fields) {
+        // close connection first
+        //closeConnection(connection);
+        // done: call callback with results
+        //    connection.end();
+      //находим поле, где перечислены все друзья текущего пользователя
+      var myfrends = "";
+      for ( var key in rows ) {
+          if ( Object.prototype.hasOwnProperty.call(rows, key) ) {
+              var el = rows[key];
+              if(el.id == params.user_id) myfrends = el.frends;
+          }
+      };
+      
+      //проставляем поле - является ли этот человек нашим другом
+      for ( var key in rows ) {
+          if ( Object.prototype.hasOwnProperty.call(rows, key) ) {
+              var el = rows[key];
+              if(myfrends.indexOf(el.id) != -1) el.is_my_frend = true;
+              else el.is_my_frend = false;
+          }
+      };    
 
-		    cb(err, rows);
-		  });
+        cb(err, rows);
+      });
   }
 
   if(params.action=="chats") {
-		  pool.query('SELECT * FROM `4_chat` WHERE user_id=? OR to_user_id=?', [params.user_id,params.user_id] , function (err, rows, fields) {
-		    // close connection first
-		    //closeConnection(connection);
-		    // done: call callback with results
-		    //    connection.end();
-			//находим поле, где перечислены все друзья текущего пользователя
+      pool.query('SELECT * FROM `4_chat` WHERE user_id=? OR to_user_id=?', [params.user_id,params.user_id] , function (err, rows, fields) {
+        // close connection first
+        //closeConnection(connection);
+        // done: call callback with results
+        //    connection.end();
+      //находим поле, где перечислены все друзья текущего пользователя
 
-		    cb(err, rows);
-		  });
+        cb(err, rows);
+      });
   }
 
 
@@ -3510,14 +3535,42 @@ var imap = {
 
 
 function jsClone(element) {
-	return $.map(element, function (obj) {
+  return $.map(element, function (obj) {
                       return $.extend({}, obj);
     });
 }
 
 function jsGetHourMinutes(time_now) {
- 	var answer = ((time_now.getHours()>9)?(time_now.getHours()):("0"+time_now.getHours()));
- 	answer += ":"+((time_now.getMinutes()>9)?(time_now.getMinutes()):("0"+time_now.getMinutes()));	
- 	return answer;
+  var answer = ((time_now.getHours()>9)?(time_now.getHours()):("0"+time_now.getHours()));
+  answer += ":"+((time_now.getMinutes()>9)?(time_now.getMinutes()):("0"+time_now.getMinutes()));  
+  return answer;
 }
 
+///////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
