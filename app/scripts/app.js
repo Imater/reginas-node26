@@ -291,8 +291,8 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
             // do something
             $scope.fpk.time_now = (new Date);
             //toMysql( (new Date()) ).substr(0,10);
-            cancelRefresh = $timeout(myIntervalFunction, 60000);
-        },60000);
+            cancelRefresh = $timeout(myIntervalFunction, 120000);
+        },120000);
     };
 
     myIntervalFunction();

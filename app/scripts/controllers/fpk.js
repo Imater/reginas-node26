@@ -236,15 +236,10 @@ myApp.directive('modelChangeBlur', function() {
     };
 });
 
-function jsDateDiff($scope,date2) {
+var jsDateDiff = _.memoize( function($scope,dif_sec,date2) {
   var answer = {text:"&nbsp;", class:"", image:false};
   if(!date2) return answer;
   if(date2=="0000-00-00 00:00:00") return answer;
-  var time_now = $scope.fpk.time_now?$scope.fpk.time_now:new Date();
-
-  var date1 = new Date(( time_now ).getTime()-1*60000);
-  var date2 = fromMysql(date2);
-  var dif_sec = date2.getTime() - date1.getTime();
 
   var days = parseInt( dif_sec/(60*1000*60*24) , 10 );
   var minutes = parseInt( dif_sec/(60*1000) , 10 ); 
@@ -281,7 +276,7 @@ function jsDateDiff($scope,date2) {
   }
 
   return answer;
-}
+}, function($scope, dif_sec, date2){ return $scope+date2+dif_sec; });
 
 
 myApp.directive('datemini', ['$timeout', function($timeout) { return {
@@ -296,7 +291,15 @@ myApp.directive('datemini', ['$timeout', function($timeout) { return {
       });
       ngModel.$render = function() {
         var date2 = ngModel.$viewValue;
-        var answer = jsDateDiff($scope, date2);
+
+        var time_now = $scope.fpk.time_now?$scope.fpk.time_now:new Date();
+
+        var date1 = new Date(( time_now ).getTime()-1*60000);
+        var date22 = fromMysql(date2);
+        var dif_sec = date22.getTime() - date1.getTime();
+
+
+        var answer = jsDateDiff($scope, dif_sec, date2);
         if(attrs.dateType=="client") {
           if(($scope.client) && ($scope.client.out!=NO_DATE)) {
             answer.text = "OUT";
