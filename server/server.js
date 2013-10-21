@@ -3219,7 +3219,7 @@ exports.loadJsonCup = function(request, response) {
 
   if( global.stat_cache_cup[ cache_id ] ) {
     response.send( global.stat_cache_cup[ cache_id ] );
-    console.info("Stat from cache "+cache_id+", brand = ", brand);
+    //console.info("Stat from cache "+cache_id+", brand = ", brand);
   } else {
 
     console.info(brand);
