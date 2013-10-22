@@ -7,6 +7,7 @@ var worker;
 if (cluster.isMaster) {
   // Fork workers.
   console.info("numCpus", numCPUs);
+  numCPUs = 1;
   for (var i = 0; i < numCPUs; i++) {
     worker = cluster.fork();
 
