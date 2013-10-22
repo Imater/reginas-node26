@@ -3561,7 +3561,7 @@ exports.loadTestDoc = function(request, response) {
      pool.query("SELECT *, 1_users.fio manager_fio, 1_users.license manager_license, 1_users.phone manager_phone, 1_users.passport_seria passport_seria, 1_users.passport_number passport_number, 1_users.passport_from passport_from, 1_users.passport_date passport_date FROM 1_do LEFT JOIN 1_users ON 1_do.manager_id=1_users.id WHERE 1_do.id=? LIMIT 1", [do_id], function (err, mydo, fields) {
      	//console.info("!!!", mydo, err);
           pool.query("SELECT * FROM 1_clients WHERE id=? LIMIT 1", [client_id], function (err, clients, fields) {
-          	 var the_do = mydo[0];
+          	 var the_do = mydo?mydo[0]:0;
 		     pool.query("SELECT * FROM 1_test LEFT JOIN 1_models ON 1_models.id=1_test.model_id WHERE 1_test.id=? LIMIT 1", [the_do?the_do.test_model_id:0], function (err, test, fields) {
 			     pool.query("SELECT * FROM 1_organization WHERE 1_organization.id=? LIMIT 1", [test[0].organization], function (err, organization, fields) {
 			     pool.query("SELECT * FROM 1_brands WHERE id=? LIMIT 1", [brand], function (err, brands, fields) {
