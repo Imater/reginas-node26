@@ -2047,7 +2047,8 @@ exports.saveClient = function(request, response) {
   query = "UPDATE 1_clients SET ? WHERE id = '"+client_id+"'";
 
     pool.query(query, changes, function (err, rows, fields) {
-      response.send({affectedRows: rows.affectedRows});
+      console.info(err);
+      response.send({affectedRows: rows?rows.affectedRows:""});
       jsClearCacheByBrand( request.query.brand );
     }); 
   });
@@ -2137,13 +2138,20 @@ exports.newDo = function(request, response) {
 
 exports.loadModels = function(request, response) {
     
-    pool.query('SELECT * FROM `1_models` ORDER by model', function (err, models, fields) {
-      pool.query('SELECT * FROM `1_brands` ORDER by title', function (err, brands, fields) {
-        pool.query('SELECT * FROM `1_users_group`', function (err, users_group, fields) {
-          response.send({models:models, brands: brands, users_group: users_group });
-        });
-      });
-    }); 
+  var brand_id = request.query.brand;
+
+
+  pool.query('SELECT * FROM `1_organization`',function (err, organizations, fields) {
+	  pool.query('SELECT * FROM `1_test` WHERE brand=?',[brand_id], function (err, tests, fields) {
+	    pool.query('SELECT * FROM `1_models` ORDER by model', function (err, models, fields) {
+	      pool.query('SELECT * FROM `1_brands` ORDER by title', function (err, brands, fields) {
+	        pool.query('SELECT * FROM `1_users_group`', function (err, users_group, fields) {
+	          response.send({models:models, brands: brands, users_group: users_group, tests: tests, organizations: organizations});
+	        });
+	      });
+	    }); 
+	  });
+  });
 
 }
 
@@ -2180,6 +2188,7 @@ exports.saveModel = function(request, response) {
 
 }
 
+
 exports.deleteModel = function(request, response) {
 
  var brand_id = request.query.brand;
@@ -2199,6 +2208,103 @@ exports.deleteModel = function(request, response) {
   });
 
 }
+
+exports.newTest = function(request, response) {
+
+ var brand_id = request.query.brand;
+
+ //console.info(brand_id);
+
+ jsCheckToken(request.query.token, response).done(function(user_id){
+    pool.query('INSERT INTO `1_test` SET `brand` = ?',[brand_id], function (err, rows, fields) {
+    response.send({rows:rows, err: err});
+    }); 
+  });
+
+}
+
+exports.saveTest = function(request, response) {
+
+ var brand_id = request.query.brand;
+ var changes = request.body.test;
+
+ //console.info("Сохраняю",brand_id, changes);
+
+ jsCheckToken(request.query.token, response).done(function(user_id){
+      pool.query('UPDATE `1_test` SET ? WHERE id = "'+changes.id+'"',[changes], function (err, rows, fields) {
+      response.send({rows:rows, err: err});
+   });
+
+  });
+
+}
+
+exports.deleteTest = function(request, response) {
+
+ var brand_id = request.query.brand;
+ var test_id = request.query.id;
+
+ jsCheckToken(request.query.token, response).done(function(user_id){
+    pool.query('SELECT count(*) cnt FROM `1_do` WHERE test_model_id = ?',[test_id], function (err, mydo, fields) {
+      if( mydo && (mydo[0].cnt==0) ) {
+	      pool.query('DELETE FROM `1_test` WHERE id = ?',[test_id], function (err, rows, fields) {
+	        response.send({rows:rows, err: err});
+	      });
+  	  }
+    });
+  });
+
+}
+
+exports.deleteOrganizations = function(request, response) {
+
+ var brand_id = request.query.brand;
+ var test_id = request.query.id;
+
+ jsCheckToken(request.query.token, response).done(function(user_id){
+    pool.query('SELECT count(*) cnt FROM `1_test` WHERE organization = ?',[test_id], function (err, mydo, fields) {
+      if( mydo && (mydo[0].cnt==0) ) {
+	      pool.query('DELETE FROM `1_organization` WHERE id = ?',[test_id], function (err, rows, fields) {
+	        response.send({rows:rows, err: err});
+	      });
+  	  }
+    });
+  });
+
+}
+
+exports.newOrganizations = function(request, response) {
+
+ var brand_id = request.query.brand;
+
+ //console.info(brand_id);
+
+ jsCheckToken(request.query.token, response).done(function(user_id){
+    pool.query('INSERT INTO `1_organization` SET `city` = ?',['Челябинск'], function (err, rows, fields) {
+    response.send({rows:rows, err: err});
+    }); 
+  });
+
+}
+
+exports.saveOrganizations = function(request, response) {
+
+
+ var brand_id = request.query.brand;
+ var changes = request.body.test;
+
+ //console.info("Сохраняю",brand_id, changes);
+
+ jsCheckToken(request.query.token, response).done(function(user_id){
+      pool.query('UPDATE `1_organization` SET ? WHERE id = "'+changes.id+'"',[changes], function (err, rows, fields) {
+      response.send({rows:rows, err: err});
+   });
+
+  });
+
+}
+
+
 
 exports.removeClient = function(request, response) {
 
@@ -2751,6 +2857,66 @@ function jsIsInside(params){
   }
 }
 
+
+exports.saveFullUserInfo = function(request, response) {
+ var brand_id = request.query.brand;
+ var changes = JSON.parse( request.query.changes );
+
+ console.info("Сохраняю:::::",brand_id, changes, changes.id);
+
+ jsCheckToken(request.query.token, response).done(function(user_id){
+      pool.query('UPDATE `1_users` SET ? WHERE id = "'+changes.id+'"',[changes], function (err, rows, fields) {
+      	response.send({rows:rows, err: err});
+   	  });
+
+  });
+
+}
+
+
+exports.loadFullUserInfo = function(request, response) {
+
+
+  var brand = request.query.brand;
+  var user_id1 = request.query.user_id;
+  
+
+ jsCheckToken(request.query.token, response).done(function(user_id){
+
+  pool.query('SELECT * FROM `1_users` WHERE id = ? LIMIT 1',[user_id1], function (err, user, fields) {    
+  		  var user_one = user[0];
+  		  delete user_one.password;
+  		  delete user_one.md5email;
+  		  delete user_one.md5password;
+  		  delete user_one.lastvizit;
+  		  delete user_one.brands;
+          response.send({user: user_one});
+  });
+
+
+ });
+
+}
+
+
+exports.loadOrganizations = function(request, response) {
+
+
+  var brand = request.query.brand;
+  
+
+ jsCheckToken(request.query.token, response).done(function(user_id){
+
+  pool.query('SELECT * FROM `1_organization`', function (err, organizations, fields) {    
+          response.send({organizations: organizations});
+  });
+
+
+ });
+
+}
+
+
 exports.loadUserInfo = function(request, response) {
 
 
@@ -3134,7 +3300,7 @@ exports.checkSMS = function(request, response) {
       sms.list(sms_texts, function (err, result) {
           if(result.cnt>0) {
             
-            query = "UPDATE 1_do SET sms_send = 1 WHERE id IN ("+ids+")";
+            var query = "UPDATE 1_do SET sms_send = 1 WHERE id IN ("+ids+")";
           pool.query(query, function (err, rows, fields) {
             if(rows) {
               jsSendMail("Отправил SMS: "+ids, JSON.stringify(sms_texts));
@@ -3347,6 +3513,121 @@ exports.loadJsonCup = function(request, response) {
 
 };
 
+exports.loadTestDoc = function(request, response) {
+
+	var brand = request.query.brand;
+	var client_id = request.query.client_id;
+	var do_id = request.query.do_id;
+	var brand = request.query.brand;
+
+	var dover = { 
+		//number: "АСИ0007490",
+		//date: "20.10.2014",
+		//manager_fio: "Доменнов Алексей Дмитриевич",
+		//manager_license: "74 AA №360349",
+		//manager_phone: "890908888883",
+		//organization: "ООО Ар Джи Моторс, ИНН 7448091317, 454008, г.Челябинск, Свердловский тракт дом 5, строение 2",
+		//bank: "в Отделении №8597 ОАО Сбербанк России, БИК 047501602, кор.счёт 30101810700000000602",
+		//rs: "40702810872020105634",
+		//passport_seria: "7509",
+		//passport_number: 667044,
+		//passport_from: "Отделом УФМС России по Челябинской области в металлургическом районе",
+		//passport_date: "04.03.2010",
+		//model: "G25",
+		//color: "серебристый",
+		//vin: "SJNFBNJ10U2782797",
+		//gos: "O 109 СР 174",
+		//gd: "Рыбаков Василий Петрович",
+		//gb: "Малофеева Наталья Георгиевна",
+		//client_fio: "Лиенев Константин Вячеславович",
+		//client_birthday: "12.05.1978",
+		//client_adress: "454000, Челябинская область, г.Челябинск, ул. Сталеваров, дом 32, кв.84",
+		//client_phone: "89227444440",
+		//client_email: "eugene.leonar@gmail.com",
+		//client_license: "74 АА №365677",
+		//client_pass1: "2902 №555265",
+		//client_pass2: "Отделом Внутренних дел Фрезиковского района Калужской области",
+		//brand_name: "Skoda",
+		//brand_title: "ООО Яромир Авто",
+		//brand_importer: "Skoda - ООО 'Ниссан Мэнуфэкчуринг РУС'",
+		//brand_adress: "194363, Санкт-Петербург, пос. Парголово, Комендантский пр. д.40"
+
+	 }	
+	 dover.number = "АСИ0"+do_id;
+	 var today = tomysql( new Date() ).split(" ")[0].split("-");
+	 dover.date = today[2]+"."+today[1]+"."+today[0];
+	 dover.test_time = tomysql( new Date() ).split(" ")[1];
+
+     pool.query("SELECT *, 1_users.fio manager_fio, 1_users.license manager_license, 1_users.phone manager_phone, 1_users.passport_seria passport_seria, 1_users.passport_number passport_number, 1_users.passport_from passport_from, 1_users.passport_date passport_date FROM 1_do LEFT JOIN 1_users ON 1_do.manager_id=1_users.id WHERE 1_do.id=? LIMIT 1", [do_id], function (err, mydo, fields) {
+     	//console.info("!!!", mydo, err);
+          pool.query("SELECT * FROM 1_clients WHERE id=? LIMIT 1", [client_id], function (err, clients, fields) {
+          	 var the_do = mydo[0];
+		     pool.query("SELECT * FROM 1_test LEFT JOIN 1_models ON 1_models.id=1_test.model_id WHERE 1_test.id=? LIMIT 1", [the_do?the_do.test_model_id:0], function (err, test, fields) {
+			     pool.query("SELECT * FROM 1_organization WHERE 1_organization.id=? LIMIT 1", [test[0].organization], function (err, organization, fields) {
+			     pool.query("SELECT * FROM 1_brands WHERE id=? LIMIT 1", [brand], function (err, brands, fields) {
+			          	var client = clients[0];
+			          	var the_test = test[0];
+			          	var org = organization[0];
+			          	var the_brand = brands[0];
+
+			          	//console.info(client, mydo, the_test, organization);
+
+
+			          	dover.client_fio = client.fio;
+			          	dover.client_birthday = (client.birthday!='0000-00-00')?tomysql(new Date(client.birthday)).split(" ")[0]:"_____________";
+
+			          	dover.client_pass1 = client.pas1 + " №" + client.pas2;
+			          	dover.client_pass2 = client.pas5 + ", " + client.pas4;
+
+			          	dover.manager_fio = the_do.manager_fio;
+			          	dover.manager_license = the_do.manager_license;
+			          	dover.manager_phone = the_do.manager_phone;
+			          	dover.passport_seria = the_do.passport_seria;
+			          	dover.passport_number = the_do.passport_number;
+			          	dover.passport_from = the_do.passport_from;
+			          	dover.passport_date = the_do.passport_date;
+
+
+
+			          	dover.brand_name = the_brand.brandname;
+			          	dover.brand_importer = the_brand.brandname;
+			          	dover.brand_adress = the_brand.brand_adress?the_brand.brand_adress:"г.Москва";
+			          	dover.brand_title = org.title;
+
+			          	dover.city = org.city;
+
+
+			          	dover.client_fio = client.fio;
+			          	//dover.client_birthday = (client.birthday!="0000-00-00")?client.birthday:"";
+			          	dover.client_adress = client.client_adress;
+			          	dover.client_phone = client.phone1?client.phone1:client.phone2;
+			          	dover.client_email = client.email?client.email:"____________";
+			          	dover.client_license = client.license;
+			          	dover.client_adress = client.client_adress;
+
+			          	dover.vin = the_test.vin;
+			          	dover.color = the_test.color;
+			          	dover.gos = the_test.gos;
+			          	dover.model = the_test.model;
+
+			          	dover.gd = org.gd;
+			          	dover.gb = org.gb;
+			          	dover.organization = org.title+". ИНН "+org.inn+", КПП "+org.kpp+", "+org.adress;
+			          	dover.bank = org.bank;
+			          	dover.rs = org.rs;
+
+			          	response.send({dover: dover});
+			     });
+				});
+	         });
+          });
+     });
+
+
+
+	 
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////
                                        ////////
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -3373,6 +3654,8 @@ app.get('/api/v1/parseManagers2', database.parseManagers2)
 
 app.get('/api/v1/parseEmail', database.parseEmail)
 
+
+app.get('/api/v1/test_doc', database.loadTestDoc)
 
 app.get('/api/v1/bigdata', database.loadAllBig)
 app.get('/api/v1/bigdata2', database.loadAllBig2)
@@ -3401,6 +3684,13 @@ app.get('/api/v1/client/update/:id', database.updateClient );
 
 app.get('/api/v1/clients_export', database.exportClients );
 
+app.get('/api/v1/organizations', database.loadOrganizations );
+app.put('/api/v1/organizations', database.saveOrganizations );
+app.post('/api/v1/organizations', database.newOrganizations );
+app.delete('/api/v1/organizations', database.deleteOrganizations );
+
+
+
 app.get('/api/v1/sms', database.sendSMS );
 
 app.get('/api/v1/stat', database.loadStat );
@@ -3419,9 +3709,17 @@ app.get('/api/v1/stat/cup/all_day', database.loadStatAllDay );
 app.get('/api/v1/models', database.loadModels );
 app.get('/api/v1/user/info', database.loadUserInfo );
 
+app.get('/api/v1/user/info/full', database.loadFullUserInfo );
+app.put('/api/v1/user/info/full', database.saveFullUserInfo );
+
 app.post('/api/v1/models', database.newModel );
 app.put('/api/v1/models', database.saveModel );
 app.delete('/api/v1/models', database.deleteModel );
+
+app.post('/api/v1/test', database.newTest );
+app.put('/api/v1/test', database.saveTest );
+app.delete('/api/v1/test', database.deleteTest );
+
 
 app.put('/api/v1/do/:id', database.saveDo );
 app.put('/api/v1/client/:id', database.saveClient );
@@ -3456,9 +3754,11 @@ app.delete('/api/v1/message/:id', database.findMessageById );
 
 app.configure(function() {
   app.use(express.compress());
-    app.use( express.static(__dirname + '/../app/images', {maxAge: 86400000}) );
-    app.use( express.static(__dirname + '/../app/images/do_type', {maxAge: 86400000}) );
-    app.use( express.static(__dirname + '/../app') );
+    //var server_is = "dist";
+    var server_is = "app";
+    app.use( express.static(__dirname + '/../'+server_is+'/images', {maxAge: 86400000}) );
+    app.use( express.static(__dirname + '/../'+server_is+'/images/do_type', {maxAge: 86400000}) );
+    app.use( express.static(__dirname + '/../'+server_is) );
 });
 
 

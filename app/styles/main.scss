@@ -1566,6 +1566,7 @@ background-color: none !important;
                             font-weight: normal;
                             color: green;
                         }
+
                         .do_bell {
                             float:right;
                             margin-top: 2px;
@@ -1591,6 +1592,46 @@ background-color: none !important;
                         color: #555;
                         font-weight: nowrap;
                     }
+                    .dover_link {
+                            margin-left: 100px;
+                    }
+                    .test_form {
+                        background: rgba(50,255,50,0.1);
+                        background-image: url('../images/backgrounds/grain.png');
+                        border-radius: 5px;
+                        border: 1px dashed #888;
+                        padding: 10px;
+                        margin-bottom: 10px;
+                    }
+                    .manager_info {
+                        background: rgba(20,200,20,0.2);
+                        padding: 20px;
+                    }
+                    .client_passport {
+                        .pas1 {
+                            width: 3em !important;
+                        }
+                        .pas2 {
+                            width: 7em;
+                        }
+                        .pas3 {
+                            min-width: 15em;
+                        }
+                        .pas4 {
+                            width: 8em;
+                        }
+                        .pas5 {
+                            min-width: 12em;
+                        }
+                        .license {
+                            width: 10em;
+                        }
+                        span {
+                            min-width: 1em !important;
+                        }
+
+                    }
+
                     .do_edit {
                         padding: 10px;
                         margin: 0px 10px 0px 15px;
@@ -2704,7 +2745,24 @@ li.needgroup {
      page-break-after: always;
 }
 
-
+.test_cars {
+    li.test_car {
+        background: #EEE;
+        margin-bottom: 20px;
+        padding: 0px 20px;
+        padding-top: 5px;
+        border-radius: 10px;
+    }
+    .col-md-4 {
+        margin-bottom: 20px;
+    }
+    span {
+        color: #000;
+    }
+    .pull-right {
+        text-align: right;
+    }
+}
 
 
 

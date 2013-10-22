@@ -1184,6 +1184,32 @@ body {
             text-decoration: line-through;
             color: #555;
             font-weight: nowrap; }
+          .clients_list .client_card .client_inside ul li.client_do_li .dover_link {
+            margin-left: 100px; }
+          .clients_list .client_card .client_inside ul li.client_do_li .test_form {
+            background: rgba(50, 255, 50, 0.1);
+            background-image: url("../images/backgrounds/grain.png");
+            border-radius: 5px;
+            border: 1px dashed #888;
+            padding: 10px;
+            margin-bottom: 10px; }
+          .clients_list .client_card .client_inside ul li.client_do_li .manager_info {
+            background: rgba(20, 200, 20, 0.2);
+            padding: 20px; }
+          .clients_list .client_card .client_inside ul li.client_do_li .client_passport .pas1 {
+            width: 3em !important; }
+          .clients_list .client_card .client_inside ul li.client_do_li .client_passport .pas2 {
+            width: 7em; }
+          .clients_list .client_card .client_inside ul li.client_do_li .client_passport .pas3 {
+            min-width: 15em; }
+          .clients_list .client_card .client_inside ul li.client_do_li .client_passport .pas4 {
+            width: 8em; }
+          .clients_list .client_card .client_inside ul li.client_do_li .client_passport .pas5 {
+            min-width: 12em; }
+          .clients_list .client_card .client_inside ul li.client_do_li .client_passport .license {
+            width: 10em; }
+          .clients_list .client_card .client_inside ul li.client_do_li .client_passport span {
+            min-width: 1em !important; }
           .clients_list .client_card .client_inside ul li.client_do_li .do_edit {
             padding: 10px;
             margin: 0px 10px 0px 15px;
@@ -2025,3 +2051,16 @@ li.needgroup {
 
 .page_break {
   page-break-after: always; }
+
+.test_cars li.test_car {
+  background: #EEE;
+  margin-bottom: 20px;
+  padding: 0px 20px;
+  padding-top: 5px;
+  border-radius: 10px; }
+.test_cars .col-md-4 {
+  margin-bottom: 20px; }
+.test_cars span {
+  color: #000; }
+.test_cars .pull-right {
+  text-align: right; }

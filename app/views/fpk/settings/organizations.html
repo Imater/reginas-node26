@@ -1,0 +1,118 @@
+<div class="scrollable_div">
+	<h3>Юридические лица Холдинга (организации)</h3>
+
+
+	<ol class="test_cars">
+		<li ng-repeat="org in orgs" class="test_car">
+		    <div class="row">
+
+				<div class="col-md-6">
+					<div class="input-group input-group-sm">
+	                  <span class="input-group-addon">Название:</span>
+	                  <input type="text" class="form-control" ng-model="org.title" placeholder='ООО "Регинас"'>
+	                </div>			
+	            </div>
+
+				<div class="col-md-6">
+					<div class="input-group input-group-sm">
+	                  <span class="input-group-addon">Город:</span>
+	                  <input type="text" class="form-control" ng-model="org.city" placeholder="Челябинск">
+	                </div>			
+	            </div>
+
+	        </div>
+
+		    <div class="row">
+
+				<div class="col-md-6">
+					<div class="input-group input-group-sm">
+	                  <span class="input-group-addon">ИНН:</span>
+	                  <input type="text" class="form-control" ng-model="org.inn" placeholder='7452007741'>
+	                </div>			
+	            </div>
+
+				<div class="col-md-6">
+					<div class="input-group input-group-sm">
+	                  <span class="input-group-addon">КПП:</span>
+	                  <input type="text" class="form-control" ng-model="org.kpp" placeholder="744701001">
+	                </div>			
+	            </div>
+
+	        </div>
+
+
+		    <div class="row">
+
+				<div class="col-md-6">
+					<div class="input-group input-group-sm">
+	                  <span class="input-group-addon">Генеральный директор:</span>
+	                  <input type="text" class="form-control" ng-model="org.gd" placeholder='Рыбаков Василий Петрович'>
+	                </div>			
+	            </div>
+
+				<div class="col-md-6">
+					<div class="input-group input-group-sm">
+	                  <span class="input-group-addon">Главный бухгалтер:</span>
+	                  <input type="text" class="form-control" ng-model="org.gb" placeholder="Каваляускене Ирина Витальевна">
+	                </div>			
+	            </div>
+
+	        </div>
+
+		    <div class="row">
+
+				<div class="col-md-12">
+					<div class="input-group input-group-sm">
+	                  <span class="input-group-addon">Адрес:</span>
+	                  <input type="text" class="form-control" ng-model="org.adress" placeholder='Свердловский пр.5'>
+	                </div>			
+	            </div>
+	        </div>
+
+		    <div class="row">
+
+				<div class="col-md-12">
+					<div class="input-group input-group-sm">
+	                  <span class="input-group-addon">Расч.счёт:</span>
+	                  <input type="text" class="form-control" ng-model="org.rs" placeholder='40702810872020105634'>
+	                </div>			
+	            </div>
+	        </div>
+
+		    <div class="row">
+
+				<div class="col-md-12">
+					<div class="input-group input-group-sm">
+	                  <span class="input-group-addon">Счёт в Банке:</span>
+	                  <input type="text" class="form-control" ng-model="org.bank" placeholder='в Отделении №8597 ОАО Сбербанк России, БИК 047501602, кор.счёт 301018107000000006021'>
+	                </div>			
+	            </div>
+	        </div>
+
+
+	        <hr>
+	        <div class="row">
+
+	        	<div class="col-md-4">
+	        		<button ng-click="jsSaveOrg(org)" class="btn btn-success btn-xs">Сохранить</button>
+	        	</div>
+	        	<div class="col-md-4 pull-right">
+	        		<a ng-click="jsDeleteOrg(org)">удалить</a>
+	        	</div>
+	        </div>
+
+		</li>
+	</ol>
+
+
+	<br>
+	<button class="btn btn-success btn-sm" ng-click="jsNewOrganization()"><i class="icon-plus"></i>Добавить новую организацию</button> 
+	<hr>
+	<ol>
+	<li>Автомобили для оформления доверенностей на тест-драйв</li>
+
+	</ol>
+
+
+
+</div>

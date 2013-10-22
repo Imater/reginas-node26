@@ -162,6 +162,7 @@ module.exports = function (grunt) {
         files: {
           src: [
             '<%= yeoman.dist %>/scripts/{,*/}*.js',
+            '<%= yeoman.dist %>/scripts/*',
             '<%= yeoman.dist %>/styles/{,*/}*.css',
             '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
             '<%= yeoman.dist %>/styles/fonts/*'
@@ -249,7 +250,8 @@ module.exports = function (grunt) {
             '.htaccess',
             'bower_components/**/*',
             'images/{,*/}*.{gif,webp}',
-            'styles/fonts/*'
+            'styles/fonts/*',
+            'views/**'
           ]
         }, {
           expand: true,
@@ -277,7 +279,7 @@ module.exports = function (grunt) {
         'copy:styles'
       ],
       dist: [
-        'coffee',
+//        'coffee',
         'copy:styles',
         'imagemin',
         'svgmin',
@@ -305,9 +307,9 @@ module.exports = function (grunt) {
       dist: {
         files: [{
           expand: true,
-          cwd: '<%= yeoman.dist %>/scripts',
+          cwd: '<%= yeoman.dist %>/**',
           src: '*.js',
-          dest: '<%= yeoman.dist %>/scripts'
+          dest: '<%= yeoman.dist %>/**'
         }]
       }
     },
@@ -355,9 +357,9 @@ module.exports = function (grunt) {
 //    'cdnify',
     'ngmin',
     'cssmin',
-//    'uglify',
-//    'rev',
-//    'usemin'
+    'uglify',
+    'rev',
+    'usemin'
   ]);
 
   grunt.registerTask('default', [

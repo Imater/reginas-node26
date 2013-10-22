@@ -13,6 +13,18 @@ _.intersectionObjects = _.intersect = function(array) {
 
 myApp.controller('settingsCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment, $timeout) {
 
+
+
+  $scope.fpk.leftmenu = { active:8,
+                items : [
+                  {id:10, title:"Модели", href: "/fpk/settings/models", segment: "s1.settings.models"},
+                  {id:11, title:"Тестовые автомобили", href: "/fpk/settings/tests", segment: "s1.settings.tests"},
+                  {id:12, title:"Юр.лица Холдинга", href: "/fpk/settings/organizations", segment: "s1.settings.organizations"}
+                ]
+
+                };
+
+
  $scope.myData = [{name: "Moroni", age: 50, sex: 4},
                  {name: "Tiancum", age: 43},
                  {name: "Jacob", age: 27},
@@ -108,16 +120,6 @@ myApp.controller('settingsCtrl', function ($scope, $resource, $rootScope, $locat
    });
  }
 
- $scope.$parent.leftmenu = { active:1,
-                items : [
-                  {id:0, title:"Менеджеры", group_by: "manager", 
-                   filter: {no_out: true, no_dg: true, no_vd:true}},
-
-                  {id:1, title:"Модели", group_by: "manager", 
-                   filter: {no_out: true, dg: true, no_vd:true}}
-
-                  ]
-                };
 
 
 });

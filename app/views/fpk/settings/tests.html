@@ -1,0 +1,80 @@
+<div class="scrollable_div">
+	<h3>Тестовые автомобили</h3>
+
+
+	<ol class="test_cars">
+		<li ng-repeat="test in fpk.tests" class="test_car">
+			<div class="row">
+
+				<div class="col-md-4">
+		            <div class="btn-group">
+		              <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+		                Модель: <b>{{fpk.models[test.model_id].model}}</b> <span class="caret"></span>
+		              </button>
+		              
+		              <ul class="dropdown-menu" role="menu">
+		                <li ng-repeat="model in fpk.models_array_show" ng-click="test.model_id = model.id"><a>{{model.model}}</a></li>
+		              </ul>
+		            </div>                              
+		        </div>
+				
+				<div class="col-md-4">
+		            <div class="btn-group">
+		              <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+		                Организация: <b>{{fpk.jsFindInArray(fpk.organizations,"id",test.organization).title}}</b> <span class="caret"></span>
+		              </button>
+		              
+		              <ul class="dropdown-menu" role="menu">
+		                <li ng-repeat="org in fpk.organizations" ng-click="test.organization = org.id"><a>{{org.title}}</a></li>
+		              </ul>
+		            </div>                              
+		        </div>
+		    </div>
+		    <div class="row">
+
+				<div class="col-md-4">
+					<div class="input-group input-group-sm">
+	                  <span class="input-group-addon">VIN:</span>
+	                  <input type="text" class="form-control" ng-model="test.vin" placeholder="XJN1111111111111111">
+	                </div>			
+	            </div>
+
+				<div class="col-md-4">
+					<div class="input-group input-group-sm">
+	                  <span class="input-group-addon">Цвет:</span>
+	                  <input type="text" class="form-control" ng-model="test.color" placeholder="серебристый">
+	                </div>			
+	            </div>
+
+				<div class="col-md-4">
+					<div class="input-group input-group-sm">
+	                  <span class="input-group-addon">Гос.номер:</span>
+	                  <input type="text" class="form-control" ng-model="test.gos" placeholder="Х 001 МК 174">
+	                </div>			
+	            </div>
+	        </div>
+	        <div class="row">
+	        	<div class="col-md-4">
+	        		<button ng-click="jsSaveTest(test)" class="btn btn-success btn-xs">Сохранить</button>
+	        	</div>
+	        	<div class="col-md-4 pull-right">
+	        		<a ng-click="jsDeleteTest(test)">удалить</a>
+	        	</div>
+	        </div>
+
+		</li>
+	</ol>
+
+
+	<br>
+	<button class="btn btn-success btn-sm" ng-click="jsNewTest()"><i class="icon-plus"></i>Добавить новый автомобиль для тест-драйва</button> 
+	<button ng-if="mySelections[0].model" class="btn btn-danger btn-sm pull-right" ng-click="jsDeleteSelectedModel()"><i class="icon-trash"></i> Удалить <b>{{mySelections[0].model}}</b></button>
+	<hr>
+	<ol>
+	<li>Автомобили для оформления доверенностей на тест-драйв</li>
+
+	</ol>
+
+
+
+</div>

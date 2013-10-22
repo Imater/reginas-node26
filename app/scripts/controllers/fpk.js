@@ -638,7 +638,16 @@ myApp.directive('onFinishRender', function ($timeout) {
 
 myApp.factory('myApi', function($http, $q, oAuth2){
   return {
+    jsLoadOrganizationsFromServer: function($scope) {
+        var dfd = $q.defer();
+      oAuth2.jsGetToken($scope).done(function(token){
+        $http({url:'/api/v1/organizations',method: "GET", params: { token: token, brand: $scope.fpk.brand }}).then(function(result){
+          dfd.resolve(result.data);
+        });      
+      });
+        return dfd.promise;
 
+    },
     jsGetManagerCupAdmin: function($scope, searchtext) {
       var dfd = $q.defer();
         $http({url:'/api/v1/stat/admin_cup/managers',method: "GET", params: { brand: $scope.fpk.brand, today: $scope.fpk.today_date}}).then(function(result){
@@ -1001,10 +1010,71 @@ myApp.factory('myApi', function($http, $q, oAuth2){
       });
       return dfd.promise;      
     },
+
     deleteModel: function($scope, del_id) {
       var dfd = $q.defer();
       oAuth2.jsGetToken($scope).done(function(token){
         $http({url:'/api/v1/models', method: "DELETE", isArray: true, params: { del_id: del_id ,token: token, brand: $scope.fpk.brand }}).then(function(result){
+            dfd.resolve(result.data);
+        });
+
+      });
+      return dfd.promise;      
+    },
+    jsSaveOrg: function($scope, test) {
+      var dfd = $q.defer();
+      oAuth2.jsGetToken($scope).done(function(token){
+        $http({url:'/api/v1/organizations', method: "PUT", isArray: true, data: {test: test}, params: { token: token, brand: $scope.fpk.brand }}).then(function(result){
+            dfd.resolve(result.data);
+        });
+
+      });
+      return dfd.promise;      
+    },
+    jsSaveTest: function($scope, test) {
+      var dfd = $q.defer();
+      oAuth2.jsGetToken($scope).done(function(token){
+        $http({url:'/api/v1/test', method: "PUT", isArray: true, data: {test: test}, params: { token: token, brand: $scope.fpk.brand }}).then(function(result){
+            dfd.resolve(result.data);
+        });
+
+      });
+      return dfd.promise;      
+    },
+    jsDeleteTest: function($scope, test) {
+      var dfd = $q.defer();
+      oAuth2.jsGetToken($scope).done(function(token){
+        $http({url:'/api/v1/test', method: "DELETE", isArray: true, data: {test: test}, params: { token: token, brand: $scope.fpk.brand, id: test.id }}).then(function(result){
+            dfd.resolve(result.data);
+        });
+
+      });
+      return dfd.promise;      
+    },
+    jsNewTest: function($scope) {
+      var dfd = $q.defer();
+      oAuth2.jsGetToken($scope).done(function(token){
+        $http({url:'/api/v1/test', method: "POST", isArray: true, params: { token: token, brand: $scope.fpk.brand }}).then(function(result){
+            dfd.resolve(result.data);
+        });
+
+      });
+      return dfd.promise;      
+    },
+    jsNewOrganization: function($scope) {
+      var dfd = $q.defer();
+      oAuth2.jsGetToken($scope).done(function(token){
+        $http({url:'/api/v1/organizations', method: "POST", isArray: true, params: { token: token, brand: $scope.fpk.brand }}).then(function(result){
+            dfd.resolve(result.data);
+        });
+
+      });
+      return dfd.promise;      
+    },
+    jsDeleteOrganization: function($scope, test) {
+      var dfd = $q.defer();
+      oAuth2.jsGetToken($scope).done(function(token){
+        $http({url:'/api/v1/organizations', method: "DELETE", isArray: true, data: {test: test}, params: { token: token, brand: $scope.fpk.brand, id: test.id }}).then(function(result){
             dfd.resolve(result.data);
         });
 

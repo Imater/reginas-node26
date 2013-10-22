@@ -345,7 +345,7 @@ myApp.directive('jqShowEffect', ['$timeout', function($timeout) {
 ///////////////////////////////////////////////////////////
 
 
-function DoCtrl($scope, myApi) { //контроллер дел
+function DoCtrl($scope, myApi, oAuth2, $http) { //контроллер дел
    $scope.backup_copy = angular.copy( $scope.do );
 /*   $scope.client = $scope.$parent.client;
    $scope.backup_copy._visible = true;
@@ -404,6 +404,37 @@ function DoCtrl($scope, myApi) { //контроллер дел
       },5); 
    };
 
+   $scope.jsShowManagerInfo = function(mydo) {
+      var dfd = new $.Deferred;
+      oAuth2.jsGetToken($scope).done(function(token){
+        $http({url:'/api/v1/user/info/full', method: "GET", isArray: true, params: { token: token, brand: $scope.fpk.brand, user_id: mydo.manager_id }}).then(function(result){
+            dfd.resolve(result.data);
+            console.info(result.data);
+
+            $scope.the_manager = result.data.user;
+            $scope.show_manager_info = !$scope.show_manager_info;
+
+        });
+
+      });
+      return dfd.promise();
+
+
+   }
+
+   $scope.jsSaveManagerInfo = function(the_manager) {
+      var dfd = new $.Deferred;
+      oAuth2.jsGetToken($scope).done(function(token){
+        $http({url:'/api/v1/user/info/full', method: "PUT", isArray: true, params: { token: token, brand: $scope.fpk.brand, changes: the_manager }}).then(function(result){
+            dfd.resolve(result.data);
+            $scope.show_manager_info = !$scope.show_manager_info;
+        });
+
+      });
+      return dfd.promise();
+
+
+   }
 
    $scope.jsDoSave = function(all_client_do) {
      var changes = {id: $scope.do.id};
@@ -413,6 +444,9 @@ function DoCtrl($scope, myApi) { //контроллер дел
 
      $(".do_date2:focus").blur();
 
+     if($scope.do['type']=="Тест-драйв") {
+      $scope.jsClientSave($scope.client);
+     }
 
      angular.forEach($scope.do, function(value, key){
        if( ($scope.backup_copy[key] != value) && !(/^_/.test(key)) ) {

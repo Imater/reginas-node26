@@ -22,7 +22,7 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
 
             .when('/fpk', 's1')
             .when('/fpk/clients', 's1.clients')
-            .when('/test_doc', 'test_doc')
+            .when('/test_doc/:client/:do', 'test_doc')
             .when('/fpk/reiting', 's1.reiting')
             .when('/fpk/statistic', 's1.statistic')
             .when('/fpk/stat_table', 's1.stat_table')
@@ -34,6 +34,8 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
             .when('/fpk/calendar/:type', 's1.calendar')
             .when('/fpk/settings', 's1.settings')
             .when('/fpk/settings/models', 's1.settings.models')
+            .when('/fpk/settings/tests', 's1.settings.tests')
+            .when('/fpk/settings/organizations', 's1.settings.organizations')
             .segment('test_doc', {
                 templateUrl: 'views/test_doc.html',
                 controller: 'testCtrl'})                
@@ -91,6 +93,18 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
                 controller: 'settingsCtrl'
             })
             .within()
+            .segment('models', {
+                templateUrl: 'views/fpk/settings.html',
+                controller: 'settingsCtrl'
+            })            
+            .segment('tests', {
+                templateUrl: 'views/fpk/settings/tests.html',
+                controller: 'settingsTestsCtrl'
+            })            
+            .segment('organizations', {
+                templateUrl: 'views/fpk/settings/organizations.html',
+                controller: 'organizationsTestsCtrl'
+            })            
             .segment('models', {
                 templateUrl: 'views/fpk/settings/models.html',
                 controller: 'settingsCtrl'
@@ -350,6 +364,8 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
               answer2[brand.id] = brand;
             });
             $scope.fpk.models_array = data.models;
+            $scope.fpk.tests = data.tests;
+            $scope.fpk.organizations = data.organizations;
             $scope.fpk.models = answer;
             $scope.fpk.brands = answer2;
             dfd.resolve();
