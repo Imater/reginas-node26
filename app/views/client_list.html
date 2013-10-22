@@ -305,11 +305,13 @@
                                             <div class="btn-group">
                                               <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
                                                 Тест на: <b>{{fpk.models[ (sss=fpk.jsFindInArray(fpk.tests, "id", do.test_model_id)).model_id ].short}} ({{sss.gos}})</b> <span class="caret"></span> 
-                                              </button> <— автомобили добавляет руководитель ОП
+                                              </button>
                                               <ul class="dropdown-menu" role="menu">
                                                 <li ng-repeat="test in fpk.tests" ng-click="do.test_model_id = test.id"><a>
                                                 {{ fpk.models[test.model_id].model }} ({{test.color}}) {{test.gos}}
                                                 </a></li>
+                                                <li class="divider"></li>
+                                                <center>добавляет руководитель ОП (настройки)</center>
                                               </ul>
                                             </div> 
                                       </div>
