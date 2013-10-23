@@ -1015,7 +1015,7 @@ exports.jsGetReiting = function(request, response) {
       }
     }
 
-    pool.query('SELECT * FROM `1_users` WHERE brand = ? AND user_group IN (5,6) ORDER by id', [brand], function (err, users, fields) {
+    pool.query('SELECT * FROM `1_users` WHERE brand = ? AND user_group IN (5,6,14) ORDER by id', [brand], function (err, users, fields) {
       pool.query('SELECT * FROM `1_models` WHERE brand = ?', [brand], function (err, models, fields) {
         pool.query('SELECT * FROM `1_clients` WHERE brand = ? AND zv LIKE ? OR vz LIKE ? OR tst LIKE ?', [brand, today_year, today_year, today_year], function (err, clients, fields) {
           clients = correct_dates(clients,"date_null");
@@ -1169,7 +1169,7 @@ exports.jsGetManagerCupAdmin = function(request, response) {
 
 
 
-      pool.query('SELECT * FROM `1_users` WHERE brand = ? AND user_group IN (5,6) ORDER by id', [brand], function (err, users, fields) {
+      pool.query('SELECT * FROM `1_users` WHERE brand = ? AND user_group IN (5,6,3,14) ORDER by id', [brand], function (err, users, fields) {
         pool.query('SELECT * FROM `1_doadmin` WHERE brand = ? AND date1 LIKE ? ORDER by date1 DESC', [brand, today_month], function (err, do_admin, fields) {
           pool.query('SELECT * FROM `1_clients` WHERE brand = ? AND (zv LIKE ? OR vz LIKE ? OR tst LIKE ?)', [brand, today_month, today_month, today_month], function (err, clients, fields) {
             do_admin = correct_dates(do_admin);
@@ -1407,7 +1407,7 @@ exports.jsGetManagerCupAdminReport = function(request, response) {
     pool.query('SELECT * FROM `1_commercials` ORDER by title', [brand], function (err, commercials, fields) {
     pool.query('SELECT * FROM `1_models` WHERE brand = ? AND `show`=1 ORDER by model', [brand], function (err, models, fields) {
       //console.info("err",err)
-      pool.query('SELECT * FROM `1_users` WHERE brand = ? AND user_group IN (5,6) ORDER by id', [brand], function (err, users, fields) {
+      pool.query('SELECT * FROM `1_users` WHERE brand = ? AND user_group IN (5,6,3,14) ORDER by id', [brand], function (err, users, fields) {
         pool.query('SELECT * FROM `1_doadmin` WHERE brand = ? AND date1 LIKE ? ORDER by date1 DESC', [brand, today_month], function (err, do_admin, fields) {
           pool.query('SELECT * FROM `1_clients` WHERE brand = ? AND (zv LIKE ? OR vz LIKE ? OR tst LIKE ? OR dg LIKE ? OR vd LIKE ?)', [brand, today_month, today_month, today_month, today_month, today_month], function (err, clients, fields) {
             do_admin = correct_dates(do_admin);
