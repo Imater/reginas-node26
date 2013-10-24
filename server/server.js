@@ -2125,7 +2125,7 @@ exports.newDo = function(request, response) {
 
  jsCheckToken(request.query.token, response).done(function(user_id){
   if(manager_id == -1) manager_id = user_id;
-  query = "INSERT INTO 1_do SET manager_id = ?, client = ?, type = ?, text = ?, brand = ?, date2 = DATE_ADD(NOW(), INTERVAL 5 MINUTE), host_id = ? ";
+  query = "INSERT INTO 1_do SET manager_id = ?, client = ?, type = ?, text = ?, brand = ?, date2 = DATE_ADD(NOW(), INTERVAL 5 MINUTE), date1 = DATE_ADD(NOW(), INTERVAL 0 MINUTE), host_id = ? ";
 
     pool.query(query, [ manager_id, client_id, do_type, do_type, brand_id, user_id ], function (err, rows, fields) {
       var insert_id = rows.insertId;
