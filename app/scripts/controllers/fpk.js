@@ -276,7 +276,7 @@ var jsDateDiff = _.memoize( function($scope,dif_sec,date2) {
   }
 
   return answer;
-}, function($scope, dif_sec, date2){ return $scope+date2+dif_sec; });
+}, function($scope, dif_sec, date2){ return $scope+date2+dif_sec+($scope.client?$scope.client.out:""); });
 
 
 myApp.directive('datemini', ['$timeout', function($timeout) { return {
