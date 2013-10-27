@@ -329,6 +329,7 @@ myApp.factory('socket', function($rootScope, $timeout) {
 //  io.set("polling duration", 10); 
 //  });
 	var socket = io.connect(undefined, {'connect timeout': 3000});
+  console.info("connect...");
 
 /*  var globalEvent = "*";
   socket.$emit = function (name) {
@@ -1284,6 +1285,11 @@ $scope.fpk.jsCanEditDo = function(client, mydo) {
 
 }
 
+
+socket.on("sendmessage", function(text){
+  console.info(text)
+  alert(text.data);
+})
 
 socket.on("loadstat", function(){
   $timeout(function(){    

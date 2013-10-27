@@ -188,7 +188,7 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 		clearTimeout(tm_loadstat);
 		tm_loadstat = setTimeout(function(){
 			$scope.getCUPtable();		
-		}, 15000)
+		}, 5000)
 		
 	});
 

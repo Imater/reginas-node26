@@ -1,21 +1,24 @@
 var cluster = require('cluster');
 var http = require('http');
 var numCPUs = require('os').cpus().length;
+var $ = require('jquery');
 
-var worker;
+var worker, workerAll = [];
 
 if (cluster.isMaster) {
   // Fork workers.
   console.info("numCpus", numCPUs);
-  numCPUs = 1;
+  //numCPUs = 1;
   for (var i = 0; i < numCPUs; i++) {
     worker = cluster.fork();
-
+    workerAll.push(worker);
 	worker.on('message', function(msg) {
       // we only want to intercept messages that have a chat property
-      if (msg.chat) {
-        console.log('Worker to master: ', msg.chat);
-        worker.send({ chat: 'Ok worker, Master got the message! Over and out!' });
+      if (msg) {
+      	//оповещаем все процессоры 
+        $.each(workerAll, function(i, work){
+	        work.send( msg );
+        });
       }
     });
 
@@ -34,12 +37,8 @@ if (cluster.isMaster) {
 } else {
 
 
-process.on('message', function(msg) {
-    // we only want to intercept messages that have a chat property
-    if (msg.chat) {
-      console.log('Master to worker: ', msg.chat);
-    }
-  });	
+
+
 
 ////////////////////////////////////////////////////////////////////
 
@@ -47,8 +46,9 @@ var express = require('express'),
   app = express(),
   fs = require("fs"),
   server = require('http').createServer(app),
-  qs = require('querystring'),
-  io = require('socket.io').listen(server, {log:false});
+  qs = require('querystring');
+
+var io = require('socket.io').listen(server, {log:false});
 var NO_DATE = '0000-00-00 00:00:00';
 var mysql      = require('mysql');
 var md5 = require('MD5');
@@ -83,19 +83,18 @@ mysqlconfig = {
 //connection.connect(); 
 var connection = mysql.createConnection(mysqlconfig);
 
-var $ = require('jquery');
-
 var mdb, collection;
-/*var MongoClient = require('mongodb').MongoClient, format = require('util').format;    
+
+var MongoClient = require('mongodb').MongoClient, format = require('util').format;    
 
   MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
     if(err) throw err;
 
-    mdb = db;
-    collection = mdb.collection('myalldata');
-    collection_mail = mdb.collection('mymail');
+    global.mdb = db;
+    global.collection = global.mdb.collection('my_cache');   
+
   });
-*/
+
 
 /*app.configure(function() {*/
 
@@ -133,6 +132,24 @@ app.use(express.bodyParser());
 
 
 
+  //центр пересылки сообщений по сокету
+  process.on('message', function(msg) {
+
+    if(msg.message_type) {
+    	if(msg.message_type == "loadstat") {
+	 	  	//global.report.loadstat();
+	 	  	io.sockets.emit('loadstat');
+    	} else if(msg.message_type == "chat") {
+	 	  	//global.report.sendMessage( msg.chat ); //отправка алерта
+	 	  	io.sockets.emit('sendmessage', {data: msg.chat});
+
+    	}
+    }
+
+  });	
+
+
+
 /*s3.createBucket({Bucket: 'upload.4tree.ru'}, function() {
   var params = {Bucket: 'upload.4tree.ru', Key: 'myKey', Body: 'Hello!'};
   s3.putObject(params, function(err, data) {
@@ -149,15 +166,18 @@ var the_socket;
 function Report(socket) {
   //Обрабатываем данные синхронизации
   var tm_emit;
+/*  this.sendMessage = function(text){
+      socket.emit( 'sendmessage', {data: text} ); 
+  }
   this.loadstat = function(user_id){
     clearTimeout(tm_emit);
     tm_emit = setTimeout(function(){
       //_sqllog({manager: user_id?user_id:"", text:"broadcast.emit( 'loadstat' )"});
-      socket.broadcast.emit( 'loadstat' );
+      socket.emit( 'loadstat' );
 
     },5);
   }
-  this.sync_answer = function(data, user_id) {
+*/  this.sync_answer = function(data, user_id) {
     var dfdArray = [];
     var rows = {};
     if(!user_id) {
@@ -219,11 +239,9 @@ function jsFindById(id) {
   return dfd.promise();
 }
 
-var report;
 
 io.sockets.on('connection', function(socket) {
-
-  report = new Report(socket);
+  global.report = new Report(socket);
 
   socket.on('createNote', function(data) {
     socket.broadcast.emit('onNoteCreated', data);
@@ -232,7 +250,7 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('sync', function(data) {
     jsCheckToken(data.token, response).done(function(user_id){
-        report.sync_answer(data, user_id);
+        global.report.sync_answer(data, user_id);
     });
     
   });
@@ -255,9 +273,12 @@ io.set('log level', 3); // reduce logging
 
 database = exports;
 
-setInterval(function(){ 
-  database.checkSMS();
-}, 60000);
+//отправкой SMS занимается только один процессор (сервер)
+if(cluster.worker.id == 1) {
+	setInterval(function(){ 
+	  database.checkSMS();
+	}, 60000);
+}
 
 app.get("/api/v1/user_:user_id/time_:lasttime/:action", function(request, response) {
   database.findAllContinents(request,function(err, results) {
@@ -868,63 +889,67 @@ exports.loadStat = function(request, response) {
   var cache_id = md5(brand_id + manager_id + today);
 
 
-  if(!global.stat_cache[brand_id]) {
-    global.stat_cache[brand_id] = {};
-  }
+  global.collection.find({ type: "loadStat", cache_id: cache_id }).toArray( function(err, the_cache){
+
+	  if( the_cache.length ) {
+	    response.send( the_cache[0]["mydata"] ); //статистика кешируется нижняя и левая
+	    //console.info("info_from_cache", cache_id);
+	    //console.info("Stat from cache "+cache_id+", brand = ", brand_id,global.stat_cache);
+	  } else {
+
+	    if(manager_id>0) {
+	      var manager_sql = " manager_id = '"+manager_id+"' AND "
+	    } else {
+	      var manager_sql = "";     
+	    }
+	  if(filter.items)
+	    $.each(filter.items, function(i, el){
+	      if(el.filter) {
+	        el.filter.brand = request.query.brand;
+	        f_filter = jsMakeClientFilter(el.filter); 
 
 
-  if( global.stat_cache[brand_id][ cache_id ] ) {
-    response.send( global.stat_cache[brand_id][ cache_id ] ); //статистика кешируется нижняя и левая
-    //console.info("Stat from cache "+cache_id+", brand = ", brand_id,global.stat_cache);
-  } else {
+	        var myquery = 'SELECT count(*) cnt FROM `1_clients` WHERE ' + manager_sql + f_filter + " true ";      
+	        //console.info(myquery);
 
-    if(manager_id>0) {
-      var manager_sql = " manager_id = '"+manager_id+"' AND "
-    } else {
-      var manager_sql = "";     
-    }
-  if(filter.items)
-    $.each(filter.items, function(i, el){
-      if(el.filter) {
-        el.filter.brand = request.query.brand;
-        f_filter = jsMakeClientFilter(el.filter); 
+	        var dfd = (function(){
+	          var dfd = $.Deferred();
+
+	            pool.query(myquery, function (err, rows, fields) {
+	            answer[ el.id ] = rows[0].cnt;
+	            dfd.resolve();
+	          });       
+	          return dfd.promise();
+	        })(); 
+
+	        dfdArray.push( dfd );
+	      }
+	    }); 
+
+	    var result = [];
+	    dfdArray.push( jsLoadStatSMS("dg", brand_id, today, result) );
+	    dfdArray.push( jsLoadStatSMS("vd", brand_id, today, result) );
+	    dfdArray.push( jsLoadStatSMS("vd_plan", brand_id, today, result) );
+	    dfdArray.push( jsLoadStatSMS("out", brand_id, today, result) );
+	    dfdArray.push( jsLoadStatSMS("zv", brand_id, today, result) );
+	    dfdArray.push( jsLoadStatSMS("vz", brand_id, today, result) );
+	    dfdArray.push( jsLoadStatSMS("tst", brand_id, today, result) );
+
+	    $.when.apply(null, dfdArray).then(function(){
+	      answer = {left_stat: answer, sms: result};
+		  global.collection.update({cache_id: cache_id}, {type: "loadStat", brand: brand_id, cache_id: cache_id, mydata: answer, time: jsNow()}, { upsert: true }, function(err, docs){
+		 	  global.collection.count(function(err, count) {
+		        console.log(format("saved cache of stat = %s", count));
+		      });    	
+		  });
 
 
-        var myquery = 'SELECT count(*) cnt FROM `1_clients` WHERE ' + manager_sql + f_filter + " true ";      
-        //console.info(myquery);
 
-        var dfd = (function(){
-          var dfd = $.Deferred();
+	      response.send(answer);  
+	    })
+	  };
 
-            pool.query(myquery, function (err, rows, fields) {
-            answer[ el.id ] = rows[0].cnt;
-            dfd.resolve();
-          });       
-          return dfd.promise();
-        })(); 
-
-        dfdArray.push( dfd );
-      }
-    }); 
-
-    var result = [];
-    dfdArray.push( jsLoadStatSMS("dg", brand_id, today, result) );
-    dfdArray.push( jsLoadStatSMS("vd", brand_id, today, result) );
-    dfdArray.push( jsLoadStatSMS("vd_plan", brand_id, today, result) );
-    dfdArray.push( jsLoadStatSMS("out", brand_id, today, result) );
-    dfdArray.push( jsLoadStatSMS("zv", brand_id, today, result) );
-    dfdArray.push( jsLoadStatSMS("vz", brand_id, today, result) );
-    dfdArray.push( jsLoadStatSMS("tst", brand_id, today, result) );
-
-    $.when.apply(null, dfdArray).then(function(){
-      answer = {left_stat: answer, sms: result};
-      if(!global.stat_cache[brand_id]) {
-        global.stat_cache[brand_id] = {};
-      }
-      global.stat_cache[brand_id][ cache_id ] = answer;
-      response.send(answer);  
-    })
-  };
+  });
   
 }
 
@@ -932,13 +957,38 @@ var jsLoadStatSMS = function(type, brand_id, today, result) {
   var dfd = $.Deferred();
   var tmp = today.split("-");
   var today_month = tmp[0]+"-"+tmp[1];
-  if( type != "vd_plan" ) {
+
+  if (type=="vd_plan") {
+    var val = {type: type, icon: "1vidacha.png", day: 0, month: 0, title: "Запланированные выдачи", order: 2};
+    myquery = "SELECT icon2 FROM `1_clients` WHERE `icon2`>2 AND vd='0000-00-00 00:00:00' AND `out`='0000-00-00 00:00:00' AND brand = ? ";
+    pool.query(myquery, [brand_id], function (err, rows, fields) {
+      val["plan"] = { plan5: 0, plan4: 0, plan3: 0 };
+      $.each(rows, function(i, cl){
+        if( cl.icon2 == 3 ) val.plan.plan3 += 1;
+        if( cl.icon2 == 4 ) val.plan.plan4 += 1;
+        if( cl.icon2 == 5 ) val.plan.plan5 += 1;
+      });
+      result.push( val );
+      dfd.resolve();
+    });
+  } else if (type=="tst") {
+    if(type=="tst") var val = {type: type, icon: "1test-drive.png", day: 0, month: 0, title: "Тестдрайвы", order: 6};
+    myquery = "SELECT count(*) cnt FROM `1_do` WHERE type='Тест-драйв' AND date2 LIKE '"+today_month+"%' AND checked != '0000-00-00 00:00:00' AND brand = ? ";
+    pool.query(myquery, [brand_id], function (err, rows_month, fields) {
+	    myquery = "SELECT count(*) cnt FROM `1_do` WHERE type='Тест-драйв' AND date2 LIKE '"+today+"%' AND checked != '0000-00-00 00:00:00' AND brand = ? ";
+	    pool.query(myquery, [brand_id], function (err, rows_day, fields) {
+		      val.day = rows_day[0].cnt;
+		      val.month = rows_month[0].cnt;;
+		      result.push( val );
+		      dfd.resolve();
+		});
+    });
+  } else {
     if(type=="dg") var val = {type: type, icon: "1dogovor.png", day: 0, month: 0, title: "Договора", order: 0};
     if(type=="vd") var val = {type: type, icon: "1vidacha.png", day: 0, month: 0, title: "Выдачи", order: 1};
     if(type=="out") var val = {type: type, icon: "1out.png", day: 0, month: 0, title: "Расторжения", order: 3};
     if(type=="zv") var val = {type: type, icon: "1zvonok.png", day: 0, month: 0, title: "Звонки первичные", order: 4};
     if(type=="vz") var val = {type: type, icon: "1vizit.png", day: 0, month: 0, title: "Визиты первичные", order: 5};
-    if(type=="tst") var val = {type: type, icon: "1test-drive.png", day: 0, month: 0, title: "Тестдрайвы", order: 6};
 
     if(type=="out") {
       var insert_sql = ' dg != "0000-00-00 00:00:00" AND';
@@ -956,20 +1006,8 @@ var jsLoadStatSMS = function(type, brand_id, today, result) {
         dfd.resolve();
       });
     });
-  } else if (type=="vd_plan") {
-    var val = {type: type, icon: "1vidacha.png", day: 0, month: 0, title: "Запланированные выдачи", order: 2};
-    myquery = "SELECT icon2 FROM `1_clients` WHERE `icon2`>2 AND vd='0000-00-00 00:00:00' AND `out`='0000-00-00 00:00:00' AND brand = ? ";
-    pool.query(myquery, [brand_id], function (err, rows, fields) {
-      val["plan"] = { plan5: 0, plan4: 0, plan3: 0 };
-      $.each(rows, function(i, cl){
-        if( cl.icon2 == 3 ) val.plan.plan3 += 1;
-        if( cl.icon2 == 4 ) val.plan.plan4 += 1;
-        if( cl.icon2 == 5 ) val.plan.plan5 += 1;
-      });
-      result.push( val );
-      dfd.resolve();
-    });
   }
+
   return dfd.promise();
 }
 
@@ -2030,10 +2068,11 @@ exports.saveDo = function(request, response) {
 
 function jsClearCacheByBrand(brand_id) {
 
-    if(global.stat_cache && global.stat_cache[brand_id] ) {
-      delete global.stat_cache[brand_id]; //обнуляем кеш
-      global.stat_cache_cup = {};
-    }
+      global.collection.remove({type:"loadStat", brand: brand_id}, function(err, data){
+      });
+
+      global.collection.remove({type:"cup"}, function(err, data){
+      });
 
 }
 
@@ -2102,10 +2141,6 @@ exports.saveAdmin = function(request, response) {
     //global.stat_cache = {}; //обнуляем кеш
       jsClearCacheByBrand( request.query.brand );
 
-    if(false)
-    setTimeout(function(){
-      report.loadstat(user_id);
-    },5);
 
   //    global.stat_cache = {}; //обнуляем кеш
     }); 
@@ -2320,9 +2355,9 @@ exports.removeClient = function(request, response) {
       //global.stat_cache = {}; //обнуляем кеш
         jsClearCacheByBrand( request.query.brand );
 
-      setTimeout(function(){
-          report.loadstat(user_id);
-      },5);
+        setTimeout(function(){
+            process.send({ message_type: "loadstat" });
+        },5);
 
       });
     }); 
@@ -2343,8 +2378,8 @@ exports.deleteAdmin = function(request, response) {
     jsClearCacheByBrand( request.query.brand );
 
     setTimeout(function(){
-      report.loadstat(user_id);
-      //console.info("load_stat", user_id);
+            process.send({ message_type: "loadstat" });
+
     },5);
 
     });
@@ -2385,192 +2420,195 @@ exports.loadStatCup = function(request, response) {
   var brand_id = request.query.brand;
   var cache_id = md5(JSON.stringify(request.query) + brand_id);
 
-  if(!global.stat_cache_cup) {
-    global.stat_cache_cup = {};
-  }
+  global.collection.find({ type: "cup", cache_id: cache_id }).toArray( function(err, the_cache){
+
+	  if( the_cache.length ) {
+	    response.send( the_cache[0]["mydata"] ); //статистика кешируется нижняя и левая
+	    //console.info("info_from_cache_CUP", cache_id);
+	    //console.info("Stat from cache "+cache_id+", brand = ", brand_id,global.stat_cache);
+	  } else {
 
 
-  if( global.stat_cache_cup[ cache_id ] ) {
-    response.send( global.stat_cache_cup[ cache_id ] );
-    //console.info("Stat from cache "+cache_id+", brand = ", brand_id);
-  } else {
+	  pool.query('SELECT * FROM `1_plan` WHERE `month` = "'+today_month+'"', function (err, plans, fields) {
+	      //console.info(plans);
+	    pool.query('SELECT * FROM `1_brands` WHERE `Show` = 1 ORDER by brand_group, title', function (err, brands, fields) {
+	      brands.push({id: -1, title: "Итого №1", brand_group: 1, logo: "logo-seyho.png"});
+	      brands.push({id: -2, title: "Итого №2", brand_group: 2, logo: "logo-seyho.png"});
+	      brands.push({id: -3, title: "Итого №3", brand_group: 3, logo: "logo-seyho.png"});
+	      brands.push({id: 0, title: "Итого", brand_group: 4,logo: "logo-seyho.png"});
+
+	      $.each(brands, function(i, brand){
+	      var plan = _.find(plans, function(el){ return el.brand == brand.id; });
+	        brand.cup = { 
+	              dogovor: 0,
+	              dogovor_month: 0,
+
+	              vidacha: 0,
+	              vidacha_month: 0,
+
+	              out: 0,
+	              out_month: 0,
+
+	              zvonok: 0,
+	              zvonok_month: 0,
+
+	              zvonok_admin: 0,
+	              zvonok_month_admin: 0,
 
 
+	              vizit: 0,
+	              vizit_month: 0,
 
-  pool.query('SELECT * FROM `1_plan` WHERE `month` = "'+today_month+'"', function (err, plans, fields) {
-      //console.info(plans);
-    pool.query('SELECT * FROM `1_brands` WHERE `Show` = 1 ORDER by brand_group, title', function (err, brands, fields) {
-      brands.push({id: -1, title: "Итого №1", brand_group: 1, logo: "logo-seyho.png"});
-      brands.push({id: -2, title: "Итого №2", brand_group: 2, logo: "logo-seyho.png"});
-      brands.push({id: -3, title: "Итого №3", brand_group: 3, logo: "logo-seyho.png"});
-      brands.push({id: 0, title: "Итого", brand_group: 4,logo: "logo-seyho.png"});
+	              vizit_admin: 0,
+	              vizit_month_admin: 0,
 
-      $.each(brands, function(i, brand){
-      var plan = _.find(plans, function(el){ return el.brand == brand.id; });
-        brand.cup = { 
-              dogovor: 0,
-              dogovor_month: 0,
+	              test: 0,
+	              test_month: 0,
 
-              vidacha: 0,
-              vidacha_month: 0,
+	              plan: plan?plan.plan:0,
 
-              out: 0,
-              out_month: 0,
+	              prognoz_5: 0,
+	              prognoz_4: 0,
+	              prognoz_3: 0
 
-              zvonok: 0,
-              zvonok_month: 0,
+	              };
+	      });
 
-              zvonok_admin: 0,
-              zvonok_month_admin: 0,
+	      function jsCupIncrement(brands, brand_id, field_name) {
+	      var cup_element = _.find(brands, function(el){ return el.id == brand_id; });
+	      if(cup_element) cup_element.cup[field_name] += 1;
 
+	      var cup_element = _.find(brands, function(el){ return el.id == -cup_element.brand_group; });
+	      if(cup_element) cup_element.cup[field_name] += 1;
 
-              vizit: 0,
-              vizit_month: 0,
+	      var cup_element = _.find(brands, function(el){ return el.id == 0; });
+	      if(cup_element) cup_element.cup[field_name] += 1;
 
-              vizit_admin: 0,
-              vizit_month_admin: 0,
+	      }
 
-              test: 0,
-              test_month: 0,
+	      function jsFindBrandGroup(brand_id) {
+	      var cup_element = _.find(brands, function(el){ return el.id == brand_id; });
 
-              plan: plan?plan.plan:0,
+	      }
 
-              prognoz_5: 0,
-              prognoz_4: 0,
-              prognoz_3: 0
+	    pool.query('SELECT * FROM 1_doadmin WHERE date1 LIKE ?', [today_month+"%"], function (err, do_admin, fields){
+	      do_admin = correct_dates(do_admin);
+	        pool.query('SELECT id, brand, zv, vz, tst, dg, vd, `out`, icon2 FROM `1_clients` WHERE'+
+	          ' zv LIKE "'+today_month+'%" OR vz LIKE "'+today_month+'%" OR tst LIKE "'+today_month+'%" OR dg LIKE "'+today_month+'%" OR vd LIKE "'+today_month+'%" OR `out` LIKE "'+today_month+'%" OR (icon2 > 2 AND vd = "0000-00-00 00:00:00")',  function (err, cars, fields) {
+	            cars = correct_dates(cars,"zero_date");
+	            //console.info("cars",cars);
 
-              };
-      });
+	            $.each(do_admin, function(i, do_adm){
+	              //Звонки
+	              if( (do_adm['type']=="zv") &&
+	                (do_adm.date1.indexOf(today_month)!=-1) ) {
+	                jsCupIncrement(brands, do_adm.brand, "zvonok_month_admin");
+	                if( (do_adm.date1.indexOf(today_date)!=-1) ) {
+	                  jsCupIncrement(brands, do_adm.brand, "zvonok_admin");
+	                }
+	              }
+	              //Визиты
+	              if( (do_adm['type']=="vz") &&
+	                (do_adm.date1.indexOf(today_month)!=-1) ) {
+	                jsCupIncrement(brands, do_adm.brand, "vizit_month_admin");
+	                if( (do_adm.date1.indexOf(today_date)!=-1) ) {
+	                  jsCupIncrement(brands, do_adm.brand, "vizit_admin");
+	                }
+	              }
 
-      function jsCupIncrement(brands, brand_id, field_name) {
-      var cup_element = _.find(brands, function(el){ return el.id == brand_id; });
-      if(cup_element) cup_element.cup[field_name] += 1;
+	            });
 
-      var cup_element = _.find(brands, function(el){ return el.id == -cup_element.brand_group; });
-      if(cup_element) cup_element.cup[field_name] += 1;
+	            $.each(cars, function(i, car){
 
-      var cup_element = _.find(brands, function(el){ return el.id == 0; });
-      if(cup_element) cup_element.cup[field_name] += 1;
+	              //Договора
+	              if( (car.dg!="") &&
+	                (car.dg.indexOf(today_month)!=-1) ) {
+	                jsCupIncrement(brands, car.brand, "dogovor_month");
+	                if( (car.dg.indexOf(today_date)!=-1) ) {
+	                  jsCupIncrement(brands, car.brand, "dogovor");
+	                }
+	              }
 
-      }
+	              //Выдачи
+	              if( (car.vd!="") &&
+	                (car.vd.indexOf(today_month)!=-1) ) {
+	                jsCupIncrement(brands, car.brand, "vidacha_month");
+	                if( (car.vd.indexOf(today_date)!=-1) ) {
+	                  jsCupIncrement(brands, car.brand, "vidacha");
+	                }
+	              }
 
-      function jsFindBrandGroup(brand_id) {
-      var cup_element = _.find(brands, function(el){ return el.id == brand_id; });
+	              //Расторжения
+	              if( (car.dg!="") && (car.out!="") && (car.vd=="") &&
+	                (car.out.indexOf(today_month)!=-1) ) {
+	                jsCupIncrement(brands, car.brand, "out_month");
+	                if( (car.out.indexOf(today_date)!=-1) ) {
+	                  jsCupIncrement(brands, car.brand, "out");
+	                }
+	              }
 
-      }
+	              //Звонки (первичные)
+	              if( (car.zv!="") && 
+	                (car.zv.indexOf(today_month)!=-1) ) {
+	                jsCupIncrement(brands, car.brand, "zvonok_month");
+	                if( (car.zv.indexOf(today_date)!=-1) ) {
+	                  jsCupIncrement(brands, car.brand, "zvonok");
+	                }
+	              }
 
-    pool.query('SELECT * FROM 1_doadmin WHERE date1 LIKE ?', [today_month+"%"], function (err, do_admin, fields){
-      do_admin = correct_dates(do_admin);
-        pool.query('SELECT id, brand, zv, vz, tst, dg, vd, `out`, icon2 FROM `1_clients` WHERE'+
-          ' zv LIKE "'+today_month+'%" OR vz LIKE "'+today_month+'%" OR tst LIKE "'+today_month+'%" OR dg LIKE "'+today_month+'%" OR vd LIKE "'+today_month+'%" OR `out` LIKE "'+today_month+'%" OR (icon2 > 2 AND vd = "0000-00-00 00:00:00")',  function (err, cars, fields) {
-            cars = correct_dates(cars,"zero_date");
-            //console.info("cars",cars);
+	              //Визиты (первичные)
+	              if( (car.vz!="") && 
+	                (car.vz.indexOf(today_month)!=-1) ) {
+	                jsCupIncrement(brands, car.brand, "vizit_month");
+	                if( (car.vz.indexOf(today_date)!=-1) ) {
+	                  jsCupIncrement(brands, car.brand, "vizit");
+	                }
+	              }
 
-            $.each(do_admin, function(i, do_adm){
-              //Звонки
-              if( (do_adm['type']=="zv") &&
-                (do_adm.date1.indexOf(today_month)!=-1) ) {
-                jsCupIncrement(brands, do_adm.brand, "zvonok_month_admin");
-                if( (do_adm.date1.indexOf(today_date)!=-1) ) {
-                  jsCupIncrement(brands, do_adm.brand, "zvonok_admin");
-                }
-              }
-              //Визиты
-              if( (do_adm['type']=="vz") &&
-                (do_adm.date1.indexOf(today_month)!=-1) ) {
-                jsCupIncrement(brands, do_adm.brand, "vizit_month_admin");
-                if( (do_adm.date1.indexOf(today_date)!=-1) ) {
-                  jsCupIncrement(brands, do_adm.brand, "vizit_admin");
-                }
-              }
+	              //Тесты
+	              if( (car.tst!="") && 
+	                (car.tst.indexOf(today_month)!=-1) ) {
+	                jsCupIncrement(brands, car.brand, "test_month");
+	                if( (car.tst.indexOf(today_date)!=-1) ) {
+	                  jsCupIncrement(brands, car.brand, "test");
+	                }
+	              }
 
-            });
+	              //Прогнозы продаж icon
+	              if( (car.icon2>2) && (car.dg!="") && (car.vd=="") ) {
+	                if((car.icon2==5)) jsCupIncrement(brands, car.brand, "prognoz_5");
+	                if((car.icon2==4)) jsCupIncrement(brands, car.brand, "prognoz_4");
+	                if((car.icon2==3)) jsCupIncrement(brands, car.brand, "prognoz_3");
+	              }
 
-            $.each(cars, function(i, car){
-
-              //Договора
-              if( (car.dg!="") &&
-                (car.dg.indexOf(today_month)!=-1) ) {
-                jsCupIncrement(brands, car.brand, "dogovor_month");
-                if( (car.dg.indexOf(today_date)!=-1) ) {
-                  jsCupIncrement(brands, car.brand, "dogovor");
-                }
-              }
-
-              //Выдачи
-              if( (car.vd!="") &&
-                (car.vd.indexOf(today_month)!=-1) ) {
-                jsCupIncrement(brands, car.brand, "vidacha_month");
-                if( (car.vd.indexOf(today_date)!=-1) ) {
-                  jsCupIncrement(brands, car.brand, "vidacha");
-                }
-              }
-
-              //Расторжения
-              if( (car.dg!="") && (car.out!="") && (car.vd=="") &&
-                (car.out.indexOf(today_month)!=-1) ) {
-                jsCupIncrement(brands, car.brand, "out_month");
-                if( (car.out.indexOf(today_date)!=-1) ) {
-                  jsCupIncrement(brands, car.brand, "out");
-                }
-              }
-
-              //Звонки (первичные)
-              if( (car.zv!="") && 
-                (car.zv.indexOf(today_month)!=-1) ) {
-                jsCupIncrement(brands, car.brand, "zvonok_month");
-                if( (car.zv.indexOf(today_date)!=-1) ) {
-                  jsCupIncrement(brands, car.brand, "zvonok");
-                }
-              }
-
-              //Визиты (первичные)
-              if( (car.vz!="") && 
-                (car.vz.indexOf(today_month)!=-1) ) {
-                jsCupIncrement(brands, car.brand, "vizit_month");
-                if( (car.vz.indexOf(today_date)!=-1) ) {
-                  jsCupIncrement(brands, car.brand, "vizit");
-                }
-              }
-
-              //Тесты
-              if( (car.tst!="") && 
-                (car.tst.indexOf(today_month)!=-1) ) {
-                jsCupIncrement(brands, car.brand, "test_month");
-                if( (car.tst.indexOf(today_date)!=-1) ) {
-                  jsCupIncrement(brands, car.brand, "test");
-                }
-              }
-
-              //Прогнозы продаж icon
-              if( (car.icon2>2) && (car.dg!="") && (car.vd=="") ) {
-                if((car.icon2==5)) jsCupIncrement(brands, car.brand, "prognoz_5");
-                if((car.icon2==4)) jsCupIncrement(brands, car.brand, "prognoz_4");
-                if((car.icon2==3)) jsCupIncrement(brands, car.brand, "prognoz_3");
-              }
-
-            });
+	            });
 
 
-        brands = _.sortBy(brands, function(br){ return (br.brand_group) });
+	        brands = _.sortBy(brands, function(br){ return (br.brand_group) });
 
-            answer = {brands: brands, cars: ""};
-        if(!global.stat_cache_cup) {
-          global.stat_cache_cup = {};
-        }
+	            answer = {brands: brands, cars: ""};
 
-        //console.info(answer);
+	        //console.info(answer);
 
-            global.stat_cache_cup[ cache_id ] = answer;
-            response.send(answer);
-        });
+	            //global.stat_cache_cup[ cache_id ] = answer;
 
+				  global.collection.update({cache_id: cache_id}, {type: "cup", brand: brand_id, cache_id: cache_id, mydata: answer, time: jsNow()}, { upsert: true }, function(err, docs){
+				 	  global.collection.count(function(err, count) {
+				        console.log(format("saved cache of stat CUP = %s", count));
+				      });    	
+				  });
+
+
+	            response.send(answer);
+	        });
+
+	    });
+
+	      
+	    }); //1_brands
+	  }); //1_plan  
+	 } //else cache
     });
-
-      
-    }); //1_brands
-  }); //1_plan  
- } //else cache
 }
 
 exports.loadStatCupCars = function(request, response) {
@@ -2757,7 +2795,8 @@ function jsUpdateClient(client_id) {
         jsClearCacheByBrand( the_client[0].brand );
 
         setTimeout(function(){
-          report.loadstat("client_id = "+client_id);
+            process.send({ message_type: "loadstat" });
+
         },5);
           
         }); 
@@ -3065,14 +3104,16 @@ exports.loadStatTable = function(request, response) {
   var brand_id = request.query.brand;
 
   var cache_id = md5( brand_id + "salt");
+  console.info("cache_id"+cache_id);
 
-  if(!global.stat_cache[brand_id]) {
-    global.stat_cache[brand_id] = {};
-  }
+  global.collection.find({ type: "cup", cache_id: cache_id }).toArray( function(err, the_cache){
 
-  if(true && global.stat_cache[brand_id][cache_id]) {
-    response.send( global.stat_cache[brand_id][cache_id] );
-  } else {
+	  if( the_cache.length ) {
+	    response.send( the_cache[0]["mydata"] ); //статистика кешируется нижняя и левая
+	    //console.info("info_from_cache_CUP_GRAPH!!!", cache_id);
+	    //console.info("Stat from cache "+cache_id+", brand = ", brand_id,global.stat_cache);
+	  } else {
+
 
     var answer = {};
 
@@ -3127,7 +3168,7 @@ exports.loadStatTable = function(request, response) {
           var do_type = "out";
           //console.info(car.fio, col.col);
           var month = (col.col>1)?col.col:'0'+col.col;
-          if( (car.dg=="") && (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
+          if( (car.dg!="") && (car[do_type]) && (car[do_type].indexOf("-"+month+"-")!=-1) ) {
             return true;
           } else {
             return false;
@@ -3243,15 +3284,17 @@ exports.loadStatTable = function(request, response) {
         }); //cars  
       
           response.send(answer);
-          if(!global.stat_cache[brand_id]) {
-            global.stat_cache[brand_id] = {};
-          }
-          global.stat_cache[brand_id][cache_id] = answer;
+
+		  global.collection.update({cache_id: cache_id}, {type: "cup", brand: brand_id, cache_id: cache_id, mydata: answer, time: jsNow(), graph: "TRUE"}, { upsert: true }, function(err, docs){
+		 	  global.collection.count(function(err, count) {
+		        console.log(format("saved cache of stat CUP_GRAPH = %s", count));
+		      });    	
+		  });
 
         }); //cars
     }); //model
   }
-  
+  });
 }
 
 exports.sendSMS = function(request, response) {
@@ -3274,6 +3317,7 @@ exports.checkSMS = function(request, response) {
   pool.query(query, function (err, mydo, fields) {
     mydo = correct_dates(mydo);
     var ids = "";
+    if(mydo)
     $.each(mydo, function(i,the_do){
       //var t_time = the_do.remind_time.toString().split(" ")[1];
       //var time1 = t_time[0]+":"+t_time[1];
@@ -3398,18 +3442,18 @@ smtpTransport.sendMail(mailOptions, function(error, response){
 exports.loadJsonCup = function(request, response) {
 
   var brand = request.query.brand;
+  var brand_id = request.query.brand;
 
-  var cache_id = md5(brand);
+  var cache_id = md5(brand+"saltJsonCup");
 
-  if(!global.stat_cache_cup) {
-    global.stat_cache_cup = {};
-  }
+  global.collection.find({ type: "cup", cache_id: cache_id }).toArray( function(err, the_cache){
 
+	  if( the_cache.length ) {
+	    response.send( the_cache[0]["mydata"] ); //статистика кешируется нижняя и левая
+	    //console.info("info_from_cache graph json", cache_id);
+	    //console.info("Stat from cache "+cache_id+", brand = ", brand_id,global.stat_cache);
+	  } else {
 
-  if( global.stat_cache_cup[ cache_id ] ) {
-    response.send( global.stat_cache_cup[ cache_id ] );
-    //console.info("Stat from cache "+cache_id+", brand = ", brand);
-  } else {
 
     console.info(brand);
 
@@ -3503,13 +3547,19 @@ exports.loadJsonCup = function(request, response) {
       if(!global.stat_cache_cup) {
         global.stat_cache_cup = {};
       }
-
-
-      global.stat_cache_cup[ cache_id ] = answer;
-
       response.send(answer);
+
+	  global.collection.update({cache_id: cache_id}, {type: "cup", brand: brand_id, cache_id: cache_id, mydata: answer, time: jsNow()}, { upsert: true }, function(err, docs){
+	 	  global.collection.count(function(err, count) {
+	        console.log(format("saved cache of stat_graph = %s", count));
+	      });    	
+	  });
+
+
+
     });
   }
+ });
 
 };
 
@@ -3628,6 +3678,14 @@ exports.loadTestDoc = function(request, response) {
 	 
 }
 
+exports.sendSocketMessage = function(request, response) {
+	var text = request.query.text;
+
+    process.send({ message_type:"chat", chat: text });
+	response.send(true);
+
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////
                                        ////////
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -3692,6 +3750,8 @@ app.delete('/api/v1/organizations', database.deleteOrganizations );
 
 
 app.get('/api/v1/sms', database.sendSMS );
+
+app.get('/api/v1/socketmessage', database.sendSocketMessage );
 
 app.get('/api/v1/stat', database.loadStat );
 app.get('/api/v1/stat/all', database.loadStatAll );
