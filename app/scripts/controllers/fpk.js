@@ -1291,11 +1291,16 @@ socket.on("sendmessage", function(text){
   alert(text.data);
 })
 
-socket.on("loadstat", function(){
-  $timeout(function(){    
-    $scope.fpk.jsLoadStat();
+var my_tm;
+socket.on("loadstat", function(msg){
+  $timeout.cancel(my_tm);
+  my_tm = $timeout(function(){    
+    if( parseInt(msg.brand) == $scope.fpk.brand) {
+      $scope.fpk.jsLoadStat();
+    } else {
+    }
     $rootScope.$broadcast("loadstat");
-  },80+parseInt(Math.random()*60));
+  }, 50+parseInt(Math.random()*60));
 });
 
 

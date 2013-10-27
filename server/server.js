@@ -138,7 +138,7 @@ app.use(express.bodyParser());
     if(msg.message_type) {
     	if(msg.message_type == "loadstat") {
 	 	  	//global.report.loadstat();
-	 	  	io.sockets.emit('loadstat');
+	 	  	io.sockets.emit('loadstat', {brand: msg.brand});
     	} else if(msg.message_type == "chat") {
 	 	  	//global.report.sendMessage( msg.chat ); //отправка алерта
 	 	  	io.sockets.emit('sendmessage', {data: msg.chat});
@@ -2356,7 +2356,7 @@ exports.removeClient = function(request, response) {
         jsClearCacheByBrand( request.query.brand );
 
         setTimeout(function(){
-            process.send({ message_type: "loadstat" });
+            process.send({ message_type: "loadstat", brand: request.query.brand });
         },5);
 
       });
@@ -2378,7 +2378,7 @@ exports.deleteAdmin = function(request, response) {
     jsClearCacheByBrand( request.query.brand );
 
     setTimeout(function(){
-            process.send({ message_type: "loadstat" });
+            process.send({ message_type: "loadstat", brand: request.query.brand });
 
     },5);
 
@@ -2795,7 +2795,7 @@ function jsUpdateClient(client_id) {
         jsClearCacheByBrand( the_client[0].brand );
 
         setTimeout(function(){
-            process.send({ message_type: "loadstat" });
+            process.send({ message_type: "loadstat", brand: the_client[0].brand });
 
         },5);
           
