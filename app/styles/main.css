@@ -1070,6 +1070,12 @@ body {
         font-weight: bold;
         display: inline;
         margin-left: 10px; }
+      .clients_list .client_card .client_container .did {
+        color: #1d7601 !important; }
+      .clients_list .client_card .client_container .did:after {
+        content: "\2605 ";
+        margin-left: 10px;
+        font-family: "fontello"; }
       .clients_list .client_card .client_container .client_manager {
         float: right;
         display: inline-block;
@@ -1779,7 +1785,10 @@ a {
   .model_trafic td {
     color: #888; }
   .model_trafic b {
-    color: #000; }
+    color: #000;
+    cursor: pointer; }
+  .model_trafic b:hover {
+    text-decoration: underline; }
   .model_trafic .model {
     color: #000;
     text-align: right;

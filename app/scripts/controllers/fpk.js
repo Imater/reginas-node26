@@ -1224,6 +1224,17 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
 
 if($scope.fpk.jsLoadStat) $scope.fpk.jsLoadStat();
 
+
+    $scope.fpk.jsShowClientIds = function(my_ids) {
+      
+      myApi.getClientIds($scope, my_ids).then(function(clients){
+        //console.info("ids:",clients);
+        $scope.fpk.one_client = clients;
+        $scope.fpk.show_one_client = true;
+      });
+      
+    }
+
 $scope.fpk.brands_cache = "";
 $scope.jsGetBrands = function() {
   if(!$scope.fpk.brands) return false;

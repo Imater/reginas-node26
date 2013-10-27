@@ -78,13 +78,13 @@
 			<td><span ng-if="model.zv_month||model.zv"><b>{{model.zv}}</b> ({{model.zv_month}})</span></td>
 			<td><span ng-if="model.vz_month||model.vz"><b>{{model.vz}}</b> ({{model.vz_month}})</span></td>
 			<td><span ng-if="model.vz2_admin_month||model.vz2_admin"><b>{{model.vz2_admin}}</b> ({{model.vz2_admin_month}})</span></td>
-			<td class="manager"><span ng-if="model.zv_manager||model.zv_manager_month"><b>{{model.zv_manager}}</b> ({{model.zv_manager_month}})</span></td>
-			<td class="manager"><span ng-if="model.vz_manager||model.vz_manager_month"><b>{{model.vz_manager}}</b> ({{model.vz_manager_month}})</td>
-			<td class="manager"><span ng-if="model.tst_manager||model.tst_manager_month"><b>{{model.tst_manager}}</b> ({{model.tst_manager_month}})</td>
-			<td class="manager"><span ng-if="model.contacts||model.contacts_month"><b>{{model.contacts}}</b> ({{model.contacts_month}})</td>
-			<td class="manager"><span ng-if="model.out_manager||model.out_month"><b>{{model.out}}</b> ({{model.out_month}})</td>
-			<td class="manager"><span ng-if="model.dg||model.dg_month"><b>{{model.dg}}</b> ({{model.dg_month}})</td>
-			<td class="manager"><span ng-if="model.vd||model.vd_month"><b>{{model.vd}}</b> ({{model.vd_month}})</td>
+			<td class="manager"><span ng-if="model.zv_manager||model.zv_manager_month"><b ng-click="fpk.jsShowClientIds(model.ids_zv_manager)">{{model.zv_manager}}</b> <a ng-click="fpk.jsShowClientIds(model.ids_zv_manager_month)">({{model.zv_manager_month}})</a></span></td>
+			<td class="manager" ><span ng-if="model.vz_manager||model.vz_manager_month"><b ng-click="fpk.jsShowClientIds(model.ids_vz_manager)">{{model.vz_manager}}</b> <a ng-click="fpk.jsShowClientIds(model.ids_vz_manager_month)">({{model.vz_manager_month}})</a></td>
+			<td class="manager"><span ng-if="model.tst_manager||model.tst_manager_month"><b ng-click="fpk.jsShowClientIds(model.ids_tst_manager)">{{model.tst_manager}}</b> <a ng-click="fpk.jsShowClientIds(model.ids_tst_manager_month)">({{model.tst_manager_month}})</a></td>
+			<td class="manager"><span ng-if="model.contacts||model.contacts_month"><b ng-click="fpk.jsShowClientIds(model.ids_contacts)">{{model.contacts}}</b> <a ng-click="fpk.jsShowClientIds(model.ids_contacts_month)">({{model.contacts_month}})</a></td>
+			<td class="manager"><span ng-if="model.out_manager||model.out_month"><b ng-click="fpk.jsShowClientIds(model.ids_out)">{{model.out}}</b> <a ng-click="fpk.jsShowClientIds(model.ids_out_month)">({{model.out_month}})</a></td>
+			<td class="manager"><span ng-if="model.dg||model.dg_month"><b ng-click="fpk.jsShowClientIds(model.ids_dg)">{{model.dg}}</b> <a ng-click="fpk.jsShowClientIds(model.ids_dg_month)">({{model.dg_month}})</a></td>
+			<td class="manager"><span ng-if="model.vd||model.vd_month"><b ng-click="fpk.jsShowClientIds(model.ids_vd)">{{model.vd}}</b> <a ng-click="fpk.jsShowClientIds(model.ids_vd_month)">({{model.vd_month}})</a></td>
 		</tr>
 	</table>
 
@@ -115,13 +115,13 @@
 			<td><span ng-if="model.zv_month||model.zv"><b>{{model.zv}}</b> ({{model.zv_month}})</span></td>
 			<td><span ng-if="model.vz_month||model.vz"><b>{{model.vz}}</b> ({{model.vz_month}})</span></td>
 			<td><span ng-if="model.vz2_admin_month||model.vz2_admin"><b>{{model.vz2_admin}}</b> ({{model.vz2_admin_month}})</span></td>
-			<td class="manager"><span ng-if="model.zv_manager||model.zv_manager_month"><b>{{model.zv_manager}}</b> ({{model.zv_manager_month}})</span></td>
-			<td class="manager"><span ng-if="model.vz_manager||model.vz_manager_month"><b>{{model.vz_manager}}</b> ({{model.vz_manager_month}})</td>
-			<td class="manager"><span ng-if="model.tst_manager||model.tst_manager_month"><b>{{model.tst_manager}}</b> ({{model.tst_manager_month}})</td>
-			<td class="manager"><span ng-if="model.contacts||model.contacts_month"><b>{{model.contacts}}</b> ({{model.contacts_month}})</td>
-			<td class="manager"><span ng-if="model.out_manager||model.out_month"><b>{{model.out}}</b> ({{model.out_month}})</td>
-			<td class="manager"><span ng-if="model.dg||model.dg_month"><b>{{model.dg}}</b> ({{model.dg_month}})</td>
-			<td class="manager"><span ng-if="model.vd||model.vd_month"><b>{{model.vd}}</b> ({{model.vd_month}})</td>
+			<td class="manager"><span ng-if="model.zv_manager||model.zv_manager_month"><b ng-click="fpk.jsShowClientIds(model.ids_zv_manager)">{{model.zv_manager}}</b> <a ng-click="fpk.jsShowClientIds(model.ids_zv_manager_month)">({{model.zv_manager_month}})</a></span></td>
+			<td class="manager" ><span ng-if="model.vz_manager||model.vz_manager_month"><b ng-click="fpk.jsShowClientIds(model.ids_vz_manager)">{{model.vz_manager}}</b> <a ng-click="fpk.jsShowClientIds(model.ids_vz_manager_month)">({{model.vz_manager_month}})</a></td>
+			<td class="manager"><span ng-if="model.tst_manager||model.tst_manager_month"><b ng-click="fpk.jsShowClientIds(model.ids_tst_manager)">{{model.tst_manager}}</b> <a ng-click="fpk.jsShowClientIds(model.ids_tst_manager_month)">({{model.tst_manager_month}})</a></td>
+			<td class="manager"><span ng-if="model.contacts||model.contacts_month"><b ng-click="fpk.jsShowClientIds(model.ids_contacts)">{{model.contacts}}</b> <a ng-click="fpk.jsShowClientIds(model.ids_contacts_month)">({{model.contacts_month}})</a></td>
+			<td class="manager"><span ng-if="model.out_manager||model.out_month"><b ng-click="fpk.jsShowClientIds(model.ids_out)">{{model.out}}</b> <a ng-click="fpk.jsShowClientIds(model.ids_out_month)">({{model.out_month}})</a></td>
+			<td class="manager"><span ng-if="model.dg||model.dg_month"><b ng-click="fpk.jsShowClientIds(model.ids_dg)">{{model.dg}}</b> <a ng-click="fpk.jsShowClientIds(model.ids_dg_month)">({{model.dg_month}})</a></td>
+			<td class="manager"><span ng-if="model.vd||model.vd_month"><b ng-click="fpk.jsShowClientIds(model.ids_vd)">{{model.vd}}</b> <a ng-click="fpk.jsShowClientIds(model.ids_vd_month)">({{model.vd_month}})</a></td>
 		</tr>
 	</table>
 
@@ -152,13 +152,13 @@
 			<td><span ng-if="model.zv_month||model.zv"><b>{{model.zv}}</b> ({{model.zv_month}})</span></td>
 			<td><span ng-if="model.vz_month||model.vz"><b>{{model.vz}}</b> ({{model.vz_month}})</span></td>
 			<td><span ng-if="model.vz2_admin_month||model.vz2_admin"><b>{{model.vz2_admin}}</b> ({{model.vz2_admin_month}})</span></td>
-			<td class="manager"><span ng-if="model.zv_manager||model.zv_manager_month"><b>{{model.zv_manager}}</b> ({{model.zv_manager_month}})</span></td>
-			<td class="manager"><span ng-if="model.vz_manager||model.vz_manager_month"><b>{{model.vz_manager}}</b> ({{model.vz_manager_month}})</td>
-			<td class="manager"><span ng-if="model.tst_manager||model.tst_manager_month"><b>{{model.tst_manager}}</b> ({{model.tst_manager_month}})</td>
-			<td class="manager"><span ng-if="model.contacts||model.contacts_month"><b>{{model.contacts}}</b> ({{model.contacts_month}})</td>
-			<td class="manager"><span ng-if="model.out_manager||model.out_month"><b>{{model.out}}</b> ({{model.out_month}})</td>
-			<td class="manager"><span ng-if="model.dg||model.dg_month"><b>{{model.dg}}</b> ({{model.dg_month}})</td>
-			<td class="manager"><span ng-if="model.vd||model.vd_month"><b>{{model.vd}}</b> ({{model.vd_month}})</td>
+			<td class="manager"><span ng-if="model.zv_manager||model.zv_manager_month"><b ng-click="fpk.jsShowClientIds(model.ids_zv_manager)">{{model.zv_manager}}</b> <a ng-click="fpk.jsShowClientIds(model.ids_zv_manager_month)">({{model.zv_manager_month}})</a></span></td>
+			<td class="manager" ><span ng-if="model.vz_manager||model.vz_manager_month"><b ng-click="fpk.jsShowClientIds(model.ids_vz_manager)">{{model.vz_manager}}</b> <a ng-click="fpk.jsShowClientIds(model.ids_vz_manager_month)">({{model.vz_manager_month}})</a></td>
+			<td class="manager"><span ng-if="model.tst_manager||model.tst_manager_month"><b ng-click="fpk.jsShowClientIds(model.ids_tst_manager)">{{model.tst_manager}}</b> <a ng-click="fpk.jsShowClientIds(model.ids_tst_manager_month)">({{model.tst_manager_month}})</a></td>
+			<td class="manager"><span ng-if="model.contacts||model.contacts_month"><b ng-click="fpk.jsShowClientIds(model.ids_contacts)">{{model.contacts}}</b> <a ng-click="fpk.jsShowClientIds(model.ids_contacts_month)">({{model.contacts_month}})</a></td>
+			<td class="manager"><span ng-if="model.out_manager||model.out_month"><b ng-click="fpk.jsShowClientIds(model.ids_out)">{{model.out}}</b> <a ng-click="fpk.jsShowClientIds(model.ids_out_month)">({{model.out_month}})</a></td>
+			<td class="manager"><span ng-if="model.dg||model.dg_month"><b ng-click="fpk.jsShowClientIds(model.ids_dg)">{{model.dg}}</b> <a ng-click="fpk.jsShowClientIds(model.ids_dg_month)">({{model.dg_month}})</a></td>
+			<td class="manager"><span ng-if="model.vd||model.vd_month"><b ng-click="fpk.jsShowClientIds(model.ids_vd)">{{model.vd}}</b> <a ng-click="fpk.jsShowClientIds(model.ids_vd_month)">({{model.vd_month}})</a></td>
 		</tr>
 	</table>
 

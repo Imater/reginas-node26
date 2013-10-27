@@ -1441,6 +1441,14 @@ background-color: none !important;
                 margin-left: 10px;
 
             }
+            .did {
+                color: #1d7601 !important; 
+            }
+            .did:after {
+                content: "\2605 ";
+                margin-left: 10px;
+                font-family: "fontello";
+            }
             .client_manager {
                 float:right;
                 display: inline-block;
@@ -2370,6 +2378,10 @@ a {
     }
     b {
         color: #000;
+        cursor: pointer;
+    }
+    b:hover{
+        text-decoration: underline;
     }
     .model {
         color: #000;
