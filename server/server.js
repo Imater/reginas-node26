@@ -71,6 +71,9 @@ io.set('store', new RedisStore({
 
   cluster.on('exit', function(worker, code, signal) {
     console.log('worker ' + worker.process.pid + ' died');
+//    worker = cluster.fork();
+    //workerAll.push(worker);
+    killWorkers('exit');
   });
 
   cluster.on('fork', function(worker, address) {
