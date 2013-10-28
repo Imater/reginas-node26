@@ -32,7 +32,7 @@ io.set('store', new RedisStore({
 */
   // Fork workers.
 
-  var workers = [];
+  var workers = {};
 
   console.info("numCpus", numCPUs);
   //numCPUs = 1;
