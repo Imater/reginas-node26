@@ -423,7 +423,6 @@ exports.getDo = function(request,response) {
 
   var left_menu = request.query.left_menu;
 
-  console.info(left_menu);
 
   var insert_sql2 = '';
   if(left_menu==3) {
