@@ -53,10 +53,10 @@ io.set('store', new RedisStore({
   }
 
 
-
   cluster.on('exit', function(worker, code, signal) {
     console.log('worker ' + worker.process.pid + ' died');
     worker = cluster.fork();
+    delete workerAll[worker.process.pid];
     workerAll[worker.pid] = worker;
     //killWorkers('exit');
   });
@@ -66,8 +66,6 @@ io.set('store', new RedisStore({
   });
 
 } else {
-
-
 
 
 
