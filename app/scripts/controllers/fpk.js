@@ -1205,7 +1205,7 @@ myApp.directive('colorChange', function() {
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
-var LIST_LENGTH = 200; //кол-во загружаемых клиентов за один раз
+var LIST_LENGTH = 100; //кол-во загружаемых клиентов за один раз
 
 
 myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment, $timeout) {
