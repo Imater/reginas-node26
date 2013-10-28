@@ -3421,7 +3421,7 @@ exports.checkSMS = function(request, response) {
       var dots = "";
       if(the_do.text.length>80) dots = "..";
 
-      var text = the_do.type + " "+time+ ". "+ the_do.text.substr(0,80)+dots+ ". "+the_do['short']+" "+the_do.fio+" "+the_do.phone1+"" + host;
+      var text = the_do.type + " "+time+ ". "+ the_do.text.substr(0,80)+dots+ ". "+the_do.fio+" ["+the_do['short']+"] "+the_do.phone1+"" + host;
       sms_texts.push({phone: the_do.phone, text: text});
       ids += the_do.id+",";
 
