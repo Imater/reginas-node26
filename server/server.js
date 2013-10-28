@@ -3703,6 +3703,7 @@ exports.loadTestDoc = function(request, response) {
           pool.query("SELECT * FROM 1_clients WHERE id=? LIMIT 1", [client_id], function (err, clients, fields) {
           	 var the_do = mydo?mydo[0]:0;
 		     pool.query("SELECT * FROM 1_test LEFT JOIN 1_models ON 1_models.id=1_test.model_id WHERE 1_test.id=? LIMIT 1", [the_do?the_do.test_model_id:0], function (err, test, fields) {
+           if(!test[0]) test[0] = "";
 			     pool.query("SELECT * FROM 1_organization WHERE 1_organization.id=? LIMIT 1", [test[0].organization], function (err, organization, fields) {
 			     pool.query("SELECT * FROM 1_brands WHERE id=? LIMIT 1", [brand], function (err, brands, fields) {
 			          	var client = clients[0];
