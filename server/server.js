@@ -2465,11 +2465,15 @@ exports.deleteAdmin = function(request, response) {
 exports.removeDo = function(request, response) {
 
  var do_id = request.query.do_id;
+ if(!do_id) {
+  response.send({error:"error"});
+  return false;
+ }
 
  jsCheckToken(request.query.token, response).done(function(user_id){
   pool.query('SELECT client FROM 1_do WHERE id = ? LIMIT 1',[do_id], function (err, clients, fields) {
     pool.query('DELETE FROM 1_do WHERE id = ? LIMIT 1',[do_id], function (err, rows, fields) {
-      jsUpdateClient(clients?clients[0].client:0).then(function(){
+      jsUpdateClient(clients[0]?clients[0].client:0).then(function(){
         response.send({rows:rows, err: err});
         //console.info({rows:rows, err: err});        
       });
