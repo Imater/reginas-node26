@@ -1534,10 +1534,14 @@ $scope.fpk.jsRoundCorner = function(){
             window.location.hash = menu_item.href;
             return true;
           }
+
           $scope.searchstring = "";
           $scope.fpk.leftmenu.current_filter = menu_item.filter;  
           $scope.fpk.clients = [];
           $scope.fpk.clientsgroupby = menu_item.group_by; 
+          if( ($scope.fpk.manager_filter > 0) && (($index==0) || ($index==1) ) ) {
+            $scope.fpk.clientsgroupby = "icon"; 
+          }
           $scope.fpk.jsRefreshClients();
 
           $('#cards_scrollable').scrollTop(0);
