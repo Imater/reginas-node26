@@ -38,8 +38,7 @@ io.set('store', new RedisStore({
   //numCPUs = 1;
   for (var i = 0; i < numCPUs; i++) {
     worker = cluster.fork();
-    workerAll.push(worker);
-    workers[worker.pid] = worker;
+    workerAll[worker.pid] = worker;
 
 	worker.on('message', function(msg) {
       // we only want to intercept messages that have a chat property
@@ -54,26 +53,12 @@ io.set('store', new RedisStore({
   }
 
 
-    var killWorkers = function(reason){
-        return function(reason) {
-            console.log('Killing because we received ' + reason);
-            _.each(workers, function(w){
-                w.kill();
-                console.log('Killed worker ' + w.pid);
-            });
-            console.log('Shutting down master process');
-            process.exit(1);
-        };
-    };
-
-   process.on('uncaughtException', killWorkers('uncaughtException'));
-   process.on('exit', killWorkers('exit'));
 
   cluster.on('exit', function(worker, code, signal) {
     console.log('worker ' + worker.process.pid + ' died');
-//    worker = cluster.fork();
-    //workerAll.push(worker);
-    killWorkers('exit');
+    worker = cluster.fork();
+    workerAll[worker.pid] = worker;
+    //killWorkers('exit');
   });
 
   cluster.on('fork', function(worker, address) {
@@ -3804,6 +3789,8 @@ exports.sendSocketMessage = function(request, response) {
 
 }
 
+
+
 ////////////////////////////////////////////////////////////////////////////////////////
                                        ////////
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -3870,6 +3857,7 @@ app.delete('/api/v1/organizations', database.deleteOrganizations );
 app.get('/api/v1/sms', database.sendSMS );
 
 app.get('/api/v1/socketmessage', database.sendSocketMessage );
+
 
 app.get('/api/v1/stat', database.loadStat );
 app.get('/api/v1/stat/all', database.loadStatAll );
