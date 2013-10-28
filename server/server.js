@@ -981,7 +981,6 @@ exports.loadStat = function(request, response) {
 	      answer = {left_stat: answer, sms: result};
 		  global.collection.update({cache_id: cache_id}, {type: "loadStat", brand: brand_id, cache_id: cache_id, mydata: answer, time: jsNow()}, { upsert: true }, function(err, docs){
 		 	  global.collection.count(function(err, count) {
-		        console.log(format("saved cache of stat = %s", count));
 		      });    	
 		  });
 
@@ -2470,7 +2469,7 @@ exports.removeDo = function(request, response) {
  jsCheckToken(request.query.token, response).done(function(user_id){
   pool.query('SELECT client FROM 1_do WHERE id = ? LIMIT 1',[do_id], function (err, clients, fields) {
     pool.query('DELETE FROM 1_do WHERE id = ? LIMIT 1',[do_id], function (err, rows, fields) {
-      jsUpdateClient(clients[0].client).then(function(){
+      jsUpdateClient(clients?clients[0].client:0).then(function(){
         response.send({rows:rows, err: err});
         //console.info({rows:rows, err: err});        
       });
@@ -2677,7 +2676,6 @@ exports.loadStatCup = function(request, response) {
 
 				  global.collection.update({cache_id: cache_id}, {type: "cup", brand: brand_id, cache_id: cache_id, mydata: answer, time: jsNow()}, { upsert: true }, function(err, docs){
 				 	  global.collection.count(function(err, count) {
-				        console.log(format("saved cache of stat CUP = %s", count));
 				      });    	
 				  });
 
@@ -3377,7 +3375,6 @@ exports.loadStatTable = function(request, response) {
 
 		  global.collection.update({cache_id: cache_id}, {type: "cup", brand: brand_id, cache_id: cache_id, mydata: answer, time: jsNow(), graph: "TRUE"}, { upsert: true }, function(err, docs){
 		 	  global.collection.count(function(err, count) {
-		        console.log(format("saved cache of stat CUP_GRAPH = %s", count));
 		      });    	
 		  });
 
@@ -3641,7 +3638,6 @@ exports.loadJsonCup = function(request, response) {
 
 	  global.collection.update({cache_id: cache_id}, {type: "cup", brand: brand_id, cache_id: cache_id, mydata: answer, time: jsNow()}, { upsert: true }, function(err, docs){
 	 	  global.collection.count(function(err, count) {
-	        console.log(format("saved cache of stat_graph = %s", count));
 	      });    	
 	  });
 
