@@ -2783,6 +2783,11 @@ exports.loadStatCupCars = function(request, response) {
 function jsUpdateClient(client_id) {
   var dfd = $.Deferred();
 
+  if(!client_id) {
+    dfd.resolve();
+    return dfd.promise();
+  }
+
 
  pool.query('SELECT * FROM `1_clients` WHERE 1_clients.id=?',[client_id], function (err, the_client, fields) {
     pool.query('SELECT * FROM `1_do` WHERE client=? ORDER by date2',[client_id], function (err, client_do, fields) {
@@ -2902,7 +2907,7 @@ function jsUpdateClient(client_id) {
           dfd.resolve( client_id );
           //console.info("client_id="+client_id+" OK: ", rows.affectedRows);
     //    global.stat_cache = {}; //обнуляем кеш
-        jsClearCacheByBrand( the_client[0].brand );
+        if(the_client[0]) jsClearCacheByBrand( the_client[0].brand );
 
         setTimeout(function(){
             process.send({ message_type: "loadstat", brand: the_client[0].brand });
