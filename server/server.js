@@ -31,11 +31,16 @@ io.set('store', new RedisStore({
   }, 1000);
 */
   // Fork workers.
+
+  var workers = [];
+
   console.info("numCpus", numCPUs);
   //numCPUs = 1;
   for (var i = 0; i < numCPUs; i++) {
     worker = cluster.fork();
     workerAll.push(worker);
+    workers[worker.pid] = worker;
+
 	worker.on('message', function(msg) {
       // we only want to intercept messages that have a chat property
       if (msg) {
@@ -49,6 +54,20 @@ io.set('store', new RedisStore({
   }
 
 
+    var killWorkers = function(reason){
+        return function(reason) {
+            console.log('Killing because we received ' + reason);
+            _.each(workers, function(w){
+                w.kill();
+                console.log('Killed worker ' + w.pid);
+            });
+            console.log('Shutting down master process');
+            process.exit(1);
+        };
+    };
+
+   process.on('uncaughtException', killWorkers('uncaughtException'));
+   process.on('exit', killWorkers('exit'));
 
   cluster.on('exit', function(worker, code, signal) {
     console.log('worker ' + worker.process.pid + ' died');
