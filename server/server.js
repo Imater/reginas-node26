@@ -3759,9 +3759,6 @@ exports.loadTestDoc = function(request, response) {
 			          	dover.brand_name = the_brand.brandname;
 			          	dover.brand_importer = the_brand.brandname;
 			          	dover.brand_adress = the_brand.brand_adress?the_brand.brand_adress:"г.Москва";
-			          	dover.brand_title = org.title;
-
-			          	dover.city = org.city;
 
 
 			          	dover.client_fio = client.fio;
@@ -3777,11 +3774,15 @@ exports.loadTestDoc = function(request, response) {
 			          	dover.gos = the_test.gos;
 			          	dover.model = the_test.model;
 
-			          	dover.gd = org.gd;
-			          	dover.gb = org.gb;
-			          	dover.organization = org.title+". ИНН "+org.inn+", КПП "+org.kpp+", "+org.adress;
-			          	dover.bank = org.bank;
-			          	dover.rs = org.rs;
+			          	if(org) {
+                    dover.gd = org.gd;
+			          	  dover.gb = org.gb;
+			          	  dover.organization = org.title+". ИНН "+org.inn+", КПП "+org.kpp+", "+org.adress;
+			          	  dover.bank = org.bank;
+			          	  dover.rs = org.rs;
+                    dover.brand_title = org.title;
+                    dover.city = org.city;
+                  }
 
 			          	response.send({dover: dover});
 			     });
