@@ -3724,6 +3724,7 @@ exports.loadTestDoc = function(request, response) {
 			          	//console.info(client, mydo, the_test, organization);
 
 
+
 			          	dover.client_fio = client.fio;
 			          	dover.client_birthday = client.birthday?client.birthday:"________________";
                   //(client.birthday!='0000-00-00')?tomysql(new Date(client.birthday)).split(" ")[0]:"_____________";
