@@ -3725,7 +3725,8 @@ exports.loadTestDoc = function(request, response) {
 
 
 			          	dover.client_fio = client.fio;
-			          	dover.client_birthday = (client.birthday!='0000-00-00')?tomysql(new Date(client.birthday)).split(" ")[0]:"_____________";
+			          	dover.client_birthday = client.birthday?client.birthday:"________________";
+                  //(client.birthday!='0000-00-00')?tomysql(new Date(client.birthday)).split(" ")[0]:"_____________";
 
 			          	dover.client_pass1 = client.pas1 + " №" + client.pas2;
 			          	dover.client_pass2 = client.pas5 + ", " + client.pas4;

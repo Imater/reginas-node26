@@ -1235,15 +1235,21 @@ if($scope.fpk.jsLoadStat) $scope.fpk.jsLoadStat();
       
     }
 
-$scope.fpk.brands_cache = "";
+var brands_cache = "";
+
 $scope.jsGetBrands = function() {
   if(!$scope.fpk.brands) return false;
 
-  if($scope.fpk.brands_cache != "") {
-    return $scope.fpk.brands_cache;
+  if(brands_cache != "") {
+    return brands_cache;
   }
 
+
   var allow_brands = $scope.fpk.the_user.rights[0].brands;
+  console.info("!!!",allow_brands.length);
+  if(allow_brands.length == 0) {
+    allow_brands = "[" + $scope.fpk.brand + "]";
+  }
 
   var brands = [];
 
@@ -1263,7 +1269,7 @@ $scope.jsGetBrands = function() {
   brands = _.sortBy(brands, function(brand){
     return brand.brand_group+brand.title;
   });
-  $scope.fpk.brands_cache = brands;
+  brands_cache = brands;
   return brands;
   //$scope.fpk.the_user.rights[0].brands  
 }
@@ -1289,6 +1295,14 @@ $scope.fpk.jsCanEditDo = function(client, mydo) {
       ((mydo.manager_id == $scope.fpk.the_user.id ) || (mydo.host_id == $scope.fpk.the_user.id )) ||
       (client.manager_id == $scope.fpk.the_user.id )      
     ) {
+
+    if( (mydo.checked != "0000-00-00 00:00:00") && (can_edit_all_client!=1) ) {
+      var dif_days = ((jsNow() - (fromMysql( mydo.checked ).getTime())) / 1000/60/60/24 );
+      if( dif_days>3 ) {
+        return false;
+      }
+    }
+
     return true; //редактировать дело можно
   } else {
     return false;  //редактировать дело нельзя

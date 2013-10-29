@@ -15,7 +15,7 @@
                             <div class="do_btn" ng-repeat="do_type in fpk.do_types" ng-click="jsAddDo(do_type,client);$event.stopPropagation();"><img ng-class="{img_active:jsCheckDoType(do_type, client)}" title="{{do_type.title}}" ng-src="images/do_type/{{do_type.img}}"></div>
                            </div>
 
-                           <span ng-if="!fpk.jsCanEditClient(client)" class="client_lock" title="Вы не можете редактировать этого клиента. Обратитесь к руководителю"><i class="icon-lock"></i></span>
+                           <span ng-if="!fpk.jsCanEditClient(client)" class="client_lock" title="Вы не можете редактировать этого клиента. Обратитесь к руководителю или старшему менеджеру."><i class="icon-lock"></i></span>
 
                            <div class="datemini" time-now="time_now" date-type="client" ng-model="client.na_date" title="{{client.na_date}}"></div> 
                            <div class="client_fio" ng-class="{did:(client.vd!='0000-00-00 00:00:00')}">{{client.fio}}</div> 
@@ -273,7 +273,7 @@
                                 <span ng-if="do.sms>0&&do.checked=='0000-00-00 00:00:00'" class="do_bell" ng-class="{send:do.sms_send}" title="Установлено SMS напоминание"><i class="icon-bell-1"></i></span>
                                 <div class="do_type_icon"><img ng-src="/images/do_type/{{fpk.do_types_array[do.type].img}}" width="20px" title="Тип дела: {{do.type}}"></div>
 
-                           <span ng-if="!fpk.jsCanEditDo(client, do)" class="do_lock" title="Вы не можете редактировать этого клиента. Обратитесь к руководителю"><i class="icon-lock"></i></span>
+                           <span ng-if="!fpk.jsCanEditDo(client, do)" class="do_lock" title="Вы не можете редактировать этого клиента. Обратитесь к руководителю или старшему менеджеру. Дела выполненные больше чем 3 дня назад, могут редактировать только они."><i class="icon-lock"></i></span>
 
 
                                 <div class="do_text">
