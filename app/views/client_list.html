@@ -39,8 +39,8 @@
                             <span ng-if="client.commercial_id">[откуда узнали: <b>{{fpk.jsFindInArray(fpk.commercials,"id",client.commercial_id).title}}</b>]<br></span>
                             <span ng-if="client.vin">[VIN: <b>{{client.vin}}</b>]<br></span>
                             <span ng-if="client.email">[Email: <b>{{client.email}}</b>]<br></span>
-                            <span ng-if="client.comment.length">{{client.comment}}<br></span><span style="font-size:0px;">{{client.comment.length}}</span>
-                            [Менеджер: <i class="icon-user"></i><b>{{fpk.jsFindInArray(fpk.all_managers,"id",client.manager_id).fio}}</b>]<br>
+                            <span ng-if="client.comment.length">{{client.comment}}<br></span><span style="font-size:0px;">{{client.comment.length}}</span>[Менеджер: <i class="icon-user"></i><b>{{fpk.jsFindInArray(fpk.all_managers,"id",client.manager_id).fio}}</b>]<br>
+                            <font color="#999697">Дата создания: {{client.date}}</font>
                           </div>
                           <div ng-if="client._edit == true" class="client_edit" jq-show-effect="client._edit == true" jq-options="{type:'slide', duration:200, delay:200, hideImmediately: true}">
                             
@@ -267,7 +267,7 @@
 
 
                           <ul>
-                            <li ng-repeat="do in client.do | orderBy: ['_date2','id']: true" class="client_do_li" ng-controller="DoCtrl" myindex={{$index}} mydoid="{{do.id}}">
+                            <li ng-repeat="do in client.do | orderBy: ['_date2']: true" class="client_do_li" ng-controller="DoCtrl" myindex={{$index}} mydoid="{{do.id}}">
                               <div class="do_line" ng-click="jsEditDo(client, do)" ng-class="{'did':do.checked!='0000-00-00 00:00:00'}">
                                 <div class="datemini"  time-now="time_now" date-type="do" ng-model="do.date2" title="{{do.date2}}"></div>
                                 <span ng-if="do.sms>0&&do.checked=='0000-00-00 00:00:00'" class="do_bell" ng-class="{send:do.sms_send}" title="Установлено SMS напоминание"><i class="icon-bell-1"></i></span>
@@ -530,6 +530,7 @@
 
 
                                     </div> <!-- row -->
+                                    <font color="#999697">Дело создано: {{do.created}}, последнее изменение: {{do.changed}}, дата выполнения: {{do.checked}}</font>
 
                                 </div>
 
