@@ -2073,3 +2073,7 @@ li.needgroup {
   color: #000; }
 .test_cars .pull-right {
   text-align: right; }
+
+#edit_admin_cup {
+  float: right;
+  margin-top: 100px; }

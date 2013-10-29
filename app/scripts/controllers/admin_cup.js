@@ -11,6 +11,10 @@ myApp.controller('adminCtrl', function ($scope, $resource, $rootScope, $location
 
     //$scope.fpk.init1();
 
+    $("#edit_admin_cup").on("click",function(){
+        $("td").attr("contenteditable", "true");
+    });
+
 
     $scope.jsDoTypeText = function(type) {
         if(type == "zv") return "Звонок";

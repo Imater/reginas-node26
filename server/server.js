@@ -2518,6 +2518,7 @@ exports.loadStatCup = function(request, response) {
 	      brands.push({id: -1, title: "Итого №1", brand_group: 1, logo: "logo-seyho.png"});
 	      brands.push({id: -2, title: "Итого №2", brand_group: 2, logo: "logo-seyho.png"});
 	      brands.push({id: -3, title: "Итого №3", brand_group: 3, logo: "logo-seyho.png"});
+        brands.push({id: -4, title: "Итого №4", brand_group: 4, logo: "logo-seyho.png"});
 	      brands.push({id: 0, title: "Итого", brand_group: 4,logo: "logo-seyho.png"});
 
 	      $.each(brands, function(i, brand){
