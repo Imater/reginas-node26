@@ -8,7 +8,7 @@
 				<div class="admin_col">
 					<span class="manager_fio" ng-class="{bold:(a.manager_id<0)}">
 						<i class="icon-user"></i>
-						{{fpk.jsFioShort(a.manager, "name")}}&nbsp;
+						{{fpk.jsFioShort(a.manager, "name")}}&nbsp;{{a.user_group}}
 					</span>
 				</div>
 				
@@ -111,7 +111,7 @@
 			<th class="manager">Выдачи</th>
 		</tr>
 		<tr ng-repeat="model in admin_users">
-			<td class="model">{{fpk.jsFioShort(model.fio,"name")}}</td>
+			<td class="model">{{fpk.jsFioShort(model.fio,"name")}} {{model.user_group}}</td>
 			<td><span ng-if="model.zv_month||model.zv"><b>{{model.zv}}</b> ({{model.zv_month}})</span></td>
 			<td><span ng-if="model.vz_month||model.vz"><b>{{model.vz}}</b> ({{model.vz_month}})</span></td>
 			<td><span ng-if="model.vz2_admin_month||model.vz2_admin"><b>{{model.vz2_admin}}</b> ({{model.vz2_admin_month}})</span></td>

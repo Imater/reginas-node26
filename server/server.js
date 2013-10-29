@@ -1252,7 +1252,7 @@ exports.jsGetManagerCupAdmin = function(request, response) {
 
 
 
-      pool.query('SELECT * FROM `1_users` WHERE brand = ? AND user_group IN (5,6,3,14) ORDER by id', [brand], function (err, users, fields) {
+      pool.query('SELECT * FROM `1_users` WHERE brand = ? AND user_group IN (5,6,3,14) ORDER by user_group,id', [brand], function (err, users, fields) {
         pool.query('SELECT * FROM `1_doadmin` WHERE brand = ? AND date1 LIKE ? ORDER by date1 DESC', [brand, today_month], function (err, do_admin, fields) {
           pool.query('SELECT * FROM `1_clients` WHERE brand = ? AND (zv LIKE ? OR vz LIKE ? OR tst LIKE ?)', [brand, today_month, today_month, today_month], function (err, clients, fields) {
             do_admin = correct_dates(do_admin);
@@ -1266,9 +1266,15 @@ exports.jsGetManagerCupAdmin = function(request, response) {
 
             $.each(users, function(i, user){ //делаем пустой ответ, потом будем увеличивать нули по мере прохождения
 
+              var short_job = "";
+              if( user.user_group == 3 ) short_job = "(РОП)";
+              if( user.user_group == 5 ) short_job = "(старший)";
+              if( user.user_group == 14 ) short_job = "(трейдин)";
+
               admin.push( {
                     manager:user.fio,
                     manager_id:user.id,
+                    user_group:short_job,
 
                     zv_admin: "",
                     zv_manager: "",
@@ -1518,7 +1524,7 @@ exports.jsGetManagerCupAdminReport = function(request, response) {
     pool.query('SELECT * FROM `1_commercials` ORDER by title', [brand], function (err, commercials, fields) {
     pool.query('SELECT * FROM `1_models` WHERE brand = ? AND `show`=1 ORDER by model', [brand], function (err, models, fields) {
       //console.info("err",err)
-      pool.query('SELECT * FROM `1_users` WHERE brand = ? AND user_group IN (5,6,3,14) ORDER by id', [brand], function (err, users, fields) {
+      pool.query('SELECT * FROM `1_users` WHERE brand = ? AND user_group IN (5,6,3,14) ORDER by user_group, id', [brand], function (err, users, fields) {
         pool.query('SELECT * FROM `1_doadmin` WHERE brand = ? AND date1 LIKE ? ORDER by date1 DESC', [brand, today_month], function (err, do_admin, fields) {
           pool.query('SELECT * FROM `1_clients` WHERE brand = ? AND (zv LIKE ? OR vz LIKE ? OR tst LIKE ? OR dg LIKE ? OR vd LIKE ?)', [brand, today_month, today_month, today_month, today_month, today_month], function (err, clients, fields) {
           pool.query('SELECT 1_clients.*, 1_do.manager_id manager_id2, 1_do.date2 tst, 1_test.model_id tstmodel FROM `1_do` LEFT JOIN 1_clients ON 1_do.client=1_clients.id LEFT JOIN 1_test ON 1_do.test_model_id = 1_test.id WHERE 1_do.brand = ? AND 1_do.date2 LIKE ? AND 1_do.checked !="0000-00-00 00:00:00" AND 1_do.type="Тест-драйв" ', [brand, today_month], function (err, clients_tst, fields) {
@@ -1549,12 +1555,19 @@ exports.jsGetManagerCupAdminReport = function(request, response) {
 
             $.each(users, function(i, user){ //делаем пустой ответ, потом будем увеличивать нули по мере прохождения
 
-              admin_users.push({user_id: user.id, fio: user.fio, zv: 0, vz: 0, tst: 0, zv_manager: 0, vz_manager: 0, tst_manager: 0, vz2_admin: 0, contacts:  0, out: 0, zv_month: 0, vz_month: 0, tst_month: 0, zv_manager_month: 0, vz_manager_month: 0, tst_manager_month: 0, vz2_admin_month: 0, contacts_month:  0, out_month: 0, dg:0, dg_month:0, vd:0, vd_month:0});
+              var short_job = "";
+              if( user.user_group == 3 ) short_job = "(РОП)";
+              if( user.user_group == 5 ) short_job = "(старш)";
+              if( user.user_group == 14 ) short_job = "(трейд)";
+
+              admin_users.push({user_id: user.id, fio: user.fio, user_group:short_job, zv: 0, vz: 0, tst: 0, zv_manager: 0, vz_manager: 0, tst_manager: 0, vz2_admin: 0, contacts:  0, out: 0, zv_month: 0, vz_month: 0, tst_month: 0, zv_manager_month: 0, vz_manager_month: 0, tst_manager_month: 0, vz2_admin_month: 0, contacts_month:  0, out_month: 0, dg:0, dg_month:0, vd:0, vd_month:0});
+
 
 
               admin.push( {
                     manager:user.fio,
                     manager_id:user.id,
+                    user_group: short_job,
 
                     zv_admin: "",
                     zv_manager: "",
