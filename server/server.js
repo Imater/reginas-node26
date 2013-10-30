@@ -56,25 +56,14 @@ io.set('store', new RedisStore({
   cluster.on('exit', function(worker, code, signal) {
     console.log('worker ' + worker.process.pid + ' died');
     worker = cluster.fork();
-    worker.on('message', function(msg) {
-        // we only want to intercept messages that have a chat property
-        if (msg) {
-          //оповещаем все процессоры 
-          $.each(workerAll, function(i, work){
-            work.send( msg );
-          });
-        }
-      });
-
-    }
-
+    
     delete workerAll[worker.process.pid];
     workerAll[worker.pid] = worker;
     //killWorkers('exit');
   });
 
   cluster.on('fork', function(worker, address) {
-    console.info("fork", worker.id);
+    console.info(worker.id);
   });
 
 } else {
