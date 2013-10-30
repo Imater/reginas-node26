@@ -3006,6 +3006,7 @@ function jsIsInside(params){
     (/79.134.19/.test(ip)) || //магнитка
     (/5.79.218/.test(ip)) ||
     (/127.0.0.1/.test(ip)) ||
+    (/37.7/.test(ip)) ||
     (/37.1/.test(ip)) ) {
     return true;
   } else {
