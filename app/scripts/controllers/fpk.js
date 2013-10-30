@@ -1402,7 +1402,8 @@ $scope.getSMS = function(sms) {
     {img: "1settings.png", title: "Подготовка"},
     {img: "1vidacha.png", title: "Выдача", fieldname: "vd"},
     {img: "1bu.png", title: "Трейд-ин", fieldname: "bu"},
-    {img: "1out.png", title: "OUT", fieldname: "out"}
+    {img: "1zvonok2.png", title: "Звонок исходящий", fieldname: "zv_out"},
+    {img: "1out.png", title: "OUT", fieldname: "out"},
  ];
 
  var tmp_status = {};
