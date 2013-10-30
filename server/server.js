@@ -2,7 +2,7 @@ var cluster = require('cluster');
 var http = require('http');
 var numCPUs = require('os').cpus().length;
 var $ = require('jquery');
-var worker, workerAll = [];
+var worker, workerAll = {};
 
 if (cluster.isMaster) {
 
@@ -38,9 +38,9 @@ io.set('store', new RedisStore({
   //numCPUs = 1;
   for (var i = 0; i < numCPUs; i++) {
     worker = cluster.fork();
-    workerAll[worker.pid] = worker;
+    workerAll[worker.process.pid] = worker;
 
-	worker.on('message', function(msg) {
+/*	worker.on('message', function(msg) {
       // we only want to intercept messages that have a chat property
       if (msg) {
       	//оповещаем все процессоры 
@@ -49,31 +49,34 @@ io.set('store', new RedisStore({
         });
       }
     });
-
+*/
   }
 
 
   cluster.on('exit', function(worker, code, signal) {
     console.log('worker ' + worker.process.pid + ' died');
     worker = cluster.fork();
+
+
+    delete workerAll[worker.process.pid];
+    workerAll[worker.process.pid] = worker;
+    //killWorkers('exit');
+  });
+
+  cluster.on('fork', function(worker, address) {
+    console.info("FORK:",worker.id);
     worker.on('message', function(msg) {
       // we only want to intercept messages that have a chat property
       if (msg) {
         //оповещаем все процессоры 
         $.each(workerAll, function(i, work){
+          //console.info("work", work.process.pid);
           work.send( msg );
         });
       }
     });
 
 
-    delete workerAll[worker.process.pid];
-    workerAll[worker.pid] = worker;
-    //killWorkers('exit');
-  });
-
-  cluster.on('fork', function(worker, address) {
-    console.info("FORK:",worker.id);
   });
 
 } else {
@@ -186,7 +189,6 @@ app.use(express.bodyParser());
 
   //центр пересылки сообщений по сокету
   process.on('message', function(msg) {
-
     if(msg.message_type) {
     	if(msg.message_type == "loadstat") {
 	 	  	//global.report.loadstat();
@@ -3811,7 +3813,7 @@ exports.loadTestDoc = function(request, response) {
 
 exports.sendSocketMessage = function(request, response) {
 	var text = request.query.text;
-
+    console.info("process", text);
     process.send({ message_type:"chat", chat: text });
 	response.send(true);
 
