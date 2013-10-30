@@ -1610,6 +1610,10 @@ background-color: none !important;
                         border: 1px dashed #888;
                         padding: 10px;
                         margin-bottom: 10px;
+                        input {
+                            color: #000 !important;
+                            font-weight: bold;
+                        }
                     }
                     .manager_info {
                         background: rgba(20,200,20,0.2);

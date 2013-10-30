@@ -1199,6 +1199,9 @@ body {
             border: 1px dashed #888;
             padding: 10px;
             margin-bottom: 10px; }
+            .clients_list .client_card .client_inside ul li.client_do_li .test_form input {
+              color: #000 !important;
+              font-weight: bold; }
           .clients_list .client_card .client_inside ul li.client_do_li .manager_info {
             background: rgba(20, 200, 20, 0.2);
             padding: 20px; }
