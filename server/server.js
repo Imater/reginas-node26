@@ -656,7 +656,7 @@ exports.loadAllBig = function(request, response) {
 }
 
 global.correct_dates = function( rows, no_zero_dates ) {
-  var fields = ['date', 'zv', 'vz', 'tst', 'dg', 'vd', 'out', 'checked', 'changed', 'created', 'date1', 'date2', 'hostcheck', 'remind', 'na_date', 'now_time', 'remind_time'];
+  var fields = ['date', 'zv', 'vz', 'tst', 'dg', 'vd', 'out', 'checked', 'changed', 'created', 'date1', 'date2', 'hostcheck', 'remind', 'na_date', 'now_time', 'remind_time','_date2'];
 
   if(!rows) return rows;
 

@@ -437,10 +437,10 @@ function DoCtrl($scope, myApi, oAuth2, $http) { //контроллер дел
    }
 
    $scope.jsDoSave = function(all_client_do) {
-     var changes = {id: $scope.do.id};
+     var changes = {id: $scope['do'].id};
      var changed = false;
 
-     $scope.do._date2 = $scope.do.date2;
+     $scope['do']["_date2"] = $scope['do'].date2;
 
      $(".do_date2:focus").blur();
 
