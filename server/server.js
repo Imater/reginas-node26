@@ -2543,10 +2543,12 @@ exports.loadStatCup = function(request, response) {
 	  pool.query('SELECT * FROM `1_plan` WHERE `month` = "'+today_month+'"', function (err, plans, fields) {
 	      //console.info(plans);
 	    pool.query('SELECT * FROM `1_brands` WHERE `Show` = 1 ORDER by brand_group, title', function (err, brands, fields) {
-	      brands.push({id: -1, title: "Итого №1", brand_group: 1, logo: "logo-seyho.png"});
-	      brands.push({id: -2, title: "Итого №2", brand_group: 2, logo: "logo-seyho.png"});
-	      brands.push({id: -3, title: "Итого №3", brand_group: 3, logo: "logo-seyho.png"});
-        brands.push({id: -4, title: "Итого №4", brand_group: 4, logo: "logo-seyho.png"});
+        if(brands.length>5) {
+  	      brands.push({id: -1, title: "Итого №1", brand_group: 1, logo: "logo-seyho.png"});
+  	      brands.push({id: -2, title: "Итого №2", brand_group: 2, logo: "logo-seyho.png"});
+  	      brands.push({id: -3, title: "Итого №3", brand_group: 3, logo: "logo-seyho.png"});
+          brands.push({id: -4, title: "Итого №4", brand_group: 4, logo: "logo-seyho.png"});
+        }
 	      brands.push({id: 0, title: "Итого", brand_group: 4,logo: "logo-seyho.png"});
 
 	      $.each(brands, function(i, brand){
