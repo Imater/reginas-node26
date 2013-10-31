@@ -1160,7 +1160,7 @@ myApp.directive('colorChange', function() {
       function jsMove(){
           clearTimeout(tm_change);
           tm_change = setTimeout(function(){
-              document.title = "ФПК ("+scope.fpk.the_user.fio.split(" ")[1]+" "+scope.fpk.the_user.fio.split(" ")[0][0]+".) — Регинас";
+              document.title = "ФПК ("+scope.fpk.the_user.fio.split(" ")[1]+" "+scope.fpk.the_user.fio.split(" ")[0][0]+".) — "+diller.holding_name;
 
               $('body').off(".my").off(".my1").off("touchstart");
               $(".changed").removeClass("changed");
@@ -1169,7 +1169,7 @@ myApp.directive('colorChange', function() {
 
       scope.$watch(attrs.colorChange, function(Val, newVal){
           if(Val != newVal) {
-            document.title = "* ФПК ("+scope.fpk.the_user.fio.split(" ")[1]+" "+scope.fpk.the_user.fio.split(" ")[0][0]+".) — Регинас";
+            document.title = "* ФПК ("+scope.fpk.the_user.fio.split(" ")[1]+" "+scope.fpk.the_user.fio.split(" ")[0][0]+".) — "+diller.holding_name;
 
             if(element.hasClass("changed")) { 
               element.removeClass("changed"); 

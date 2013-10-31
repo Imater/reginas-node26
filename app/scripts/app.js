@@ -299,6 +299,8 @@ angular.module('fpkApp').factory('oAuth2', function($window){
 
 function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2) {
 
+    $scope.diller = diller;
+
     $scope.fpk = {}; //главный объект, в котором хранится всё общее
     
     $scope.fpk.time_now = (new Date);
@@ -405,7 +407,7 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
         var dfd = new $.Deferred();
         myApi.loadUserInfo($scope).then(function(user){
           $scope.fpk.the_user = user.user[0];
-          document.title = "ФПК ("+user.user[0].fio.split(" ")[1]+" "+user.user[0].fio.split(" ")[0][0]+".) — Регинас";
+          document.title = "ФПК ("+user.user[0].fio.split(" ")[1]+" "+user.user[0].fio.split(" ")[0][0]+".) — "+diller.holding_name;
           if(!dont_select_brand) $scope.fpk.brand = user.user[0].brand; //бренд по умолчанию
           localStorage.setItem("brand", $scope.fpk.brand);
 
