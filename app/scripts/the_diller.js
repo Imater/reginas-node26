@@ -4,8 +4,10 @@ if(false) {
 		logo_image: "images/logo-mini.png",
 		logo_image_big: "images/logo.png"
 	}
-	global.database = "h116";
-	global.sms_sender = "Reginas-FPK";
+	if(global) {
+		global.database = "h116";
+		global.sms_sender = "Reginas-FPK";
+	}
 
 } else {
 	var diller = {
@@ -13,6 +15,8 @@ if(false) {
 		logo_image: "images/logo-mini-t.png",
 		logo_image_big: "images/logo-t.png"
 	}	
-	global.database = "h117";
-	global.sms_sender = "T-Motors";
+	if(global) {
+		global.database = "h117";
+		global.sms_sender = "T-Motors";
+	}
 }
