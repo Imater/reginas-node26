@@ -4,7 +4,7 @@ if(false) {
 		logo_image: "images/logo-mini.png",
 		logo_image_big: "images/logo.png"
 	}
-	if( !(!global) ) {
+	if( typeof global != 'undefined' ) {
 		global.database = "h116";
 		global.sms_sender = "Reginas-FPK";
 	}
@@ -15,7 +15,7 @@ if(false) {
 		logo_image: "images/logo-mini-t.png",
 		logo_image_big: "images/logo-t.png"
 	}	
-	if( !(!global) ) {
+	if( typeof global != 'undefined' ) {
 		global.database = "h117";
 		global.sms_sender = "T-Motors";
 	}
