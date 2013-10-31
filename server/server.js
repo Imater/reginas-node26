@@ -115,10 +115,11 @@ var restApi = require("./rest-api.js");
 
 global.isProduction = false;
 require("./isProduction.js");
+require("../app/scripts/the_diller.js");
 
+console.info("db = ",global.database);
 
 var Pool = require('mysql-simple-pool');
-
 
 if(!isProduction) console.info("Development mode");
 
@@ -126,14 +127,14 @@ global.pool = new Pool(100, {
   host     : '127.0.0.1',
   user     : 'root',
   password : 'See6thoh',
-  database : 'h116'
+  database : global.database //h116
 });
 
 mysqlconfig = {
   host     : '127.0.0.1',
   user     : 'root',
   password : 'See6thoh',
-  database : 'h116'
+  database : global.database //h116
 };
 //connection.connect(); 
 var connection = mysql.createConnection(mysqlconfig);
