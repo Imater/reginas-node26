@@ -3444,6 +3444,7 @@ exports.checkSMS = function(request, response) {
 
   var Sms = require('node-smsc').Smsc,
     sms = new Sms('imater', '990990', {sender: global.sms_sender});
+    console.info(global.sms_sender);
 
   var query = "SELECT 1_u.fio myhost, DATE_ADD(NOW(), INTERVAL 1_do.sms MINUTE) now_time, date2 remind_time, 1_users.phone, 1_clients.phone1, 1_clients.fio, 1_do.*, 1_models.short  FROM 1_do LEFT JOIN 1_users ON 1_users.id=1_do.manager_id LEFT JOIN 1_clients ON 1_clients.id = 1_do.client LEFT JOIN 1_users 1_u ON 1_u.id = 1_do.host_id AND 1_do.host_id!=1_do.manager_id LEFT JOIN 1_models ON 1_clients.model = 1_models.id WHERE sms>0 AND checked = '0000-00-00 00:00:00' AND sms_send = 0 AND DATE_ADD(NOW(), INTERVAL 1_do.sms MINUTE) > date2";
 
@@ -3470,6 +3471,8 @@ exports.checkSMS = function(request, response) {
 
     });
     ids += "0";
+
+    console.info("SMS-TEXT:",sms_texts);
 
     if(sms_texts.length) {
 
