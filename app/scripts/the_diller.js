@@ -1,4 +1,4 @@
-if(false) {
+if(true) {
 	var diller = {
 		holding_name: "Регинас",
 		logo_image: "images/logo-mini.png",
