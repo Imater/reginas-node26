@@ -2891,7 +2891,7 @@ function jsUpdateClient(client_id) {
               }
               if(!first_action) {
                 //answer.vz = mydo.date2;
-                first_action = true;
+                //first_action = true;
               }
             }
           }
