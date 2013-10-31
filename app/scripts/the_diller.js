@@ -5,6 +5,7 @@ if(false) {
 		logo_image_big: "images/logo.png"
 	}
 	global.database = "h116";
+	global.sms_sender = "Reginas-FPK";
 
 } else {
 	var diller = {
@@ -13,4 +14,5 @@ if(false) {
 		logo_image_big: "images/logo-t.png"
 	}	
 	global.database = "h117";
+	global.sms_sender = "T-Motors";
 }
