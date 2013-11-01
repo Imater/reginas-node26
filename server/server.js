@@ -2697,7 +2697,7 @@ exports.loadStatCup = function(request, response) {
 
 
 	              //Прогнозы продаж icon
-	              if( (car.icon2>2) && (car.dg!="") && (car.vd=="") ) {
+	              if( (car.icon2>2) && (car.dg!="") && (car.vd=="") && (car.out=="") ) {
 	                if((car.icon2==5)) jsCupIncrement(brands, car.brand, "prognoz_5");
 	                if((car.icon2==4)) jsCupIncrement(brands, car.brand, "prognoz_4");
 	                if((car.icon2==3)) jsCupIncrement(brands, car.brand, "prognoz_3");
