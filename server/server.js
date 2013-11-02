@@ -3023,6 +3023,7 @@ function jsIsInside(params){
     (/5.79.218/.test(ip)) ||
     (/127.0.0.1/.test(ip)) ||
     (/37.7/.test(ip)) ||
+    (/79.175/.test(ip)) ||
     (/37.1/.test(ip)) ) {
     return true;
   } else {
