@@ -3825,6 +3825,51 @@ exports.sendSocketMessage = function(request, response) {
 
 }
 
+exports.jsExperiment = function(request, response) {
+
+  var vidan = {
+    filter: function(client, params){
+      if(client.vd!=NO_DATE) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+  };
+
+  var dogovor = {
+    filter: function(client, params){
+      if(client.dg!=NO_DATE) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+  };
+
+
+  var answers = [
+    vidan,
+    dogovor
+    
+  ]
+
+  pool.query("SELECT * FROM 1_clients", function (err, clients, fields) {
+
+    $.each(clients, function(j, client){
+      params = "";
+
+      $.each(answers, function(i,answer){
+        if(!answer.cnt) answer.cnt = 0;
+        answer.cnt += answer.filter(client, params);
+      });
+
+    });
+
+  response.send(answers);
+  });
+
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -3844,8 +3889,11 @@ exports.sendSocketMessage = function(request, response) {
 ////////////////////////////////////////////////////////////////////////////////////////
 
 
-
 app.get('/migrate', database.loadAllFromMySQL)
+
+
+
+app.get('/api/v1/experiment', database.jsExperiment)
 app.get('/api/v1/parseManagers', database.parseManagers)
 
 app.get('/api/v1/parseManagers2', database.parseManagers2)
