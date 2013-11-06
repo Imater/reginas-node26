@@ -394,6 +394,30 @@ function DoCtrl($scope, myApi, oAuth2, $http) { //контроллер дел
       $scope.do.checked = ($scope.do.checked==NO_DATE)?now:NO_DATE ;
 
       $scope.jsDoSave();
+
+      if( ($scope.do.type == "Выдача") && (confirm("Добавить 3 звонка внимания после выдачи?")) ) {
+          client_id = $scope.client.id;
+          alert(client_id);
+          if(false)
+          myApi.addDo($scope, "Звонок исходящий", client_id).then(function(result){
+            console.info("ADDED",result);
+            var insert_id = result.insert_id;
+            myApi.getDo($scope, client.id).then(function(value){
+              client.do = value;
+              client._visible = true;
+              var new_do = _.find(client.do, function(el){ return el.id == insert_id; });
+              new_do._visible = true;
+              setTimeout(function(){
+                $("li[mydoid='"+insert_id+"'] textarea:first").focus().select();
+              },1);
+              setTimeout(function(){
+                $("li[mydoid='"+insert_id+"'] textarea:first").focus().select();
+              },600);
+            });
+
+          });
+
+      }
    }
 
    $scope.setFocusInWhile = function(obj, $event) {

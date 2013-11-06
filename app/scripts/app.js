@@ -24,10 +24,11 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
             .when('/fpk/clients', 's1.clients')
             .when('/test_doc/:client/:do', 'test_doc')
             .when('/fpk/reiting', 's1.reiting')
-            .when('/fpk/statistic', 's1.statistic')
-            .when('/fpk/stat_table', 's1.stat_table')
-            .when('/fpk/stat_day', 's1.stat_day')
-            .when('/fpk/stat_all_day', 's1.stat_all_day')
+            .when('/fpk/st/statistic', 's1.st.statistic')
+            .when('/fpk/st/stat_table', 's1.st.stat_table')
+            .when('/fpk/st/stat_day', 's1.st.stat_day')
+            .when('/fpk/st/stat_all_day', 's1.st.stat_all_day')
+            .when('/fpk/st/stat_big', 's1.st.stat_big')
             .when('/fpk/admin_cup', 's1.admin_cup')
             .when('/fpk/news', 's1.news')
             .when('/fpk/calendar', 's1.calendar')
@@ -72,6 +73,11 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
                 templateUrl: 'views/fpk/calendar.html',
                 controller: 'calendarCtrl'
             })
+            .segment('st', {
+                templateUrl: 'views/fpk/stat_main.html',
+                controller: 'statMainCtrl'
+            })
+            .within()
             .segment('statistic', {
                 templateUrl: 'views/fpk/stat.html',
                 controller: 'statCtrl'
@@ -88,6 +94,11 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
                 templateUrl: 'views/fpk/stat/stat_all_day.html',
                 controller: 'statAllDayCtrl'
             })
+            .segment('stat_big', {
+                templateUrl: 'views/fpk/stat/stat_big.html',
+                controller: 'statBigCtrl'
+            })
+            .up()
             .segment('settings', {
                 templateUrl: 'views/fpk/settings.html',
                 controller: 'settingsCtrl'

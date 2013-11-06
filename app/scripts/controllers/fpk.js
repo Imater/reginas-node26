@@ -276,7 +276,7 @@ var jsDateDiff = _.memoize( function($scope,dif_sec,date2) {
   }
 
   return answer;
-}, function($scope, dif_sec, date2){ return $scope+date2+dif_sec+($scope.client?$scope.client.out:""); });
+}, function($scope, dif_sec, date2){ return $scope+date2+dif_sec+($scope.client?$scope.client.out:"")+($scope.client?$scope.client.dg:""); });
 
 
 myApp.directive('datemini', ['$timeout', function($timeout) { return {
@@ -577,6 +577,28 @@ myApp.filter('onlyManager', function() {
     })
     return answer;
   };
+});
+
+myApp.directive('datepicker2', function() {
+    return {
+        restrict: 'A',
+        require : 'ngModel',
+        link : function (scope, element, attrs, ngModelCtrl) {
+            $(function(){
+                element.datepicker({
+                    dateFormat:'dd.mm.yy',
+                    showOtherMonths: true,
+                    selectOtherMonths: true,
+                    onSelect:function (date) {
+                        ngModelCtrl.$setViewValue(date);
+                        scope.$apply();
+                    }
+                });
+            });
+            scope.$on('$destroy', function() {
+            });
+        }
+    }
 });
 
 
@@ -1220,6 +1242,16 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
         });    
     }
   }
+
+      $scope.fpk.jsShowClientIds = function(my_ids) {
+      
+      myApi.getClientIds($scope, my_ids).then(function(clients){
+        //console.info("ids:",clients);
+        $scope.fpk.one_client = clients;
+        $scope.fpk.show_one_client = true;
+      });
+      
+    }
 
 
 if($scope.fpk.jsLoadStat) $scope.fpk.jsLoadStat();

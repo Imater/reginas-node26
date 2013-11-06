@@ -2,16 +2,6 @@
 
 myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment, $timeout, $http) {
 
- 	$scope.fpk.leftmenu = { active:10,
-                items : [
-                  {id:10, title:"Холдинг", href: "/fpk/statistic", segment: "s1.statistic"},
-                  {id:11, title:"Подробная таблица", href: "/fpk/stat_table", segment: "s1.stat_table"},
-                  {id:12, title:"Ежедневный отчёт", href: "/fpk/stat_day", segment: "s1.stat_day"},
-                  {id:13, title:"Подробный ежедневный отчёт", href: "/fpk/stat_all_day", segment: "s1.stat_all_day"}
-                ]
-
-                };
-
 	$scope.fpk.leftmenu.active = -1;
 
 	$scope.stat_view_switch = 1;
@@ -26,7 +16,7 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 
 
 	$scope.LoadJsonByDay = function() {
-	 if( $routeSegment.startsWith('s1.statistic') ) {
+	 if( $routeSegment.startsWith('s1.st.statistic') ) {
 //		$.getJSON('/api/v1/json/cup?brand='+$scope.fpk.brand).done(function(data) {
 
         $http({url:'/api/v1/json/cup',method: "GET", params: { brand: $scope.fpk.brand, today: $scope.fpk.today_date}}).then(function(result){
@@ -116,7 +106,7 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 	});
 
 	$scope.getCUPtable = function() {
-	 if( $routeSegment.startsWith('s1.statistic') ) {
+	 if( $routeSegment.startsWith('s1.st.statistic') ) {
 		 myApi.getCUP($scope).then(function(cup){
 
 			  var allow_brands = $scope.fpk.the_user.rights[0].brands;

@@ -1,0 +1,57 @@
+<div class="scrollable_div clients_big">
+
+	<h3>Аналитика по датам</h3>
+
+	<div class="row">
+	  <div class="col-md-3">
+	    <div class="input-group input-group-sm">
+    	  <span class="input-group-addon">Начальная дата:</span>
+      	  <input type="text" class="form-control" datepicker2 ng-model="fpk.d1"  placeholder="01.01.2013">
+    	</div>
+      </div>
+
+	  <div class="col-md-3">
+	    <div class="input-group input-group-sm">
+    	  <span class="input-group-addon">Конечная дата:</span>
+      	  <input type="text" class="form-control" datepicker2 ng-model="fpk.d2"  placeholder="31.01.2013">
+    	</div>
+      </div>
+    </div> <!-- row -->
+    <br>
+    <ul class="nav nav-tabs top_tabs">
+      <li ng-class="{active:stat_big_view_switch=='zv'}" ng-click="stat_big_view_switch='zv'"><a>Звонки</a></li>
+
+      <li ng-class="{active:stat_big_view_switch=='vz'}" ng-click="stat_big_view_switch='vz'"><a>Визиты</a></li>
+
+      <li ng-class="{active:stat_big_view_switch=='tst'}"  ng-click="stat_big_view_switch='tst'"><a>Тесты</a></li>
+
+      <li ng-class="{active:stat_big_view_switch=='dg'}" ng-click="stat_big_view_switch='dg'"><a>Договора</a></li>
+
+      <li ng-class="{active:stat_big_view_switch=='vd'}" ng-click="stat_big_view_switch='vd'"><a>Выдачи</a></li>
+
+      <li ng-class="{active:stat_big_view_switch=='out'}"  ng-click="stat_big_view_switch='out'"><a>Расторжения</a></li>
+
+      <li ng-class="{active:stat_big_view_switch=='out_all'}"  ng-click="stat_big_view_switch='out_all'"><a>OUT</a></li>
+
+    </ul>
+    <table>
+    	<tr>
+    		<th>
+    			Менеджеры:
+    		</th>
+    		<th ng-repeat="top in stat_top" class="cnt">
+    			{{jsShortDate(top)}}
+    		</th>
+    	</tr>
+    	<tr ng-repeat="user in stat_big">
+    		<td>
+    		{{user.user.fio}}
+    		</td>
+    		<td ng-repeat="col in user.cols" class="cnt" ng-click="fpk.jsShowClientIds(col.dg.ids);">
+    			{{col.dg.cnt}}
+    		</td>
+    	</tr>
+    </table>
+
+
+</div>

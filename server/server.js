@@ -1687,25 +1687,24 @@ exports.jsGetManagerCupAdminReport = function(request, response) {
 
 
                 if( ( client.zv.indexOf(today_month1)!=-1 ) || ( client.vz.indexOf(today_month1)!=-1 )) {
-
                   if( hasContacts(client) ) {
-                    jsAdminIncrementModel(admin_models, client.model, "contacts", client.vz?client.vz:client.zv, client.id);
-                    jsAdminIncrementModel(admin_models, -5, "contacts", client.vz?client.vz:client.zv, client.id);
-                    jsAdminIncrementCommercial(admin_commercials, client.commercial_id, "contacts", client.vz?client.vz:client.zv, client.id);
-                    jsAdminIncrementCommercial(admin_commercials, -5, "contacts", client.vz?client.vz:client.zv, client.id);
+                    jsAdminIncrementModel(admin_models, client.model, "contacts", (client.vz!=NO_DATE)?client.vz:client.zv, client.id);
+                    jsAdminIncrementModel(admin_models, -5, "contacts", (client.vz!=NO_DATE)?client.vz:client.zv, client.id);
+                    jsAdminIncrementCommercial(admin_commercials, client.commercial_id, "contacts", (client.vz!=NO_DATE)?client.vz:client.zv, client.id);
+                    jsAdminIncrementCommercial(admin_commercials, -5, "contacts", (client.vz!=NO_DATE)?client.vz:client.zv, client.id);
 
-                    jsAdminIncrementUser(admin_users, client.manager_id, "contacts", client.vz?client.vz:client.zv, client.id);
-                    jsAdminIncrementUser(admin_users, -5, "contacts", client.vz?client.vz:client.zv, client.id);
+                    jsAdminIncrementUser(admin_users, client.manager_id, "contacts", (client.vz!=NO_DATE)?client.vz:client.zv, client.id);
+                    jsAdminIncrementUser(admin_users, -5, "contacts", (client.vz!=NO_DATE)?client.vz:client.zv, client.id);
 
 
                   } else {
-                    jsAdminIncrementModel(admin_models, client.model, "out", client.vz?client.vz:client.zv, client.id);
-                    jsAdminIncrementModel(admin_models, -5, "out", client.vz?client.vz:client.zv, client.id);
-                    jsAdminIncrementCommercial(admin_commercials, client.commercial_id, "out", client.vz?client.vz:client.zv, client.id);    
-                    jsAdminIncrementCommercial(admin_commercials, -5, "out", client.vz?client.vz:client.zv, client.id);
+                    jsAdminIncrementModel(admin_models, client.model, "out", (client.vz!=NO_DATE)?client.vz:client.zv, client.id);
+                    jsAdminIncrementModel(admin_models, -5, "out", (client.vz!=NO_DATE)?client.vz:client.zv, client.id);
+                    jsAdminIncrementCommercial(admin_commercials, client.commercial_id, "out", (client.vz!=NO_DATE)?client.vz:client.zv, client.id);    
+                    jsAdminIncrementCommercial(admin_commercials, -5, "out", (client.vz!=NO_DATE)?client.vz:client.zv, client.id);
 
-                    jsAdminIncrementUser(admin_users, client.manager_id, "out", client.vz?client.vz:client.zv, client.id);
-                    jsAdminIncrementUser(admin_users, -5, "out", client.vz?client.vz:client.zv, client.id);
+                    jsAdminIncrementUser(admin_users, client.manager_id, "out", (client.vz!=NO_DATE)?client.vz:client.zv, client.id);
+                    jsAdminIncrementUser(admin_users, -5, "out", (client.vz!=NO_DATE)?client.vz:client.zv, client.id);
 
 
                   }
@@ -3827,47 +3826,187 @@ exports.sendSocketMessage = function(request, response) {
 
 exports.jsExperiment = function(request, response) {
 
-  var vidan = {
-    filter: function(client, params){
-      if(client.vd!=NO_DATE) {
-        return 1;
-      } else {
-        return 0;
+  var jsVD = function(do_type){ 
+    return { 
+      myfilter: function(params){
+        var add = 0;
+        //dates.d1;
+        //dates.d2;
+
+        var compare = ((params.client[do_type]>=params.dates.d1) && (params.client[do_type]<=params.dates.d2) )
+          && (params.client.manager_id==params.answer.user.id);
+
+        if( compare ) {
+          add = 1;
+        }
+        if(!params.col.cnt) params.col.cnt = 0;
+        if(!params.col.ids) params.col.ids = [];
+
+        params.col.cnt += add;
+        if(add) params.col.ids.push( params.client.id );
       }
     }
   };
 
-  var dogovor = {
-    filter: function(client, params){
-      if(client.dg!=NO_DATE) {
-        return 1;
-      } else {
-        return 0;
+  pool.query("SELECT * FROM 1_users WHERE user_group IN (5,6)", function (err, users, fields) {
+    answers = [];
+    $.each(users, function(i, user){
+      answers.push({
+        user: {id:user.id},
+        cols: {
+          vz: ( new jsVD("vz") ),
+          zv: ( new jsVD("zv") ),
+          dg: ( new jsVD("dg") ),
+          tst: ( new jsVD("tst") ),
+          vd: ( new jsVD("vd") ),
+          out: ( new jsVD("out") )
+        }
+      });
+    });
+
+    pool.query("SELECT id, vz, zv, dg, tst, vd, `out`, manager_id FROM 1_clients WHERE brand = 7", function (err, clients, fields) {
+
+      $.each(clients, function(j, client){
+
+        $.each(answers, function(i,answer){
+          $.each(answer.cols, function(j, col){
+            var params = {
+              client: client,
+              col: col,
+              answer: answer,
+              dates: {
+                d1: new Date(2013,9,1),
+                d2: new Date(2013,9,5, 23, 59, 59)
+              }
+            };
+            col.myfilter(params);
+          });
+        });
+
+      });
+
+    response.send(answers);
+    });
+
+  });
+
+}
+
+//статистика
+exports.jsStatBig1 = function(request, response) {
+  var col_dates = [];
+
+  var _d1 = request.query.d1;
+  var _d2 = request.query.d2;
+  var brand_id = request.query.brand;
+
+  var d1_split = _d1.split(".");
+  var d2_split = _d2.split(".");
+
+  var d1 = new Date(d1_split[2], d1_split[1]-1, d1_split[0],0 ,0 ,0 );
+  var d2 = new Date(d2_split[2], d2_split[1]-1, d2_split[0], 23, 59, 59 );
+
+  var d = d1;
+
+  while( d<=d2 ) {
+    col_dates.push(d);
+    d = new Date(d);
+    d.setDate(d.getDate()+1);
+  }
+
+var jsVD = function(do_type){ 
+    return { 
+      myfilter: function(params){
+        var add = 0;
+
+        var compare = ((params.client[do_type]>=params.dates.d1) && (params.client[do_type]<=params.dates.d2) )
+          && (params.client.manager_id==params.answer.user.id);
+
+        if( compare ) {
+          add = 1;
+        }
+        if(!params.col.cnt) params.col.cnt = 0;
+        if(!params.col.ids) params.col.ids = [];
+
+        params.col.cnt += add;
+        if(add) params.col.ids.push( params.client.id );
       }
     }
   };
 
 
-  var answers = [
-    vidan,
-    dogovor
-    
-  ]
+  function myfilters(idd){ 
 
-  pool.query("SELECT * FROM 1_clients", function (err, clients, fields) {
+    return {
+          vz: ( new jsVD("vz") ),
+          zv: ( new jsVD("zv") ),
+          dg: ( new jsVD("dg") ),
+          tst: ( new jsVD("tst") ),
+          vd: ( new jsVD("vd") ),
+          out: ( new jsVD("out") ),
+          idd: idd
+        };
 
-    $.each(clients, function(j, client){
-      params = "";
+  }  
 
-      $.each(answers, function(i,answer){
-        if(!answer.cnt) answer.cnt = 0;
-        answer.cnt += answer.filter(client, params);
+  pool.query("SELECT * FROM 1_users WHERE user_group IN (5,6) AND brand = ?", [brand_id], function (err, users, fields) {
+    answers = [];
+
+    $.each(users, function(i, user){
+
+      cols = {};
+      $.each(col_dates, function(k, dt){
+        cols[dt] = new myfilters(k);
+      });
+
+      answers.push({
+        user: user,
+        cols: cols
       });
 
     });
 
-  response.send(answers);
+    pool.query("SELECT id, vz, zv, dg, tst, vd, `out`, manager_id FROM 1_clients WHERE brand = ?",[brand_id], function (err, clients, fields) {
+
+      $.each(clients, function(j, client){
+
+        $.each(answers, function(i,answer){
+          $.each(answer.cols, function(j, cl){
+
+            var d1 = new Date(j);
+            var d2 = new Date( d1 );
+            
+            d2.setHours(23);
+            d2.setMinutes(59);
+            d2.setSeconds(59);
+
+            $.each( cl, function(l, col1){
+              //console.info("COL=",l, col);
+              //console.info("d",d1, d2);
+
+              var params = {
+                client: client,
+                col: col1,
+                answer: answer,
+                dates: {
+                  d1: d1,
+                  d2: d2
+                }
+              };
+              if(col1.myfilter) col1.myfilter(params);
+
+            });
+
+          });
+        });
+
+      });
+
+    response.send({top:col_dates, answers:answers});
+    });
+
   });
+  
 
 }
 
@@ -3893,19 +4032,20 @@ app.get('/migrate', database.loadAllFromMySQL)
 
 
 
-app.get('/api/v1/experiment', database.jsExperiment)
-app.get('/api/v1/parseManagers', database.parseManagers)
+app.get('/api/v1/stat_big1', database.jsStatBig1);
+app.get('/api/v1/experiment', database.jsExperiment);
+app.get('/api/v1/parseManagers', database.parseManagers);
 
-app.get('/api/v1/parseManagers2', database.parseManagers2)
-
-
-app.get('/api/v1/parseEmail', database.parseEmail)
+app.get('/api/v1/parseManagers2', database.parseManagers2);
 
 
-app.get('/api/v1/test_doc', database.loadTestDoc)
+app.get('/api/v1/parseEmail', database.parseEmail);
 
-app.get('/api/v1/bigdata', database.loadAllBig)
-app.get('/api/v1/bigdata2', database.loadAllBig2)
+
+app.get('/api/v1/test_doc', database.loadTestDoc);
+
+app.get('/api/v1/bigdata', database.loadAllBig);
+app.get('/api/v1/bigdata2', database.loadAllBig2);
 
 app.get('/api/v1/client_ids', database.findAllClientsIds );
 

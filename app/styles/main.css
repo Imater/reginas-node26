@@ -1801,6 +1801,12 @@ a {
   .model_trafic .manager {
     background: #DDD; }
 
+.admin_report.more table {
+  max-width: 500% !important;
+  width: 1300px; }
+.admin_report.more .more {
+  background: #fff8dc !important; }
+
 .admin_cup ul.admin_ul {
   list-style: none;
   padding: 0px;
@@ -2080,3 +2086,23 @@ li.needgroup {
 #edit_admin_cup {
   float: right;
   margin-top: 100px; }
+
+#ui-datepicker-div .ui-widget-header {
+  border-color: #000 !important;
+  background: #000 !important; }
+
+.clients_big {
+  color: #000 !important; }
+  .clients_big h3 {
+    color: #FFF; }
+  .clients_big table {
+    margin-top: 20px;
+    background: #FFF; }
+    .clients_big table td, .clients_big table th {
+      color: #000;
+      min-width: 17em;
+      white-space: nowrap;
+      border: 1px solid #CCC; }
+    .clients_big table .cnt {
+      min-width: 3em;
+      text-align: center; }
