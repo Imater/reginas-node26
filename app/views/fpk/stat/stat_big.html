@@ -47,8 +47,8 @@
     		<td>
     		{{user.user.fio}}
     		</td>
-    		<td ng-repeat="col in user.cols" class="cnt" ng-click="fpk.jsShowClientIds(col.f.vd.ids);" title="{{col.f.vd.titles}}">
-    			<b ng-if="col.f.vd.cnt">{{col.f.vd.cnt}}</b>
+    		<td ng-repeat="col in user.cols" class="cnt" ng-click="fpk.jsShowClientIds(col.f[stat_big_view_switch].ids);" title="{{col.f[stat_big_view_switch].titles}}">
+    			<b ng-if="col.f[stat_big_view_switch].cnt">{{col.f[stat_big_view_switch].cnt}}</b>
     		</td>
     	</tr>
     </table>

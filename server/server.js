@@ -3922,7 +3922,18 @@ var jsVD = function(do_type){
         var compare = ((params.client[do_type]>=params.dates.d1) && (params.client[do_type]<=params.dates.d2) )
           && (params.client.manager_id==params.answer.user.id);
 
-        if( compare ) {
+        var compare2 = true;
+
+        if(do_type=="out") compare2 = ( params.client["dg"] != NO_DATE );
+
+        if(do_type=="out_all") {
+          compare = ((params.client['out']>=params.dates.d1) && (params.client['out']<=params.dates.d2) )
+          && (params.client.manager_id==params.answer.user.id);
+          compare2 = ( params.client["dg"] == NO_DATE );
+        }
+
+
+        if( compare && compare2) {
           add = 1;
         }
         if(!params.col.cnt) params.col.cnt = 0;
@@ -3946,6 +3957,7 @@ var jsVD = function(do_type){
           tst: ( new jsVD("tst") ),
           vd: ( new jsVD("vd") ),
           out: ( new jsVD("out") ),
+          out_all: ( new jsVD("out_all") ),
           idd: idd
         };
 
@@ -4005,7 +4017,6 @@ var jsVD = function(do_type){
       });
 
     response.send({top:col_dates, answers:answers});
-    console.info(answers);
     });
 
   });
