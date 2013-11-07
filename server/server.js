@@ -1602,56 +1602,56 @@ exports.jsGetManagerCupAdminReport = function(request, response) {
 
 
               if(mydo.type=='zv') { 
-                jsAdminIncrement(users, mydo.manager_id, "zv_admin", mydo.date1);
-                jsAdminIncrementModel(admin_models, mydo.model, "zv", mydo.date1);
-                jsAdminIncrementModel(admin_models, -5, "zv", mydo.date1);
+                jsAdminIncrement(users, mydo.manager_id, "zv_admin", mydo.date1, mydo.id);
+                jsAdminIncrementModel(admin_models, mydo.model, "zv", mydo.date1, mydo.id);
+                jsAdminIncrementModel(admin_models, -5, "zv", mydo.date1, mydo.id);
 
-                jsAdminIncrementCommercial(admin_commercials, mydo.commercial, "zv", mydo.date1);
-                jsAdminIncrementCommercial(admin_commercials, -5, "zv", mydo.date1);
+                jsAdminIncrementCommercial(admin_commercials, mydo.commercial, "zv", mydo.date1, mydo.id);
+                jsAdminIncrementCommercial(admin_commercials, -5, "zv", mydo.date1, mydo.id);
 
-                jsAdminIncrementUser(admin_users, mydo.manager_id, "zv", mydo.date1);
-                jsAdminIncrementUser(admin_users, -5, "zv", mydo.date1);
+                jsAdminIncrementUser(admin_users, mydo.manager_id, "zv", mydo.date1, mydo.id);
+                jsAdminIncrementUser(admin_users, -5, "zv", mydo.date1, mydo.id);
 
-                if(mydo.manager_id > 0) jsAdminIncrement(users, -3, "zv_admin", mydo.date1);
-                if(mydo.manager_id != -3) jsAdminIncrement(users, -5, "zv_admin", mydo.date1);
+                if(mydo.manager_id > 0) jsAdminIncrement(users, -3, "zv_admin", mydo.date1, mydo.id);
+                if(mydo.manager_id != -3) jsAdminIncrement(users, -5, "zv_admin", mydo.date1, mydo.id);
               }
               if(mydo.type=='vz') {
-                jsAdminIncrement(users, mydo.manager_id, "vz_admin", mydo.date1);
-                jsAdminIncrementCommercial(admin_commercials, mydo.commercial, "vz", mydo.date1);
-                jsAdminIncrementCommercial(admin_commercials, -5, "vz", mydo.date1);
+                jsAdminIncrement(users, mydo.manager_id, "vz_admin", mydo.date1, mydo.id);
+                jsAdminIncrementCommercial(admin_commercials, mydo.commercial, "vz", mydo.date1, mydo.id);
+                jsAdminIncrementCommercial(admin_commercials, -5, "vz", mydo.date1, mydo.id);
 
-                jsAdminIncrementUser(admin_users, mydo.manager_id, "vz", mydo.date1);
-                jsAdminIncrementUser(admin_users, -5, "vz", mydo.date1);
+                jsAdminIncrementUser(admin_users, mydo.manager_id, "vz", mydo.date1, mydo.id);
+                jsAdminIncrementUser(admin_users, -5, "vz", mydo.date1, mydo.id);
 
-                jsAdminIncrementModel(admin_models, mydo.model, "vz", mydo.date1);
-                jsAdminIncrementModel(admin_models, -5, "vz", mydo.date1);
-                if(mydo.manager_id > 0) jsAdminIncrement(users, -3, "vz_admin", mydo.date1);
-                if(mydo.manager_id != -3) jsAdminIncrement(users, -5, "vz_admin", mydo.date1);
+                jsAdminIncrementModel(admin_models, mydo.model, "vz", mydo.date1, mydo.id);
+                jsAdminIncrementModel(admin_models, -5, "vz", mydo.date1, mydo.id);
+                if(mydo.manager_id > 0) jsAdminIncrement(users, -3, "vz_admin", mydo.date1, mydo.id);
+                if(mydo.manager_id != -3) jsAdminIncrement(users, -5, "vz_admin", mydo.date1, mydo.id);
               }
               if(mydo.type=='tst') {
-                jsAdminIncrement(users, mydo.manager_id, "tst_admin", mydo.date1);
-                jsAdminIncrementCommercial(admin_commercials, mydo.commercial, "tst", mydo.date1);
-                jsAdminIncrementCommercial(admin_commercials, -5, "tst", mydo.date1);
+                jsAdminIncrement(users, mydo.manager_id, "tst_admin", mydo.date1, mydo.id);
+                jsAdminIncrementCommercial(admin_commercials, mydo.commercial, "tst", mydo.date1, mydo.id);
+                jsAdminIncrementCommercial(admin_commercials, -5, "tst", mydo.date1, mydo.id);
 
-                jsAdminIncrementUser(admin_users, mydo.manager_id, "tst", mydo.date1);
-                jsAdminIncrementUser(admin_users, -5, "tst", mydo.date1);
+                jsAdminIncrementUser(admin_users, mydo.manager_id, "tst", mydo.date1, mydo.id);
+                jsAdminIncrementUser(admin_users, -5, "tst", mydo.date1, mydo.id);
 
-                jsAdminIncrementModel(admin_models, mydo.model, "tst", mydo.date1);
-                jsAdminIncrementModel(admin_models, -5, "tst", mydo.date1);
-                if(mydo.manager_id > 0) jsAdminIncrement(users, -3, "tst_admin", mydo.date1);
+                jsAdminIncrementModel(admin_models, mydo.model, "tst", mydo.date1, mydo.id);
+                jsAdminIncrementModel(admin_models, -5, "tst", mydo.date1, mydo.id);
+                if(mydo.manager_id > 0) jsAdminIncrement(users, -3, "tst_admin", mydo.date1, mydo.id);
               }
               if(mydo.type=='vz2') {
-                jsAdminIncrement(users, mydo.manager_id, "vz2_admin", mydo.date1);
-                jsAdminIncrementCommercial(admin_commercials, mydo.commercial, "vz2_admin", mydo.date1);
-                jsAdminIncrementCommercial(admin_commercials, -5, "vz2_admin", mydo.date1);
+                jsAdminIncrement(users, mydo.manager_id, "vz2_admin", mydo.date1, mydo.id);
+                jsAdminIncrementCommercial(admin_commercials, mydo.commercial, "vz2_admin", mydo.date1, mydo.id);
+                jsAdminIncrementCommercial(admin_commercials, -5, "vz2_admin", mydo.date1, mydo.id);
 
-                jsAdminIncrementUser(admin_users, mydo.manager_id, "vz2_admin", mydo.date1);
-                jsAdminIncrementUser(admin_users, -5, "vz2_admin", mydo.date1);
+                jsAdminIncrementUser(admin_users, mydo.manager_id, "vz2_admin", mydo.date1, mydo.id);
+                jsAdminIncrementUser(admin_users, -5, "vz2_admin", mydo.date1, mydo.id);
 
-                jsAdminIncrementModel(admin_models, mydo.model, "vz2_admin", mydo.date1)
-                jsAdminIncrementModel(admin_models, -5, "vz2_admin", mydo.date1);
-                if(mydo.manager_id != -3) jsAdminIncrement(users, -3, "vz2_admin", mydo.date1);
-                if(mydo.manager_id != -3) jsAdminIncrement(users, -5, "vz2_admin", mydo.date1);
+                jsAdminIncrementModel(admin_models, mydo.model, "vz2_admin", mydo.date1, mydo.id)
+                jsAdminIncrementModel(admin_models, -5, "vz2_admin", mydo.date1, mydo.id);
+                if(mydo.manager_id != -3) jsAdminIncrement(users, -3, "vz2_admin", mydo.date1, mydo.id);
+                if(mydo.manager_id != -3) jsAdminIncrement(users, -5, "vz2_admin", mydo.date1, mydo.id);
               }
 
               if(mydo.date1.indexOf(today_date)!=-1) {

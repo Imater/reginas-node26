@@ -395,7 +395,7 @@ function DoCtrl($scope, myApi, oAuth2, $http) { //контроллер дел
 
       $scope.jsDoSave();
 
-      if( ($scope.do.type == "Выдача") && (confirm("Добавить 3 звонка внимания после выдачи?")) ) {
+/*      if( ($scope.do.type == "Выдача") && (confirm("Добавить 3 звонка внимания после выдачи?")) ) {
           client_id = $scope.client.id;
           alert(client_id);
           if(false)
@@ -418,7 +418,7 @@ function DoCtrl($scope, myApi, oAuth2, $http) { //контроллер дел
           });
 
       }
-   }
+*/   }
 
    $scope.setFocusInWhile = function(obj, $event) {
       alert(1);

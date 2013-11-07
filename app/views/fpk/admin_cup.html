@@ -95,7 +95,7 @@
 		</tr>
 		<tr ng-repeat="model in admin_models">
 			<td class="model">{{model.model}}</td>
-			<td><span ng-if="model.zv_month||model.zv"><b>{{model.zv}}</b> ({{model.zv_month}})</span></td>
+			<td><span ng-if="model.zv_month||model.zv"><b ng-click="fpk.jsShowAdminIds(model.ids_zv)">{{model.zv}}</b> (<a ng-click="fpk.jsShowAdminIds(model.ids_zv_month)">{{model.zv_month}}</a>)</span></td>
 			<td><span ng-if="model.vz_month||model.vz"><b>{{model.vz}}</b> ({{model.vz_month}})</span></td>
 			<td><span ng-if="model.vz2_admin_month||model.vz2_admin"><b>{{model.vz2_admin}}</b> ({{model.vz2_admin_month}})</span></td>
 

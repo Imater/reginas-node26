@@ -1243,8 +1243,18 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
     }
   }
 
-      $scope.fpk.jsShowClientIds = function(my_ids) {
+    $scope.fpk.jsShowClientIds = function(my_ids) {
       
+      myApi.getClientIds($scope, my_ids).then(function(clients){
+        //console.info("ids:",clients);
+        $scope.fpk.one_client = clients;
+        $scope.fpk.show_one_client = true;
+      });
+      
+    }
+
+    $scope.fpk.jsShowAdminIds = function(my_ids) {
+      alert(my_ids);
       myApi.getClientIds($scope, my_ids).then(function(clients){
         //console.info("ids:",clients);
         $scope.fpk.one_client = clients;
