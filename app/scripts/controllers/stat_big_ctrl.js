@@ -1,8 +1,8 @@
 myApp.controller('statBigCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment, $q, $http) {
 	$scope.stat_big_view_switch='dg';
 
-	$scope.fpk.d1 = "01.10.2013";
-	$scope.fpk.d2 = "31.11.2013";
+	$scope.fpk.d1 = "01.11.2013";
+	$scope.fpk.d2 = "10.11.2013";
 
 
     var jsLoadBig = function($scope) {

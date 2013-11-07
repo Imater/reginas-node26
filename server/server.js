@@ -3927,9 +3927,11 @@ var jsVD = function(do_type){
         }
         if(!params.col.cnt) params.col.cnt = 0;
         if(!params.col.ids) params.col.ids = [];
+        if(!params.col.titles) params.col.titles = [];
 
         params.col.cnt += add;
         if(add) params.col.ids.push( params.client.id );
+        if(add) params.col.titles.push( params.client.fio+" "+do_type+" "+params.client[do_type] );
       }
     }
   };
@@ -3954,10 +3956,11 @@ var jsVD = function(do_type){
 
     $.each(users, function(i, user){
 
-      cols = {};
+      cols = [];
       $.each(col_dates, function(k, dt){
-        cols[dt] = new myfilters(k);
+        cols.push( {date:dt, f: new myfilters(k)} );
       });
+      console.info("col_dates", cols);
 
       answers.push({
         user: user,
@@ -3972,15 +3975,14 @@ var jsVD = function(do_type){
 
         $.each(answers, function(i,answer){
           $.each(answer.cols, function(j, cl){
-
-            var d1 = new Date(j);
+            var d1 = new Date( cl.date );
             var d2 = new Date( d1 );
             
             d2.setHours(23);
             d2.setMinutes(59);
             d2.setSeconds(59);
 
-            $.each( cl, function(l, col1){
+            $.each( cl.f, function(l, col1){
               //console.info("COL=",l, col);
               //console.info("d",d1, d2);
 
@@ -4003,6 +4005,7 @@ var jsVD = function(do_type){
       });
 
     response.send({top:col_dates, answers:answers});
+    console.info(answers);
     });
 
   });
