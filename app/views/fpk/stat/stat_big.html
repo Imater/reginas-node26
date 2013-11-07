@@ -39,8 +39,7 @@
     		<th>
     			Менеджеры:
     		</th>
-    		<th ng-repeat="top in stat_top" class="cnt">
-    			{{jsShortDate(top)}}
+    		<th ng-repeat="top in stat_top" class="cnt" ng-bind-html="jsShortDate(top)">
     		</th>
     	</tr>
     	<tr ng-repeat="user in stat_big">

@@ -2106,3 +2106,6 @@ li.needgroup {
     .clients_big table .cnt {
       min-width: 3em;
       text-align: center; }
+    .clients_big table .header_month {
+      color: red;
+      font-size: 12px; }

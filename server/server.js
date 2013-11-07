@@ -3911,7 +3911,13 @@ exports.jsStatBig1 = function(request, response) {
   while( d<=d2 ) {
     col_dates.push(d);
     d = new Date(d);
+    var the_month = d.getMonth();
+    var old_date = d;
     d.setDate(d.getDate()+1);
+    console.info( d.getMonth() , the_month );
+    if(d.getMonth() != the_month) {
+      col_dates.push({month:old_date});
+    }
   }
 
 var jsVD = function(do_type){ 
@@ -3920,7 +3926,7 @@ var jsVD = function(do_type){
         var add = 0;
 
         var compare = ((params.client[do_type]>=params.dates.d1) && (params.client[do_type]<=params.dates.d2) )
-          && (params.client.manager_id==params.answer.user.id);
+          && ((params.client.manager_id==params.answer.user.id) || (params.answer.user.id==-5) );
 
         var compare2 = true;
 
@@ -3966,13 +3972,14 @@ var jsVD = function(do_type){
   pool.query("SELECT * FROM 1_users WHERE user_group IN (5,6) AND brand = ?", [brand_id], function (err, users, fields) {
     answers = [];
 
+    users.push({id:-5, fio: "Итого"});
+
     $.each(users, function(i, user){
 
       cols = [];
       $.each(col_dates, function(k, dt){
         cols.push( {date:dt, f: new myfilters(k)} );
       });
-      console.info("col_dates", cols);
 
       answers.push({
         user: user,
@@ -3993,6 +4000,11 @@ var jsVD = function(do_type){
             d2.setHours(23);
             d2.setMinutes(59);
             d2.setSeconds(59);
+
+            if(cl.date.month) {
+              d1 = new Date( cl.date.month.getFullYear(), cl.date.month.getMonth(), 1, 0,0,0 );
+              d2 = new Date( cl.date.month.getFullYear(), cl.date.month.getMonth()+1, 0, 23,59,59 );              
+            }
 
             $.each( cl.f, function(l, col1){
               //console.info("COL=",l, col);

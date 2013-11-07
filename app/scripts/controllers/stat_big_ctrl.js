@@ -26,6 +26,12 @@ myApp.controller('statBigCtrl', function ($scope, $resource, $rootScope, $locati
     })
 
     $scope.jsShortDate = function(dt) {
+
+    	if(dt.month) {
+    		var month = new Date(dt.month);
+    		return "<span class='header_month'>"+(month.getMonth()+1)+"."+month.getFullYear()+"</span>";
+    	}
+
     	var d = new Date(dt);
     	return d.getDate()+"."+(d.getMonth()+1);
     }
