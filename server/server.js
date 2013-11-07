@@ -2902,7 +2902,7 @@ function jsUpdateClient(client_id) {
             if(mydo.checked!="") {
               if(answer.out==NO_DATE) {
                 answer.out = mydo.date2;
-                answer.out_reason = mydo.text;
+                answer.out_reason = mydo.text + mydo.comment?("["+mydo.comment+"]"):"";
                 answer.bu = "";
               }
               if(!first_action) {
@@ -2966,8 +2966,8 @@ exports.updateClient = function(request, response) {
   dfdArray.push(dfd);
   pool.query('SELECT id FROM `1_clients` LIMIT 3000000',[client_id], function (err, clients, fields) {
      $.each(clients, function(i, cl){
-    dfdArray.push( jsUpdateClient(cl.id) );     
-    dfd.resolve();
+      dfdArray.push( jsUpdateClient(cl.id) );     
+      dfd.resolve();
      });
 
       
