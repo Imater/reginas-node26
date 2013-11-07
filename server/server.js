@@ -706,6 +706,23 @@ function jsMakeClientFilter(filter, manager_id) {
   return f_filter;
 }
 
+exports.findAllAdminIds = function(request, response) {
+  var manager = request.query.manager;
+  var ids = request.query.ids;
+
+  var myquery = "SELECT 1_doadmin.*, 1_doadmin.fio fio_client, 1_models.`short`, 1_users.fio, 1_commercials.`title` FROM 1_doadmin LEFT JOIN 1_models ON 1_models.id = 1_doadmin.model LEFT JOIN 1_users ON 1_users.id = 1_doadmin.manager_id LEFT JOIN 1_commercials ON 1_commercials.id = 1_doadmin.commercial WHERE 1_doadmin.id IN ("+ids+") ORDER by manager_id, date1";
+
+  jsCheckToken(request.query.token, response).done(function(user_id){
+
+      pool.query(myquery, function (err, rows, fields) {
+        rows = correct_dates( rows );
+        response.send(rows);
+      }); 
+  });
+
+}
+
+
 
 exports.findAllClientsIds = function(request, response) {
   var manager = request.query.manager;
@@ -4074,6 +4091,7 @@ app.get('/api/v1/bigdata', database.loadAllBig);
 app.get('/api/v1/bigdata2', database.loadAllBig2);
 
 app.get('/api/v1/client_ids', database.findAllClientsIds );
+app.get('/api/v1/admin_ids', database.findAllAdminIds );
 
 app.get('/api/v1/json/cup', database.loadJsonCup );
 

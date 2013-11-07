@@ -1491,7 +1491,7 @@ background-color: none !important;
                 margin-top:2px;
                 .do_btn {
                     display: inline;
-                    margin: 3px 4px;
+                    margin: 3px 3px;
                     img {
                         opacity: 0.3;
                     }
@@ -2283,6 +2283,21 @@ a {
         bottom:0px;
         padding-bottom: 50px;
         color: #EEE;
+}
+
+.one_admin {
+    margin-top: 20px;
+    margin-left: 20px;
+    td {
+        background: #FFF;
+        padding: 2px 10px;
+        border: 1px solid #CCC;
+    }
+    th {
+        background: #EEE;
+        text-align: center;
+        border: 1px solid #CCC;
+    }
 }
 
 

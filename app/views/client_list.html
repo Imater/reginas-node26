@@ -1,7 +1,7 @@
   <!-- {{jsGetDistinctTitle(distinct)}} -->
                 <!-- | filter:filterDistinct | orderBy:clientsgroupby:jsOrder(clientsgroupby) -->
 
-        <ul class="clients_list clearfix noselectable" ng-init="first_num=0">
+        <ul class="clients_list clearfix" ng-init="first_num=0">
 
                   <li ng-repeat="client in local_clients" class="client_card" myid="{{client.id}}">
                   <h3 ng-if="fpk.jsGroupExpression1(local_clients, $index, distinct)">{{fpk.jsGetDistinctTitle(client, distinct)}}</h3>
@@ -11,7 +11,7 @@
                            {{fpk.models[client.model].short?fpk.models[client.model].short:'&nbsp;'}}
                            </div>
 
-                           <div class="do_buttons">
+                           <div class="do_buttons noselectable">
                             <div class="do_btn" ng-repeat="do_type in fpk.do_types" ng-click="jsAddDo(do_type,client);$event.stopPropagation();"><img ng-class="{img_active:jsCheckDoType(do_type, client)}" title="{{do_type.title}}" ng-src="images/do_type/{{do_type.img}}"></div>
                            </div>
 
@@ -40,7 +40,7 @@
                             <span ng-if="client.vin">[VIN: <b>{{client.vin}}</b>]<br></span>
                             <span ng-if="client.email">[Email: <b>{{client.email}}</b>]<br></span>
                             <span ng-if="client.comment.length">{{client.comment}}<br></span><span style="font-size:0px;">{{client.comment.length}}</span>[Менеджер: <i class="icon-user"></i><b>{{fpk.jsFindInArray(fpk.all_managers,"id",client.manager_id).fio}}</b>]<br>
-                            <font color="#999697">Дата создания: {{client.date}}</font>
+                            <font color="#999697">Дата создания: {{client.date | nicedatetime}}</font>
                           </div>
                           <div ng-if="client._edit == true" class="client_edit" jq-show-effect="client._edit == true" jq-options="{type:'slide', duration:200, delay:200, hideImmediately: true}">
                             
@@ -530,7 +530,7 @@
 
 
                                     </div> <!-- row -->
-                                    <font color="#999697" style="font-size:9px">Дело создано: {{do.created}}, последнее изменение: {{do.changed}}, дата выполнения: {{do.checked}}</font>
+                                    <font color="#999697" style="font-size:9px">Дело создано: {{do.created | nicedatetime}}, последнее изменение: {{do.changed | nicedatetime}}, дата выполнения: {{do.checked | nicedatetime}}</font>
 
                                 </div>
 

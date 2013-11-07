@@ -176,6 +176,32 @@
           <div class="one_client_container">
 
             <div client-list="fpk.one_client" my-attr="fpk.one_client" my-distinct="one_client"></div>
+
+            <div ng-if="fpk.one_admin">
+              <table class="one_admin">
+                <tr>
+                  <th>№</th>
+                  <th>Модель</th>
+                  <th>Дата</th>
+                  <th>Менеджер</th>
+                  <th>Источник рекламы</th>
+                  <th>Имя клиента</th>
+                </tr>
+                <tr ng-repeat="adm in fpk.one_admin">
+                  <td>{{$index+1}}</td>
+                  <td>{{adm.short}}</td>
+                  <td>{{adm.date1 | nicedatetime}}</td>
+                  <td>
+                    <b ng-if="adm.manager_id==-2">Не менеджер</b>
+                    <b ng-if="adm.manager_id==-1">Неохваченный трафик</b>
+                    <b ng-if="adm.manager_id==-4">Отказ от общения</b>
+                    {{adm.fio}}
+                  </td>
+                  <td>{{adm.title}}</td>
+                  <td>{{adm.fio_client}}</td>
+                </tr>
+              </table>
+            </div>
             
           </div>
       </div>

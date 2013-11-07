@@ -438,7 +438,16 @@ myApp.filter('nicedate', function() {
     }
 });
 
-
+myApp.filter('nicedatetime', function() {
+    return function(the_date) {
+      if(the_date) {
+        var ds = the_date.split("-");
+        var dt = ds[2].split(" ");
+        return dt[0]+"."+ds[1]+"."+ds[0]+" — "+dt[1].substr(0,5);  
+      }
+      
+    }
+});
 
 myApp.filter('parent_id', function() {
     return function(input, uppercase) {
@@ -739,7 +748,17 @@ myApp.factory('myApi', function($http, $q, oAuth2){
 
       return dfd.promise;      
     },
-    getClientFull: function($scope,client_id) {
+    getAdminIds: function($scope, ids) {
+      var dfd = $q.defer();
+
+      oAuth2.jsGetToken($scope).done(function(token){
+        $http({url:'/api/v1/admin_ids',method: "GET", isArray: true, params: { token: token, manager: $scope.fpk.manager_filter, ids: ids}}).then(function(result){
+          dfd.resolve(result.data);
+        });
+      });
+
+      return dfd.promise;      
+    },    getClientFull: function($scope,client_id) {
       var dfd = $q.defer();
 
       oAuth2.jsGetToken($scope).done(function(token){
@@ -1254,10 +1273,9 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
     }
 
     $scope.fpk.jsShowAdminIds = function(my_ids) {
-      alert(my_ids);
-      myApi.getClientIds($scope, my_ids).then(function(clients){
+      myApi.getAdminIds($scope, my_ids).then(function(clients){
         //console.info("ids:",clients);
-        $scope.fpk.one_client = clients;
+        $scope.fpk.one_admin = clients;
         $scope.fpk.show_one_client = true;
       });
       
@@ -1437,6 +1455,7 @@ $scope.getSMS = function(sms) {
  
  $scope.fpk.do_types = [ //типы дел
     {img: "1zvonok.png", title: "Звонок", fieldname: "zv"},
+    {img: "1zvonok2.png", title: "Звонок исходящий", fieldname: "zv_out"},
     {img: "1vizit.png", title: "Визит", fieldname: "vz"},
     {img: "1test-drive.png", title: "Тест-драйв", fieldname: "tst"},
     {img: "1credit.png", title: "Кредит"},
@@ -1444,7 +1463,6 @@ $scope.getSMS = function(sms) {
     {img: "1settings.png", title: "Подготовка"},
     {img: "1vidacha.png", title: "Выдача", fieldname: "vd"},
     {img: "1bu.png", title: "Трейд-ин", fieldname: "bu"},
-    {img: "1zvonok2.png", title: "Звонок исходящий", fieldname: "zv_out"},
     {img: "1out.png", title: "OUT", fieldname: "out"},
  ];
 
@@ -1507,6 +1525,7 @@ $scope.getSMS = function(sms) {
  $scope.jsCloseOneClient = function(){
     $scope.fpk.show_one_client = false;
     $scope.sms_active = false;
+    $scope.fpk.one_admin = "";
     if($scope.fpk.jsRefreshClients) $scope.fpk.jsRefreshClients();
  };
 

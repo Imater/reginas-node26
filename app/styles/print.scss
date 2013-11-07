@@ -16,6 +16,8 @@
 .cards_scrollable, #cards_scrollable {
 	position: static;
 	overflow: inherit;
+	bottom: auto;
+	height: 5000px;
 }
 
 .scrollable_div {
