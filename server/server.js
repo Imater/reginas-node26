@@ -4002,8 +4002,8 @@ var jsVD = function(do_type){
             d2.setSeconds(59);
 
             if(cl.date.month) {
-              d1 = new Date( cl.date.month.getFullYear(), cl.date.month.getMonth(), 1, 0,0,0 );
-              d2 = new Date( cl.date.month.getFullYear(), cl.date.month.getMonth()+1, 0, 23,59,59 );              
+              d1 = new Date( cl.date.month.getFullYear(), cl.date.month.getMonth()-1, 1, 0,0,0 );
+              d2 = new Date( cl.date.month.getFullYear(), cl.date.month.getMonth(), 0, 23,59,59 );              
             }
 
             $.each( cl.f, function(l, col1){
