@@ -3942,7 +3942,7 @@ var jsVD = function(do_type){
 
         params.col.cnt += add;
         if(add) params.col.ids.push( params.client.id );
-        if(add) params.col.titles.push( params.client.fio+" "+do_type+" "+params.client[do_type] );
+        if(add) params.col.titles.push( params.client.fio );
       }
     }
   };
@@ -3981,7 +3981,7 @@ var jsVD = function(do_type){
 
     });
 
-    pool.query("SELECT id, vz, zv, dg, tst, vd, `out`, manager_id FROM 1_clients WHERE brand = ?",[brand_id], function (err, clients, fields) {
+    pool.query("SELECT fio, id, vz, zv, dg, tst, vd, `out`, manager_id FROM 1_clients WHERE brand = ?",[brand_id], function (err, clients, fields) {
 
       $.each(clients, function(j, client){
 
