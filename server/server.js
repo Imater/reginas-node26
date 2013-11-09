@@ -2959,7 +2959,6 @@ function jsUpdateClient(client_id) {
           if(the_client[0]) jsClearCacheByBrand( the_client[0].brand );
 
           setTimeout(function(){
-              console.info("need_push");
               process.send({ message_type: "loadstat", brand: the_client[0].brand });
 
           },5);
