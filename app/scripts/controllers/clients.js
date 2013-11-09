@@ -218,7 +218,18 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
 
           
           myApi.saveClient($scope, changes, client_id).then(function(value){
-            if(value.affectedRows>0) {
+            if(value.length>0) {
+              console.info("11", value)
+
+              client.na_date = value[0].na_date; 
+              client.attention = value[0].attention; 
+              client.dublicate = value[0].dublicate; 
+
+              client.phone1 = value[0].phone1; 
+              client.phone2 = value[0].phone2; 
+              client.phone3 = value[0].phone3; 
+              client.phone4 = value[0].phone4; 
+
               client._edit = false;
               $scope.fpk.jsLoadStat();
               $("#myfullcalendar").fullCalendar("refetchEvents");
@@ -485,6 +496,13 @@ function DoCtrl($scope, myApi, oAuth2, $http) { //контроллер дел
         myApi.saveDo($scope, changes, $scope.client.id).then(function(client_back){
           $scope.backup_copy = angular.copy( $scope.do );
           $scope.client.na_date = client_back[0].na_date; 
+          $scope.client.attention = client_back[0].attention; 
+          $scope.client.dublicate = client_back[0].dublicate; 
+          $scope.client.phone1 = client_back[0].phone1; 
+          $scope.client.phone2 = client_back[0].phone2; 
+          $scope.client.phone3 = client_back[0].phone3; 
+          $scope.client.phone4 = client_back[0].phone4; 
+
           $("#myfullcalendar").fullCalendar("refetchEvents");
 
           setTimeout(function(){ if($scope.fpk.jsLoadStat) $scope.fpk.jsLoadStat(); 

@@ -11,14 +11,29 @@
                            {{fpk.models[client.model].short?fpk.models[client.model].short:'&nbsp;'}}
                            </div>
 
+                           <span class="dublicates" ng-if="client.dublicate.length">
+
+                             <span ng-repeat="dub in client.dublicate">
+<img ng-if="dub.brand_logo" ng-class="{our_brand:(dub.brand == fpk.brand)}" height="16px" width="25.6px" ng-src="images/logos/{{dub.brand_logo}}" title="{{fpk.jsDubTitle(dub)}}"></img>
+                             </span>
+                             
+                           </span>
+
+
                            <div class="do_buttons noselectable">
                             <div class="do_btn" ng-repeat="do_type in fpk.do_types" ng-click="jsAddDo(do_type,client);$event.stopPropagation();"><img ng-class="{img_active:jsCheckDoType(do_type, client)}" title="{{do_type.title}}" ng-src="images/do_type/{{do_type.img}}"></div>
                            </div>
 
                            <span ng-if="!fpk.jsCanEditClient(client)" class="client_lock" title="Вы не можете редактировать этого клиента. Обратитесь к руководителю или старшему менеджеру."><i class="icon-lock"></i></span>
 
+
+
+                           <i ng-if="client.attention" title="{{client.attention}}" class="icon-attention attention"></i>
+
                            <div class="datemini" time-now="time_now" date-type="client" ng-model="client.na_date" title="{{client.na_date}}"></div> 
+
                            <div class="client_fio" ng-class="{did:(client.vd!='0000-00-00 00:00:00')}">{{client.fio}}</div> 
+
 
                            <div class="client_manager" ng-if="(fpk.clientsgroupby!='manager_id'&&fpk.manager_filter==-1)||(distinct=='one_client')">{{fpk.jsFindInArray(fpk.all_managers,"id",client.manager_id).fio_short_name}}</div>
 

@@ -1404,13 +1404,37 @@ background-color: none !important;
     .client_card {
         cursor: pointer;
         color: rgba(0,0,0,0.5);
+        .dublicates {
+            float: right;
+            margin-top: 3px;
+            margin-right: 5px;
+        }
+        .our_brand {
+            background: rgba(255,50,50,0.9);
+            box-shadow: inset 0px 0px 5px #000;
+            padding: 3px;
+            border-radius: 2px;
+            height: 23px;
+            width: 32px;
+            margin-top: -3px;
+        }
+        .attention {
+            color: #777;
+            font-size: 14px;
+            margin-top: 1px;
+            position: absolute;            
+        }
+        .datemini {
+            margin-left: 20px;
+        }        
         .client_container {
             border-top: 1px solid #FFF;
             border-bottom: 1px solid #CCC;
             background: $panel_background;
             background-image: url('../images/backgrounds/grain2.png');
 
-            padding: 3px 10px;
+            padding: 3px 5px;
+            padding-right: 10px;
             color: #000 !important;
             .client_fio {
                 font-size: 1.4em;

@@ -81,10 +81,10 @@ myApp.directive('resizable2', function() { return {
 myApp.directive('autoComplete', function($timeout, myApi) {
     return function(scope, iElement, iAttrs) {
             iElement.autocomplete({
+                delay: 1000,
                 source: function( request, response ) {
                   var searchtext = request.term;
                   myApi.getAutocomplete(scope, searchtext).then(function(answer){
-                    console.info(answer);
                     var res = [];
                     $.each(answer, function(i,el){
 
@@ -443,7 +443,14 @@ myApp.filter('nicedatetime', function() {
       if(the_date) {
         var ds = the_date.split("-");
         var dt = ds[2].split(" ");
-        return dt[0]+"."+ds[1]+"."+ds[0]+" — "+dt[1].substr(0,5);  
+
+        var dif_days = parseInt((jsNow() - (fromMysql( the_date ).getTime())) / 1000/60/60/24 );
+
+        if(dif_days > 1000) dif_days = "";
+        else dif_days += " дн.назад"
+
+
+        return dt[0]+"."+ds[1]+"."+ds[0]+" — "+dt[1].substr(0,5) + ' ('+dif_days+')';  
       }
       
     }
@@ -1249,7 +1256,7 @@ myApp.directive('colorChange', function() {
 var LIST_LENGTH = 100; //кол-во загружаемых клиентов за один раз
 
 
-myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment, $timeout) {
+myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment, $timeout, $filter) {
 
   $scope.fpk.today_date = toMysql( (new Date()) ).substr(0,10);
 
@@ -1294,6 +1301,23 @@ if($scope.fpk.jsLoadStat) $scope.fpk.jsLoadStat();
       });
       
     }
+
+$scope.fpk.jsDubTitle = function(dub) {
+  if( dub.brand_id == $scope.fpk.brand ) dub.brand_title += " (у нас)";
+  var t = dub.brand_title + '\n' +
+      'клиент: '+dub.fio + '\n' +
+      'модель: '+dub.model + '\n' +
+      'менеджер: [' + dub.manager_fio + ']\n';
+
+  t += (dub.zv!=NO_DATE)?("Звонок: "+$filter('nicedatetime')(dub.zv)+"\n"):"";
+  t += (dub.vz!=NO_DATE)?("Визит: "+$filter('nicedatetime')(dub.vz)+"\n"):"";
+  t += (dub.tst!=NO_DATE)?("Тест: "+$filter('nicedatetime')(dub.tst)+"\n"):"";
+  t += (dub.dg!=NO_DATE)?("Договор: "+$filter('nicedatetime')(dub.dg)+"\n"):"";
+  t += (dub.vd!=NO_DATE)?("Выдача: "+$filter('nicedatetime')(dub.vd)+"\n"):"";
+  t += (dub.out!=NO_DATE)?("OUT: "+$filter('nicedatetime')(dub.out)+"\n"):"";
+
+  return t;
+}
 
 var brands_cache = "";
 
