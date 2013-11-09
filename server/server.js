@@ -2967,7 +2967,7 @@ function jsUpdateClient(client_id, no_push) {
               the_client[0].phone2.length+
               the_client[0].phone3.length+
               the_client[0].phone4.length+
-              the_client[0].email.length) ) && (answer.out == NO_DATE) ) answer.attention = "Нет номера телефона или email; ";
+              the_client[0].email.length) ) && (answer.out == NO_DATE) ) answer.attention += "Нет номера телефона или email; ";
 
         if( (answer.dg != NO_DATE) && (the_client[0].vin.length<6) && (answer.out == NO_DATE) ) {
           answer.attention += "Есть договор, но не указан Vin; ";
