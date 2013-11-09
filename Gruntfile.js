@@ -15,6 +15,7 @@ var mountFolder = function (connect, dir) {
 module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt);
   require('time-grunt')(grunt);
+  grunt.loadNpmTasks('grunt-ngmin');
 
   // configurable paths
   var yeomanConfig = {
@@ -232,7 +233,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: '<%= yeoman.app %>',
-          src: ['*.html', 'views/*.html'],
+          src: ['*.html', 'views/**/*.html'],
           dest: '<%= yeoman.dist %>'
         }]
       }
@@ -251,6 +252,7 @@ module.exports = function (grunt) {
             'bower_components/**/*',
             'images/{,*/}*.{gif,webp}',
             'styles/fonts/*',
+            'styles/*',
             'views/**'
           ]
         }, {
@@ -281,8 +283,8 @@ module.exports = function (grunt) {
       dist: [
 //        'coffee',
         'copy:styles',
-        'imagemin',
-        'svgmin',
+//        'imagemin',
+//        'svgmin',
         'htmlmin'
       ]
     },
@@ -305,12 +307,13 @@ module.exports = function (grunt) {
     },*/
     ngmin: {
       dist: {
-        files: [{
+        directives: [{
           expand: true,
           cwd: '<%= yeoman.dist %>/**',
-          src: '*.js',
+          src: '**/*.js',
           dest: '<%= yeoman.dist %>/**'
-        }]
+        }],
+
       }
     },
     uglify: {
@@ -358,7 +361,7 @@ module.exports = function (grunt) {
     'ngmin',
     'cssmin',
     'uglify',
-    'rev',
+//    'rev',
     'usemin'
   ]);
 

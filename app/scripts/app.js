@@ -67,7 +67,7 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
             })
             .segment('news', {
                 templateUrl: 'views/fpk/news.html',
-                controller: 'statCtrl'
+                controller: 'newsCtrl'
             })
             .segment('calendar', {
                 templateUrl: 'views/fpk/calendar.html',

@@ -2902,7 +2902,8 @@ function jsUpdateClient(client_id) {
             if(mydo.checked!="") {
               if(answer.out==NO_DATE) {
                 answer.out = mydo.date2;
-                answer.out_reason = mydo.text + mydo.comment?("["+mydo.comment+"]"):"";
+                answer.out_reason = mydo['text'] + " " + (mydo.comment?("["+mydo.comment+"]"):"");
+                console.info(answer.out_reason, mydo);
                 answer.bu = "";
               }
               if(!first_action) {
@@ -2934,19 +2935,35 @@ function jsUpdateClient(client_id) {
 
         });
 
-      query = "UPDATE 1_clients SET ? WHERE id = '"+client_id+"'";
+        //console.info("check_if_changed = ",correct_dates(the_client), answer);
+        the_client = correct_dates(the_client);
+
+        var need_push = false;
+        $.each(answer, function(key, new_val){
+          if( new_val != the_client[0][key] ) {
+            if( ['zv','vz','tst','dg','vd','out'].indexOf(key) ) {
+              need_push = true;
+            }
+          };
+        });
+
+        query = "UPDATE 1_clients SET ? WHERE id = '"+client_id+"'";
 
         pool.query(query, answer, function (err, rows, fields) {
 
           dfd.resolve( client_id );
           //console.info("client_id="+client_id+" OK: ", rows.affectedRows);
     //    global.stat_cache = {}; //обнуляем кеш
-        if(the_client[0]) jsClearCacheByBrand( the_client[0].brand );
 
-        setTimeout(function(){
-            process.send({ message_type: "loadstat", brand: the_client[0].brand });
+        if( need_push ) {
+          if(the_client[0]) jsClearCacheByBrand( the_client[0].brand );
 
-        },5);
+          setTimeout(function(){
+              console.info("need_push");
+              process.send({ message_type: "loadstat", brand: the_client[0].brand });
+
+          },5);
+        }
           
         }); 
 

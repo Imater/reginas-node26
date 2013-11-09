@@ -8,19 +8,6 @@ angular.module('ui.redactor.multi', [])
       link: function (scope, elm, attrs, ngModel) {
         var expression, options, tinyInstance, tt,
           updateView = function () {
-            clearTimeout(scope.up_t);
-            scope.up_t = setTimeout(function(){
-              var el = $( $('#multi_editor').redactor('getBlock') );
-
-              var par = el.parents(".me_part_editor");
-
-              if(par.length) {
-                par.trigger("input");
-              } else {
-                elm.find(".me_part_editor").trigger("input");
-                elm.find(".me_title_header").trigger("input");
-              }
-            },100);
             var html = elm.html();
             //ngModel.$setViewValue( html );
             //scope.note.changetime = jsNow();
@@ -35,12 +22,6 @@ angular.module('ui.redactor.multi', [])
         }
 
         scope.$on('$destroy', function() {
-            var id = tinyInstance.attr("id");
-            if(id) id = id.replace("uiRedactor","redactor_air_");
-            setTimeout(function(){
-              $("#"+id).remove();  
-            },50);
-            
         });
 
         // generate an ID if not present
@@ -55,6 +36,7 @@ angular.module('ui.redactor.multi', [])
         }
         options = {
           // Update model when calling setContent (such as from the source editor popup)
+            lang: "ru",
             keyupCallback: function(html) {
               updateView();
             },
@@ -82,12 +64,7 @@ angular.module('ui.redactor.multi', [])
         };
         // extend options with initial uiTinymceConfig and options from directive attribute value
         angular.extend(options, uiRedactorConfig, expression);
-        setTimeout(function () {
-          //tinymce.init(options);
-          $('#'+attrs.id).redactor(options);
-          $("#multi_editor").attr("contenteditable","false");
-          onResize();
-        });
+
 
 
 /*        ngModel.$render = function() {

@@ -117,7 +117,10 @@ body {
     text-shadow: 0px 1px 0px #000;
     text-align: center; }
     #panel_center #panel_center_header .dropdown-menu a {
-      color: #000; }
+      color: #000;
+      text-shadow: none; }
+    #panel_center #panel_center_header .dropdown-menu .active {
+      font-weight: bold; }
     #panel_center #panel_center_header .menu_mini {
       position: absolute;
       left: 7px;
@@ -208,7 +211,9 @@ body {
       margin-right: 35px;
       margin-top: 4px; }
       #panel_center #center_footer .cup_sms ul {
-        list-style: none; }
+        list-style: none;
+        white-space: nowrap;
+        overflow: hidden; }
         #panel_center #center_footer .cup_sms ul li {
           display: inline-block; }
           #panel_center #center_footer .cup_sms ul li .sms {
@@ -941,29 +946,6 @@ body {
   width: 3px;
   z-index: 7;
   display: inline-block; }
-
-.redactor_toolbar {
-  background: #FFF !important;
-  min-height: 26px; }
-  .redactor_toolbar i {
-    font-size: 14px;
-    display: inline-block;
-    line-height: 25px;
-    text-align: center;
-    width: 26px; }
-  .redactor_toolbar li {
-    height: 26px !important;
-    padding: 0px !important; }
-    .redactor_toolbar li a {
-      background-image: none !important;
-      text-indent: 0px !important;
-      height: 25px !important;
-      width: 26px !important;
-      border: none !important;
-      color: #000; }
-  .redactor_toolbar .redactor_separator {
-    height: 25px !important;
-    border-right: none !important; }
 
 .redactor_air .redactor_toolbar {
   background: #FFF !important;
