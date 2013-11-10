@@ -2969,7 +2969,8 @@ function jsUpdateClient(client_id, no_push) {
               the_client[0].phone4.length+
               the_client[0].email.length) ) && (answer.out == NO_DATE) ) answer.attention += "Нет номера телефона или email; ";
 
-        if( (answer.dg != NO_DATE) && (the_client[0].vin.length<6) && (answer.out == NO_DATE) ) {
+        if( (answer.dg != NO_DATE) && (the_client[0].vin.length<6) && (answer.out == NO_DATE) && 
+            ( ['+','1','2','3'].indexOf(the_client[0]['status'].substr(0,1))!=-1 ) ) {
           answer.attention += "Есть договор, но не указан Vin; ";
         }
 
