@@ -38,6 +38,18 @@ body {
   left: 0px;
   z-index: 0;
   min-height: 450px; }
+  #panel_left .my_reiting_step {
+    font-size: 130px;
+    color: #151a22;
+    text-align: center; }
+  #panel_left .first_place {
+    font-size: 80px;
+    text-align: center;
+    color: #5e759a; }
+  #panel_left .second_place {
+    font-size: 40px;
+    text-align: center;
+    color: #37455b; }
   #panel_left #panel_left_header {
     height: 36px;
     text-align: center;

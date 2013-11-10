@@ -1123,7 +1123,7 @@ exports.jsGetReiting = function(request, response) {
     var cost = 600000;
     if(client.cost>250000) {
       cost = client.cost;
-      if(cost>2500000) cost = 2500000;
+      if(cost>3500000) cost = 3500000;
     } else if (model && model.cost) {
       cost = model.cost;
     }
@@ -1245,6 +1245,29 @@ exports.jsGetReiting = function(request, response) {
           });
 
           response.send(answer);
+
+          //записываем рейтинг в профиль менеджера
+          var dif = frommysql(start_today_date_sql) - frommysql(today_date_sql);
+          dif = parseInt(dif / 24/60/60/1000 );
+          console.info(dif);
+          if(dif == -7) {
+            console.info('reiting = ', answer.length, dif);
+            answer = _.sortBy(answer, function(man){ return -(man.reiting_sum) });
+            
+            var bigest_sum = 0;
+            $.each(answer, function(i, manager){
+              if(i==0) bigest_sum = manager.reiting_sum;
+              manager.reiting_step = i+1;
+              manager.reiting_procent = parseInt((manager.reiting_sum / bigest_sum)*100)
+
+              pool.query('UPDATE `1_users` SET reiting_step = ?, reiting_procent = ? WHERE id = ? LIMIT 1', [manager.reiting_step, manager.reiting_procent, manager.manager_id ], function (err, users, fields) {
+                console.info(manager);  
+              });
+
+            });
+          }
+
+
         }); 
     });
     });
@@ -3214,8 +3237,8 @@ exports.loadUserInfo = function(request, response) {
  jsCheckToken(request.query.token, response).done(function(user_id){
   _sqllog({manager: user_id, request: request, text:"Запрос информации loadUserInfo"});
   //console.info("USER_ID:", user_id);
-  pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone, brands FROM `1_users` WHERE id = ? LIMIT 1',[user_id], function (err, user, fields) {    
-    pool.query('SELECT active, id, brand, fio, message_on, user_group, phone FROM `1_users` ORDER BY brand, fio', function (err, users, fields) {
+  pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone, brands, reiting_procent, reiting_step FROM `1_users` WHERE id = ? LIMIT 1',[user_id], function (err, user, fields) {    
+    pool.query('SELECT active, id, brand, fio, message_on, user_group, phone, reiting_procent, reiting_step FROM `1_users` ORDER BY brand, reiting_step, fio', function (err, users, fields) {
       pool.query('SELECT * FROM `1_commercials`', function (err, commercials, fields) {
           pool.query('SELECT * FROM `1_users_group`', function (err, users_group, fields) {
             //response.send({models:models, brands: brands, users_group: users_group });

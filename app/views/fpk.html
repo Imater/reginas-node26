@@ -42,8 +42,8 @@
         <ul class="dropdown-menu">
           <li role="presentation" class="dropdown-header">Фильтровать по:</li>                   
           <li ng-click="jsSelectManager(-1)"><a><i class="icon-users"></i>Все менеджеры</a></li>
-          <li role="presentation" class="dropdown-header">Менеджеры:</li>                   
-          <li ng-click="jsSelectManager(manager.id)" ng-repeat="manager in fpk.managers | onlyManager:true"><a><i class="icon-user"></i>{{manager.fio_short_name}}</a></li>
+          <li role="presentation" class="dropdown-header">Менеджеры [рейтинг за 7 дней]:</li>                   
+          <li ng-click="jsSelectManager(manager.id)" ng-repeat="manager in fpk.managers | onlyManager:true"><a><i class="icon-user"></i>[{{manager.reiting_step}} место] — {{manager.fio_short_name}}</a></li>
           <li class="dropdown-submenu"><a >Остальные</a>
            <ul class="dropdown-menu">
             <li ng-click="jsSelectManager(manager.id)" ng-repeat="manager in fpk.managers | onlyManager:false"><a >{{manager.fio}}</a></li>
@@ -73,6 +73,21 @@
           {{menu_item.title}} <div ng-if="fpk.stat[menu_item.id]" class="div_count">{{fpk.stat[menu_item.id]}}</div>
           </li>
         </ul>
+
+        <div class="my_reiting_step" title="Место в рейтинге за 7 дней">
+         {{reiting = fpk.jsShowManagerFilterReiting(); reiting.step}}
+         <div ng-if="reiting.step==1" class="first_place">
+          <i class="icon-top-list"></i>
+         </div>
+         <div ng-if="reiting.step==2" class="second_place">
+          <i class="icon-top-list"></i>
+         </div>
+         <div ng-if="reiting.reiting_procent<0" class="second_place">
+          <i class="icon-emo-cry"></i>
+         </div>
+
+
+        </div>
 
         <div id="main_calendar">
           <div id="datetoday" class="input-append date" ng-model="fpk.today_date" datepicker>

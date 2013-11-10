@@ -1477,6 +1477,21 @@ $scope.getSMS = function(sms) {
   }
  }
  
+ $scope.fpk.jsShowManagerFilterReiting = function() {
+
+
+  if($scope.fpk.manager_filter == -1) {
+    return { step: "", reiting_procent: 0 };
+  } else {
+    var the_manager = _.find($scope.fpk.managers, function(manager) {
+      return (manager.id == $scope.fpk.manager_filter );
+    });
+
+    if(the_manager) return { step: the_manager.reiting_step, reiting_procent: the_manager.reiting_procent };
+  }
+ }
+
+
  $scope.fpk.do_types = [ //типы дел
     {img: "1zvonok.png", title: "Звонок", fieldname: "zv"},
     {img: "1zvonok2.png", title: "Звонок исходящий", fieldname: "zv_out"},
