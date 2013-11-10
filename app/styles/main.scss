@@ -161,20 +161,28 @@ body {
 
     .my_reiting_step {
         font-size: 130px;
-        color: darken($left_panel_background, 8%);
+        a {
+            font-weight: bold;
+            color: darken($left_panel_background, 10%);
+        }
         text-align: center;
     }
 
     .first_place {
+        margin-top: -50px;
+        margin-left: 15px;
         font-size: 80px;
         text-align: center;
-        color: lighten($left_panel_background, 30%);
+        color: #000;
+        text-shadow: 0px 0px 7px #ffff56;
     }
 
     .second_place {
+        margin-top: -30px;
         font-size: 40px;
         text-align: center;
-        color: lighten($left_panel_background, 10%);
+        color: #000;
+        text-shadow: 0px 0px 10px #CCC;
     }
 
     #panel_left_header {
