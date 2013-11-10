@@ -1251,7 +1251,7 @@ exports.jsGetReiting = function(request, response) {
           dif = parseInt(dif / 24/60/60/1000 );
           console.info(dif);
           if(dif == -7) {
-            console.info('reiting = ', answer.length, dif);
+            console.info('see reiting = ', answer.length, dif);
             answer = _.sortBy(answer, function(man){ return -(man.reiting_sum) });
             
             var bigest_sum = 0;
@@ -1261,7 +1261,6 @@ exports.jsGetReiting = function(request, response) {
               manager.reiting_procent = parseInt((manager.reiting_sum / bigest_sum)*100)
 
               pool.query('UPDATE `1_users` SET reiting_step = ?, reiting_procent = ? WHERE id = ? LIMIT 1', [manager.reiting_step, manager.reiting_procent, manager.manager_id ], function (err, users, fields) {
-                console.info(manager);  
               });
 
             });
