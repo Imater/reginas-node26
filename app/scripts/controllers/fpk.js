@@ -81,7 +81,7 @@ myApp.directive('resizable2', function() { return {
 myApp.directive('autoComplete', function($timeout, myApi) {
     return function(scope, iElement, iAttrs) {
             iElement.autocomplete({
-                delay: 1000,
+                delay: 500,
                 source: function( request, response ) {
                   var searchtext = request.term;
                   myApi.getAutocomplete(scope, searchtext).then(function(answer){
