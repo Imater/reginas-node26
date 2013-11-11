@@ -1275,7 +1275,7 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
   $scope.fpk.jsDoReadOnly = function(mydo) {
     var dif_days = parseInt((jsNow() - (fromMysql( mydo.created ).getTime())) / 1000/60/60/24 );
 
-    var compare = (dif_days>=1);
+    var compare = (dif_days>=2);
 
     if( $scope.fpk.the_user.rights[0].can_edit_all_client ) compare = false;
 
