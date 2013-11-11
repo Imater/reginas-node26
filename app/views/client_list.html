@@ -250,7 +250,7 @@
                                 <button class="btn btn-success btn-sm" ng-click="jsClientSave(client)">Сохранить</button>
                               </div>
                               <div class="col-md-3">
-                                <a class="pull-right delete_client" ng-click="jsClientDelete(client)">Удалить клиента</a>
+                                <a class="pull-right delete_client" ng-click="jsClientDelete(client)" ng-if="fpk.jsCanDeleteClient(client)">Удалить клиента</a>
                               </a>
                               </div>
 
