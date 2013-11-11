@@ -1289,7 +1289,7 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
 
     var compare = (dif_days<=2);
 
-    if( $scope.fpk.the_user.rights[0].can_edit_all_client ) compare = true;    
+    if( $scope.fpk.the_user.rights[0].can_edit_all_client ) compare = (dif_days<=45);    
     return compare;
   }
 
