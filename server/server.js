@@ -3151,6 +3151,7 @@ function jsIsInside(params){
   if( (params.user[0].user_group == 1) || //учредитель
     (params.user[0].user_group == 2) || //директор
     (params.user[0].user_group == 3) || //руководитель отдела продаж
+    (params.user[0].user_group == 5) || //старший менеджер отдела продаж
     (params.user[0].user_group == 10) || //админ системы
     (/192.168.200/.test(ip)) ||
     (/62.165.38/.test(ip)) ||
