@@ -2977,6 +2977,13 @@ function jsUpdateClient(client_id, no_push) {
               answer.bu = mydo.date2;
             }
           }
+          if(mydo.checked == "") {
+            var dif_days = parseInt((jsNow() - (frommysql( mydo.date2 ).getTime())) / 1000/60/60/24 );
+            console.info("!", dif_days);
+            if(dif_days > 1) {
+              answer.attention += "Назначены просроченные дела; ";
+            }
+          }
 
 
         });
