@@ -309,7 +309,7 @@
 
                                             <!-- <a ng-if="do.type=='Тест-драйв'" class="dover_link"><i class="icon-print-1"></i> доверенность на тест</a> 
  -->
-                                            <button class="do_del" ng-click="jsDelDo()">Удалить</button>
+                                            <button class="do_del" ng-click="jsDelDo()" ng-if="!do.readonly">Удалить</button>
                                             <button ng-click="jsDoCancel()" class="do_cancel">Отменить</button>
                                       </div>
                                     </div>
@@ -433,7 +433,7 @@
                                       <div class="col-md-12">
                                         <div class="input-group input-group-sm">
                                           <span class="input-group-addon">Дело:</span>
-                                            <textarea placeholder="Введите описание дела..." class="do_text_input" return-on-blur2="do_text" ng-model="do.text" ></textarea> 
+                                            <textarea  ng-readonly="do.readonly" placeholder="Введите описание дела..." class="do_text_input" return-on-blur2="do_text" ng-model="do.text" ></textarea> 
 
                                         </div>
                                       </div>
@@ -476,9 +476,9 @@
                                     <div class="row">
                                     
                                       <div class="col-md-8">
-                                        <div class="input-group input-group-sm">
+                                        <div class="input-group input-group-sm" ng-init="do.readonly=fpk.jsDoReadOnly(do)">
                                           <span class="input-group-addon">Дата:</span>
-                                          <input date-time-entry="do.date2" class="do_date2"></input>
+                                          <input date-time-entry="do.date2" iamdisabled="do.readonly" class="do_date2"></input>
                                         </div>
                                       </div>
                                     
@@ -507,7 +507,10 @@
                                     <div class="row">
                                       <div class="col-md-8">
                                         <div class="fast_time">
-                                          <span>
+                                          <span ng-if="do.readonly" style="color:green">
+                                            Прошло 24 часа с момента создания дела, теперь вы не можете менять его дату. Только написать результат, выполнить и создать новое. Если нужно, обратитесь к руководителю.
+                                          </span>
+                                          <span ng-if="!do.readonly">
                                             Через: 
                                             <a ng-click="jsAddHours(0.5)">30 мин.,</a> 
                                             <a ng-click="jsAddHours(1)">1 час,</a> 

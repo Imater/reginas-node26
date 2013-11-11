@@ -1178,6 +1178,10 @@ body {
         .clients_list .client_card .client_inside ul li.client_do_li {
           font-size: 13px;
           min-height: 2em; }
+          .clients_list .client_card .client_inside ul li.client_do_li input[disabled] {
+            background: #EEE; }
+          .clients_list .client_card .client_inside ul li.client_do_li textarea[readonly] {
+            background: #EEE; }
           .clients_list .client_card .client_inside ul li.client_do_li .do_line {
             border-top: 1px solid #DDD;
             border-bottom: 1px solid #AAA;

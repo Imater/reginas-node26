@@ -1583,6 +1583,12 @@ background-color: none !important;
                 li.client_do_li {
                     font-size: 13px;
                     min-height: 2em;
+                    input[disabled] {
+                        background: #EEE;
+                    }
+                    textarea[readonly] {
+                        background: #EEE;
+                    }
                     .do_line {
                         border-top: 1px solid #DDD;
                         border-bottom: 1px solid #AAA;

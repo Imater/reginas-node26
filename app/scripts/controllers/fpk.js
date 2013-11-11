@@ -517,8 +517,9 @@ myApp.directive('returnOnBlur', function() {
 myApp.directive('dateTimeEntry', function() {    
     return {
         restrict: 'A',
-        scope:{'dateTimeEntry':'=' },
-        link: function(scope, elm, attrs) {            
+        scope:{'dateTimeEntry':'=',
+               'iamdisabled':'=' },
+        link: function(scope, elm, attrs) {     
             scope.$watch('dateTimeEntry', function(nVal) { 
               nVal = fromMysql( nVal );
               elm.datetimeEntry('setDatetime', nVal);
@@ -561,6 +562,8 @@ myApp.directive('dateTimeEntry', function() {
 
                   },600);
                 });
+
+                if(scope['iamdisabled']) elm.datetimeEntry('disable');
 
             //elm.datetimeEntry('setDatetime', scope.onChange);
 
@@ -1267,6 +1270,16 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
             $scope.fpk.cup_sms = result.sms;
         });    
     }
+  }
+
+  $scope.fpk.jsDoReadOnly = function(mydo) {
+    var dif_days = parseInt((jsNow() - (fromMysql( mydo.created ).getTime())) / 1000/60/60/24 );
+
+    var compare = (dif_days>=1);
+
+    if( $scope.fpk.the_user.rights[0].can_edit_all_client ) compare = false;
+
+    return compare;
   }
 
     $scope.fpk.jsShowClientIds = function(my_ids) {
