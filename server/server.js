@@ -1558,7 +1558,7 @@ exports.jsGetManagerCupAdminReport = function(request, response) {
           cup_element[ "ids_"+field_name+"_month" ] += ","+client_id;
         }
       } else {
-        jsAdminIncrementUser(users, -2, field_name+"_month");       
+        jsAdminIncrementUser(users, -2, field_name+"_month", undefined, client_id);       
       }
     }
 
@@ -1573,7 +1573,7 @@ exports.jsGetManagerCupAdminReport = function(request, response) {
         }
         return true;
       } else {
-        jsAdminIncrementUser(users, -2, field_name);        
+        jsAdminIncrementUser(users, -2, field_name, undefined, client_id);        
         return false;
       }
     }
@@ -2202,9 +2202,13 @@ exports.saveDo = function(request, response) {
   var changes = JSON.parse(request.query.changes);
   var client_id = request.query.client_id;
 
+  console.info("c", changes);
+
  jsCheckToken(request.query.token, response).done(function(user_id){
 
   changes.changed = tomysql( new Date() );
+
+  console.info("ch",changes);
 
   query = "UPDATE 1_do SET ? WHERE id = '"+id+"'";
   //console.info("F = ",query, changes);
