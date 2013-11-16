@@ -4,12 +4,24 @@
 		"selected_items":
 		[
 			[
-				"nor",
-				"nowrap"
+				"mar",
+				"margin-left"
 			],
 			[
 				"text",
 				"text-shadow"
+			],
+			[
+				"ng-bin",
+				"ng-bind-html	AngularJS"
+			],
+			[
+				"font",
+				"font-size"
+			],
+			[
+				"nor",
+				"nowrap"
 			],
 			[
 				"fon",
@@ -18,10 +30,6 @@
 			[
 				"short",
 				"short_job"
-			],
-			[
-				"font",
-				"font-weight"
 			],
 			[
 				"lin",
@@ -380,10 +388,6 @@
 				"the_value"
 			],
 			[
-				"mar",
-				"margin-top"
-			],
-			[
 				"req",
 				"request"
 			],
@@ -510,10 +514,6 @@
 			[
 				"this_",
 				"this_to_user_id"
-			],
-			[
-				"res",
-				"response"
 			]
 		]
 	},
@@ -523,7 +523,7 @@
 			"file": "server/server.js",
 			"settings":
 			{
-				"buffer_size": 144229,
+				"buffer_size": 149378,
 				"line_ending": "Unix"
 			}
 		},
@@ -547,7 +547,7 @@
 			"file": "app/styles/main.scss",
 			"settings":
 			{
-				"buffer_size": 72972,
+				"buffer_size": 74376,
 				"line_ending": "Unix"
 			}
 		},
@@ -724,7 +724,7 @@
 			"file": "app/views/fpk/reiting.html",
 			"settings":
 			{
-				"buffer_size": 2013,
+				"buffer_size": 2114,
 				"line_ending": "Unix",
 				"name": "<h1>Рейтинг менеджеров</h1>"
 			}
@@ -887,7 +887,7 @@
 			"file": "app/views/fpk.html",
 			"settings":
 			{
-				"buffer_size": 15219,
+				"buffer_size": 15914,
 				"line_ending": "Unix"
 			}
 		},
@@ -895,7 +895,7 @@
 			"file": "app/scripts/controllers/fpk.js",
 			"settings":
 			{
-				"buffer_size": 59018,
+				"buffer_size": 61100,
 				"line_ending": "Unix"
 			}
 		},
@@ -935,7 +935,7 @@
 			"file": "app/views/client_list.html",
 			"settings":
 			{
-				"buffer_size": 37450,
+				"buffer_size": 38554,
 				"line_ending": "Unix"
 			}
 		},
@@ -951,7 +951,7 @@
 			"file": "app/scripts/controllers/clients.js",
 			"settings":
 			{
-				"buffer_size": 16912,
+				"buffer_size": 17654,
 				"line_ending": "Unix"
 			}
 		},
@@ -1208,6 +1208,61 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"'app'",
+			"app",
+			"jsGetManagerCupAdminReport",
+			"saveDo",
+			"/do",
+			"attent",
+			"24",
+			"do_typ",
+			"group",
+			"user_gr",
+			"создания",
+			"nicedat",
+			"do.readonly",
+			"Удалить",
+			"datetime",
+			"reiting_",
+			"jsShowManagerFilter",
+			"manager_filter",
+			"filter",
+			"darken",
+			"left_pan",
+			"loadUserInfo",
+			"jsGetReiting",
+			"jsCheckDublicate",
+			"jsDublicate",
+			"updateclie",
+			"jsCheckDublicate",
+			"byid",
+			"updateclie",
+			"saveclient",
+			"getAutocomplete",
+			"dublicate",
+			"Не указан",
+			"Не указан vin",
+			"dubtitle",
+			"dif",
+			"nicedatetime",
+			"dublica",
+			"dublicat",
+			"logo",
+			"findAllClients",
+			"n correct_dates",
+			"correct_dates",
+			"findAllClients",
+			"correct_dates",
+			"findAllClients",
+			"correct_dates",
+			"jsCheckDublicate",
+			"dosave",
+			"saveclie",
+			"attention",
+			"no_na_sum",
+			"jsGetReiting",
+			"need_push",
+			"dist",
 			"out_reason",
 			"script",
 			"static",
@@ -1280,62 +1335,7 @@
 			"socketme",
 			"5.79.218",
 			"inside",
-			"updateclie",
-			"Звонок",
-			"admin_c",
-			"cupad",
-			"orderBy",
-			"time_now",
-			"created",
-			"jsGetBrands",
-			"watch",
-			"jsGetBrands",
-			"canedit",
-			"do_types",
-			"Звонок",
-			"cup",
-			"filter",
-			"group_by",
-			"LIST_LENGTH",
-			"pagin",
-			"max",
-			"MAX",
-			"random",
-			"setInt",
-			"error",
-			"socketme",
-			"global.collection",
-			"console.info",
-			"loadstat",
-			"saved c",
-			"savedo",
-			"manager",
-			"findAllClientsIds",
-			"after",
-			"jsAdminIncrementModel",
-			"jsGetManagerCupAdminReport",
-			"AND 1_do.checked !=\"0000-00-00 00:00:00\" AND 1_do.type=\"Тест-",
-			"cup",
-			"jsGetManagerCupAdminReport",
-			"findClientDoType",
-			"io",
-			"findClientDoType",
-			"loadstat",
-			"message_type",
-			"message_type: \"loadstat\"",
-			"deletecl",
-			"message_type",
-			"jsLoadStat",
-			"message_type",
-			"info_from",
-			"loadstat",
-			"updateclie",
-			"console.info",
-			"message_type",
-			"updatecli",
-			"socket",
-			"report.loadstat",
-			"updateclient"
+			"updateclie"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1411,7 +1411,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 144229,
+						"buffer_size": 149378,
 						"regions":
 						{
 							"mark":
@@ -1427,8 +1427,8 @@
 						"selection":
 						[
 							[
-								101790,
-								101790
+								0,
+								5229
 							]
 						],
 						"settings":
@@ -1440,7 +1440,7 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 54391.0,
+						"translation.y": 3036.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1470,7 +1470,7 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 5141.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1508,15 +1508,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 72972,
+						"buffer_size": 74376,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								35973,
-								35973
+								44314,
+								44314
 							]
 						],
 						"settings":
@@ -1526,7 +1526,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 23616.0,
+						"translation.y": 28736.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1887,8 +1887,8 @@
 						"selection":
 						[
 							[
-								2941,
-								2949
+								14872,
+								14853
 							]
 						],
 						"settings":
@@ -1899,7 +1899,7 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 7482.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -2137,15 +2137,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2013,
+						"buffer_size": 2114,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1195,
-								1224
+								2016,
+								2016
 							]
 						],
 						"settings":
@@ -2155,7 +2155,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 59.0,
+						"translation.y": 277.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -2710,15 +2710,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 15219,
+						"buffer_size": 15914,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								7391,
-								7391
+								3014,
+								3014
 							]
 						],
 						"settings":
@@ -2731,7 +2731,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2342.0,
+						"translation.y": 624.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -2742,15 +2742,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 59018,
+						"buffer_size": 61100,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								45489,
-								45490
+								41012,
+								41108
 							]
 						],
 						"settings":
@@ -2761,7 +2761,7 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 26939.0,
+						"translation.y": 23882.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -2884,15 +2884,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 37450,
+						"buffer_size": 38554,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								37039,
-								37039
+								35058,
+								35058
 							]
 						],
 						"settings":
@@ -2902,7 +2902,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 11183.0,
+						"translation.y": 10722.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -2942,15 +2942,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 16912,
+						"buffer_size": 17654,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								262,
-								1108
+								2406,
+								2411
 							]
 						],
 						"settings":
@@ -2961,7 +2961,7 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1110.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -3255,6 +3255,10 @@
 		"height": 500.0,
 		"selected_items":
 		[
+			[
+				"",
+				"~/4tree_node/4tree_node.sublime-project"
+			]
 		],
 		"width": 380.0
 	},

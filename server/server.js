@@ -3972,6 +3972,109 @@ exports.sendSocketMessage = function(request, response) {
 
 }
 
+
+exports.jsStatBig3 = function(request, response) {
+  var _d1 = request.query.d1;
+  var _d2 = request.query.d2;
+
+  _d1 = _d1.split(".");
+  var d1 = _d1[2]+"-"+_d1[1]+"-"+_d1[0]+" 00:00:00";
+
+  _d2 = _d2.split(".");
+  var d2 = _d2[2]+"-"+_d2[1]+"-"+_d2[0]+" 23:59:59";
+
+  var params = {
+    brand: request.query.brand,
+    d1: d1,
+    d2: d2
+  };
+
+  console.info(params);
+
+  jsStatGroup(params).done( function(answer){ 
+    response.send( { stat_big: answer } ); 
+  });
+}
+
+
+var jsStatGroup = function(params) {
+    var dfd = $.Deferred();
+
+    var gr_func = function(element){
+              var typ = this.typ;
+              var compare = true;
+              if(this.name=='out') { compare = (element.dg != '0000-00-00 00:00:00'); }
+              if(this.name=='out_all') { compare = (element.dg == '0000-00-00 00:00:00'); }
+              if( (element[typ]!='0000-00-00 00:00:00')&&(compare) ) {
+                var group = element[typ].getFullYear()+"."+( '0'+(element[typ].getMonth()+1) ).slice(-2)+"."+('0'+element[typ].getDate()).slice(-2);
+              } else {
+                var group = "-1";            
+              }
+              return group;
+    };
+
+
+    var def = {
+      brand: 7,
+      dotypes: [
+        { typ: 'zv', name: 'zv', group_function: gr_func },
+        { typ: 'vz', name: 'vz', group_function: gr_func },
+        { typ: 'tst', name: 'tst', group_function: gr_func },
+        { typ: 'dg', name: 'dg', group_function: gr_func },
+        { typ: 'vd', name: 'vd', group_function: gr_func },
+        { typ: 'out', name: 'out', group_function: gr_func },
+        { typ: 'out', name: 'out_all', group_function: gr_func }
+      ],
+      groupby: "manager_id",
+      groupname: "user_fio"
+    }
+
+    params = _.defaults(params, def);
+
+
+    pool.query("SELECT 1_clients.id, 1_clients.vz, 1_clients.zv, 1_clients.dg, 1_clients.tst, 1_clients.vd, 1_clients.`out`, 1_clients.commercial_id, 1_clients.manager_id, 1_clients.model, 1_users.fio user_fio FROM 1_clients LEFT JOIN 1_users ON 1_users.id=1_clients.manager_id WHERE 1_clients.brand = ? AND ((zv>? AND zv<?) OR (vz>? AND vz<?) OR (tst>? AND tst<?) OR (`out`>? AND `out`<?) OR (dg>? AND dg<?) OR (vd>? AND vd<?)) ", [params.brand, params.d1, params.d2, params.d1, params.d2, params.d1, params.d2, params.d1, params.d2, params.d1, params.d2, params.d1, params.d2 ], function (err, clients, fields) {
+
+      var answer = _(clients).chain()
+      .groupBy(function(cl){ //группирую
+        return cl[ params.groupname ] + ":" + cl[ params.groupby ]; 
+      })
+      .map(function(el, key){ //считаю элементы
+        myanswer = { group_value: key, group_name: "", statistic: {} };
+
+        _.each( params.dotypes, function(typ){ //['zv','vz','dg','vd']
+
+            var el2 = _(el).chain().groupBy(function(element){ //группирую по типу дела
+              return typ.group_function(element);
+            })
+            .map(function(e, my_date){ // сумирую все элементы по датам
+              if(my_date == -1) return false;
+              var ids = _.pluck(e, 'id');
+              var models = _.pluck(e, 'model');
+              var ss = { date: my_date };
+              ss[typ.name] = { cnt: e.length, ids: ids, models: models };
+              return ss;
+            }) 
+            .compact()
+            .value();
+
+            _.each(el2, function(el1, key1){ //прохожу каждое дело, чтобы перекинуть их внутрь даты
+              if(!myanswer.statistic[el1.date]) myanswer.statistic[el1.date] = {};
+              if(!myanswer.statistic[el1.date][typ.name]) myanswer.statistic[el1.date][typ.name] = [];
+              myanswer.statistic[el1.date][typ.name] = el1;
+            });
+
+        });
+
+        return myanswer;
+      })
+      .value();
+
+      dfd.resolve(answer);
+    });
+    return dfd.promise();
+
+}
+
 exports.jsExperiment = function(request, response) {
 
   var jsVD = function(do_type){ 
@@ -4207,7 +4310,9 @@ app.get('/migrate', database.loadAllFromMySQL)
 
 
 app.get('/api/v1/stat_big1', database.jsStatBig1);
-app.get('/api/v1/experiment', database.jsExperiment);
+
+app.get('/api/v1/stat_big3', database.jsStatBig3);
+//app.get('/api/v1/experiment', database.jsExperiment2);
 app.get('/api/v1/parseManagers', database.parseManagers);
 
 app.get('/api/v1/parseManagers2', database.parseManagers2);
