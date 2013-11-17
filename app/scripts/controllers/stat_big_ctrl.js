@@ -108,7 +108,7 @@ myApp.controller('statBigCtrl', function ($scope, $resource, $rootScope, $locati
             } else if (col_date.week) {
                 var dt = toMysql( col_date.week ).split(" ")[0];
                 var title = dt.split('-');
-                title = title[1]+"<br>W"+col_date.week.getWeek();
+                title = title[1]+"<br>W"+(col_date.week.getWeek());
                 answer.date = { week: true, date: dt.replace(/-/ig, "."), title: title, int_date: col_date.week };
             } else if (col_date.month) {
                 var dt = toMysql( col_date.month ).split(" ")[0];
@@ -142,7 +142,7 @@ myApp.controller('statBigCtrl', function ($scope, $resource, $rootScope, $locati
         var answer={};
         if(col_date.date.week) {
             var dt = new Date(col_date.date.int_date);
-            var find_date = dt.getFullYear()+".W"+(dt.getWeek());
+            var find_date = dt.getFullYear()+".W"+(dt.getWeek()-1);
             answer = group_line.statistic_week[find_date];
         } else if(col_date.date.month) {
             answer = group_line.statistic_month[col_date.date.date.substr(0,7)];
