@@ -700,7 +700,7 @@ myApp.factory('myApi', function($http, $q, oAuth2){
     },
     jsGetManagerCupAdminReport: function($scope, searchtext) {
       var dfd = $q.defer();
-        $http({url:'/api/v1/stat/admin_cup/managers_report',method: "GET", params: { brand: $scope.fpk.brand, today: $scope.fpk.today_date}}).then(function(result){
+        $http({url:'/api/v1/stat/admin_cup/managers_report',method: "GET", params: { brand: $scope.fpk.brand, today: $scope.fpk.today_date, manager_filter: $scope.fpk.manager_filter}}).then(function(result){
           dfd.resolve(result.data);
         });
 
@@ -729,7 +729,7 @@ myApp.factory('myApi', function($http, $q, oAuth2){
       var dfd = $q.defer();
 
       oAuth2.jsGetToken($scope).done(function(token){
-        $http({url:'/api/v1/do',method: "GET", params: { token: token, brand: $scope.fpk.brand, manager: $scope.fpk.manager_filter, left_menu: $scope.fpk.leftmenu?$scope.fpk.leftmenu.active:'' }}).then(function(result){
+        $http({url:'/api/v1/do',method: "GET", params: { token: token, brand: $scope.fpk.brand, manager: $scope.fpk.manager_filter, left_menu: $scope.fpk.leftmenu?$scope.fpk.leftmenu.active:'', cal_type: $scope.fpk.cal_type }}).then(function(result){
           dfd.resolve(result.data);
         });
       });
@@ -1528,6 +1528,8 @@ $scope.getSMS = function(sms) {
     {img: "1bu.png", title: "Трейд-ин", fieldname: "bu"},
     {img: "1out.png", title: "OUT", fieldname: "out"},
  ];
+
+ $scope.fpk.cal_type = 'all_do';
 
  var tmp_status = {};
  $.each($scope.fpk.do_types, function(i, dt){

@@ -9,6 +9,12 @@ $(function() {
     FastClick.attach(document.body);
 });
 
+Date.prototype.getWeek = function() {
+    var onejan = new Date(this.getFullYear(),0,1);
+    return Math.ceil((((this - onejan) / 86400000) + onejan.getDay()+1)/7);
+}     
+
+
 
 angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 'ui.redactor.multi', 'ui.calendar', "ng", "infinite-scroll", "monospaced.elastic", 'route-segment', 'view-segment', 'ngGrid', "highcharts-ng"])
     .config(function ($routeProvider, $locationProvider, $compileProvider, $routeSegmentProvider) {
@@ -392,7 +398,7 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
     $scope.fpk.today_do = [];
     $scope.fpk.jsRefreshDo = function(scope){        
         if($scope.fpk.right_panel_hide == false) {
-          myApi.getDoToday(scope).then(function(answer){
+          myApi.getDoToday($scope).then(function(answer){
             $scope.fpk.today_do = answer;
           });
         } else {

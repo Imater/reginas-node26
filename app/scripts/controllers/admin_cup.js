@@ -143,7 +143,7 @@ myApp.controller('adminCtrl', function ($scope, $resource, $rootScope, $location
 
     $scope.jsLoadAdmin();
 
-    $scope.$watchCollection("[fpk.brand, fpk.today_date]",function(){
+    $scope.$watchCollection("[fpk.brand, fpk.today_date, fpk.manager_filter]",function(){
         $scope.jsLoadAdmin();
         if($scope.admin_models) $scope.jsLoadAdminReport();
     })

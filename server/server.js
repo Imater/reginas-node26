@@ -420,6 +420,10 @@ exports.getDo = function(request,response) {
   var user_id = request.query.user_id;
   var brand = request.query.brand;
   var manager_id = request.query.manager;
+  var cal_type = request.query.cal_type;
+
+  console.info("cal_type = ", cal_type);
+
 
   var left_menu = request.query.left_menu;
 
@@ -436,8 +440,17 @@ exports.getDo = function(request,response) {
   jsCheckToken(request.query.token, response).done(function(user_id){
     var insert_sql = "";
     if(manager_id>0) insert_sql = "1_do.manager_id = '"+manager_id+"' AND ";
-    var query = 'SELECT 1_do.*, 1_clients.id, 1_clients.fio, 1_models.short, 1_users.fio man FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model  LEFT JOIN 1_users ON 1_do.manager_id = 1_users.id WHERE '+insert_sql+' 1_do.brand = ? AND 1_do.date2<= DATE_ADD(NOW(), INTERVAL 15 DAY) AND 1_do.checked = "0000-00-00 00:00:00" '+insert_sql2+' ORDER by date2';
+
+    if( cal_type == 'all_do' ) {
+      var query = 'SELECT 1_do.*, 1_clients.id, 1_clients.fio, 1_models.short, 1_users.fio man FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model  LEFT JOIN 1_users ON 1_do.manager_id = 1_users.id WHERE '+insert_sql+' 1_do.brand = ? AND 1_do.date2<= DATE_ADD(NOW(), INTERVAL 15 DAY) AND 1_do.checked = "0000-00-00 00:00:00" '+insert_sql2+' ORDER by date2';      
+    } else if (cal_type == 'my_slave') {
+      var query = 'SELECT 1_do.*, 1_clients.id, 1_clients.fio, 1_models.short, 1_users.fio man FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model  LEFT JOIN 1_users ON 1_do.manager_id = 1_users.id WHERE 1_do.brand = ? AND 1_do.date2<= DATE_ADD(NOW(), INTERVAL 15 DAY) AND 1_do.checked = "0000-00-00 00:00:00" AND host_id = '+user_id+' AND host_id <> 1_do.manager_id ORDER by date2';            
+    } else if (cal_type == 'im_slave') {
+      var query = 'SELECT 1_do.*, 1_clients.id, 1_clients.fio, 1_models.short, 1_users.fio man FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model  LEFT JOIN 1_users ON 1_do.manager_id = 1_users.id WHERE 1_do.brand = ? AND 1_do.date2<= DATE_ADD(NOW(), INTERVAL 15 DAY) AND 1_do.checked = "0000-00-00 00:00:00" AND 1_do.manager_id = '+user_id+' AND host_id <> 1_do.manager_id ORDER by date2';            
+    }
+
       pool.query(query, [ brand ] , function (err, rows, fields) {
+          console.info(err);
           rows = correct_dates(rows);
           response.send(rows);
       }); 
@@ -1431,6 +1444,8 @@ exports.jsGetManagerCupAdminReport = function(request, response) {
   today_month1 = today_month1[0]+"-"+today_month1[1];
   var today_month = today_month1 + "%";
 
+  var manager_id = request.query.manager_filter;
+
     var admin = [];
 
     function hasContacts(client) {
@@ -1584,13 +1599,23 @@ exports.jsGetManagerCupAdminReport = function(request, response) {
     var admin_commercials = [];
     var admin_users = [];
 
+    var manager_filter = "";
+    var manager_filter_admin = "";
+    if(manager_id!=-1) {
+      manager_filter = " AND 1_clients.manager_id = "+manager_id;
+      manager_filter_admin = " AND manager_id = "+manager_id;
+    }
+
+    console.info("manager_filter = ",manager_filter);
+
     pool.query('SELECT * FROM `1_commercials` ORDER by title', [brand], function (err, commercials, fields) {
     pool.query('SELECT * FROM `1_models` WHERE brand = ? AND `show`=1 ORDER by model', [brand], function (err, models, fields) {
       //console.info("err",err)
       pool.query('SELECT * FROM `1_users` WHERE brand = ? AND user_group IN (5,6,3,14) ORDER by user_group, id', [brand], function (err, users, fields) {
-        pool.query('SELECT * FROM `1_doadmin` WHERE brand = ? AND date1 LIKE ? ORDER by date1 DESC', [brand, today_month], function (err, do_admin, fields) {
-          pool.query('SELECT * FROM `1_clients` WHERE brand = ? AND (zv LIKE ? OR vz LIKE ? OR tst LIKE ? OR dg LIKE ? OR vd LIKE ?)', [brand, today_month, today_month, today_month, today_month, today_month], function (err, clients, fields) {
-          pool.query('SELECT 1_clients.*, 1_do.manager_id manager_id2, 1_do.date2 tst, 1_test.model_id tstmodel FROM `1_do` LEFT JOIN 1_clients ON 1_do.client=1_clients.id LEFT JOIN 1_test ON 1_do.test_model_id = 1_test.id WHERE 1_do.brand = ? AND 1_do.date2 LIKE ? AND 1_do.checked !="0000-00-00 00:00:00" AND 1_do.type="Тест-драйв" ', [brand, today_month], function (err, clients_tst, fields) {
+        pool.query('SELECT * FROM `1_doadmin` WHERE brand = ? AND date1 LIKE ? '+manager_filter_admin+' ORDER by date1 DESC', [brand, today_month], function (err, do_admin, fields) {
+          pool.query('SELECT * FROM `1_clients` WHERE brand = ? AND (zv LIKE ? OR vz LIKE ? OR tst LIKE ? OR dg LIKE ? OR vd LIKE ?) ' + manager_filter, [brand, today_month, today_month, today_month, today_month, today_month], function (err, clients, fields) {
+            console.info(err);
+          pool.query('SELECT 1_clients.*, 1_do.manager_id manager_id2, 1_do.date2 tst, 1_test.model_id tstmodel FROM `1_do` LEFT JOIN 1_clients ON 1_do.client=1_clients.id LEFT JOIN 1_test ON 1_do.test_model_id = 1_test.id WHERE 1_do.brand = ? AND 1_do.date2 LIKE ? AND 1_do.checked !="0000-00-00 00:00:00" AND 1_do.type="Тест-драйв" ' + manager_filter, [brand, today_month], function (err, clients_tst, fields) {
             do_admin = correct_dates(do_admin);
             clients = correct_dates(clients);
             clients_tst = correct_dates(clients_tst);
@@ -3978,41 +4003,95 @@ exports.jsStatBig3 = function(request, response) {
   var _d2 = request.query.d2;
 
   _d1 = _d1.split(".");
-  var d1 = _d1[2]+"-"+_d1[1]+"-"+_d1[0]+" 00:00:00";
+  var d1 = _d1[2]+"-"+_d1[1]+"-"+"01 00:00:00";
 
   _d2 = _d2.split(".");
-  var d2 = _d2[2]+"-"+_d2[1]+"-"+_d2[0]+" 23:59:59";
+  var d2 = _d2[2]+"-"+_d2[1]+"-"+"31 23:59:59";
 
   var params = {
     brand: request.query.brand,
     d1: d1,
-    d2: d2
-  };
+    d2: d2,
+    groupby: request.query.group1,
+    groupname: request.query.group2,
+    manager_filter: request.query.manager_filter
+};
 
-  console.info(params);
 
   jsStatGroup(params).done( function(answer){ 
     response.send( { stat_big: answer } ); 
   });
 }
 
+Date.prototype.getWeek = function() {
+    var onejan = new Date(this.getFullYear(),0,1);
+    return Math.ceil((((this - onejan) / 86400000) + onejan.getDay())/7);
+}     
 
 var jsStatGroup = function(params) {
     var dfd = $.Deferred();
 
-    var gr_func = function(element){
+    var gr_func = function(element, date){
               var typ = this.typ;
               var compare = true;
               if(this.name=='out') { compare = (element.dg != '0000-00-00 00:00:00'); }
               if(this.name=='out_all') { compare = (element.dg == '0000-00-00 00:00:00'); }
               if( (element[typ]!='0000-00-00 00:00:00')&&(compare) ) {
                 var group = element[typ].getFullYear()+"."+( '0'+(element[typ].getMonth()+1) ).slice(-2)+"."+('0'+element[typ].getDate()).slice(-2);
+
+                if(date == 'month') {
+                  var group = element[typ].getFullYear()+"."+( '0'+(element[typ].getMonth()+2) ).slice(-2);
+                } else if (date == 'week') {
+                  var dt = new Date(element[typ]);
+
+                  group = dt.getFullYear()+".W"+(new Date(dt.getFullYear(),dt.getMonth(), dt.getDate())).getWeek();
+
+                }
+
               } else {
                 var group = "-1";            
               }
               return group;
     };
 
+    //группирую массив клиентов по датам событий
+    function calcStatByDate(el, typ, myanswer, field_name, date_type, params) {
+        var el2 = _(el).chain().groupBy(function(element){ //группирую по типу дела
+          return typ.group_function(element, date_type);
+        })
+        .map(function(e, my_date){ // сумирую все элементы по датам
+          if(my_date == -1) return false;
+          var ids = _.pluck(e, 'id');
+          
+          if(params.groupby != 'model') {
+            var models = _.pluck(e, 'short');
+            var gr_by = models;
+          } else {
+            var users = _.pluck(e, 'user_fio');
+            var gr_by = users;
+          }
+          var models_cnt = _.countBy(gr_by, function(model){
+              if(!model) return "Не_указана";
+              return model;
+          });
+
+          models_cnt = JSON.stringify(models_cnt).replace(/,/ig, '\n').replace(/\{|\}/ig,'').replace(/"/ig,'');
+
+          var ss = { date: my_date };
+          ss[typ.name] = { cnt: e.length, ids: ids, models: models_cnt };
+          return ss;
+        }) 
+        .compact()
+        .value();
+
+        _.each(el2, function(el1, key1){ //прохожу каждое дело, чтобы перекинуть их внутрь даты
+          if(!myanswer[field_name][el1.date]) myanswer[field_name][el1.date] = {};
+          if(!myanswer[field_name][el1.date][typ.name]) myanswer[field_name][el1.date][typ.name] = [];
+          myanswer[field_name][el1.date][typ.name] = el1;
+
+        });
+      return myanswer;
+    }
 
     var def = {
       brand: 7,
@@ -4031,38 +4110,25 @@ var jsStatGroup = function(params) {
 
     params = _.defaults(params, def);
 
+    manager_filter = "";
 
-    pool.query("SELECT 1_clients.id, 1_clients.vz, 1_clients.zv, 1_clients.dg, 1_clients.tst, 1_clients.vd, 1_clients.`out`, 1_clients.commercial_id, 1_clients.manager_id, 1_clients.model, 1_users.fio user_fio FROM 1_clients LEFT JOIN 1_users ON 1_users.id=1_clients.manager_id WHERE 1_clients.brand = ? AND ((zv>? AND zv<?) OR (vz>? AND vz<?) OR (tst>? AND tst<?) OR (`out`>? AND `out`<?) OR (dg>? AND dg<?) OR (vd>? AND vd<?)) ", [params.brand, params.d1, params.d2, params.d1, params.d2, params.d1, params.d2, params.d1, params.d2, params.d1, params.d2, params.d1, params.d2 ], function (err, clients, fields) {
+    if(params.manager_filter!=-1) {
+      manager_filter = " AND manager_id = "+params.manager_filter;
+    }
+
+    pool.query("SELECT 1_clients.id, 1_clients.vz, 1_clients.zv, 1_clients.dg, 1_clients.tst, 1_clients.vd, 1_clients.`out`, 1_clients.commercial_id, 1_clients.manager_id, 1_clients.model, 1_users.fio user_fio, 1_models.short FROM 1_clients LEFT JOIN 1_users ON 1_users.id=1_clients.manager_id LEFT JOIN 1_models ON 1_models.id=1_clients.model WHERE 1_clients.brand = ? AND ((zv>=? AND zv<=?) OR (vz>=? AND vz<=?) OR (tst>=? AND tst<=?) OR (`out`>=? AND `out`<=?) OR (dg>=? AND dg<=?) OR (vd>=? AND vd<=?)) "+manager_filter, [params.brand, params.d1, params.d2, params.d1, params.d2, params.d1, params.d2, params.d1, params.d2, params.d1, params.d2, params.d1, params.d2 ], function (err, clients, fields) {
 
       var answer = _(clients).chain()
       .groupBy(function(cl){ //группирую
         return cl[ params.groupname ] + ":" + cl[ params.groupby ]; 
       })
       .map(function(el, key){ //считаю элементы
-        myanswer = { group_value: key, group_name: "", statistic: {} };
+        myanswer = { group_value: key, time: jsNow() ,group_name: "", statistic_week: {}, statistic_month: {}, statistic: {} };
 
         _.each( params.dotypes, function(typ){ //['zv','vz','dg','vd']
-
-            var el2 = _(el).chain().groupBy(function(element){ //группирую по типу дела
-              return typ.group_function(element);
-            })
-            .map(function(e, my_date){ // сумирую все элементы по датам
-              if(my_date == -1) return false;
-              var ids = _.pluck(e, 'id');
-              var models = _.pluck(e, 'model');
-              var ss = { date: my_date };
-              ss[typ.name] = { cnt: e.length, ids: ids, models: models };
-              return ss;
-            }) 
-            .compact()
-            .value();
-
-            _.each(el2, function(el1, key1){ //прохожу каждое дело, чтобы перекинуть их внутрь даты
-              if(!myanswer.statistic[el1.date]) myanswer.statistic[el1.date] = {};
-              if(!myanswer.statistic[el1.date][typ.name]) myanswer.statistic[el1.date][typ.name] = [];
-              myanswer.statistic[el1.date][typ.name] = el1;
-            });
-
+          calcStatByDate(el, typ, myanswer, 'statistic', 'date', params); //группирую события по типам дел и датам
+          calcStatByDate(el, typ, myanswer, 'statistic_month', 'month', params); //группирую события по типам дел и месяцам
+          calcStatByDate(el, typ, myanswer, 'statistic_week', 'week', params); //группирую события по типам дел и месяцам
         });
 
         return myanswer;
@@ -4074,6 +4140,9 @@ var jsStatGroup = function(params) {
     return dfd.promise();
 
 }
+
+
+
 
 exports.jsExperiment = function(request, response) {
 

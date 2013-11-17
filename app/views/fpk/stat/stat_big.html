@@ -37,12 +37,32 @@
       <li ng-class="{active:stat_big_view_switch=='out_all'}"  ng-click="stat_big_view_switch='out_all'"><a>OUT</a></li>
 
     </ul>
+    <br>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+        Группировать по: <b ng-if="group1=='model'">Модели</b><b ng-if="group1=='manager_id'">Менеджеру</b> <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li ng-click="group1 = 'model'; group2 = 'short'"><a>
+          Модели автомобиля  
+        </a></li>
+        <li ng-click="group1 = 'manager_id'; group2 = 'user_fio'"><a>
+          Менеджеру
+        </a></li>
+
+      </ul>
+    </div>
+    &nbsp;&nbsp;
+    <button class="btn btn-success btn-sm" ng-click="show_days=!show_days"><span ng-if="!show_days">Показать</span><span ng-if="show_days">Скрыть</span> дни</button>
+    &nbsp;&nbsp;
+    <b style="color:#888">Можете включить "Фильтр" по одному менеджеру</b>
+
 
     <div id="two_tables">
       <table id="table_left">
         <tr>
           <th class="group_value">
-            Менеджеры:<br>
+            Группа:<br>
             &nbsp;
           </th>
           <th>
@@ -50,7 +70,7 @@
         </tr>
         <tr ng-repeat="group_line in stat_big">
           <td class="group_value">
-           <div class="gr_val">{{group_line.group_value}}</div>
+           <div class="gr_val">{{group_line.group_value.split(':')[0]}}</div>
           </td>
           <td>
               <div class="gr_icon" ng-repeat="dt in do_types" ng-show="(stat_big_view_switch==dt.typ)||(stat_big_view_switch=='all')">
@@ -64,15 +84,15 @@
       <div id="table_right">
       <table>
       	<tr>
-      		<th ng-repeat="top in col_dates" class="cnt header_dates" ng-bind-html="jsShowDate(top)">
+      		<th ng-repeat="top in col_dates" class="cnt header_dates" ng-bind-html="jsShowDate(top)" ng-class="{'cnt_week':top.date.week, 'cnt_month': top.date.month}">
       		</th>
       	</tr>
       	<tr ng-repeat="group_line in stat_big">
-      		<td ng-repeat="col_date in col_dates" class="cnt">
+      		<td ng-repeat="col_date in col_dates" class="cnt" ng-class="{'cnt_week':col_date.date.week, 'cnt_month': col_date.date.month}">
             <b>{{st = jsFindStat(group_line, col_date);null;}}</b>
             <span>
               <div ng-repeat="dt in do_types" ng-click="fpk.jsShowClientIds(st[dt.typ][dt.typ].ids)" ng-show="(stat_big_view_switch==dt.typ)||(stat_big_view_switch=='all')">
-        			   <b title="{{st[dt.typ][dt.typ].ids}}">{{st[dt.typ][dt.typ].cnt;}}</b>
+        			   <b title="{{st[dt.typ][dt.typ].models}}">{{st[dt.typ][dt.typ].cnt;}}</b>
                  <i ng-if="!st[dt.typ][dt.typ].cnt">&nbsp;</i>
               </div>
             </span>

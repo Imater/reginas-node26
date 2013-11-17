@@ -714,8 +714,8 @@ body {
   z-index: 0; }
   #panel_right #panel_right_header {
     height: 36px;
-    text-align: center;
-    margin-top: 12px; }
+    margin-left: 20px;
+    margin-top: 7px; }
   #panel_right .mydo {
     position: absolute;
     top: 30px;
@@ -2138,6 +2138,10 @@ li.needgroup {
     .clients_big table td, .clients_big table th {
       color: #000;
       border: 1px solid #CCC; }
+    .clients_big table .cnt_week {
+      background: #d8ffd3; }
+    .clients_big table .cnt_month {
+      background: #99ff90; }
     .clients_big table .group_value {
       width: 120px; }
       .clients_big table .group_value .gr_val {
@@ -2167,9 +2171,13 @@ li.needgroup {
       opacity: 0.6; }
     .clients_big table .dt:hover {
       opacity: 1; }
+    .clients_big table .header_week {
+      color: #b75d26; }
     .clients_big table .header_month {
-      color: red;
-      font-size: 12px; }
+      color: red; }
+    .clients_big table .header_today {
+      color: green;
+      text-shadow: 0px 0px 7px yellow; }
   .clients_big #table_left {
     position: absolute;
     z-index: 2;
