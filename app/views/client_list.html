@@ -63,7 +63,7 @@
                             <span ng-if="client.email">[Email: <b>{{client.email}}</b>]<br></span>
                             <span ng-if="client.comment.length">{{client.comment}}<br></span><span style="font-size:0px;">{{client.comment.length}}</span>[Менеджер: <i class="icon-user"></i><b>{{fpk.jsFindInArray(fpk.all_managers,"id",client.manager_id).fio}}</b>]<br>
                             <font color="#999697">Дата создания: {{client.date | nicedatetime}}</font>
-                            <font color="#999697" ng-if="client.hostchecked_id!=''"><br>Проверен руководителем: {{client.hostchecked_id}} - {{client.hostchecked | nicedatetime}}</font>
+                            <font color="#999697" ng-if="client.hostchecked_id"><br>Проверен руководителем: {{client.hostchecked_id}} - {{client.hostchecked | nicedatetime}}</font>
                           </div>
                           <div ng-if="client._edit == true" class="client_edit" jq-show-effect="client._edit == true" jq-options="{type:'slide', duration:200, delay:200, hideImmediately: true}">
                             
