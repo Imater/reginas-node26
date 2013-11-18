@@ -1501,6 +1501,7 @@ background-color: none !important;
                 clear:right;
                 display: inline-block; 
                 margin-top: 1px;
+                margin-right: 10px;
                 line-height: 1em;
                 font-size: 12px;
                 padding: 4px 3px 4px 3px;
@@ -1511,6 +1512,20 @@ background-color: none !important;
                 border-radius: 5px;
                 border-top: 1px solid darken($panel_background,80%);
                 border-bottom: 1px solid #FFF;
+
+            }
+            .client_checked {
+                position: absolute;
+                right: 15px;
+                margin-top: 1px;
+                font-size: 14px;
+                cursor: pointer;
+                color: #777;
+                opacity:0.9;
+                //background: red;
+            }
+            .client_checked.checked {
+                color: #EEE;
 
             }
             .do_buttons {
@@ -1545,6 +1560,18 @@ background-color: none !important;
             .client_manager {
                 display: none;
             }
+            .client_checked.checked {
+                color: #CCC;
+            }
+            .client_checked:hover {
+                opacity:1;
+                color: #888;
+            }
+            .client_checked.checked:hover {
+                color: #444;
+                opacity:1;
+            }
+
 
         }
 

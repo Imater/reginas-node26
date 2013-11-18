@@ -422,9 +422,6 @@ exports.getDo = function(request,response) {
   var manager_id = request.query.manager;
   var cal_type = request.query.cal_type;
 
-  console.info("cal_type = ", cal_type);
-
-
   var left_menu = request.query.left_menu;
 
 
@@ -669,7 +666,7 @@ exports.loadAllBig = function(request, response) {
 }
 
 global.correct_dates = function( rows, no_zero_dates ) {
-  var fields = ['date', 'zv', 'vz', 'tst', 'dg', 'vd', 'out', 'checked', 'changed', 'created', 'date1', 'date2', 'hostcheck', 'remind', 'na_date', 'now_time', 'remind_time','_date2'];
+  var fields = ['date', 'zv', 'vz', 'tst', 'dg', 'vd', 'out', 'checked', 'changed', 'created', 'date1', 'date2', 'hostcheck', 'remind', 'na_date', 'now_time', 'remind_time','_date2', 'hostchecked'];
 
   if(!rows) return rows;
 

@@ -7,6 +7,13 @@
                   <h3 ng-if="fpk.jsGroupExpression1(local_clients, $index, distinct)">{{fpk.jsGetDistinctTitle(client, distinct)}}</h3>
 
                         <div class="client_container" ng-click="jsOpenClient(client);">
+                           <div class="client_checked" title="Проверен руководителем:
+{{client.hostchecked_id}}
+{{client.hostchecked | nicedatetime}}
+                           " ng-class="{checked:client.hostchecked!='0000-00-00 00:00:00'}" ng-click="fpk.hostcheck(client);jsClientSave(client);$event.stopPropagation();">
+                            <i class="icon-record"></i>
+                           </div>
+
                            <div class="client_car" title="{{client.status}}" style="background:-webkit-gradient(linear, right top, left top, color-stop({{fpk.car_status[client.status].procent}}, #2b365a), color-stop({{fpk.car_status[client.status].procent}}, #516F8F)) !important;">
                            {{fpk.models[client.model].short?fpk.models[client.model].short:'&nbsp;'}}
                            </div>
@@ -56,6 +63,7 @@
                             <span ng-if="client.email">[Email: <b>{{client.email}}</b>]<br></span>
                             <span ng-if="client.comment.length">{{client.comment}}<br></span><span style="font-size:0px;">{{client.comment.length}}</span>[Менеджер: <i class="icon-user"></i><b>{{fpk.jsFindInArray(fpk.all_managers,"id",client.manager_id).fio}}</b>]<br>
                             <font color="#999697">Дата создания: {{client.date | nicedatetime}}</font>
+                            <font color="#999697" ng-if="client.hostchecked_id!=''"><br>Проверен руководителем: {{client.hostchecked_id}} - {{client.hostchecked | nicedatetime}}</font>
                           </div>
                           <div ng-if="client._edit == true" class="client_edit" jq-show-effect="client._edit == true" jq-options="{type:'slide', duration:200, delay:200, hideImmediately: true}">
                             

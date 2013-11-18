@@ -1272,6 +1272,21 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
     }
   }
 
+  $scope.fpk.hostcheck = function(client) {
+    if($scope.fpk.the_user.rights[0].can_hostcheck) {
+      console.info(client.hostchecked);
+      if(client.hostchecked == '0000-00-00 00:00:00') {
+        client.hostchecked = toMysql( new Date() );
+        client.hostchecked_id = $scope.fpk.jsFioShort($scope.fpk.the_user.fio, 'name');
+      } else {
+        client.hostchecked = "0000-00-00 00:00:00";
+        client.hostchecked_id = "";
+      }
+    } else {
+      alert('Только руководитель может пометить карточку клиента как проверенную.');
+    }
+  }
+
   $scope.fpk.jsDoReadOnly = function(mydo) {
     var dif_days = parseInt((jsNow() - (fromMysql( mydo.created ).getTime())) / 1000/60/60/24 );
 
@@ -1479,7 +1494,6 @@ $scope.getSMS = function(sms) {
 
  
  $scope.fpk.jsFindInArray = _.memoize( function(myarray, fieldname, myid) {
-
       var answer = _.find(myarray, function(com){
         if(com[fieldname]) {
           return (com[fieldname] == myid);

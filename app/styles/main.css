@@ -1118,6 +1118,7 @@ body {
         clear: right;
         display: inline-block;
         margin-top: 1px;
+        margin-right: 10px;
         line-height: 1em;
         font-size: 12px;
         padding: 4px 3px 4px 3px;
@@ -1128,6 +1129,16 @@ body {
         border-radius: 5px;
         border-top: 1px solid #222222;
         border-bottom: 1px solid #FFF; }
+      .clients_list .client_card .client_container .client_checked {
+        position: absolute;
+        right: 15px;
+        margin-top: 1px;
+        font-size: 14px;
+        cursor: pointer;
+        color: #777;
+        opacity: 0.9; }
+      .clients_list .client_card .client_container .client_checked.checked {
+        color: #EEE; }
       .clients_list .client_card .client_container .do_buttons {
         display: none;
         float: right;
@@ -1147,6 +1158,14 @@ body {
       display: none; }
     .clients_list .client_card .client_container:hover .client_manager {
       display: none; }
+    .clients_list .client_card .client_container:hover .client_checked.checked {
+      color: #CCC; }
+    .clients_list .client_card .client_container:hover .client_checked:hover {
+      opacity: 1;
+      color: #888; }
+    .clients_list .client_card .client_container:hover .client_checked.checked:hover {
+      color: #444;
+      opacity: 1; }
     .clients_list .client_card .client_inside {
       color: #000 !important;
       margin-left: 15px;
