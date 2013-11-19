@@ -240,6 +240,13 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
 
 
         $scope.jsOpenClient = function(client) {
+          console.info("open_client = ", $scope.fpk.the_user.rights[0].brands, client.brand );
+
+          if( !$scope.fpk.jsCanShowBrand(client.brand) ) {
+            alert('У вас недостаточно прав, чтобы открывать клиентов чужого бренда');
+            return false;
+          }
+
           if(!client.do) {
 
             myApi.getDo($scope, client.id).then(function(value){

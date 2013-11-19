@@ -112,14 +112,15 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 			  var allow_brands = $scope.fpk.the_user.rights[0].brands;
 
 			  var brands = [];
-
+			  console.info("brands_all",$scope.fpk.the_user.rights[0].brands_all);
+			  console.info("allow_brands",allow_brands);
 			  if(!allow_brands.length) {
 			    brands = _.filter(cup.brands, function(brand){
 			      return (brand.id == $scope.fpk.the_user.brand);
 			    });
 			  } else if ( allow_brands.indexOf("*")!=-1 ) {
 			    brands = cup.brands;
-			  } else if ( allow_brands.indexOf("-")!=-1 ) {
+			  } else if ( (allow_brands.indexOf("-")!=-1) || ($scope.fpk.the_user.rights[0].brands_all == '["-"]') ) {
 			    brands = cup.brands;
 			  } else if (true) {
 			    brands = _.filter(cup.brands, function(brand){
@@ -127,6 +128,7 @@ myApp.controller('statCtrl', function ($scope, $resource, $rootScope, $location,
 			    });
 			    
 			  }
+			  console.info("brands = ", brands)
 
 		    $scope.cup = brands;
 

@@ -1358,9 +1358,27 @@ $scope.fpk.jsDubTitle = function(dub) {
   return t;
 }
 
+$scope.fpk.jsCanShowBrand = _.memoize( function(brand) {
+          if(brand == 0) return true;
+          
+          console.info("jsCanShowBrand = ", brand, $scope.fpk.the_user.rights[0].brands_all);
+            //проверяем права пользователя для ограниченного РОП
+          if($scope.fpk.the_user.rights[0].brands_all == '["-"]') 
+            if ( ($scope.fpk.the_user.rights[0].brands.indexOf( parseInt(brand) )==-1)
+              && (parseInt(brand)!=$scope.fpk.the_user.brand ) ) {
+            return false;
+          } else {
+            return true;
+          }
+          return true;
+
+} );
+
+
 var brands_cache = "";
 
 $scope.jsGetBrands = function() {
+
   if(!$scope.fpk.brands) return false;
 
   if(brands_cache != "") {
@@ -1369,7 +1387,7 @@ $scope.jsGetBrands = function() {
 
 
   var allow_brands = $scope.fpk.the_user.rights[0].brands;
-  console.info("!!!",allow_brands.length);
+  //console.info("!!!",allow_brands, $scope.fpk.the_user.rights[0].brands_all);
   if(allow_brands.length == 0) {
     allow_brands = "[" + $scope.fpk.brand + "]";
   }
@@ -1383,7 +1401,9 @@ $scope.jsGetBrands = function() {
   } else if ( allow_brands.indexOf("*")!=-1 ) {
     brands = $scope.fpk.brands;
   } else if ( allow_brands.indexOf("-")!=-1 ) {
-    brands = $scope.fpk.brands;
+    brands = _.filter($scope.fpk.brands, function(brand){
+      return ( (allow_brands.indexOf(brand.id) != -1) || (brand.id==$scope.fpk.the_user.brand));
+    });
   } else if (true) {
     brands = _.filter($scope.fpk.brands, function(brand){
       return (allow_brands.indexOf(brand.id) != -1);
@@ -1581,6 +1601,12 @@ $scope.getSMS = function(sms) {
 
 
  $scope.jsSelectBrand = function(id) {
+
+    if(!$scope.fpk.jsCanShowBrand( id )) {
+      alert('У вас недостаточно прав, чтобы выбирать чужой бренд.');
+      return false;
+    }
+
     $scope.fpk.brand=id;
     $scope.fpk.jsLoadStat(); 
     $scope.fpk.jsRefreshClients();   

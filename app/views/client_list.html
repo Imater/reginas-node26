@@ -39,7 +39,9 @@
 
                            <div class="datemini" time-now="time_now" date-type="client" ng-model="client.na_date" title="{{client.na_date}}"></div> 
 
-                           <div class="client_fio" ng-class="{did:(client.vd!='0000-00-00 00:00:00')}">{{client.fio}}</div> 
+                           <div class="client_fio" ng-class="{did:(client.vd!='0000-00-00 00:00:00')}" ng-if="fpk.jsCanShowBrand(client.brand)">{{client.fio}}</div> 
+
+                           <div class="client_fio" ng-class="{did:(client.vd!='0000-00-00 00:00:00')}" ng-if="!fpk.jsCanShowBrand(client.brand)">{{client.fio.split(' ')[1]}}</div> 
 
 
                            <div class="client_manager" ng-if="(fpk.clientsgroupby!='manager_id'&&fpk.manager_filter==-1)||(distinct=='one_client')">{{fpk.jsFindInArray(fpk.all_managers,"id",client.manager_id).fio_short_name}}</div>

@@ -460,8 +460,10 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
 
               //перекрываем права пользователя указанные в группе, правами из таблицы пользователей
               if( $scope.fpk.the_user.brands ) {
+                $scope.fpk.the_user.rights[0].brands_all = $scope.fpk.the_user.rights[0].brands; //['-'] или ['*']
                 $scope.fpk.the_user.rights[0].brands = $scope.fpk.the_user.brands?JSON.parse($scope.fpk.the_user.brands):[];
               } else {
+                $scope.fpk.the_user.rights[0].brands_all = $scope.fpk.the_user.rights[0].brands;
                 $scope.fpk.the_user.rights[0].brands = $scope.fpk.the_user.rights[0].brands?JSON.parse($scope.fpk.the_user.rights[0].brands):[];
               }
 
