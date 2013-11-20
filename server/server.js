@@ -2688,7 +2688,7 @@ exports.loadStatCup = function(request, response) {
 	      if((cup_element)&&(brand_id!=18)) cup_element.cup[field_name] += 1;
 
 	      var cup_element = _.find(brands, function(el){ return el.id == 0; });
-	      if(cup_element) cup_element.cup[field_name] += 1;
+	      if((cup_element)&&(brand_id!=18)) cup_element.cup[field_name] += 1;
 
 	      }
 
