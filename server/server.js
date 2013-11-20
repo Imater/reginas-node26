@@ -2624,7 +2624,7 @@ exports.loadStatCup = function(request, response) {
 
   global.collection.find({ type: "cup", cache_id: cache_id }).toArray( function(err, the_cache){
 
-	  if( the_cache.length && false) {
+	  if( the_cache.length ) {
 	    response.send( the_cache[0]["mydata"] ); //статистика кешируется нижняя и левая
 	    //console.info("info_from_cache_CUP", cache_id);
 	    //console.info("Stat from cache "+cache_id+", brand = ", brand_id,global.stat_cache);
