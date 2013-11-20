@@ -2624,7 +2624,7 @@ exports.loadStatCup = function(request, response) {
 
   global.collection.find({ type: "cup", cache_id: cache_id }).toArray( function(err, the_cache){
 
-	  if( the_cache.length ) {
+	  if( the_cache.length && false) {
 	    response.send( the_cache[0]["mydata"] ); //статистика кешируется нижняя и левая
 	    //console.info("info_from_cache_CUP", cache_id);
 	    //console.info("Stat from cache "+cache_id+", brand = ", brand_id,global.stat_cache);
@@ -2633,7 +2633,7 @@ exports.loadStatCup = function(request, response) {
 
 	  pool.query('SELECT * FROM `1_plan` WHERE `month` = "'+today_month+'"', function (err, plans, fields) {
 	      //console.info(plans);
-	    pool.query('SELECT * FROM `1_brands` WHERE `Show` = 1 ORDER by brand_group, title', function (err, brands, fields) {
+	    pool.query('SELECT * FROM `1_brands` ORDER by brand_group, title', function (err, brands, fields) {
         if(brands.length>5) {
   	      brands.push({id: -1, title: "Итого №1", brand_group: 1, logo: "logo-seyho.png"});
   	      brands.push({id: -2, title: "Итого №2", brand_group: 2, logo: "logo-seyho.png"});
@@ -2683,8 +2683,9 @@ exports.loadStatCup = function(request, response) {
 	      var cup_element = _.find(brands, function(el){ return el.id == brand_id; });
 	      if(cup_element) cup_element.cup[field_name] += 1;
 
-	      var cup_element = _.find(brands, function(el){ return el.id == -cup_element.brand_group; });
-	      if(cup_element) cup_element.cup[field_name] += 1;
+	      var cup_element = _.find(brands, function(el){ 
+          return ((el.id == -cup_element.brand_group)); });
+	      if((cup_element)&&(brand_id!=18)) cup_element.cup[field_name] += 1;
 
 	      var cup_element = _.find(brands, function(el){ return el.id == 0; });
 	      if(cup_element) cup_element.cup[field_name] += 1;
@@ -3288,8 +3289,8 @@ exports.loadUserInfo = function(request, response) {
  jsCheckToken(request.query.token, response).done(function(user_id){
   _sqllog({manager: user_id, request: request, text:"Запрос информации loadUserInfo"});
   //console.info("USER_ID:", user_id);
-  pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone, brands, reiting_procent, reiting_step FROM `1_users` WHERE id = ? LIMIT 1',[user_id], function (err, user, fields) {    
-    pool.query('SELECT active, id, brand, fio, message_on, user_group, phone, reiting_procent, reiting_step FROM `1_users` ORDER BY brand, reiting_step, fio', function (err, users, fields) {
+  pool.query('SELECT active, id, brand, email, fio, message_on, user_group, phone, brands, reiting_procent, reiting_step, `can_see_corp` FROM `1_users` WHERE id = ? LIMIT 1',[user_id], function (err, user, fields) {    
+    pool.query('SELECT active, id, brand, brands, fio, message_on, user_group, phone, reiting_procent, reiting_step FROM `1_users` ORDER BY brand, reiting_step, fio', function (err, users, fields) {
       pool.query('SELECT * FROM `1_commercials`', function (err, commercials, fields) {
           pool.query('SELECT * FROM `1_users_group`', function (err, users_group, fields) {
             //response.send({models:models, brands: brands, users_group: users_group });

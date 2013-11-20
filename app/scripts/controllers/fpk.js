@@ -1776,8 +1776,6 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
 
     $scope.fpk.jsCanShowBrand = _.memoize(function (brand) {
         if (brand == 0) return true;
-
-        console.info("jsCanShowBrand = ", brand, $scope.fpk.the_user.rights[0].brands_all);
         //проверяем права пользователя для ограниченного РОП
         if ($scope.fpk.the_user.rights[0].brands_all == '["-"]')
             if (($scope.fpk.the_user.rights[0].brands.indexOf(parseInt(brand)) == -1) && (parseInt(brand) != $scope.fpk.the_user.brand)) {
@@ -1792,7 +1790,7 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
 
     var brands_cache = "";
 
-    $scope.jsGetBrands = function () {
+    $scope.jsGetBrands = function () { //определяет, какие бренды доступны
 
         if (!$scope.fpk.brands) return false;
 
@@ -2078,12 +2076,12 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
         }
 
         $scope.fpk.brand = id;
+        $scope.fpk.manager_filter = -1;
         $scope.fpk.jsLoadStat();
         $scope.fpk.jsRefreshClients();
         $scope.fpk.jsRefreshUserInfo("dont_set_brand");
         //$scope.jsLoadModelsFromServer();
         if ($scope.jsRefreshModels) $scope.jsRefreshModels();
-        $scope.fpk.manager_filter = -1;
         $("#myfullcalendar").fullCalendar("refetchEvents");
     }
 

@@ -386,6 +386,7 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
             $scope.fpk.tests = data.tests;
             $scope.fpk.organizations = data.organizations;
             $scope.fpk.models = answer;
+            //console.info("BRANDS_TO_SHOW == ", answer2);
             $scope.fpk.brands = answer2;
             dfd.resolve();
          }); //getModels
@@ -433,8 +434,15 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
             us.fio_short_name = $scope.fpk.jsFioShort(us.fio, "name");
           });
 
-          $scope.fpk.managers = _.filter(user.users, function(user){
-            return (user.brand == $scope.fpk.brand);
+          $scope.fpk.managers = _.filter(user.users, function(user1){
+              if(user1.brands) {
+                  var user_can_see_brands = user1.brands?user1.brands.match( /\d{1,2}/ig ):"no_brands"; //парсим [1,4,12,45]
+                  if( (user_can_see_brands)&&(user_can_see_brands.indexOf($scope.fpk.brand.toString())!=-1) ) {
+                    return true;
+                  }
+              }
+
+              return ((user1.brand == $scope.fpk.brand));
           });
           $scope.fpk.all_managers = user.users;
           //user.users; //список всех менеджеров
