@@ -333,13 +333,16 @@
 
             <span ng-if="fpk.cal_type == 'my_slave'">Я поручил</span>
             <span ng-if="fpk.cal_type == 'im_slave'">Мне поручили</span>
+            <span ng-if="fpk.cal_type == 'my_completed'">Мои поручения выполнены</span>
 
             <span class="caret"></span>
           </a>
           <ul class="dropdown-menu" role="menu" style="z-index:999999">
             <li ng-click="fpk.cal_type='all_do'; fpk.jsRefreshDo();"><a>Дела менеджеров</a></li>
             <li ng-click="fpk.cal_type='my_slave'; fpk.jsRefreshDo();"><a>Я поручил</a></li>
+            <li ng-click="fpk.cal_type='my_completed'; fpk.jsRefreshDo();"><a>Поручения выполнены</a></li>
             <li ng-click="fpk.cal_type='im_slave'; fpk.jsRefreshDo();"><a>Мне поручили</a></li>
+
 
           </ul>
         </div>
@@ -354,7 +357,7 @@
           <li ng-click="jsOpenClientFromRight(mydo)" ng-repeat="mydo in fpk.today_do">
           <div class="datemini right_do" time-now="time_now" date-type="client" ng-model="mydo.date2" title="{{client.na_date}}"></div> 
           <div class="do_type_icon"><img ng-src="/images/do_type/{{fpk.do_types_array[mydo.type].img}}" width="10px" title="Тип дела: {{mydo.type}}"></div>
-          {{mydo.text}}
+          {{mydo.text}} <b style="color:green">{{mydo.comment}}</b>
           <div class="mydo_fio"><span ng-if="mydo.short"><b>{{mydo.short}}</b> — </span>{{(mydo.fio)}}</div>
           <div ng-if="fpk.manager_filter==-1" class="mydo_fio">Менеджер: <i class="icon-user"></i>{{fpk.jsFioShort(mydo.man)}}</div>
           </li>
