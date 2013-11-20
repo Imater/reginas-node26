@@ -48,6 +48,7 @@
 
 
                            <div ng-if="client.out_reason.length&&client.out_reason.length>9" class="out_reason">{{client.out_reason}}</div>
+                           <div ng-if="((fpk.leftmenu.active==6)||(fpk.leftmenu.active==7))&&(client.attention)" class="out_reason">[{{client.attention}}]</div>
                         </div>      
                         <div ng-if="client._visible == true" class="client_inside selectable" jq-show-effect="client._visible == true" jq-options="{type:'slide', duration:200, delay:200, hideImmediately: true}" style="display:none;">
                           <div class="client_info" ng-click="jsEditClient(client)">
