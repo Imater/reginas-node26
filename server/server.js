@@ -724,8 +724,9 @@ function jsMakeClientFilter(filter, manager_id) {
 
   f_filter += filter.credit ? '`creditmanager` LIKE "Кредит -%" AND ' : '';
 
-  f_filter += filter.need_check ? '`hostchecked` ="'+NO_DATE+'" AND ' : '';
+  f_filter += filter.need_check ? '(`hostchecked` ="'+NO_DATE+'") AND ' : '';
 
+  f_filter += filter.need_check_attention ? '(`attention` != "") AND ' : '';
 
   return f_filter;
 }
@@ -978,8 +979,11 @@ exports.loadStat = function(request, response) {
                   {id:5, title:"Трейд-ин", group_by: "manager_id", 
                    filter: {bu: true}},
 
-                  {id:6, title:"Не проверены", group_by: "manager_id", 
-                   filter: {need_check: true}}
+                  {id:6, title:"Ждут проверки", group_by: "manager_id", 
+                   filter: {need_check: true}},
+
+                  {id:7, title:"Некорректные", group_by: "manager_id", 
+                   filter: {need_check_attention: true}},
 
                   ]
                 };
@@ -1266,7 +1270,6 @@ exports.jsGetReiting = function(request, response) {
           //записываем рейтинг в профиль менеджера
           var dif = frommysql(start_today_date_sql) - frommysql(today_date_sql);
           dif = parseInt(dif / 24/60/60/1000 );
-          console.info(dif);
           if(dif == -7) {
             console.info('see reiting = ', answer.length, dif);
             answer = _.sortBy(answer, function(man){ return -(man.reiting_sum) });
@@ -3050,6 +3053,10 @@ function jsUpdateClient(client_id, no_push) {
         });
 
         if( the_client[0].hostchecked.split(" ")[0] == tomysql( new Date() ).split(' ')[0] ) {
+          need_push = true;
+        }
+
+        if( answer.attention != '' ) {
           need_push = true;
         }
 

@@ -32,6 +32,11 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
     if($scope.fpk.the_user.rights[0].can_hostcheck) {
         $scope.fpk.leftmenu.items.push( {id:6, title:"<i class='icon-record'></i> Ждут проверки", group_by: "manager_id", 
                    filter: {need_check: true}} );
+
+        $scope.fpk.leftmenu.items.push( {id:7, title:"<i class='icon-attention'></i> Некорректные", group_by: "manager_id", 
+                   filter: {need_check_attention: true}} );
+
+
     }
 
 
