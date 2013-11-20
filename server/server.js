@@ -726,7 +726,7 @@ function jsMakeClientFilter(filter, manager_id) {
 
   f_filter += filter.need_check ? '(`hostchecked` ="'+NO_DATE+'") AND ' : '';
 
-  f_filter += filter.need_check_attention ? '(`attention` != "") AND ' : '';
+  f_filter += filter.need_check_attention ? '(`attention` != "") AND manader_id != 667 AND ' : '';
 
   return f_filter;
 }
