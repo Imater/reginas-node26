@@ -1360,7 +1360,7 @@ $scope.fpk.jsDubTitle = function(dub) {
 
 $scope.fpk.jsCanShowBrand = _.memoize( function(brand) {
           if(brand == 0) return true;
-          
+
           console.info("jsCanShowBrand = ", brand, $scope.fpk.the_user.rights[0].brands_all);
             //проверяем права пользователя для ограниченного РОП
           if($scope.fpk.the_user.rights[0].brands_all == '["-"]') 
@@ -1432,6 +1432,7 @@ $scope.fpk.jsCanEditClient = function(client) {
 }
 
 $scope.fpk.jsCanEditDo = function(client, mydo) {
+   alert(mydo['type']);
    var can_edit_all_client = $scope.fpk.the_user.rights[0].can_edit_all_client;
 
   if( can_edit_all_client ||
@@ -1442,7 +1443,7 @@ $scope.fpk.jsCanEditDo = function(client, mydo) {
     if( (mydo.checked != "0000-00-00 00:00:00") && (can_edit_all_client!=1) ) {
       var dif_days = ((jsNow() - (fromMysql( mydo.checked ).getTime())) / 1000/60/60/24 );
       if( dif_days>3 ) {
-        return false;
+        if(mydo['type']!='OUT') return false;
       }
     }
 
