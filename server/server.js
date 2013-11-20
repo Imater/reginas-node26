@@ -3049,6 +3049,10 @@ function jsUpdateClient(client_id, no_push) {
           };
         });
 
+        if( the_client[0].hostchecked.split(" ")[0] == tomysql( new Date() ).split(' ')[0] ) {
+          need_push = true;
+        }
+
         query = "UPDATE 1_clients SET ? WHERE id = '"+client_id+"'";
 
         pool.query(query, answer, function (err, rows, fields) {
