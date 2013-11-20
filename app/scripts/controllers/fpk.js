@@ -1432,7 +1432,6 @@ $scope.fpk.jsCanEditClient = function(client) {
 }
 
 $scope.fpk.jsCanEditDo = function(client, mydo) {
-   alert(mydo['type']);
    var can_edit_all_client = $scope.fpk.the_user.rights[0].can_edit_all_client;
 
   if( can_edit_all_client ||
