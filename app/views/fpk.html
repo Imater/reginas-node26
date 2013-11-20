@@ -69,8 +69,8 @@
 
     <div id="panel_left_content" class="noselectable">
         <ul class="left_menu">
-          <li ng-repeat="menu_item in fpk.leftmenu.items" ng-class="{ 'active': ($index==fpk.leftmenu.active||$routeSegment.startsWith(menu_item.segment)) }" ng-click="fpk.jsSelectLeftMenu(menu_item, $index);">
-          {{menu_item.title}} <div ng-if="fpk.stat[menu_item.id]" class="div_count">{{fpk.stat[menu_item.id]}}</div>
+          <li ng-repeat="menu_item in fpk.leftmenu.items" ng-class="{ 'active': ($index==fpk.leftmenu.active||$routeSegment.startsWith(menu_item.segment)) }" ng-click="fpk.jsSelectLeftMenu(menu_item, $index);"><span ng-bind-html="menu_item.title"></span>
+          <div ng-if="fpk.stat[menu_item.id]" class="div_count">{{fpk.stat[menu_item.id]}}</div>
           </li>
         </ul>
 

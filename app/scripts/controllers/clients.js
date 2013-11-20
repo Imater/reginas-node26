@@ -25,8 +25,15 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
 
                   {id:5, title:"Трейд-ин", group_by: "manager_id", 
                    filter: {bu: true}}
+
                   ]
                 };
+
+    if($scope.fpk.the_user.rights[0].can_hostcheck) {
+        $scope.fpk.leftmenu.items.push( {id:-6, title:"<i class='icon-record'></i> Ждут проверки вами", group_by: "manager_id", 
+                   filter: {need_check: true}} );
+    }
+
 
   $scope.fpk.init.done(function(){
       $scope.fpk.clients_current_i = 1;

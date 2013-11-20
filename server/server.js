@@ -724,6 +724,8 @@ function jsMakeClientFilter(filter, manager_id) {
 
   f_filter += filter.credit ? '`creditmanager` LIKE "Кредит -%" AND ' : '';
 
+  f_filter += filter.need_check ? '`hostchecked` ="'+NO_DATE+'" AND ' : '';
+
 
   return f_filter;
 }
@@ -974,7 +976,11 @@ exports.loadStat = function(request, response) {
                    filter: {out: true}}, 
 
                   {id:5, title:"Трейд-ин", group_by: "manager_id", 
-                   filter: {bu: true}}
+                   filter: {bu: true}},
+
+                  {id:6, title:"Не проверены", group_by: "manager_id", 
+                   filter: {need_check: true}}
+
                   ]
                 };
 
@@ -1006,7 +1012,6 @@ exports.loadStat = function(request, response) {
 	      if(el.filter) {
 	        el.filter.brand = request.query.brand;
 	        f_filter = jsMakeClientFilter(el.filter); 
-
 
 	        var myquery = 'SELECT count(*) cnt FROM `1_clients` WHERE ' + manager_sql + f_filter + " true ";      
 	        //console.info(myquery);
@@ -3038,7 +3043,7 @@ function jsUpdateClient(client_id, no_push) {
         var need_push = false;
         $.each(answer, function(key, new_val){
           if( new_val != the_client[0][key] ) {
-            if( (['zv','vz','tst','dg','vd','out'].indexOf(key)!=-1) && (!no_push) ) {
+            if( (['zv','vz','tst','dg','vd','out','hostchecked'].indexOf(key)!=-1) && (!no_push) ) {
               need_push = true;
             }
           };
