@@ -35,14 +35,14 @@ myApp.controller('adminCtrl', function ($scope, $resource, $rootScope, $location
 
     $scope.jsEffectDayTest = function(model) {
         if(model.vz_manager == 0) return '';
-        return parseInt(100*(model.tst_manager)/(model.vz_manager))+"%";
+        return parseInt(100*(model.tst_manager)/(model.vz))+"%";
     }
 
     $scope.jsEffectMonthTest = function(model) {
         //model.zv_manager_month+model.vz_manager_month
 
         if(model.vz_manager_month == 0) return '';
-        return parseInt(100*(model.tst_manager_month)/(model.vz_manager_month))+"%";
+        return parseInt(100*(model.tst_manager_month)/(model.vz_month))+"%";
     }
 
     $scope.jsEffectDayDg = function(model) {
