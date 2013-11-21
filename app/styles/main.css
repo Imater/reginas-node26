@@ -1160,12 +1160,6 @@ body {
       display: none; }
     .clients_list .client_card .client_container:hover .client_checked.checked {
       color: #CCC; }
-    .clients_list .client_card .client_container:hover .client_checked:hover {
-      opacity: 1;
-      color: #888; }
-    .clients_list .client_card .client_container:hover .client_checked.checked:hover {
-      color: #444;
-      opacity: 1; }
     .clients_list .client_card .client_inside {
       color: #000 !important;
       margin-left: 15px;
