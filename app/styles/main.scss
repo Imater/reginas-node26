@@ -1434,6 +1434,10 @@ background-color: none !important;
             float: right;
             margin-top: 3px;
             margin-right: 5px;
+            max-width: 200px;
+            overflow-x: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         .our_brand {
             background: rgba(255,50,50,0.9);
