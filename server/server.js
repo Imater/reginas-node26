@@ -3205,6 +3205,7 @@ function jsIsInside(params){
     (params.user[0].user_group == 3) || //руководитель отдела продаж
     (params.user[0].user_group == 5) || //старший менеджер отдела продаж
     (params.user[0].user_group == 10) || //админ системы
+    (params.user[0].user_group == 16) || //руководитель маркетологов
     (/192.168.200/.test(ip)) ||
     (/62.165.38/.test(ip)) ||
     (/79.134.19/.test(ip)) || //магнитка
