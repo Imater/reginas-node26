@@ -164,6 +164,7 @@ function setCache(myarg) {
   //console.info("set", val);
   redis_client.hset( "brand:"+myarg.brand_id, "cache_id:"+myarg.cache_id, val );  
   redis_client.incr("set_cache:"+myarg.brand_id);
+  redis_client.incr("set_cache_all");
 }
 
 function getCache(myarg) {
@@ -172,6 +173,7 @@ function getCache(myarg) {
     if(result) {
       dfd.resolve( err, JSON.parse(result) );
       redis_client.incr("get_cache:"+myarg.brand_id);
+      redis_client.incr("get_cache_all");
     }
     dfd.resolve( err, result );
   });
@@ -192,6 +194,7 @@ function delCache(myarg) {
     });        
   }
   redis_client.incr("del_cache:"+myarg.brand_id);
+  redis_client.incr("del_cache_all");
 
   return dfd.promise();
 }
