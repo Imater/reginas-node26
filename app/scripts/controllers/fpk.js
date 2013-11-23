@@ -422,6 +422,18 @@ myApp.factory('socket', function ($rootScope, $timeout) {
     };
 });
 
+myApp.filter('jsFilterDo', function () {
+    return function (dts, stat_big_view_switch, group_by) {
+        if(stat_big_view_switch == 'all') return dts;
+
+        var answer = _.filter(dts, function(dt){
+          return (dt['typ'] == stat_big_view_switch);
+        });
+        return answer;
+    }
+});
+
+
 myApp.filter('jsFilterClients', function () {
     return function (clients, distinct, group_by) {
         console.info(777);

@@ -91,9 +91,8 @@
       		<td ng-repeat="col_date in col_dates" class="cnt" ng-class="{'cnt_week':col_date.date.week, 'cnt_month': col_date.date.month}">
             <b>{{st = jsFindStat(group_line, col_date);null;}}</b>
             <span>
-              <div ng-repeat="dt in do_types" ng-click="fpk.jsShowClientIds(st[dt.typ][dt.typ].ids)" ng-show="(stat_big_view_switch==dt.typ)||(stat_big_view_switch=='all')">
-        			   <b title="{{st[dt.typ][dt.typ].models}}">{{st[dt.typ][dt.typ].cnt;}}</b>
-                 <i ng-if="!st[dt.typ][dt.typ].cnt">&nbsp;</i>
+              <div ng-repeat="dt in do_types | jsFilterDo:stat_big_view_switch" ng-click="fpk.jsShowClientIds(st[dt.typ][dt.typ].ids)">
+        			   <b title="{{st[dt.typ][dt.typ].models}}">{{st[dt.typ][dt.typ].cnt?st[dt.typ][dt.typ].cnt:"&nbsp;";}}</b>                 
               </div>
             </span>
       		</td>

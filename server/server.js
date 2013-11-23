@@ -214,6 +214,9 @@ function jsClearCacheByBrand(brand_id) {
         console.info("del_cup = ", err, result, brand_id);
       });
 
+
+      delCache({brand_id:"do_admin:"+brand_id});
+
       //global.collection.remove({type:"cup"}, function(err, data){
       //});
 
@@ -1431,11 +1434,21 @@ exports.jsGetReiting = function(request, response) {
 exports.jsGetManagerCupAdmin = function(request, response) {
 
   var brand = request.query.brand;
+  var brand_id = brand;
   var today = request.query.today+"%";
   var today_date = request.query.today;
   var today_month1 = request.query.today.split("-");
   today_month1 = today_month1[0]+"-"+today_month1[1];
   var today_month = today_month1 + "%";
+
+  var cache_id = brand+today;
+
+  getCache({brand_id:"do_admin:"+brand_id, cache_id:cache_id}).done(function(err, the_cache){
+ 
+  if(the_cache) {
+    response.send(the_cache.mydata);
+    return true;
+  }
 
     var admin = [];
 
@@ -1565,11 +1578,14 @@ exports.jsGetManagerCupAdmin = function(request, response) {
                   //console.info(client.tst, client.manager_id);
                 }
             });
-
-            response.send({admin:admin});
+            var result = {admin:admin};
+            response.send(result);
+            setCache({brand_id:"do_admin:"+brand_id, cache_id: cache_id, value: {type: "loadStat", brand: brand_id, cache_id: cache_id, mydata: result, time: jsNow()} });
           }); 
         });
       });
+
+  }); //getCache
   
 }
 
@@ -1577,6 +1593,7 @@ exports.jsGetManagerCupAdmin = function(request, response) {
 exports.jsGetManagerCupAdminReport = function(request, response) {
 
   var brand = request.query.brand;
+  var brand_id = brand;
   var today = request.query.today+"%";
   var today_date = request.query.today;
   var today_month1 = request.query.today.split("-");
@@ -1584,6 +1601,17 @@ exports.jsGetManagerCupAdminReport = function(request, response) {
   var today_month = today_month1 + "%";
 
   var manager_id = request.query.manager_filter;
+
+
+  var cache_id = brand+today+manager_id+"salt_for_admin";
+
+  getCache({brand_id:"do_admin:"+brand_id, cache_id:cache_id}).done(function(err, the_cache){
+ 
+  if(the_cache) {
+    response.send(the_cache.mydata);
+    return true;
+  }
+
 
     var admin = [];
 
@@ -1993,13 +2021,17 @@ exports.jsGetManagerCupAdminReport = function(request, response) {
                 }
             });
 
-            response.send({admin:admin, admin_models: admin_models, admin_commercials: admin_commercials, admin_users: admin_users});
+            var result = {admin:admin, admin_models: admin_models, admin_commercials: admin_commercials, admin_users: admin_users};
+            response.send(result);
+            setCache({brand_id:"do_admin:"+brand_id, cache_id: cache_id, value: {type: "loadStat", brand: brand_id, cache_id: cache_id, mydata: result, time: jsNow()} });
           }); 
          });
         });
       });
   });
   });
+
+  }); //getCache
   
 }
 
@@ -2438,6 +2470,8 @@ exports.newAdmin = function(request, response) {
     pool.query(query, changes, function (err, rows, fields) {
       var insert_id = rows.insertId;
       response.send({insertId: insert_id});
+      delCache({brand_id:"do_admin:"+brand});
+
       //console.info(err, rows);
     });
 
@@ -4153,6 +4187,8 @@ exports.sendSocketMessage = function(request, response) {
 
 
 exports.jsStatBig3 = function(request, response) {
+  var brand_id = request.query.brand;
+
   var _d1 = request.query.d1;
   var _d2 = request.query.d2;
 
@@ -4171,10 +4207,22 @@ exports.jsStatBig3 = function(request, response) {
     manager_filter: request.query.manager_filter
 };
 
+  var cache_id = JSON.stringify(params);
+
+  getCache({brand_id:"do:"+brand_id, cache_id:cache_id}).done(function(err, the_cache){
+ 
+  if(the_cache) {
+    response.send(the_cache.mydata);
+    return true;
+  }
 
   jsStatGroup(params).done( function(answer){ 
-    response.send( { stat_big: answer } ); 
+    var result = { stat_big: answer };
+    response.send( result ); 
+    setCache({brand_id:"do:"+brand_id, cache_id: cache_id, value: {type: "loadStat", brand: brand_id, cache_id: cache_id, mydata: result, time: jsNow()} });
   });
+
+  });//getCache
 }
 
 Date.prototype.getWeek = function() {

@@ -27,6 +27,11 @@ myApp.controller('statBigCtrl', function ($scope, $resource, $rootScope, $locati
         { typ: "vd", img: "images/do_type/1vidacha.png", title: "Выдачи", tshort: "выдачи"}
     ];
 
+    $scope.myownfiler = function(){
+        alert(1);
+    }
+
+    //ng-show="(stat_big_view_switch==dt.typ)||(stat_big_view_switch=='all')"
 
     var jsLoadBig = function($scope) {
       var dfd = $q.defer();
