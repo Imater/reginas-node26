@@ -2530,7 +2530,7 @@ exports.loadModels = function(request, response) {
 
 
   pool.query('SELECT * FROM `1_organization`',function (err, organizations, fields) {
-	  pool.query('SELECT * FROM `1_test` WHERE brand=?',[brand_id], function (err, tests, fields) {
+	  pool.query('SELECT * FROM `1_test`',[brand_id], function (err, tests, fields) {
 	    pool.query('SELECT * FROM `1_models` ORDER by model', function (err, models, fields) {
 	      pool.query('SELECT * FROM `1_brands` ORDER by title', function (err, brands, fields) {
 	        pool.query('SELECT * FROM `1_users_group`', function (err, users_group, fields) {
@@ -3031,12 +3031,17 @@ exports.loadStatCupCars = function(request, response) {
   return true;
  }
 
+  var brand_q1 = ' AND brand="'+brand_id+'" ';
+  if(brand_id == 0) brand_q1 = '';
 
-  var query = 'SELECT * FROM `1_clients` WHERE '+filter+' AND brand="'+brand_id+'" ORDER by '+myorder;
+
+  var query = 'SELECT * FROM `1_clients` WHERE '+filter+ brand_q1+' ORDER by '+myorder;
 
   if(do_type == "tst") {
 
-   query = 'SELECT 1_clients.*, 1_do.manager_id manager_id2, 1_do.date2 tst, 1_test.model_id tstmodel FROM `1_do` LEFT JOIN 1_clients ON 1_do.client=1_clients.id LEFT JOIN 1_test ON 1_do.test_model_id = 1_test.id WHERE 1_do.brand = "'+brand_id+'" AND 1_do.date2 LIKE "'+today_date+'%" AND 1_do.checked !="0000-00-00 00:00:00" AND 1_do.type="Тест-драйв" ORDER by 1_clients.model';
+   var brand_q = '1_do.brand = "'+brand_id+'" AND';
+   if(brand_id == 0) brand_q = "";
+   query = 'SELECT 1_clients.*, 1_do.manager_id manager_id2, 1_do.date2 tst, 1_test.model_id tstmodel FROM `1_do` LEFT JOIN 1_clients ON 1_do.client=1_clients.id LEFT JOIN 1_test ON 1_do.test_model_id = 1_test.id WHERE '+brand_q+' 1_do.date2 LIKE "'+today_date+'%" AND 1_do.checked !="0000-00-00 00:00:00" AND 1_do.type="Тест-драйв" ORDER by 1_clients.model';
   }
 
 

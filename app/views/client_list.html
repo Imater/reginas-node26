@@ -308,6 +308,7 @@
                                   <span ng-if="do.manager_id!=client.manager_id && do.manager_id>0">[Исполнитель: <i class="icon-user"></i>{{fpk.jsFindInArray(fpk.all_managers,"id",do.manager_id).fio_short}}]</span>
                                   <span ng-if="do.comment" class="do_result"><br>Результат: {{do.comment}}</span>
                                 </div>
+                                <span ng-if="do.test_model_id" class="pull-right"><i class="icon-steering-wheel"></i> <b>{{fpk.models[ (sss=fpk.jsFindInArray(fpk.tests, "id", do.test_model_id)).model_id ].model}} ({{sss.gos}})</span>
                               </div>
                               
                               <div ng-if="do._visible == true" jq-show-effect="do._visible == true" jq-options="{type:'slide', duration:150, delay:200, hideImmediately: true}" class="do_edit" style="display:none;">
@@ -333,8 +334,8 @@
                                                 Тест на: <b>{{fpk.models[ (sss=fpk.jsFindInArray(fpk.tests, "id", do.test_model_id)).model_id ].short}} ({{sss.gos}})</b> <span class="caret"></span> 
                                               </button>
                                               <ul class="dropdown-menu" role="menu">
-                                                <li ng-repeat="test in fpk.tests" ng-click="do.test_model_id = test.id"><a>
-                                                {{ fpk.models[test.model_id].model }} ({{test.color}}) {{test.gos}}
+                                                <li ng-repeat="test in fpk.tests | jsTestFilter:client.brand" ng-click="do.test_model_id = test.id"><a>
+                                                <b>{{ fpk.models[test.model_id].model }}</b> ({{test.color}}) {{test.gos}}
                                                 </a></li>
                                                 <li class="divider"></li>
                                                 <center>добавляет руководитель ОП (настройки)</center>
