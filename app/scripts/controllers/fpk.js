@@ -1930,6 +1930,7 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
 
 
     $scope.fpk.jsFindInArray = _.memoize(function (myarray, fieldname, myid) {
+
         var answer = _.find(myarray, function (com) {
             if (com[fieldname]) {
                 return (com[fieldname] == myid);

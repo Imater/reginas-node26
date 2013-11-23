@@ -493,11 +493,20 @@ exports.findDoById = function(request,response) {
 exports.getDo = function(request,response) {
   var user_id = request.query.user_id;
   var brand = request.query.brand;
+  var brand_id = brand;
   var manager_id = request.query.manager;
   var cal_type = request.query.cal_type;
 
   var left_menu = request.query.left_menu;
 
+  var cache_id = user_id + brand + manager_id + cal_type + left_menu;
+
+  getCache({brand_id:"do:"+brand_id, cache_id:cache_id}).done(function(err, the_cache){
+
+  if(the_cache) {
+    response.send(the_cache.mydata);
+    return true;
+  }
 
   var insert_sql2 = '';
   if(left_menu==3) {
@@ -525,9 +534,21 @@ exports.getDo = function(request,response) {
       pool.query(query, [ brand ] , function (err, rows, fields) {
           console.info(err);
           rows = correct_dates(rows);
+          $.each(rows, function(i, row){
+            if(row.man) {
+              var fio = row.man.split(" ");
+              if(fio.length==3) {                
+                row.man = fio[0] +" "+ fio[1];
+              }
+            }
+          });
           response.send(rows);
+          setCache({brand_id:"do:"+brand_id, cache_id: cache_id, value: {type: "loadStat", brand: brand_id, cache_id: cache_id, mydata: rows, time: jsNow()} });
+
       }); 
   });
+
+  }); //getCache
 }
 
 
@@ -2310,7 +2331,6 @@ exports.saveDo = function(request, response) {
   var changes = JSON.parse(request.query.changes);
   var client_id = request.query.client_id;
 
-
  jsCheckToken(request.query.token, response).done(function(user_id){
 
   changes.changed = tomysql( new Date() );
@@ -3136,6 +3156,9 @@ function jsUpdateClient(client_id, no_push) {
         pool.query(query, answer, function (err, rows, fields) {
 
           dfd.resolve( client_id );
+
+          delCache({brand_id:"do:"+the_client[0].brand }); //удаляю кеш календаря
+
           //console.info("client_id="+client_id+" OK: ", rows.affectedRows);
     //    global.stat_cache = {}; //обнуляем кеш
 

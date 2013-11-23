@@ -408,15 +408,14 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
 
     }
 
-    $scope.fpk.jsFioShort = function(fio, need_surname) {
-    //    console.info(fio,"fioshort");
+    $scope.fpk.jsFioShort = _.memoize( function(fio, need_surname) {
         if(!fio) return "";
         var fio_sp = fio.split(" ");
         var name = (fio_sp[1]?(fio_sp[1].substr(0,1)+"."):"");
         if(need_surname == "name") var name = (fio_sp[1]?(fio_sp[1]+""):"");
         var answer = fio_sp[0] + " "+ name + ((fio_sp[2]&&need_surname&&(need_surname!="name"))?(fio_sp[2].substr(0,1)+"."):"");
         return answer;
-    }
+    }, function(fio, need_surname) { return fio+need_surname; } );
 
 
     $scope.fpk.init = new $.Deferred();

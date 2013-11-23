@@ -9,7 +9,7 @@
                         <div class="client_container" ng-click="jsOpenClient(client);">
                            <div class="client_checked" title="Проверен руководителем:
 {{client.hostchecked_id}}
-{{client.hostchecked | nicedatetime}}
+{{client.hostchecked}}
                            " ng-class="{checked:client.hostchecked!='0000-00-00 00:00:00'}" ng-click="fpk.hostcheck(client);jsClientSave(client);$event.stopPropagation();">
                             <i class="icon-record"></i>
                            </div>
@@ -28,7 +28,7 @@
 
 
                            <div class="do_buttons noselectable">
-                            <div class="do_btn" ng-repeat="do_type in fpk.do_types" ng-click="jsAddDo(do_type,client);$event.stopPropagation();"><img ng-class="{img_active:jsCheckDoType(do_type, client)}" title="{{do_type.title}}" ng-src="images/do_type/{{do_type.img}}"></div>
+                            <div class="do_btn" ng-repeat="do_type in fpk.do_types" ng-click="jsAddDo(do_type,client);$event.stopPropagation();"><img title="{{do_type.title}}" ng-src="images/do_type/{{do_type.img}}"></div>
                            </div>
 
                            <span ng-if="!fpk.jsCanEditClient(client)" class="client_lock" title="Вы не можете редактировать этого клиента. Обратитесь к руководителю или старшему менеджеру."><i class="icon-lock"></i></span>
