@@ -863,7 +863,17 @@ exports.findAllClientsIds = function(request, response) {
 exports.findAllClients = function(request, response) {
 
   var filter = request.query.filter ? JSON.parse(request.query.filter):{};
+  var brand_id = filter.brand;
   var manager = request.query.manager;
+
+  var cache_id = JSON.stringify( filter ) + manager;
+
+  getCache({brand_id:"do:"+brand_id, cache_id:cache_id}).done(function(err, the_cache){
+
+    if(the_cache) {
+      response.send(the_cache.mydata);
+      return true;
+    }
 
   f_filter = jsMakeClientFilter(filter, manager);
 
@@ -891,8 +901,11 @@ exports.findAllClients = function(request, response) {
       pool.query(myquery, function (err, rows, fields) {
         rows = correct_dates( rows );
         response.send(rows);
+        setCache({brand_id:"do:"+brand_id, cache_id: cache_id, value: {type: "loadStat", brand: brand_id, cache_id: cache_id, mydata: rows, time: jsNow()} });
       }); 
   });
+
+  });//getCache
 
 }
 
