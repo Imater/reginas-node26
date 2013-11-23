@@ -104,6 +104,7 @@ io.set('store', new RedisStore({
   }));
 
 
+
 var NO_DATE = '0000-00-00 00:00:00';
 var mysql      = require('mysql');
 var md5 = require('MD5');
@@ -139,7 +140,7 @@ mysqlconfig = {
 //connection.connect(); 
 var connection = mysql.createConnection(mysqlconfig);
 
-var mdb, collection;
+/*var mdb, collection;
 
 var MongoClient = require('mongodb').MongoClient, format = require('util').format;    
 
@@ -150,6 +151,77 @@ var MongoClient = require('mongodb').MongoClient, format = require('util').forma
     global.collection = global.mdb.collection('my_cache');   
 
   });
+*/
+var redis_client = redis.createClient();
+
+//записывает кэш привязанный к номеру бренда
+function setCache(myarg) {
+  if( _.isObject(myarg['value']) ) {
+    var val = JSON.stringify( myarg['value'] );
+  } else {
+    var val = myarg['value'];
+  }
+  //console.info("set", val);
+  redis_client.hset( "brand:"+myarg.brand_id, "cache_id:"+myarg.cache_id, val );  
+}
+
+function getCache(myarg) {
+  var dfd = $.Deferred();
+  redis_client.hget( "brand:"+myarg.brand_id, "cache_id:"+myarg.cache_id, function(err, result){
+    if(result) {
+      dfd.resolve( err, JSON.parse(result) );
+    }
+    dfd.resolve( err, result );
+  });
+  return dfd.promise();
+}
+
+
+function delCache(myarg) {
+  var dfd = $.Deferred();
+
+  if(myarg.cache_id) {
+    redis_client.hdel( "brand:"+myarg.brand_id, "cache_id:"+myarg.cache_id, function(err, result){
+      dfd.resolve( err, result );
+    });    
+  } else {
+    redis_client.del( "brand:"+myarg.brand_id, function(err, result){
+      dfd.resolve( err, result );
+    });        
+  }
+
+  return dfd.promise();
+}
+
+function jsClearCacheByBrand(brand_id) {
+
+      //redis_client.del({})
+
+      delCache({brand_id: brand_id}).done(function(err, result){
+        console.info("del = ", err, result, brand_id);
+      });
+
+      //global.collection.remove({type:"loadStat", brand: brand_id}, function(err, data){
+      //});
+
+      delCache({brand_id: "cup"}).done(function(err, result){
+        console.info("del_cup = ", err, result, brand_id);
+      });
+
+      //global.collection.remove({type:"cup"}, function(err, data){
+      //});
+
+}
+
+//setCache({brand_id:1, cache_id:"xVx", value: {dd: 'UUUPS'} });
+
+//getCache({brand_id:1, cache_id:"xVx"}).done(function(err, result){
+//  console.info("answer = ", err, result);
+//});
+
+//delCache({brand_id:1}).done(function(err, result){
+//  console.info("answer_del = ", err, result);
+//});
 
 
 /*app.configure(function() {*/
@@ -255,9 +327,9 @@ function Report(socket) {
         if(el_client.changetime > el_server.changetime) {
           //сохраняем данные в базе сервера
           if (el_server.user_id == user_id) {
-            collection.update({id: el_server.id, user_id: user_id },{ $set: el_client }, function(err,rows){
-              if(rows) console.info("Сохранил - "+el_server.id);
-            }); 
+//            collection.update({id: el_server.id, user_id: user_id },{ $set: el_client }, function(err,rows){
+//              if(rows) console.info("Сохранил - "+el_server.id);
+//            }); 
           } else {
             console.info("Чужая запись, не сохраняю. Пользователь: "+el_server.user_id);
 
@@ -280,12 +352,13 @@ function Report(socket) {
 
 //нахожу одну заметку в базе
 function jsFindById(id) {
+
   var dfd = $.Deferred();
 
-    collection.find({id:id}).toArray(function (err, rows, fields) {
+  //  collection.find({id:id}).toArray(function (err, rows, fields) {
     //response.send(rows);
-    dfd.resolve(rows);
-    }); 
+    //dfd.resolve(rows);
+    //}); 
 
 /*  pool.query('SELECT * FROM `tree` WHERE id = ? LIMIT 1', [id], function (err, rows, fields) {
     dfd.resolve(rows);
@@ -379,6 +452,7 @@ function jsCheckToken(token, response) {
 }
 
 exports.findAllMessages = function(request,response) {
+  return false;
   jsCheckToken(request.query.token, response).done(function(user_id){
     if(user_id) {
         var collection = mdb.collection('myalldata');   
@@ -998,12 +1072,11 @@ exports.loadStat = function(request, response) {
   var cache_id = md5(brand_id + manager_id + today);
 
 
-  global.collection.find({ type: "loadStat", cache_id: cache_id }).toArray( function(err, the_cache){
+//  global.collection.find({ type: "loadStat", cache_id: cache_id }).toArray( function(err, the_cache){
+  getCache({brand_id:brand_id, cache_id:cache_id}).done(function(err, the_cache){
 
-	  if( the_cache.length ) {
-	    response.send( the_cache[0]["mydata"] ); //статистика кешируется нижняя и левая
-	    //console.info("info_from_cache", cache_id);
-	    //console.info("Stat from cache "+cache_id+", brand = ", brand_id,global.stat_cache);
+	  if( the_cache ) {
+	    response.send( the_cache.mydata ); //статистика кешируется нижняя и левая
 	  } else {
 
 	    if(manager_id>0) {
@@ -1045,10 +1118,13 @@ exports.loadStat = function(request, response) {
 
 	    $.when.apply(null, dfdArray).then(function(){
 	      answer = {left_stat: answer, sms: result};
-		  global.collection.update({cache_id: cache_id}, {type: "loadStat", brand: brand_id, cache_id: cache_id, mydata: answer, time: jsNow()}, { upsert: true }, function(err, docs){
-		 	  global.collection.count(function(err, count) {
-		      });    	
-		  });
+
+        setCache({brand_id:brand_id, cache_id: cache_id, value: {type: "loadStat", brand: brand_id, cache_id: cache_id, mydata: answer, time: jsNow()} });
+
+		  //global.collection.update({cache_id: cache_id}, }, { upsert: true }, function(err, docs){
+		 	  //global.collection.count(function(err, count) {
+		      //});    	
+		  //});
 
 
 
@@ -2234,13 +2310,11 @@ exports.saveDo = function(request, response) {
   var changes = JSON.parse(request.query.changes);
   var client_id = request.query.client_id;
 
-  console.info("c", changes);
 
  jsCheckToken(request.query.token, response).done(function(user_id){
 
   changes.changed = tomysql( new Date() );
 
-  console.info("ch",changes);
 
   query = "UPDATE 1_do SET ? WHERE id = '"+id+"'";
   //console.info("F = ",query, changes);
@@ -2258,15 +2332,7 @@ exports.saveDo = function(request, response) {
 
 }
 
-function jsClearCacheByBrand(brand_id) {
 
-      global.collection.remove({type:"loadStat", brand: brand_id}, function(err, data){
-      });
-
-      global.collection.remove({type:"cup"}, function(err, data){
-      });
-
-}
 
 exports.saveClient = function(request, response) {
   var changes = request.body.changes;
@@ -2622,10 +2688,11 @@ exports.loadStatCup = function(request, response) {
   var brand_id = request.query.brand;
   var cache_id = md5(JSON.stringify(request.query) + brand_id);
 
-  global.collection.find({ type: "cup", cache_id: cache_id }).toArray( function(err, the_cache){
+  //global.collection.find({ type: "cup", cache_id: cache_id }).toArray( function(err, the_cache){
+  getCache({brand_id:"cup", cache_id:cache_id}).done(function(err, the_cache){
 
-	  if( the_cache.length ) {
-	    response.send( the_cache[0]["mydata"] ); //статистика кешируется нижняя и левая
+	  if( the_cache ) {
+	    response.send( the_cache["mydata"] ); //статистика кешируется нижняя и левая
 	    //console.info("info_from_cache_CUP", cache_id);
 	    //console.info("Stat from cache "+cache_id+", brand = ", brand_id,global.stat_cache);
 	  } else {
@@ -2805,10 +2872,13 @@ exports.loadStatCup = function(request, response) {
 
 	            //global.stat_cache_cup[ cache_id ] = answer;
 
-				  global.collection.update({cache_id: cache_id}, {type: "cup", brand: brand_id, cache_id: cache_id, mydata: answer, time: jsNow()}, { upsert: true }, function(err, docs){
-				 	  global.collection.count(function(err, count) {
-				      });    	
-				  });
+          setCache({brand_id:"cup", cache_id: cache_id, value: {type: "cup", brand: brand_id, cache_id: cache_id, mydata: answer, time: jsNow()} });
+
+
+//				  global.collection.update({cache_id: cache_id}, {type: "cup", brand: brand_id, cache_id: cache_id, mydata: answer, time: jsNow()}, { upsert: true }, function(err, docs){
+	//			 	  global.collection.count(function(err, count) {
+		//		      });    	
+			//	  });
 
 
 	            response.send(answer);
@@ -3431,10 +3501,12 @@ exports.loadStatTable = function(request, response) {
   var cache_id = md5( brand_id + "salt");
   console.info("cache_id"+cache_id);
 
-  global.collection.find({ type: "cup", cache_id: cache_id }).toArray( function(err, the_cache){
 
-	  if( the_cache.length ) {
-	    response.send( the_cache[0]["mydata"] ); //статистика кешируется нижняя и левая
+//  global.collection.find({ type: "cup", cache_id: cache_id }).toArray( function(err, the_cache){
+  getCache({brand_id:"cup", cache_id:cache_id}).done(function(err, the_cache){
+
+	  if( the_cache ) {
+	    response.send( the_cache["mydata"] ); //статистика кешируется нижняя и левая
 	    //console.info("info_from_cache_CUP_GRAPH!!!", cache_id);
 	    //console.info("Stat from cache "+cache_id+", brand = ", brand_id,global.stat_cache);
 	  } else {
@@ -3609,11 +3681,12 @@ exports.loadStatTable = function(request, response) {
         }); //cars  
       
           response.send(answer);
+      setCache({brand_id:"cup", cache_id: cache_id, value: {type: "cup", brand: brand_id, cache_id: cache_id, mydata: answer, time: jsNow(), graph: "TRUE"} });
 
-		  global.collection.update({cache_id: cache_id}, {type: "cup", brand: brand_id, cache_id: cache_id, mydata: answer, time: jsNow(), graph: "TRUE"}, { upsert: true }, function(err, docs){
-		 	  global.collection.count(function(err, count) {
-		      });    	
-		  });
+//		  global.collection.update({cache_id: cache_id}, {type: "cup", brand: brand_id, cache_id: cache_id, mydata: answer, time: jsNow(), graph: "TRUE"}, { upsert: true }, function(err, docs){
+	//	 	  global.collection.count(function(err, count) {
+		//      });    	
+		  //});
 
         }); //cars
     }); //model
@@ -3771,10 +3844,11 @@ exports.loadJsonCup = function(request, response) {
 
   var cache_id = md5(brand+"saltJsonCup");
 
-  global.collection.find({ type: "cup", cache_id: cache_id }).toArray( function(err, the_cache){
+//  global.collection.find({ type: "cup", cache_id: cache_id }).toArray( function(err, the_cache){
+  getCache({brand_id:"cup", cache_id:cache_id}).done(function(err, the_cache){
 
-	  if( the_cache.length ) {
-	    response.send( the_cache[0]["mydata"] ); //статистика кешируется нижняя и левая
+	  if( the_cache ) {
+	    response.send( the_cache["mydata"] ); //статистика кешируется нижняя и левая
 	    //console.info("info_from_cache graph json", cache_id);
 	    //console.info("Stat from cache "+cache_id+", brand = ", brand_id,global.stat_cache);
 	  } else {
@@ -3874,10 +3948,14 @@ exports.loadJsonCup = function(request, response) {
       }
       response.send(answer);
 
-	  global.collection.update({cache_id: cache_id}, {type: "cup", brand: brand_id, cache_id: cache_id, mydata: answer, time: jsNow()}, { upsert: true }, function(err, docs){
-	 	  global.collection.count(function(err, count) {
-	      });    	
-	  });
+
+      setCache({brand_id:"cup", cache_id: cache_id, value: {type: "cup", brand: brand_id, cache_id: cache_id, mydata: answer, time: jsNow()} });
+
+
+//	  global.collection.update({cache_id: cache_id}, {type: "cup", brand: brand_id, cache_id: cache_id, mydata: answer, time: jsNow()}, { upsert: true }, function(err, docs){
+	 	//  global.collection.count(function(err, count) {
+	//      });    	
+	  ///});
 
 
 
