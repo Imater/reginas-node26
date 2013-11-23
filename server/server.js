@@ -502,7 +502,7 @@ exports.getDo = function(request,response) {
   var cache_id = user_id + brand + manager_id + cal_type + left_menu;
 
   getCache({brand_id:"do:"+brand_id, cache_id:cache_id}).done(function(err, the_cache){
-
+ 
   if(the_cache) {
     response.send(the_cache.mydata);
     return true;
@@ -1218,6 +1218,7 @@ var jsLoadStatSMS = function(type, brand_id, today, result) {
 exports.jsGetReiting = function(request, response) {
 
   var brand = request.query.brand;
+  var brand_id = request.query.brand;
   var today = request.query.today+"%";
   var today_date = request.query.today;
 
@@ -1232,6 +1233,17 @@ exports.jsGetReiting = function(request, response) {
   var start_today_date = request.query.start_today;
 
   var start_today_date_sql = request.query.start_today+" "+current_time;
+
+
+  var cache_id = brand_id + today + start_today;
+
+  getCache({brand_id:"do:"+brand_id, cache_id:cache_id}).done(function(err, the_cache){
+
+    if(the_cache) {
+      response.send(the_cache.mydata);
+      return true;
+    }
+
 
     var answer = [];
 
@@ -1363,6 +1375,8 @@ exports.jsGetReiting = function(request, response) {
           });
 
           response.send(answer);
+          setCache({brand_id:"do:"+brand_id, cache_id: cache_id, value: {type: "loadStat", brand: brand_id, cache_id: cache_id, mydata: answer, time: jsNow()} });
+
 
           //записываем рейтинг в профиль менеджера
           var dif = frommysql(start_today_date_sql) - frommysql(today_date_sql);
@@ -1387,6 +1401,8 @@ exports.jsGetReiting = function(request, response) {
         }); 
     });
     });
+
+  }); //getCache
   
 }
 
