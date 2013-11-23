@@ -2673,6 +2673,7 @@ exports.removeClient = function(request, response) {
         //console.info({rows:rows, err: err});
       //global.stat_cache = {}; //обнуляем кеш
         jsClearCacheByBrand( request.query.brand );
+        delCache({brand_id:"do:"+request.query.brand }); //удаляю кеш календаря
 
         setTimeout(function(){
             process.send({ message_type: "loadstat", brand: request.query.brand });
