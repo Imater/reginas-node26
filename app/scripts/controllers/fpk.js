@@ -2016,6 +2016,10 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
             title: "Тест-драйв",
             fieldname: "tst"
         }, {
+            img: "1com.png",
+            title: "Ком.предложение",
+            fieldname: "com"
+        }, {
             img: "1credit.png",
             title: "Кредит"
         }, {

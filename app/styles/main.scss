@@ -2961,11 +2961,79 @@ li.needgroup {
 
 }
 
+.com_div {
+    border: 1px dashed #989505;
+    background: #fffcdc;
+    padding: 15px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    input {
+        font-weight: bold;
+    }
+    .car_params {
+        input {
+            margin-right: 20px;
+        }
+    }
+    .input-group-addon {
+        min-width: 9em !important; 
+    }
+    .oborudovanie {
+        height: 130px;
+        font-size: 12px;
+        overflow: auto;
+        table {
+                border: none !important; 
+                width: auto;
+            td,th {
+                border: none !important; 
+                padding: 1px;
+                max-width: 70%;
+                font-size: 11px;
+            }
+        }
+    }
+    .contacts {
+        height: 60px;
+        font-size: 12px;
+        overflow: auto;
+    }
+}
 
 
+.com_table {
+    font-size: 12px;
+    th {
+        text-align: right;
+        padding-right: 10px;
+        font-weight: normal;
+    }
+    td {
+        font-weight: bold;
+    }
+}
 
 
-
+.com_complectation {
+    border: 1px solid #888;
+    width: 100%;
+    th, td {
+        padding: 10px;
+        vertical-align: top;
+        font-size: 11px;
+        border: 1px solid #AAA;
+        table {
+                border: none !important; 
+                width: auto;
+            td,th {
+                border: none !important; 
+                padding: 1px;
+                max-width: 70%;
+                font-size: 11px;
+            }
+        }
+    }
+}
 
 
 

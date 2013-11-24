@@ -4058,6 +4058,27 @@ exports.loadJsonCup = function(request, response) {
 
 };
 
+exports.loadComDoc = function(request, response) {
+
+  var brand = request.query.brand;
+  var client_id = request.query.client_id;
+  var do_id = request.query.do_id;
+  var brand = request.query.brand;
+
+  pool.query("SELECT 1_do.*, 1_users.fio manager_fio, 1_users.phone manager_phone, 1_models.model FROM 1_do LEFT JOIN 1_users ON 1_do.manager_id=1_users.id LEFT JOIN 1_models ON 1_do.test_model_id=1_models.id WHERE 1_do.id=? LIMIT 1", [do_id], function (err, mydo, fields) {
+
+      var client = {
+        dover: "HI",
+        mydo: mydo[0]
+      }
+
+      response.send(client);
+
+  });
+
+
+}
+
 exports.loadTestDoc = function(request, response) {
 
 	var brand = request.query.brand;
@@ -4593,6 +4614,7 @@ app.get('/api/v1/parseEmail', database.parseEmail);
 
 
 app.get('/api/v1/test_doc', database.loadTestDoc);
+app.get('/api/v1/com_doc', database.loadComDoc);
 
 app.get('/api/v1/bigdata', database.loadAllBig);
 app.get('/api/v1/bigdata2', database.loadAllBig2);

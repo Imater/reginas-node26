@@ -29,6 +29,7 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
             .when('/fpk', 's1')
             .when('/fpk/clients', 's1.clients')
             .when('/test_doc/:client/:do', 'test_doc')
+            .when('/com_doc/:client/:do', 'com_doc')
             .when('/fpk/reiting', 's1.reiting')
             .when('/fpk/st/statistic', 's1.st.statistic')
             .when('/fpk/st/stat_table', 's1.st.stat_table')
@@ -46,6 +47,9 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
             .segment('test_doc', {
                 templateUrl: 'views/test_doc.html',
                 controller: 'testCtrl'})                
+            .segment('com_doc', {
+                templateUrl: 'views/com_doc.html',
+                controller: 'comCtrl'})                
             .segment('user', {
                 templateUrl: 'views/user.html',
                 controller: 'loginCtrl'})
@@ -388,6 +392,8 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
             $scope.fpk.models = answer;
             //console.info("BRANDS_TO_SHOW == ", answer2);
             $scope.fpk.brands = answer2;
+            $scope.fpk.models_array_show = _.filter($scope.fpk.models_array, function(el){ return ( (el.brand == $scope.fpk.brand) && (el.show == 1)); });
+
             dfd.resolve();
          }); //getModels
          return dfd.promise();

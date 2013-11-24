@@ -2208,3 +2208,58 @@ li.needgroup {
     margin-left: 10px;
     width: 500px;
     overflow-x: scroll; }
+
+.com_div {
+  border: 1px dashed #989505;
+  background: #fffcdc;
+  padding: 15px;
+  margin-bottom: 20px;
+  margin-top: 20px; }
+  .com_div input {
+    font-weight: bold; }
+  .com_div .car_params input {
+    margin-right: 20px; }
+  .com_div .input-group-addon {
+    min-width: 9em !important; }
+  .com_div .oborudovanie {
+    height: 130px;
+    font-size: 12px;
+    overflow: auto; }
+    .com_div .oborudovanie table {
+      border: none !important;
+      width: auto; }
+      .com_div .oborudovanie table td, .com_div .oborudovanie table th {
+        border: none !important;
+        padding: 1px;
+        max-width: 70%;
+        font-size: 11px; }
+  .com_div .contacts {
+    height: 60px;
+    font-size: 12px;
+    overflow: auto; }
+
+.com_table {
+  font-size: 12px; }
+  .com_table th {
+    text-align: right;
+    padding-right: 10px;
+    font-weight: normal; }
+  .com_table td {
+    font-weight: bold; }
+
+.com_complectation {
+  border: 1px solid #888;
+  width: 100%; }
+  .com_complectation th, .com_complectation td {
+    padding: 10px;
+    vertical-align: top;
+    font-size: 11px;
+    border: 1px solid #AAA; }
+    .com_complectation th table, .com_complectation td table {
+      border: none !important;
+      width: auto; }
+      .com_complectation th table td, .com_complectation th table th, .com_complectation td table td, .com_complectation td table th {
+        border: none !important;
+        padding: 1px;
+        max-width: 70%;
+        font-size: 11px; }

@@ -1,0 +1,96 @@
+<div id="dover">
+	<table width="100%">
+	<tr>
+		<td>
+			<img ng-src="images/logos/{{br=fpk.brands[client.mydo.brand]; br.logo}}"><br>
+			<h5>{{br.diller_adress}}</h5>
+			{{client.mydo.manager_fio}}<br>
+			Тел.: {{client.mydo.manager_phone}}
+		</td>
+		<td>
+			<img src="images/logo_reginas_big.png" class="pull-right">
+		</td>
+	</tr>
+	</table>
+	<center><h4>Коммерческое предложение на <b>{{client.mydo.model}}</b></h4></center>
+	<table class="com_table">
+	<tr ng-if="client.mydo.model">
+		<th>Модель:</th>
+		<td>{{client.mydo.model}}</td>
+	</tr>
+	<tr ng-if="client.mydo.car_motor">
+		<th>Двигатель:</th>
+		<td>{{client.mydo.car_motor}}</td>
+	</tr>
+	<tr ng-if="client.mydo.car_gearbox">
+		<th>Тип КПП:</th>
+		<td>{{client.mydo.car_gearbox}}</td>
+	</tr>
+	<tr ng-if="client.mydo.car_year">
+		<th>Год выпуска:</th>
+		<td>{{client.mydo.car_year}}</td>
+	</tr>
+	<tr ng-if="client.mydo.car_color">
+		<th>Цвет кузова:</th>
+		<td>{{client.mydo.car_color}}</td>
+	</tr>
+	<tr ng-if="client.mydo.car_compl">
+		<th>Комплектация:</th>
+		<td>{{client.mydo.car_compl}}</td>
+	</tr>
+	<tr  ng-if="client.mydo.car_dostavka">
+		<th>Примерный срок поставки:</th>
+		<td>{{client.mydo.car_dostavka}}</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr ng-if="client.mydo.car_cost">
+		<th>Стоимость:</th>
+		<td>{{client.mydo.car_cost}}</td>
+	</tr>
+	<tr  ng-if="client.mydo.car_cost_color">
+		<th>Стоимость окраски:</th>
+		<td>{{client.mydo.car_cost_color}}</td>
+	</tr>
+	<tr  ng-if="client.mydo.car_cost_dop">
+		<th>Стоимость доп.оборудования:</th>
+		<td>{{client.mydo.car_cost_dop}}</td>
+	</tr>
+	<tr  ng-if="client.mydo.car_cost_special">
+		<th>Специальное предложение:</th>
+		<td>{{client.mydo.car_cost_special}}</td>
+	</tr>
+	<tr ng-if="client.mydo.car_cost_itog">
+		<th>Итого:</th>
+		<td>{{client.mydo.car_cost_itog}}</td>
+	</tr>
+  </table>
+  <br>
+  <table class="com_complectation">
+  	<tr>
+  		<th ng-if="client.mydo.car_equipment">Стандартные опции:</th>
+  		<th ng-if="client.mydo.car_equipment_dop">Дополнительные опции:</th>
+  	</tr>
+  	<tr>
+  		<td  ng-if="client.mydo.car_equipment" ng-bind-html="client.mydo.car_equipment"></td>
+  		<td  ng-if="client.mydo.car_equipment_dop" ng-bind-html="client.mydo.car_equipment_dop"></td>
+  	</tr>
+  </table>
+  	<br>
+
+	<table class="com_table">
+	<tr ng-if="client.mydo.car_contacts">
+		<td ng-bind-html="client.mydo.car_contacts"></td>
+	</tr>
+	</table>
+	<hr>
+	<table class="com_table">
+	<tr>
+		<th>Ваш персональный менеджер:</th>
+		<td>{{client.mydo.manager_fio}} (тел.: {{client.mydo.manager_phone}}<i class="icon-phone"></i>)</td>
+	</tr>
+
+  
+
+</div>

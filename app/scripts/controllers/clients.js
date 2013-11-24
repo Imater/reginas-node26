@@ -51,6 +51,14 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
 
 
   });
+
+  setTimeout(function(){
+    $(".client_container:first").click();
+    setTimeout(function(){
+      $(".do_line")[1].click();
+    }, 200);
+  },500);
+
 /*    myApi.getClient({brand:1, no_out: true, no_dg: true, no_vd:true}).then(function(x){
       $scope.clients = x;
     });
@@ -177,8 +185,6 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
           mydo.sms=minutes;
           mydo.sms_send=0;
         }
-
-        $scope.fpk.models_array_show = _.filter($scope.fpk.models_array, function(el){ return ( (el.brand == $scope.fpk.brand) && (el.show == 1)); });
 
         $scope.jsPlanRotate = function(client, fieldname) {
           client[fieldname] += 1;
