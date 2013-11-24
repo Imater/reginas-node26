@@ -204,14 +204,12 @@ function jsClearCacheByBrand(brand_id) {
       //redis_client.del({})
 
       delCache({brand_id: brand_id}).done(function(err, result){
-        console.info("del = ", err, result, brand_id);
       });
 
       //global.collection.remove({type:"loadStat", brand: brand_id}, function(err, data){
       //});
 
       delCache({brand_id: "cup"}).done(function(err, result){
-        console.info("del_cup = ", err, result, brand_id);
       });
 
 
@@ -1773,8 +1771,6 @@ exports.jsGetManagerCupAdminReport = function(request, response) {
       manager_filter_admin = " AND manager_id = "+manager_id;
     }
 
-    console.info("manager_filter = ",manager_filter);
-
     pool.query('SELECT * FROM `1_commercials` ORDER by title', [brand], function (err, commercials, fields) {
     pool.query('SELECT * FROM `1_models` WHERE brand = ? AND `show`=1 ORDER by model', [brand], function (err, models, fields) {
       //console.info("err",err)
@@ -3181,7 +3177,6 @@ function jsUpdateClient(client_id, no_push) {
           }
           if(mydo.checked == "") {
             var dif_days = parseInt((jsNow() - (frommysql( mydo.date2 ).getTime())) / 1000/60/60/24 );
-            console.info("!", dif_days);
             if(dif_days > 1) {
               answer.attention += "Назначены просроченные дела; ";
             }
@@ -3597,7 +3592,7 @@ exports.loadStatTable = function(request, response) {
   var brand_id = request.query.brand;
 
   var cache_id = md5( brand_id + "salt");
-  console.info("cache_id"+cache_id);
+  //console.info("cache_id"+cache_id);
 
 
 //  global.collection.find({ type: "cup", cache_id: cache_id }).toArray( function(err, the_cache){
@@ -3952,7 +3947,7 @@ exports.loadJsonCup = function(request, response) {
 	  } else {
 
 
-    console.info(brand);
+    //console.info(brand);
 
     var answer = {dg:[],
             vd:[],
