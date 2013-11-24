@@ -52,13 +52,6 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
 
   });
 
-  setTimeout(function(){
-    $(".client_container:first").click();
-    setTimeout(function(){
-      $(".do_line")[1].click();
-    }, 200);
-  },500);
-
 /*    myApi.getClient({brand:1, no_out: true, no_dg: true, no_vd:true}).then(function(x){
       $scope.clients = x;
     });
