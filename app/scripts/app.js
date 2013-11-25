@@ -19,6 +19,17 @@ Date.prototype.getWeek = function() {
 angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 'ui.redactor.multi', 'ui.calendar', "ng", "infinite-scroll", "monospaced.elastic", 'route-segment', 'view-segment', 'ngGrid', "highcharts-ng"])
     .config(function ($routeProvider, $locationProvider, $compileProvider, $routeSegmentProvider) {
 
+        Tinycon.setOptions({
+            width: 10,
+            height: 5,
+            font: '10px arial',
+            colour: '#000',
+            background: 'rgba(255,255,255,0)',
+            fallback: true
+        });
+
+        Tinycon.setBubble(0);
+
 //    $locationProvider.html5Mode(false).hashPrefix('!');
         $routeSegmentProvider.options.autoLoadTemplates = true;
 

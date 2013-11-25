@@ -1707,6 +1707,9 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
             myApi.getStat($scope).then(function (result) {
                 $scope.fpk.stat = result.left_stat;
                 $scope.fpk.cup_sms = result.sms;
+                var dogovors = _.find(result.sms, function(el){ return el.type=="dg" }).day;
+                Tinycon.setBubble( dogovors );
+
             });
         }
     }
