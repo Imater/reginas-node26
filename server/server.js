@@ -3050,6 +3050,26 @@ exports.loadStatCupCars = function(request, response) {
   });
 }
 
+exports.test2 = function(request, response) {
+  var dfdArray = [];
+  var dfd = $.Deferred();
+
+  pool.query('SELECT id FROM `1_clients` WHERE vd!="0000-00-00 00:00:00" LIMIT 200000', function (err, clients, fields) {
+    $.each(clients, function(i, cl){
+      dfdArray.push( jsUpdateClient(cl.id, "dont_push_to_socket") ); 
+      dfd.resolve();
+    });
+  });  
+
+  $.when.apply(null, dfdArray).done(function(){
+    response.send("ok");
+    //console.info("ok");
+  });
+
+}
+
+
+
 function jsUpdateClient(client_id, no_push) {
   var dfd = $.Deferred();
 
@@ -3086,7 +3106,11 @@ function jsUpdateClient(client_id, no_push) {
                }
 
         var first_action = false;
+        var start_find_rings = false;
+        var rings = [];
         $.each(client_do, function(i,mydo){
+
+
 
         if( (mydo.checked=="") && (answer.na_id=="") ) {
           answer.na_id = mydo.id;
@@ -3162,6 +3186,7 @@ function jsUpdateClient(client_id, no_push) {
               if(answer.vd==NO_DATE) {
                 answer.vd = mydo.date2;
                 answer.bu = "";
+                start_find_rings = mydo.date2;
               }
               if(!first_action) {
                 answer.vz = mydo.date2;
@@ -3170,12 +3195,19 @@ function jsUpdateClient(client_id, no_push) {
             }
           }
 
+          if( (start_find_rings) && (mydo.type.indexOf("Звонок")!=-1) ) {
+            var d1 = frommysql( mydo.date2 );
+            var d2 = frommysql( start_find_rings );
+            var dif_days = parseInt( ( d1.getTime() - d2.getTime() )/(24*60*60*1000) );
+            rings.push( {date2: mydo.date2, checked: mydo.checked, text: mydo.text, vd: start_find_rings, dif: dif_days} );
+          }          
+
           if(mydo.type == "Трейд-ин") {
             if( (answer.vd == "0000-00-00 00:00:00") && (answer.out=="0000-00-00 00:00:00") ) {
               answer.bu = mydo.date2;
             }
           }
-          if(mydo.checked == "") {
+          if( (mydo.checked == "")&&(mydo.date2) ) {
             var dif_days = parseInt((jsNow() - (frommysql( mydo.date2 ).getTime())) / 1000/60/60/24 );
             if(dif_days > 1) {
               answer.attention += "Назначены просроченные дела; ";
@@ -3188,6 +3220,71 @@ function jsUpdateClient(client_id, no_push) {
         if( !(answer.na_id) && (answer.out == NO_DATE) ) {
           answer.attention += "Нет следующего действия; ";
         }
+
+        //////////////////////////////////////////////////////
+
+        var need_analyse = true;
+
+        if(the_client[0].dublicate) {
+          var mydublicates = JSON.parse( the_client[0].dublicate );
+          //console.info(mydublicates);
+          var dubs = _.find(mydublicates, function(dub){ return dub.brand == the_client[0].brand });
+          
+          if( dubs ) {
+            var need_analyse = false;
+          }
+        }
+
+        var rings_ok = {
+          r1: false,
+          r2: false,
+          r3: false
+        }
+
+        if (the_client[0].fio.indexOf("ОО")!=-1) {
+          need_analyse = false;
+        }
+
+        if( need_analyse ) {
+            $.each(rings, function(i, ring){
+  //              console.info(ring.dif, the_client[0].fio, i, ring.text, ring.vd, ring.date2);
+                if(ring.dif<15) {
+                  rings_ok.r1 = true;
+                } else if( (ring.dif>=15)&&(ring.dif<60) ) {                  
+                  rings_ok.r2 = true;
+                } else if( (ring.dif>=60)&&(ring.dif<400) )  {
+                  rings_ok.r3 = true;
+                }
+            });            
+
+            if(rings_ok.r1&&rings_ok.r2&&rings_ok.r3) {
+            } else if(start_find_rings) {
+              //добавляем недостающие звонки
+              console.info("bad - - - - - - - - - - - - - - - -", the_client[0].fio);                                  
+              var start_find_rings_d = frommysql( start_find_rings );
+              var today_sqldate = tomysql( new Date() );
+              setTimeout(function(){
+                jsUpdateClient(the_client[0].id, "dont_push_to_socket");
+                console.info("second_update");
+              },300);
+              if(!rings_ok.r1) {
+                jsAddRingDays(3, the_client[0], start_find_rings_d, today_sqldate);
+              }
+              if(!rings_ok.r2) {
+                jsAddRingDays(30, the_client[0], start_find_rings_d, today_sqldate);
+              }
+              if(!rings_ok.r3) {
+                jsAddRingDays(365, the_client[0], start_find_rings_d, today_sqldate);
+              }
+
+
+            }
+
+        }
+
+        //////////////////////////////////////////////////////
+
+        //console.info("RINGS = ", rings);
 
         if( ( !(the_client[0].phone1.length+
               the_client[0].phone2.length+
@@ -3252,6 +3349,51 @@ return dfd.promise();
  
 }
 
+
+var jsAddRingDays = function(days, the_client, start_find_rings_d, today_sqldate){
+    if(!start_find_rings_d) return true;
+    var text = "__Звонок внимания через "+days+" дн.";
+    var date2 = tomysql( new Date(start_find_rings_d.getTime() + days*24*60*60*1000) );
+    if( date2 < today_sqldate ) {
+      var checked = date2; 
+      text += " (auto)";
+    } else {
+      var checked = "0000-00-00 00:00:00";
+    }
+    jsAddRing(the_client.id, the_client.brand, the_client.manager_id, date2, checked, text, "Звонок исходящий");
+    console.info("Добавил звонок внимания", the_client.id, the_client.brand, the_client.manager_id, date2, checked, text, "Звонок исходящий");
+
+}
+
+var jsAddRing = function(client_id, brand_id, manager_id, date2, checked, text, type_do) {
+  var dfd = $.Deferred();
+    var time_now = new Date();
+
+    var values = {
+    client: client_id,
+    brand: brand_id,
+    manager_id: manager_id,
+    date1: time_now,
+    date2: date2,
+    checked: checked,
+    created: date2,
+    changed: date2,
+    text: text,
+    type: type_do,
+    host_id: manager_id
+
+
+  };
+
+  query = "INSERT INTO 1_do SET ?";
+    pool.query(query, values, function (err, rows, fields) {
+      dfd.resolve(rows);
+    });
+
+  return dfd.promise();
+}
+
+
 //проверка клиента, был ли он уже в другом бренде
 var jsCheckDublicate = function(client) {
   var dfd = $.Deferred();
@@ -3291,6 +3433,9 @@ var jsCheckDublicate = function(client) {
 
   return dfd.promise();
 }
+
+
+
 
 exports.updateClient = function(request, response) {
   var client_id = request.params.id;
@@ -4641,6 +4786,7 @@ app.get('/api/v1/search', database.searchString );
 app.get('/api/v1/autocomplete', database.getAutocomplete );
 
 app.get('/api/v1/client/update/:id', database.updateClient );
+app.get('/api/v1/test2', database.test2 );
 
 app.get('/api/v1/clients_export', database.exportClients );
 

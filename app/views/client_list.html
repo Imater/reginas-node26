@@ -321,11 +321,11 @@
                                     <div class="row">
                                       <div class="col-md-12">
                                             <button ng-click="jsDoSave(); do._visible=false;" class="do_save">Сохранить</button>
-                                            <button ng-click="jsDoDone();do._visible=false;" class="do_done">{{do.checked!='0000-00-00 00:00:00' && "Снять выполнение" || "Выполнить"}}</button>  
+                                            <button ng-click="jsDoDone(client);do._visible=false;" class="do_done">{{do.checked!='0000-00-00 00:00:00' && "Снять выполнение" || "Выполнить"}}</button>  
 
                                             <!-- <a ng-if="do.type=='Тест-драйв'" class="dover_link"><i class="icon-print-1"></i> доверенность на тест</a> 
  -->
-                                            <button class="do_del" ng-click="jsDelDo()" ng-if="!do.readonly">Удалить</button>
+                                            <button class="do_del" ng-click="jsDelDo(client)" ng-if="!do.readonly">Удалить</button>
                                             <button ng-click="jsDoCancel()" class="do_cancel">Отменить</button>
                                       </div>
                                     </div>

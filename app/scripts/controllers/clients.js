@@ -424,37 +424,24 @@ function DoCtrl($scope, myApi, oAuth2, $http) { //контроллер дел
     $scope.can_parse_date = !$scope.can_parse_date;
    }
 
-   $scope.jsDoDone = function() {
+   $scope.jsDoDone = function(client) {
       var now = toMysql( (new Date()) );
 
       $scope.do.checked = ($scope.do.checked==NO_DATE)?now:NO_DATE ;
 
       $scope.jsDoSave();
 
-/*      if( ($scope.do.type == "Выдача") && (confirm("Добавить 3 звонка внимания после выдачи?")) ) {
-          client_id = $scope.client.id;
-          alert(client_id);
-          if(false)
-          myApi.addDo($scope, "Звонок исходящий", client_id).then(function(result){
-            console.info("ADDED",result);
-            var insert_id = result.insert_id;
+      if( ($scope.do.type == "Выдача") ) {
+        setTimeout(function(){          
             myApi.getDo($scope, client.id).then(function(value){
-              client.do = value;
               client._visible = true;
-              var new_do = _.find(client.do, function(el){ return el.id == insert_id; });
-              new_do._visible = true;
-              setTimeout(function(){
-                $("li[mydoid='"+insert_id+"'] textarea:first").focus().select();
-              },1);
-              setTimeout(function(){
-                $("li[mydoid='"+insert_id+"'] textarea:first").focus().select();
-              },600);
+              client.do = value;
             });
+        }, 1300);
 
-          });
+      };
 
       }
-*/   }
 
    $scope.setFocusInWhile = function(obj, $event) {
       alert(1);
@@ -546,12 +533,19 @@ function DoCtrl($scope, myApi, oAuth2, $http) { //контроллер дел
     console.info(angular.copy( $scope.backup_copy ));
     $scope.do = angular.copy( $scope.backup_copy );
    }
-   $scope.jsDelDo = function() {
+   $scope.jsDelDo = function(client) {
           if( confirm("Вы действительно хотите удалить дело №"+$scope.do.id+"?") ) {
               myApi.deleteDo($scope, $scope.do.id).then(function(value){
                 console.info(value);
                 if(value.rows.affectedRows>0) {
-                  $scope.fpk.jsRefreshClients();
+                  //$scope.fpk.jsRefreshClients();
+                  setTimeout(function(){          
+                      myApi.getDo($scope, client.id).then(function(value){
+                        client._visible = true;
+                        client.do = value;
+                      });
+                  }, 1200);
+
                   if($scope.fpk.jsLoadStat) $scope.fpk.jsLoadStat();
                 }
                 else alert("Не могу удилить дело.");
