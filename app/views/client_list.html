@@ -21,7 +21,7 @@
                            <span class="dublicates" ng-if="client.dublicate.length">
 
                              <span ng-repeat="dub in client.dublicate">
-<img ng-if="dub.brand_logo" ng-class="{our_brand:(dub.brand == fpk.brand)}" height="16px" width="25.6px" ng-src="images/logos/{{dub.brand_logo}}" title="{{fpk.jsDubTitle(dub)}}"></img>
+<img ng-if="dub.brand_logo" ng-class="{our_brand:(dub.brand == fpk.brand)}" height="16px" width="25.6px" ng-src="images/logos/{{dub.brand_logo}}" title="{{fpk.jsDubTitle(dub, client)}}"></img>
                              </span>
                              
                            </span>

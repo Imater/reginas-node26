@@ -1783,13 +1783,16 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
 
     }
 
-    $scope.fpk.jsDubTitle = function (dub) {
+    $scope.fpk.jsDubTitle = function (dub, client) {
         if (dub.brand_id == $scope.fpk.brand) dub.brand_title += " (у нас)";
         var t = dub.brand_title + '\n' +
             'клиент: ' + dub.fio + '\n' +
-            'VIN: ' + (dub.vin?dub.vin:'') + '\n' +
             'модель: ' + dub.model + '\n' +
             'менеджер: [' + dub.manager_fio + ']\n';
+
+        if( (dub.vin)&&(dub.vin==client.vin) ) {
+            t+='VIN: ' + dub.vin + ' (уже в работе)\n';
+        }
 
         t += (dub.zv != NO_DATE) ? ("Звонок: " + $filter('nicedatetime')(dub.zv) + "\n") : "";
         t += (dub.vz != NO_DATE) ? ("Визит: " + $filter('nicedatetime')(dub.vz) + "\n") : "";
