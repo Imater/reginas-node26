@@ -14,7 +14,8 @@
                             <i class="icon-record"></i>
                            </div>
 
-                           <div class="client_car" title="{{client.status}}" style="background:-webkit-gradient(linear, right top, left top, color-stop({{fpk.car_status[client.status].procent}}, #2b365a), color-stop({{fpk.car_status[client.status].procent}}, #516F8F)) !important;">
+                           <div class="client_car" ng-class="{width_vin:client.vin}" title="{{client.status}}
+{{client.vin}}" style="background:-webkit-gradient(linear, right top, left top, color-stop({{fpk.car_status[client.status].procent}}, #2b365a), color-stop({{fpk.car_status[client.status].procent}}, #516F8F)) !important;">
                            {{fpk.models[client.model].short?fpk.models[client.model].short:'&nbsp;'}}
                            </div>
 

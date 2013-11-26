@@ -1518,6 +1518,11 @@ background-color: none !important;
                 border-bottom: 1px solid #FFF;
 
             }
+            .width_vin:after {
+                content: "+";
+                color: #e6ffe0;
+
+            }
             .client_checked {
                 position: absolute;
                 right: 15px;
