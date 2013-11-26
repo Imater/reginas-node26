@@ -39,7 +39,7 @@
 					<li ng-repeat="mydo in a.mydo" ng-click="jsEditAdminDo(mydo)" ng-class="{active:( (mydo.id == edit_mydo.id) && (cup_new_show) )}">
 						В <b>{{mydo.date1 | nicetime}}</b> был <b>{{jsDoTypeText(mydo.type)}}</b> по модели 
 						<b>{{(mydo.model==-1)?"неизвестно":fpk.models[mydo.model].model}}</b>.
-						Источник рекламы: <b>{{fpk.jsFindInArray(fpk.commercials,"id",mydo.commercial).title}}</b><span ng-if="mydo.fio">. Клиент: <b>{{mydo.fio}}</b></span>
+						Источник рекламы: <b>{{fpk.jsFindInArray(fpk.commercials,"id",mydo.commercial).title}}</b><span ng-if="mydo.fio">. Клиент: <b>{{mydo.fio}}</b>. Телефон: {{mydo.phone}} <b>{{mydo.client_type}}</b></span>
 						<a class="pull-right"><i class="icon-edit"></i></a>
 					</li>
 				</ol>
@@ -307,6 +307,10 @@
 
 	  		<a class="close_new pull-right" ng-click="jsCloseAdminDo()">Закрыть</a>
 	  		<a class="del_new pull-right" ng-click="jsDelAdmin(edit_mydo.id)">Удалить</a>
+	  		
+	  		<a class="del_new btn btn-xs btn-warning" ng-click="jsAddClientFromAdmin(edit_mydo)" style="margin-top:5px;">
+	  			<b>Создать рабочий лист для менеджера</b>
+	  		</a>
 
 	  	</div>
 	  </div>
@@ -314,8 +318,8 @@
 	  <div class="row">
 	  	<div class="col-md-8">
             <div class="input-group input-group-sm client_fio_input">
-              <span class="input-group-addon" title="ФИО клиента">ФИО:</span>
-              <input type="text" class="form-control" placeholder="Самойлов Анатолий Петрович" ng-model="edit_mydo.fio">
+              <span class="input-group-addon" title="ФИО клиента"  style="min-width:80px">ФИО:</span>
+              <input auto-complete type="text" class="form-control" placeholder="Самойлов Анатолий Петрович" ng-model="edit_mydo.fio">
             </div>
 
 	  	</div>
@@ -339,6 +343,34 @@
             </div>
 
 		</div>	  
+	  </div> <!-- row -->
+	  <br>
+	  <div class="row">
+	  	<div class="col-md-8">
+            <div class="input-group input-group-sm client_fio_input">
+              <span class="input-group-addon" title="Телефон клиента" style="min-width:80px">Телефон:</span>
+              <input auto-complete type="text" class="form-control" placeholder="89227444440" ng-model="edit_mydo.phone">
+            </div>
+	  	</div>
+		<div class="col-md-4">
+
+            <div class="btn-group">
+              <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                Тип клиента: <b>{{edit_mydo.client_type}}</b> <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu pull-right" role="menu">
+                  <li ng-click="edit_mydo.client_type='Физическое лицо'">
+                  	<a><i class="icon-user"></i>Физическое лицо</a>
+                  </li>
+                  <li ng-click="edit_mydo.client_type='Юридическое лицо'">
+                  	<a><i class="icon-user"></i>Юридическое лицо</a>
+                  </li>
+              </ul>
+            </div>
+
+		</div>	  
+
+
 	  </div> <!-- row -->
 
 

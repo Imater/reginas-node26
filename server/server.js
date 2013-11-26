@@ -265,12 +265,16 @@ app.configure(function(){
 app.use(express.bodyParser());
 
 
+//              process.send({ message_type: "newclient", user: manager_id, client_id: insert_id });
 
 
   //центр пересылки сообщений по сокету
   process.on('message', function(msg) {
     if(msg.message_type) {
-    	if(msg.message_type == "loadstat") {
+      if(msg.message_type=="newclient") {
+        io.sockets.emit('newclient', {user: msg.user, client_id: msg.client_id});
+        console.info("PUSHED: ", {user: msg.user, client_id: msg.client_id});
+      } else if(msg.message_type == "loadstat") {
 	 	  	//global.report.loadstat();
 	 	  	io.sockets.emit('loadstat', {brand: msg.brand});
     	} else if(msg.message_type == "chat") {
@@ -2481,6 +2485,43 @@ exports.saveAdmin = function(request, response) {
   var mydo_id = changes.id;
 
  jsCheckToken(request.query.token, response).done(function(user_id){
+  console.info("user_id = ",user_id);
+  //добавляем менеджеру рабочий лист
+  if( request.body.need_add_client ) {
+    var client = {
+      fio: changes.fio + " (добавлен_администратором)",
+      comment: "Добавлен администратором ("+changes.client_type+")",
+      phone1: (changes.phone?changes.phone:''),
+      date: changes.date1,
+      brand: changes.brand,
+      manager_id: changes.manager_id,
+      model: changes.model,
+      commercial_id: changes.commercial,
+      creditmanager: 'Неизвестно'
+    }
+    console.info("need_add_client = ", client);
+    pool.query("INSERT INTO 1_clients SET ?", client, function(err, rows, fields){
+      console.info("client_added = ",err);
+      var insert_id = rows.insertId;
+      var brand_id = changes.brand;
+      var manager_id = changes.manager_id;
+      var i=1;
+      var do_type = 'vz';
+      if(changes.type=='zv') var do_type = 'zv';
+
+      jsAddDoToClient(insert_id, do_type, brand_id, user_id, manager_id, i).then(function(result){
+        console.info("Дело добавлено", result);
+        jsUpdateClient(insert_id).then(function(){
+          console.info("insert_id = ", insert_id);
+          setTimeout(function(){
+              process.send({ message_type: "newclient", user: manager_id, client_id: insert_id });
+          },5);
+        });
+      });
+    });
+
+  } 
+
 
   query = "UPDATE 1_doadmin SET ? WHERE id = '"+mydo_id+"'";
 

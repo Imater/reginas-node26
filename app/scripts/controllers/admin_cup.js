@@ -192,6 +192,17 @@ myApp.controller('adminCtrl', function ($scope, $resource, $rootScope, $location
           });
     }
 
+    $scope.jsAddClientFromAdmin = function(edit_client) {
+        if(true||confirm("Создать рабочий лист для менеджера ["+edit_client.fio+"]?")) {
+            myApi.saveAdminForManager($scope, edit_client).then(function(result){
+                alert("Рабочий лист создан и отправлен менеджеру. Спасибо.");    
+                console.info("admin_saved",result);
+            });
+            
+        }
+    }
+
+
     $scope.jsCloseAdminDo = function() {
     	$scope.cup_new_show=false;
     }

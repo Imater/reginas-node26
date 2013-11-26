@@ -63,6 +63,7 @@
                             <span ng-if="client.creditmanager">[оплата: <b>{{client.creditmanager}}</b>]<br></span>
                             <span ng-if="client.commercial_id">[откуда узнали: <b>{{fpk.jsFindInArray(fpk.commercials,"id",client.commercial_id).title}}</b>]<br></span>
                             <span ng-if="client.vin">[VIN: <b>{{client.vin}}</b>]<br></span>
+                            <span ng-if="client.car_color">[Цвет: <b>{{client.car_color}}</b>]<br></span>
                             <span ng-if="client.email">[Email: <b>{{client.email}}</b>]<br></span>
                             <span ng-if="client.comment.length">{{client.comment}}<br></span><span style="font-size:0px;">{{client.comment.length}}</span>[Менеджер: <i class="icon-user"></i><b>{{fpk.jsFindInArray(fpk.all_managers,"id",client.manager_id).fio}}</b>]<br>
                             <font color="#999697">Дата создания: {{client.date | nicedatetime}}</font>
@@ -241,12 +242,21 @@
 
                               <div class="col-md-6">
                                 <div class="input-group input-group-sm vin_group">
+                                  <span class="input-group-addon" style="min-width:50px">Vin</span>
                                   <input type="text" class="form-control" ng-model="client.vin" placeholder="Vin-код или номер заказа">
-                                  <span class="input-group-addon">Vin</span>
                                 </div>                              
+
+                                <div class="input-group input-group-sm vin_group">
+                                  <span class="input-group-addon" style="min-width:50px">Цвет</span>
+                                  <input type="text" class="form-control" ng-model="client.car_color" placeholder="белый перламутр">
+                                </div>                              
+
+
                               </div>
 
                             </div>
+
+
 
                             <div class="row">
                             

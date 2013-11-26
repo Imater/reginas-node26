@@ -1240,6 +1240,33 @@ myApp.factory('myApi', function ($http, $q, oAuth2) {
 
 
         },
+        saveAdminForManager: function ($scope, changes) {
+            var dfd = $q.defer();
+
+            oAuth2.jsGetToken($scope).done(function (token) {
+
+                $http({
+                    url: '/api/v1/admin/' + changes.id,
+                    method: "PUT",
+                    isArray: true,
+                    data: {
+                        changes: changes,
+                        need_add_client: true
+                    },
+                    params: {
+                        token: token,
+                        brand: $scope.fpk.brand
+                    }
+                }).then(function (result) {
+                    console.info("ADMIN SAVED: ", result.data);
+                    dfd.resolve(result.data);
+                });
+            });
+
+            return dfd.promise;
+
+
+        },        
         deleteClient: function ($scope, client_id) {
             var dfd = $q.defer();
 
@@ -1910,6 +1937,20 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
                 $scope.fpk.jsLoadStat();
             } else {}
             $rootScope.$broadcast("loadstat");
+        }, 50 + parseInt(Math.random() * 60));
+    });
+
+    var my_tm2;
+    socket.on("newclient", function(msg){
+        $timeout.cancel(my_tm2);
+        my_tm2 = $timeout(function () {
+            if (parseInt(msg.user) == $scope.fpk.the_user.id ) {
+                if(confirm("Администратор добавил вам новый рабочий лист. Открыть?")) {
+                    $scope.fpk.jsShowClientIds( msg.client_id );
+                } else {
+                    alert("Вы можете открыть клиента позже, он у вас 'В работе'");
+                }
+            } else {}
         }, 50 + parseInt(Math.random() * 60));
     });
 
