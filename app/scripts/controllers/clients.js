@@ -302,6 +302,12 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
           var client_id = client.id;
           var do_type_title = do_type.title;
 
+          if( !$scope.fpk.jsCanShowBrand(client.brand) ) {
+            alert('У вас недостаточно прав, чтобы добавлять дела клиентам чужого бренда');
+            return false;
+          }
+
+
           myApi.addDo($scope, do_type_title, client_id).then(function(result){
             console.info("ADDED",result);
             var insert_id = result.insert_id;
