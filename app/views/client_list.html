@@ -15,7 +15,7 @@
                            </div>
 
                            <div class="client_car" ng-class="{width_vin:client.vin}" title="{{client.status}}
-{{client.vin}}" style="background:-webkit-gradient(linear, right top, left top, color-stop({{fpk.car_status[client.status].procent}}, #2b365a), color-stop({{fpk.car_status[client.status].procent}}, #516F8F)) !important;">
+{{client.vin}}" style="background:-webkit-gradient(linear, right top, left top, color-stop({{fpk.car_status[client.status].procent}}, #2b365a), color-stop({{fpk.car_status[client.status].procent}}, #516F8F)) !important;" ng-click="fpk.jsOpenOneCar(client.vin); $event.stopPropagation();">
                            {{fpk.models[client.model].short?fpk.models[client.model].short:'&nbsp;'}}
                            </div>
 
@@ -352,6 +352,85 @@
                                       </div>
                                     </div>
 
+
+                                    <div ng-if="((fpk.brand==2)||(fpk.brand==6))&&do.type=='Договор'" class="com_div">
+                                      <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="btn-group">
+                                              <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" ng-init="jsLoadComplectations(fpk.models[do.test_model_id]);">
+                                                Модель: <b>{{fpk.models[client.model].model}}</b> <span class="caret"></span>
+                                              </button>
+
+                                              <ul class="dropdown-menu" role="menu">
+                                                <li ng-repeat="model in fpk.models_array_show" ng-click="do.test_model_id = model.id; jsLoadComplectations(model);"><a>{{model.model}}</a></li>
+                                                <li class="divider"></li>
+                                                <li><a>Неизвестно</a></li>
+                                              </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+
+                                          <a ng-click="jsClientSave(client);jsDoSave();" target="_blank" href="#/dog_doc/{{client.id}}/{{do.id}}"
+                                          class="btn btn-success pull-right btn-xs">Распечатать договор</a>
+                                        </div>
+
+                                      </div> <!-- row -->
+                                    <div class="row">
+
+                                      <div class="col-md-12 client_passport">
+                                        <div class="input-group input-group-sm">
+                                          <span class="input-group-addon">Паспорт клиента, серия:</span>
+                                          <input type="text" class="form-control pas1" ng-model="client.pas1" placeholder="7502">
+                                          <span class="input-group-addon">№</span>
+                                          <input type="text" class="form-control pas2" ng-model="client.pas2" placeholder="750234">
+                                          <span class="input-group-addon">Дата рождения:</span>
+                                          <input type="text" class="form-control pas4" ng-model="client.birthday" placeholder="12.05.2000">
+                                        </div>
+                                      </div>
+
+                                    </div>
+                                    <div class="row">
+
+                                      <div class="col-md-12 client_passport">
+                                        <div class="input-group input-group-sm">
+                                          <span class="input-group-addon">Выдан:</span>
+                                          <input type="text" class="form-control pas4" ng-model="client.pas4" placeholder="12.05.2000">
+                                          <span class="input-group-addon">Кем выдан:</span>
+                                          <input type="text" class="form-control pas5" ng-model="client.pas5" placeholder="ОВД Калининского района Челябинской области">
+                                        </div>
+                                      </div>
+
+                                    </div>
+
+
+                                    <div class="row">
+
+                                      <div class="col-md-12 client_passport">
+                                        <div class="input-group input-group-sm">
+                                          <span class="input-group-addon">Адрес:</span>
+                                          <input type="text" class="form-control pas5" ng-model="client.client_adress" placeholder="г.Челябинск, ул.Сталеваров, дом 32, кв. 65">
+                                          <span class="input-group-addon">Срок поставки:</span>
+                                          <input type="text" class="form-control pas4" ng-model="do.car_dostavka" placeholder="12.11.2013">
+                                        </div>
+                                      </div>
+
+                                    </div>
+
+                                    <div class="row">
+                                          <div class="col-md-12">
+                                            <div class="input-group input-group-sm car_params">
+                                              <span class="input-group-addon">Итого (авто+окраска+доп.оборуд.+спец.предл.):</span>
+                                              <input type="text" class="form-control pas2" ng-model="do.car_cost_itog" placeholder="461 500">
+                                            </div>
+                                          </div>
+                                    </div> <!-- row -->
+
+
+
+                                    </div>
+
+
+
                                     <div ng-if="do.type=='Трейд-ин'" class="com_div">
                                       <h5>Информация о автомобиле клиента:</h5>
                                       <div class="row">
@@ -416,28 +495,51 @@
 
                                     <div ng-if="do.type=='Ком.предложение'" class="com_div">
                                       <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-8">
                                             <div class="btn-group">
-                                              <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                                              <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" ng-init="jsLoadComplectations(fpk.models[do.test_model_id]);">
                                                 Модель: <b>{{fpk.models[do.test_model_id].model?fpk.models[do.test_model_id].model:'&nbsp;'}}</b> <span class="caret"></span>
                                               </button>
 
                                               <ul class="dropdown-menu" role="menu">
-                                                <li ng-repeat="model in fpk.models_array_show" ng-click="do.test_model_id = model.id"><a>{{model.model}}</a></li>
+                                                <li ng-repeat="model in fpk.models_array_show" ng-click="do.test_model_id = model.id; jsLoadComplectations(model);"><a>{{model.model}}</a></li>
                                                 <li class="divider"></li>
                                                 <li><a>Неизвестно</a></li>
                                               </ul>
-                                            </div>     
-
-
-
+                                            </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
+
                                           <a ng-click="jsClientSave(client);jsDoSave();" target="_blank" href="#/com_doc/{{client.id}}/{{do.id}}"
                                           class="btn btn-success pull-right btn-xs">Распечатать</a>
                                         </div>
 
-                                      </div>
+                                      </div> <!-- row -->
+
+                                      <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="input-group input-group-sm car_params">
+                                              <span style="margin-left: 15px;" class="input-group-addon" data-toggle="dropdown">Код комплектации: <span class="caret"></span></span>
+                                              <ul class="dropdown-menu" role="menu">
+                                                <li ng-repeat="model in fpk.complectations" ng-click="do.car_complectation = model.code; do.car_compl_name = model.name;"><a>{{model.code}} — {{model.name}} — {{model.options.length}}</a></li>
+                                              </ul>
+                                              <input auto-complete-compl type="text" class="form-control" ng-model="do.car_complectation" placeholder="A6S2D261FDH081">
+                                            </div>
+                                            &nbsp;<a ng-click="jsLoadComplectationByCode(do)">загрузить опции по коду {{do.car_complectation}}</a>
+                                            </div>     
+
+
+
+                                        <div class="col-md-6">
+                                            <div class="input-group input-group-sm car_params">
+                                              <span class="input-group-addon">Название комплектации:</span>
+                                              <input type="text" class="form-control" ng-model="do.car_compl_name" placeholder="1,6 MT GL HB">
+                                            </div>
+                                            <a ng-click="jsSaveComplectation(do)" class="pull-right">сохранить опции для кода (по умолчанию)</a>
+
+                                        </div>
+
+                                      </div> <!-- row -->
                                       <div class="row">
                                           <div class="col-md-12">
                                             <div class="input-group input-group-sm car_params">
@@ -506,11 +608,11 @@
                                       <div class="row">
                                           <div class="col-md-6">
                                               <span>Стандартное оборудование:</span>
-                                              <div type="text" class="form-control oborudovanie" ng-model="do.car_equipment" placeholder="18 500 рублей" contenteditable="true"></div>
+                                              <textarea type="text" class="form-control oborudovanie" ng-model="do.car_equipment" placeholder="кондиционер" ng-trim="false"></textarea>
                                           </div>
                                           <div class="col-md-6">
                                               <span>Доп.оборудование с ценами:</span>
-                                              <div type="text" class="form-control oborudovanie" ng-model="do.car_equipment_dop" placeholder="зимняя резина в подарок" contenteditable="true"></div>
+                                              <textarea type="text" class="form-control oborudovanie" ng-model="do.car_equipment_dop" placeholder="парктроники задние" ng-trim="false"></textarea>
                                           </div>
                                       </div> <!-- row -->
 
@@ -518,7 +620,7 @@
                                       <div class="row">
                                           <div class="col-md-12">
                                               <span>Комментарий:</span>
-                                              <div type="text" class="form-control contacts" ng-model="do.car_contacts" placeholder="" contenteditable="true"></div>
+                                              <textarea type="text" class="form-control contacts" ng-model="do.car_contacts" placeholder="" contenteditable="true"></textarea>
                                           </div>
                                       </div> <!-- row -->
 

@@ -83,6 +83,38 @@ myApp.directive('resizable2', function () {
     }
 });
 
+myApp.directive('autoCompleteCompl', function ($timeout, myApi) {
+    return function (scope, iElement, iAttrs) {
+        iElement.autocomplete({
+            delay: 500,
+            source: function (request, response) {
+                var searchtext = request.term;
+                myApi.getAutocompleteCompl(scope, searchtext).then(function (answer) {
+                    var res = [];
+                    $.each(answer, function (i, el) {
+
+                        var title = el.code + " (" + el.name + ") " + "";
+
+                        title = (title).replace(searchtext, "<font color='red'>" + searchtext + "</font>");
+
+                        res.push({
+                            label: title,
+                            value: el.code
+                        })
+                    });
+
+                    response(res);
+                });
+
+            },
+            select: function () {
+                $timeout(function () {
+                    iElement.trigger('input');
+                }, 0);
+            }
+        });
+    };
+});
 
 
 
@@ -111,34 +143,6 @@ myApp.directive('autoComplete', function ($timeout, myApi) {
                     response(res);
                 });
 
-                /*                        response( {
-                          label: "HELLO",
-                          value: "UPS"
-                        } );
-*/
-
-                /*                  $.ajax({
-                    url: "api/v1/autocomplete",
-                    dataType: "jsonp",
-                    data: {
-                      featureClass: "P",
-                      style: "full",
-                      maxRows: 12,
-                      name_startsWith: request.term,
-                      brand: scope.fpk.brand
-                    },
-                    success: function( data ) {
-                      response( $.map( data, function( item ) {
-                        console.info("ANSWER = ",item);
-
-                        return {
-                          label: "HELLO",
-                          value: "UPS"
-                        }
-                      }));
-                    }
-                  });
-*/
             },
             select: function () {
                 $timeout(function () {
@@ -477,6 +481,12 @@ myApp.filter('nicetime', function () {
     }
 });
 
+myApp.filter('nl2p', function () {
+    return function(text){
+        text = String(text).trim();
+        return (text.length > 0 ? text.replace(/[\r\n]+/ig, '<br>') : null);
+    }
+});
 
 
 myApp.filter('nicedate', function () {
@@ -793,6 +803,21 @@ myApp.factory('myApi', function ($http, $q, oAuth2) {
 
             return dfd.promise;
         },
+        getAutocompleteCompl: function ($scope, searchtext) {
+            var dfd = $q.defer();
+            $http({
+                url: '/api/v1/autocomplete_compl',
+                method: "GET",
+                params: {
+                    brand: $scope.fpk.brand,
+                    searchtext: searchtext
+                }
+            }).then(function (result) {
+                dfd.resolve(result.data);
+            });
+
+            return dfd.promise;
+        },
         getDo: function ($scope, id) {
             var dfd = $q.defer();
 
@@ -864,6 +889,26 @@ myApp.factory('myApi', function ($http, $q, oAuth2) {
                         token: token,
                         manager: $scope.fpk.manager_filter,
                         ids: ids
+                    }
+                }).then(function (result) {
+                    dfd.resolve(result.data);
+                });
+            });
+
+            return dfd.promise;
+        },
+        getCarByVin: function ($scope, vin) {
+            var dfd = $q.defer();
+
+            oAuth2.jsGetToken($scope).done(function (token) {
+                $http({
+                    url: '/api/v1/car',
+                    method: "GET",
+                    isArray: true,
+                    params: {
+                        token: token,
+                        manager: $scope.fpk.manager_filter,
+                        vin: vin
                     }
                 }).then(function (result) {
                     dfd.resolve(result.data);
@@ -1800,6 +1845,18 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
     if ($scope.fpk.jsLoadStat) $scope.fpk.jsLoadStat();
 
 
+    $scope.fpk.jsOpenOneCar = function (vin) {
+        myApi.getCarByVin($scope, vin).then(function (car) {
+            //console.info("ids:",clients);
+          if(car.length)
+            {
+            $scope.fpk.show_one_car = true;
+            $scope.fpk.one_car = car[0];
+            }
+        });
+    };
+
+
     $scope.fpk.jsShowClientIds = function (my_ids) {
 
         myApi.getClientIds($scope, my_ids).then(function (clients) {
@@ -2169,6 +2226,13 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
         $scope.fpk.jsRefreshDo($scope);
         $("#myfullcalendar").fullCalendar("refetchEvents");
     }
+
+
+
+    $scope.jsCloseOneCar = function () {
+        $scope.fpk.show_one_car = false;
+        $scope.sms_active = false;
+    };
 
 
     $scope.jsCloseOneClient = function () {

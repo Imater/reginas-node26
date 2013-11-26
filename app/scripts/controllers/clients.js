@@ -52,13 +52,12 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
 
   });
 
-/*  setTimeout(function(){
+  setTimeout(function(){
     $(".client_container:first").click();
     setTimeout(function(){
       $(".do_line")[1].click();
     }, 200);
   },500);
-*/
 /*    myApi.getClient({brand:1, no_out: true, no_dg: true, no_vd:true}).then(function(x){
       $scope.clients = x;
     });
@@ -121,7 +120,7 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
 
 
 
-myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
+myApp.directive("clientList", function ($compile, myApi, $routeSegment, $http) {
   return {
 //    template: '{{local_clients}} {{local_clients.length}} hi!', 
     templateUrl: 'views/client_list.html',
@@ -296,6 +295,55 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment) {
           } else {
             alert("Вы не можете редактировать дела чужого клиента, но можете добавить ему дела. Права на редактирование есть у старшего менеджера и руководителей. Дела выполненные больше чем 3 дня назад, может менять только руководитель.");
           }
+        }
+
+        $scope.jsLoadComplectationByCode = function(mydo) {
+                var searchtext = mydo.car_complectation;
+                myApi.getAutocompleteCompl($scope, searchtext).then(function (answer) {
+                    var res = [];
+                    $.each(answer, function (i, el) {
+                      if(el.code == searchtext) mydo.car_equipment = el.options;
+                    });
+                });
+        };
+
+        $scope.jsSaveComplectation = function(mydo) {
+            if(!$scope.fpk.the_user.rights[0].can_edit_all_client) {
+              alert("Комплектацию может сохранять только руководитель");
+              return true;
+            }
+            $http({
+                url: '/api/v1/complectation',
+                method: "POST",
+                params: {
+                    brand: $scope.fpk.brand
+                },
+                data: {
+                    mydo: mydo
+                }
+            }).then(function (result) {
+                alert("Опции для кода комплектации "+mydo.car_complectation+" сохранены успешно.");
+            });
+
+        }
+
+        $scope.jsLoadComplectations = function(mydo) {
+              if(mydo) {
+                var searchtext = mydo.code;
+                myApi.getAutocompleteCompl($scope, searchtext).then(function (answer) {
+                    var res = [];
+                    $.each(answer, function (i, el) {
+                        res.push({
+                            code: el.code,
+                            name: el.name,
+                            options: el.options
+                        })
+                    });
+                    $scope.fpk.complectations = res;
+                });
+              }
+
+          
         }
 
         $scope.jsAddDo = function(do_type, client) {

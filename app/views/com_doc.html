@@ -18,6 +18,10 @@
 		<th>Модель:</th>
 		<td>{{client.mydo.model}}</td>
 	</tr>
+	<tr ng-if="client.mydo.car_complectation">
+		<th>Комплектация:</th>
+		<td>{{client.mydo.car_complectation}} ({{client.mydo.car_compl_name}})</td>
+	</tr>
 	<tr ng-if="client.mydo.car_motor">
 		<th>Двигатель:</th>
 		<td>{{client.mydo.car_motor}}</td>
@@ -73,8 +77,8 @@
   		<th ng-if="client.mydo.car_equipment_dop">Дополнительные опции:</th>
   	</tr>
   	<tr>
-  		<td  ng-if="client.mydo.car_equipment" ng-bind-html="client.mydo.car_equipment"></td>
-  		<td  ng-if="client.mydo.car_equipment_dop" ng-bind-html="client.mydo.car_equipment_dop"></td>
+  		<td  ng-if="client.mydo.car_equipment" ng-bind-html="client.mydo.car_equipment | nl2p"></td>
+  		<td  ng-if="client.mydo.car_equipment_dop" ng-bind-html="client.mydo.car_equipment_dop | nl2p"></td>
   	</tr>
   </table>
   	<br>

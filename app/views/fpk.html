@@ -219,6 +219,72 @@
           </div>
       </div>
 
+      <div id="new_client_div" ng-if="fpk.show_one_car">
+          <div class="close_one_client" ng-click="jsCloseOneCar()">закрыть <i class="icon-cancel-1"></i></div>
+          <div class="one_client_container">
+            <h3><center>Автомобиль {{fpk.one_car.code_employer}}</center></h3>
+            <table class="one_car">
+
+              <tr>
+                <th>Vin код:</th>
+                <td>{{fpk.one_car.vin}} (№ заказа: {{fpk.one_car.zakaz}})</td>
+              </tr>
+              <tr>
+                <th>Код комплектации:</th>
+                <td>{{fpk.one_car.code}}</td>
+              </tr>
+              <tr>
+                <th>Цвет кузова:</th>
+                <td>{{fpk.one_car.body_color}} ({{fpk.one_car.body_color2}})</td>
+              </tr>
+              <tr>
+                <th>Цвет салона:</th>
+                <td>{{fpk.one_car.trim_color}} ({{fpk.one_car.trim_color2}})</td>
+              </tr>
+              <tr>
+                <th>Год выпуска:</th>
+                <td>{{fpk.one_car.car_year}}</td>
+              </tr>
+              <tr>
+                <th>&nbsp;</th>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <th>Статус логистики:</th>
+                <td>{{fpk.one_car.logistic_status}} ({{fpk.one_car.logistic_date}})</td>
+              </tr>
+              <tr>
+              <tr>
+                <th>Код заказа:</th>
+                <td>{{fpk.one_car.ordered_by}} (тип оплаты: "{{fpk.one_car.payment_type}}")</td>
+              </tr>
+              <tr>
+                <th>Дата заказа:</th>
+                <td>{{fpk.one_car.order_status_date}} ({{fpk.one_car.order_status}})</td>
+              </tr>
+              <tr>
+                <th>Тип использования:</th>
+                <td>{{fpk.one_car.vehicle_usage}}</td>
+              </tr>
+              <tr>
+                <th>Customs passed:</th>
+                <td>{{fpk.one_car.customs_passed}}</td>
+              </tr>
+              <tr>
+                <th>Дата начала консигнации:</th>
+                <td>{{fpk.one_car.consignment_date}}</td>
+              </tr>
+              <tr>
+                <th>Дата окончания консигнации:</th>
+                <td>{{fpk.one_car.consignment_date_end}}</td>
+              </tr>
+
+
+            </table>
+          </div>
+      </div>
+
+
 
 <!--
 <div ng-show="view_switch==1">

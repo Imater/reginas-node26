@@ -41,6 +41,7 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
             .when('/fpk/clients', 's1.clients')
             .when('/test_doc/:client/:do', 'test_doc')
             .when('/com_doc/:client/:do', 'com_doc')
+            .when('/dog_doc/:client/:do', 'dog_doc')
             .when('/fpk/reiting', 's1.reiting')
             .when('/fpk/st/statistic', 's1.st.statistic')
             .when('/fpk/st/stat_table', 's1.st.stat_table')
@@ -61,6 +62,9 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
             .segment('com_doc', {
                 templateUrl: 'views/com_doc.html',
                 controller: 'comCtrl'})                
+            .segment('dog_doc', {
+                templateUrl: 'views/dog_doc.html',
+                controller: 'dogCtrl'})                
             .segment('user', {
                 templateUrl: 'views/user.html',
                 controller: 'loginCtrl'})

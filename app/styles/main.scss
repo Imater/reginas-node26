@@ -3041,5 +3041,18 @@ li.needgroup {
     }
 }
 
-
+.one_car {
+    background: #FFF;
+    font-size: 14px;
+    margin: 0 auto;
+    width: 80%;
+    td, th {
+        padding: 2px 5px;
+        font-weight: bold;
+    }
+    th {
+        font-weight: normal;
+        text-align: right;
+    }
+}
 

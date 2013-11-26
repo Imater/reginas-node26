@@ -648,6 +648,22 @@ exports.getAutocomplete = function(request,response) {
 
 }
 
+exports.getAutocompleteCompl = function(request,response) {
+
+//  var user_id = request.query.user_id;
+  var brand = request.query.brand;
+  var search = request.query.searchtext;
+
+
+  //console.info("HI:",request.query, search);
+
+    var sr = (search+"%");
+
+      pool.query('SELECT * FROM `1_cars_complectation` WHERE brand = ? AND code LIKE ? ORDER by code', [brand, sr] , function (err, rows, fields) {
+          response.send(rows);
+      }); 
+
+}
 
 
 exports.newMessage = function(request,response) {
@@ -870,6 +886,24 @@ exports.findAllClientsIds = function(request, response) {
   });
 
 }
+
+exports.findCarByVin = function(request, response) {
+  var manager = request.query.manager;
+  var vin = request.query.vin;
+  console.info("vin",vin);
+
+  var myquery = "SELECT * FROM 1_cars_portal WHERE vin = ?";
+
+  jsCheckToken(request.query.token, response).done(function(user_id){
+
+      pool.query(myquery, [vin], function (err, rows, fields) {
+        console.info(err)
+        response.send(rows);
+      }); 
+  });
+
+}
+
 
 exports.findAllClients = function(request, response) {
 
@@ -3098,9 +3132,19 @@ exports.test2 = function(request, response) {
   var dfdArray = [];
   var dfd = $.Deferred();
 
-  pool.query('SELECT id FROM `1_clients` WHERE vd!="0000-00-00 00:00:00" LIMIT 200000', function (err, clients, fields) {
+  pool.query('SELECT DISTINCT(cd.code), 1_cars_portal.code_employer, 1_cars_portal.sell_in FROM `1_cars_portal` cd LEFT JOIN 1_cars_portal ON cd.code = 1_cars_portal.code', function (err, clients, fields) {
     $.each(clients, function(i, cl){
-      dfdArray.push( jsUpdateClient(cl.id, "dont_push_to_socket") ); 
+      console.info(cl.code, cl.code_employer);
+      query = "INSERT INTO 1_cars_complectation SET ?";
+      var cr = {
+        code: cl.code,
+        model: cl.code_employer,
+        name: cl.code_employer,
+        cost: cl.sell_in.replace(/[^0-9.]/g, "")
+      }
+      pool.query(query, [cr], function (err, clients, fields) {
+      });
+      
       dfd.resolve();
     });
   });  
@@ -4250,6 +4294,27 @@ exports.loadJsonCup = function(request, response) {
 
 };
 
+exports.loadDogDoc = function(request, response) {
+
+  var brand = request.query.brand;
+  var client_id = request.query.client_id;
+  var do_id = request.query.do_id;
+  var brand = request.query.brand;
+
+  pool.query("SELECT 1_do.*, 1_users.fio manager_fio, 1_users.phone manager_phone, 1_models.model model_name, 1_clients.*, 1_cars_portal.* FROM 1_do LEFT JOIN 1_users ON 1_do.manager_id=1_users.id  LEFT JOIN 1_clients ON 1_do.client=1_clients.id LEFT JOIN 1_models ON 1_clients.model=1_models.id LEFT JOIN 1_cars_portal ON 1_clients.vin=1_cars_portal.vin WHERE 1_do.id=? LIMIT 1", [do_id], function (err, mydo, fields) {
+
+      var client = {
+        dover: "HI",
+        mydo: mydo[0]
+      }
+
+      response.send(client);
+
+  });
+
+
+}
+
 exports.loadComDoc = function(request, response) {
 
   var brand = request.query.brand;
@@ -4397,6 +4462,42 @@ exports.sendSocketMessage = function(request, response) {
 	response.send(true);
 
 }
+
+exports.saveComplectation = function(request, response) {
+    var mydo = request.body.mydo;
+    var brand_id = request.query.brand;
+    //console.info("process", mydo, brand_id);
+    
+/*  mydo.car_equipment;
+    mydo.car_complectation;
+    mydo.car_compl_name;
+*/
+    var query = "SELECT count(*) cnt FROM 1_cars_complectation WHERE code = ? AND brand = ?";
+    pool.query(query, [mydo.car_complectation, brand_id], function (err, compl, fields) {
+      var changes = {
+        code: mydo.car_complectation,
+        options: mydo.car_equipment,
+        model: mydo.car_compl_name,
+        name: mydo.car_compl_name
+      }
+      if(compl[0].cnt) {
+        query = "UPDATE 1_cars_complectation SET ? WHERE code = ? AND brand = ?";
+        pool.query(query, [changes, mydo.car_complectation, brand_id], function (err, compl, fields) {
+          response.send(true);
+        });
+      } else {
+        changes.brand = brand_id;
+        query = "INSERT INTO 1_cars_complectation SET ?";
+        pool.query(query, [changes], function (err, compl, fields) {
+          response.send(true);
+        });        
+      }
+    });
+
+
+
+}
+
 
 
 exports.jsStatBig3 = function(request, response) {
@@ -4807,10 +4908,12 @@ app.get('/api/v1/parseEmail', database.parseEmail);
 
 app.get('/api/v1/test_doc', database.loadTestDoc);
 app.get('/api/v1/com_doc', database.loadComDoc);
+app.get('/api/v1/dog_doc', database.loadDogDoc);
 
 app.get('/api/v1/bigdata', database.loadAllBig);
 app.get('/api/v1/bigdata2', database.loadAllBig2);
 
+app.get('/api/v1/car', database.findCarByVin );
 app.get('/api/v1/client_ids', database.findAllClientsIds );
 app.get('/api/v1/admin_ids', database.findAllAdminIds );
 
@@ -4831,6 +4934,7 @@ app.get('/api/v1/xls', database.loadXLS );
 
 app.get('/api/v1/search', database.searchString );
 app.get('/api/v1/autocomplete', database.getAutocomplete );
+app.get('/api/v1/autocomplete_compl', database.getAutocompleteCompl );
 
 app.get('/api/v1/client/update/:id', database.updateClient );
 app.get('/api/v1/test2', database.test2 );
@@ -4842,7 +4946,7 @@ app.put('/api/v1/organizations', database.saveOrganizations );
 app.post('/api/v1/organizations', database.newOrganizations );
 app.delete('/api/v1/organizations', database.deleteOrganizations );
 
-
+app.post('/api/v1/complectation', database.saveComplectation );
 
 app.get('/api/v1/sms', database.sendSMS );
 
@@ -4884,7 +4988,6 @@ app.get('/api/v1/do', database.getDo );
 app.put('/api/v1/admin/:id', database.saveAdmin );
 app.post('/api/v1/admin', database.newAdmin );
 app.delete('/api/v1/admin/:id', database.deleteAdmin );
-
 
 app.get('/api/v1/do_by_type', database.findClientDoType );
 
