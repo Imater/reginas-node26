@@ -2519,7 +2519,10 @@ exports.saveAdmin = function(request, response) {
         });
       });
     });
-
+    if(changes.brand) {
+      jsClearCacheByBrand( changes.brand );
+      delCache({brand_id:"do:"+changes.brand }); //удаляю кеш календаря
+    }
   } 
 
 
