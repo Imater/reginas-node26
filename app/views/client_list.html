@@ -274,12 +274,7 @@
                                 <a class="pull-right delete_client" ng-click="jsClientDelete(client)" ng-if="fpk.jsCanDeleteClient(client)">Удалить клиента</a>
                               </a>
   
-  <div class="checkbox">
-    <label title="Есть согласие на Обработку Персональных Данных (ОПД)">
-      <input type="checkbox" ng-model="client.can_contact" ng-true-value="1" ng-false-value="0"> согласие на ОПД
-    </label>
-  </div>
-
+  
                               </div>
 
                             <div class="row">
@@ -300,6 +295,15 @@
           
                                       </ul>
                                     </div>                              
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-6 but selectmanager">
+                              <div class="checkbox">
+                                <label title="Есть согласие на Обработку Персональных Данных (ОПД)">
+                                  <input type="checkbox" ng-model="client.can_contact" ng-true-value="1" ng-false-value="0"> Есть подписанное согласие на обработку персональных данных
+                                </label>
+                              </div>
                               </div>
                             </div>
 
