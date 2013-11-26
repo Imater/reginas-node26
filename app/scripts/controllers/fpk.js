@@ -1787,6 +1787,7 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
         if (dub.brand_id == $scope.fpk.brand) dub.brand_title += " (у нас)";
         var t = dub.brand_title + '\n' +
             'клиент: ' + dub.fio + '\n' +
+            'VIN: ' + (dub.vin?dub.vin:'') + '\n' +
             'модель: ' + dub.model + '\n' +
             'менеджер: [' + dub.manager_fio + ']\n';
 

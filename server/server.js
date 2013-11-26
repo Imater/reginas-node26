@@ -3403,8 +3403,10 @@ var jsCheckDublicate = function(client) {
                  (client.phone2?client.phone2:"!!!") + "', '" +
                  (client.phone3?client.phone3:"!!!") + "', '" +
                  (client.phone4?client.phone4:"!!!") + "'";
+  var vin = client.vin;
 
-  var query = 'SELECT 1_clients.*, 1_users.fio manager_fio, 1_models.model, 1_brands.title brand_title, 1_brands.logo brand_logo FROM `1_clients` LEFT JOIN 1_users ON 1_users.id = 1_clients.manager_id LEFT JOIN 1_models ON 1_models.id = 1_clients.model LEFT JOIN 1_brands ON 1_brands.id = 1_clients.brand WHERE ( phone1 IN ('+phones+') OR phone2 IN ('+phones+') OR phone3 IN ('+phones+') OR phone4 IN ('+phones+') ) AND 1_clients.out = "0000-00-00 00:00:00" ';
+
+  var query = 'SELECT 1_clients.*, 1_users.fio manager_fio, 1_models.model, 1_brands.title brand_title, 1_brands.logo brand_logo FROM `1_clients` LEFT JOIN 1_users ON 1_users.id = 1_clients.manager_id LEFT JOIN 1_models ON 1_models.id = 1_clients.model LEFT JOIN 1_brands ON 1_brands.id = 1_clients.brand WHERE ( ( phone1 IN ('+phones+') OR phone2 IN ('+phones+') OR phone3 IN ('+phones+') OR phone4 IN ('+phones+') ) OR vin = "'+vin+'") AND 1_clients.out = "0000-00-00 00:00:00" ';
 
   pool.query(query, function (err, clients, fields) {
     clients = correct_dates(clients);
@@ -3417,6 +3419,7 @@ var jsCheckDublicate = function(client) {
             manager_fio: cl.manager_fio,
             brand_title: cl.brand_title,
             brand_logo: cl.brand_logo,
+            vin: client.vin,
             zv: cl.zv,
             vz: cl.vz,
             tst: cl.tst,
