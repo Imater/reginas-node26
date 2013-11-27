@@ -450,13 +450,16 @@ function jsCheckToken(token, response) {
   var dfd = new $.Deferred();
 
   //console.info("check_token");
+  if(token) {
     pool.query('SELECT *, NOW() FROM `oauth_access_tokens` WHERE access_token = ? AND expires >= DATE_ADD(NOW(), INTERVAL 0 HOUR) ', [token] , function (err, rows, fields) {
 
-        if(rows && rows[0] && rows[0].user_id) {
+        if(rows && rows.length && rows[0] && rows[0].user_id) {
           dfd.resolve( parseInt( rows[0].user_id ) );
 
-          pool.query('UPDATE 1_users SET lastvizit = NOW() WHERE id= ? ', [rows[0].user_id] , function (err, rows, fields) {
-          });
+          if(rows[0].user_id) {
+            pool.query('UPDATE 1_users SET lastvizit = NOW() WHERE id= "'+rows[0].user_id+'"' , function (err, rows, fields) {
+            });
+          }
 
         } else {
           dfd.fail("Token invalid");
@@ -464,6 +467,7 @@ function jsCheckToken(token, response) {
           console.info("Token invalid");
         }
     }); 
+  }
     return dfd.promise();
 
 }
