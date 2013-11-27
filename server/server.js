@@ -3356,7 +3356,7 @@ function jsUpdateClient(client_id, no_push) {
                 console.info("second_update");
               },300);
               if(!rings_ok.r1) {
-                jsAddRingDays(3, the_client[0], start_find_rings_d, today_sqldate);
+                jsAddRingDays(2, the_client[0], start_find_rings_d, today_sqldate);
               }
               if(!rings_ok.r2) {
                 jsAddRingDays(30, the_client[0], start_find_rings_d, today_sqldate);
