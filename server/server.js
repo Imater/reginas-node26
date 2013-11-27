@@ -4069,7 +4069,7 @@ exports.checkSMS = function(request, response) {
 
       if(isProduction) {
       sms.list(sms_texts, function (err, result) {
-          if(result.cnt>0) {
+          if(result && (result.cnt>0) ) {
             
             var query = "UPDATE 1_do SET sms_send = 1 WHERE id IN ("+ids+")";
           pool.query(query, function (err, rows, fields) {
