@@ -518,7 +518,8 @@ exports.getDo = function(request,response) {
   var manager_id = request.query.manager;
   var cal_type = request.query.cal_type;
   if(!cal_type) {
-    console.info("ERROR = ",request.query);
+    response.send(false);
+    return true;
   }
 
   var left_menu = request.query.left_menu;
