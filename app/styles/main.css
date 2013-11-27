@@ -1934,7 +1934,7 @@ a {
   bottom: 0px;
   z-index: 10;
   background: #EEE;
-  padding: 15px;
+  padding: 10px;
   color: #000;
   border-radius: 10px;
   font-size: 12px;
@@ -1945,7 +1945,7 @@ a {
   background-size: 130px; }
   .admin_cup_new ol {
     box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.4);
-    padding: 10px 45px;
+    padding: 5px 45px;
     background: #EEE; }
   .admin_cup_new h5 {
     margin-left: 20px; }
