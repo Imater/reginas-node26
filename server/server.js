@@ -71,7 +71,13 @@ io.set('store', new RedisStore({
         //оповещаем все процессоры 
         $.each(workerAll, function(i, work){
           //console.info("work", work.process.pid);
+          
+          try {
           work.send( msg );
+          } catch(e) {
+            console.info("error_send_msg", e, msg);
+          }
+
         });
       }
     });
