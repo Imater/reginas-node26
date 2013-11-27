@@ -549,8 +549,9 @@ exports.getDo = function(request,response) {
     } else if (cal_type == 'im_slave') {
       var query = 'SELECT 1_do.*, 1_clients.id, 1_clients.fio, 1_models.short, 1_users.fio man FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model  LEFT JOIN 1_users ON 1_do.manager_id = 1_users.id WHERE 1_do.brand = ? AND 1_do.date2<= DATE_ADD(NOW(), INTERVAL 15 DAY) AND 1_do.checked = "0000-00-00 00:00:00" AND 1_do.manager_id = '+user_id+' AND host_id <> 1_do.manager_id ORDER by date2';            
     } else if (cal_type == 'my_completed') {
-      var query = 'SELECT 1_do.*, 1_clients.id, 1_clients.fio, 1_models.short, 1_users.fio man FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model  LEFT JOIN 1_users ON 1_do.manager_id = 1_users.id WHERE 1_do.date2<= DATE_ADD(NOW(), INTERVAL 15 DAY) AND 1_do.checked != "0000-00-00 00:00:00" AND 1_do.host_id = '+user_id+' AND host_id <> 1_do.manager_id ORDER by checked DESC LIMIT 150';            
+      var query = 'SELECT 1_do.*, 1_clients.id, 1_clients.fio, 1_models.short, 1_users.fio man FROM 1_do LEFT JOIN 1_clients ON 1_do.client = 1_clients.id LEFT JOIN 1_models ON 1_models.id =1_clients.model  LEFT JOIN 1_users ON 1_do.manager_id = 1_users.id WHERE 1_do.date2<= DATE_ADD(NOW(), INTERVAL 15 DAY) AND 1_do.checked != "0000-00-00 00:00:00" AND 1_do.host_id = '+user_id+' AND host_id <> 1_do.manager_id AND (true OR brand = ?) ORDER by checked DESC LIMIT 150';            
     }
+    console.info("is_error_here? = ",query);
     if(brand)
       pool.query(query, [ brand ] , function (err, rows, fields) {
           console.info(err);
