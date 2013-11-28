@@ -22,15 +22,17 @@ myApp.controller('adminCtrl', function ($scope, $resource, $rootScope, $location
     }
 
     $scope.jsEffectDay = function(model) {
-        if(model.zv+model.vz == 0) return '';
+        //model.zv
+        //model.zv
+        if( (model.vz+model.zv) == 0) return '';
         return parseInt(100*(model.zv_manager+model.vz_manager)/(model.zv+model.vz))+"%";
     }
 
     $scope.jsEffectMonth = function(model) {
         //model.zv_manager_month+model.vz_manager_month
-
-        if(model.zv_month+model.vz_month == 0) return '';
-        return parseInt(100*(model.zv_manager_month+model.vz_manager_month)/(model.zv_month+model.vz_month))+"%";
+        //model.zv_month model.zv_month
+        if(model.vz_month == 0) return '';
+        return parseInt(100*(model.zv_manager_month+model.vz_manager_month)/(model.vz_month))+"%";
     }
 
     $scope.jsEffectDayTest = function(model) {
@@ -52,9 +54,9 @@ myApp.controller('adminCtrl', function ($scope, $resource, $rootScope, $location
 
     $scope.jsEffectMonthDg = function(model) {
         //model.zv_manager_month+model.vz_manager_month
-
-        if(model.vz_month + model.zv_month == 0) return '';
-        return parseInt(100*(model.dg_month)/(model.vz_month+model.zv_month))+"%";
+        //+model.zv_month
+        if(model.vz_month == 0) return '';
+        return parseInt(100*(model.dg_month)/(model.vz_month))+"%";
     }
 
     $scope.jsEffectDayVd = function(model) {
@@ -64,9 +66,9 @@ myApp.controller('adminCtrl', function ($scope, $resource, $rootScope, $location
 
     $scope.jsEffectMonthVd = function(model) {
         //model.zv_manager_month+model.vz_manager_month
-
-        if(model.vz_month+model.zv_month == 0) return '';
-        return parseInt(100*(model.vd_month)/(model.vz_month+model.zv_month))+"%";
+        //model.zv_month
+        if(model.vz_month == 0) return '';
+        return parseInt(100*(model.vd_month)/(model.vz_month))+"%";
     }
 
     $scope.jsDoTypeText = function(type) {
