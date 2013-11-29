@@ -3366,10 +3366,6 @@ function jsUpdateClient(client_id, no_push) {
               console.info("bad - - - - - - - - - - - - - - - -", the_client[0].fio);                                  
               var start_find_rings_d = frommysql( start_find_rings );
               var today_sqldate = tomysql( new Date() );
-              setTimeout(function(){
-                jsUpdateClient(the_client[0].id, "dont_push_to_socket");
-                console.info("second_update");
-              },300);
               if(!rings_ok.r1) {
                 jsAddRingDays(2, the_client[0], start_find_rings_d, today_sqldate);
               }
@@ -3379,6 +3375,10 @@ function jsUpdateClient(client_id, no_push) {
               if(!rings_ok.r3) {
                 jsAddRingDays(365, the_client[0], start_find_rings_d, today_sqldate);
               }
+              setTimeout(function(){
+                jsUpdateClient(the_client[0].id, "dont_push_to_socket");
+                console.info("second_update");
+              },550);
 
 
             }
