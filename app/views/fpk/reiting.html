@@ -1,6 +1,7 @@
 <div class="scrollable_div">
 
 	<ul class="nav nav-tabs">
+	  <li ng-class="{active:(days==-1)}" ng-click="days=-1"><a>С начала месяца</a></li>
 	  <li ng-class="{active:(days==1)}" ng-click="days=1"><a>1 день</a></li>
 	  <li ng-class="{active:(days==3)}" ng-click="days=3"><a>3 дня</a></li>
 	  <li ng-class="{active:(days==7)}" ng-click="days=7"><a>7 дней</a></li>
@@ -10,7 +11,8 @@
 	  <li ng-class="{active:(days==365)}" ng-click="days=365"><a>365 дней</a></li>
 	</ul>	
 
-	<h2>Рейтинг менеджеров за {{days}} дней</h2>
+	<h2 ng-if="days!=-1">Рейтинг менеджеров за {{days}} дней</h2>
+	<h2 ng-if="days==-1">Рейтинг менеджеров с начала месяца</h2>
 
 	<table class="reiting_table">
 		<tr>

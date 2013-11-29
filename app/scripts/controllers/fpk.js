@@ -1129,7 +1129,12 @@ myApp.factory('myApi', function ($http, $q, oAuth2) {
 
             var days = $scope.days;
 
-            var start_today = toMysql(new Date((new Date(fromMysql($scope.fpk.today_date))).getTime() - 24 * 60 * 60 * 1000 * days));
+            if(days==-1) {
+                var split_date = $scope.fpk.today_date.split("-");
+                var start_today = split_date[0]+"-"+split_date[1]+"-01";
+            } else {
+                var start_today = toMysql(new Date((new Date(fromMysql($scope.fpk.today_date))).getTime() - 24 * 60 * 60 * 1000 * days));                
+            }
 
             oAuth2.jsGetToken($scope).done(function (token) {
 
