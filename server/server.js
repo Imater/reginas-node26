@@ -206,10 +206,10 @@ function delCache(myarg) {
 }
 
 
-var clear_cup_cache = _.throttle(function(){ 
+var clear_cup_cache = _.debounce(function(){ 
       delCache({brand_id: "cup"}).done(function(err, result){
       });
-}, 5000);
+}, 15000);
 
 
 
