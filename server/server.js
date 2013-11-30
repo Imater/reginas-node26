@@ -488,7 +488,7 @@ String.prototype.translit = (function(){
       if(!user_info.user) { return true; }
       the_user = user_info;
 
-      redis_client.hset( "users_online_fio", "user_id:"+the_user.user.fio.translit()+":"+"session_id:"+the_user.sessionid+":"+tomysql(new Date()), JSON.stringify(the_user), function(dd, kk){
+      redis_client.hset( "users_online_fio", "user_id:"+the_user.user.fio.translit()+":brand:"+the_user.user.brand+":"+"session_id:"+the_user.sessionid+":"+tomysql(new Date()), JSON.stringify(the_user), function(dd, kk){
       });
 
       
