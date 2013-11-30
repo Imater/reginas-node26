@@ -352,7 +352,7 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
 
     myIntervalFunction();
 
-    $rootScope.online = "offline";
+    $rootScope.online = false;
 
     $rootScope.jsGetOnline = function(){
         return $rootScope.online;
@@ -360,7 +360,16 @@ function MainCtrl($scope, $routeSegment, $rootScope, myApi, $timeout, $q, oAuth2
 
     $rootScope.jsSetOnline = function(status){
         $rootScope.online = status;
+        if(!$scope.$$phase) {
+          $scope.$digest();
+        }        
     }
+
+    $rootScope.jsGetUserInfo = function(){
+        if($scope.fpk && $scope.fpk.the_user) {
+            return $scope.fpk.the_user;        
+        }
+    }    
 
     $scope.fpk.showfpk = function() {
         var answer = "";

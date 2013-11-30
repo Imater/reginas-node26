@@ -34,6 +34,7 @@
     </ul>
     <ul class="nav navbar-nav navbar-right top_header_filter">
       <li ng-if="!fpk.the_user.rights.isInside"><a>Ограниченный доступ (вы зашли не с рабочей сети)</a></li>
+      <li ng-if="!jsGetOnline()"><a style="color:green">Установка соединения с сервером...</a></li>
       <li ng-if="fpk.inside"><a href="#/fpk/admin_cup" ng-class="{active: $routeSegment.startsWith('s1.admin_cup')}" >Трафик</a></li>
       <li ng-if="fpk.inside"><a href="#/fpk/reiting"  ng-class="{active: $routeSegment.startsWith('s1.reiting')}">Рейтинг менеджеров</a></li>
       <li ng-if="fpk.inside&&fpk.the_user.rights[0].can_edit_models"  ng-class="{active: $routeSegment.startsWith('s1.settings')}"><a href="#/fpk/settings/models">Настройки</a></li>

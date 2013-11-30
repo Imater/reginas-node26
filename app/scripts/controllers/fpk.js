@@ -353,7 +353,6 @@ myApp.directive('datemini', ['$timeout',
 
 
 myApp.factory('socket', function ($rootScope, $timeout) {
-
     //  io.configure(function () { 
     //  io.set("transports", ["xhr-polling"]); 
     //  io.set("polling duration", 10); 
@@ -361,7 +360,32 @@ myApp.factory('socket', function ($rootScope, $timeout) {
     var socket = io.connect(undefined, {
         'connect timeout': 3000
     });
-    console.info("connect...");
+
+    socket.on('close', function () {
+        console.info("server off");
+    });
+    socket.on('timeout', function () {
+        console.info("server off timeout");
+    });
+    var stop_interval;
+    socket.on('connect', function () {
+        console.info('connected...', socket.socket.sessionid);
+        $rootScope.jsSetOnline(true);
+        stop_interval = setInterval(function(){
+            var user_info = $rootScope.jsGetUserInfo();
+            if(user_info) clearTimeout(stop_interval);
+            socket.emit("add_user", { sessionid: socket.socket.sessionid, user: user_info } );
+        }, 500+Math.random()*1000);
+        //$rootScope.fpk.online = false;
+    });
+    socket.on('disconnect', function (){
+        console.info('disconnected...');
+        $rootScope.jsSetOnline(false);
+    });
+    socket.on('EMAIL', function () {
+        alert("NEW MAIL");
+        console.info("NEW EMAIL.");
+    });
 
     /*  var globalEvent = "*";
   socket.$emit = function (name) {
@@ -387,27 +411,8 @@ myApp.factory('socket', function ($rootScope, $timeout) {
 */
     return {
         on: function (eventName, callback) {
-            socket.on('disconect', function () {
-                console.info("server off");
-                $timeout(function () {
-                    $rootScope.jsSetOnline(false);
-                }, 1)
-            });
-            socket.on('connect', function () {
-                if ($rootScope.jsStartSync) $rootScope.jsStartSync();
-                $timeout(function () {
-                    $rootScope.jsSetOnline(true);
-                }, 1);
-
-
-            });
-            socket.on('EMAIL', function () {
-                alert("NEW MAIL");
-                console.info("NEW EMAIL.");
-            });
             socket.on(eventName, function () {
                 var args = arguments;
-                //console.info("on=",socket, eventName);
                 $rootScope.$apply(function () {
                     callback.apply(socket, args);
                 });
@@ -1989,7 +1994,7 @@ myApp.controller('fpkCtrl', function ($scope, $resource, $rootScope, $location, 
     socket.on("sendmessage", function (text) {
         console.info(text)
         alert(text.data);
-    })
+    });
 
     var my_tm;
     socket.on("loadstat", function (msg) {

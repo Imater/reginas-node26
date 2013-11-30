@@ -16,6 +16,33 @@ if (cluster.isMaster) {
   var RedisStore = require('socket.io/lib/stores/redis');
   var redis = require('socket.io/node_modules/redis');
 
+  var subscriber = redis.createClient(),
+      publisher  = redis.createClient();
+
+  publisher.del("users_online");
+
+
+  subscriber.on('error', function(e) {
+     console.log('subscriber', e.stack); 
+  });
+
+  publisher.on('error', function(e) {
+     console.log('publisher', e.stack); 
+  });
+
+  subscriber.on("message", function(channel, message) {
+    console.log("MASTER: Message '" + message + "' on channel '" + channel + "' arrived!")
+  });
+
+  subscriber.on("pmessage", function(pattern, channel,message) {
+    console.log("__ MASTER: Public message:"+message+" (pattern '" + pattern + "') on channel '" + channel + "' arrived!")
+  });
+
+  subscriber.psubscribe(["to:master*", "to:user"], function(){
+    console.info("Subscribe to TEST is OK");
+  });
+  //publisher.publish("test", "SEND FROM SERVER!!!");
+  //publisher.publish("test", "kthxbai");  
 
   var io = require('socket.io').listen(server, {
     log: false
@@ -36,7 +63,7 @@ if (cluster.isMaster) {
   var workers = {};
 
   console.info("numCpus", numCPUs);
-  //numCPUs = 1;
+  //numCPUs = 2;
   for (var i = 0; i < numCPUs; i++) {
     worker = cluster.fork();
     workerAll[worker.process.pid] = worker;
@@ -85,10 +112,10 @@ if (cluster.isMaster) {
 
   });
 
-} else {
+} else { /////////////////////////CREATE CLUSTER///////////////////////////////
 
 
-  ////////////////////////////////////////////////////////////////////
+  
   var express = require('express'),
     app = express(),
     fs = require("fs"),
@@ -97,6 +124,28 @@ if (cluster.isMaster) {
 
   var RedisStore = require('socket.io/lib/stores/redis');
   var redis = require('socket.io/node_modules/redis');
+
+  var subscriber = redis.createClient(),
+      publisher  = redis.createClient();
+
+  subscriber.on('error', function(e) {
+     console.log('subscriber', e.stack); 
+  });
+
+  publisher.on('error', function(e) {
+     console.log('publisher', e.stack); 
+  });
+
+/*  subscriber.on("message", function(channel, message) {
+    console.log("Message PROCESS '" + message + "' on channel '" + channel + "' arrived!")
+  });
+
+  subscriber.subscribe("test", function(){
+    console.info("HELLO!");
+  });
+*/  
+  publisher.publish("to:user", "Hello Server, i'm = "+cluster.worker.id);
+
 
 
   var io = require('socket.io').listen(server, {
@@ -158,6 +207,8 @@ var MongoClient = require('mongodb').MongoClient, format = require('util').forma
   });
 */
   var redis_client = redis.createClient();
+      redis_client.del("users_online");
+
 
   //записывает кэш привязанный к номеру бренда
 
@@ -398,9 +449,27 @@ var MongoClient = require('mongodb').MongoClient, format = require('util').forma
     return dfd.promise();
   }
 
-
+  ///////////////////////S O C K E T _ O N //////////////////////////
   io.sockets.on('connection', function(socket) {
+    var the_user;
     global.report = new Report(socket);
+
+    socket.on('add_user', function( user_info ){
+      if(!user_info.user) { return true; }
+      the_user = user_info;
+      
+      redis_client.hset( "users_online", "user_id:"+the_user.user.id+":"+"session_id:"+the_user.sessionid, JSON.stringify(the_user), function(dd, kk){
+        console.info('add_user to socket = ', cluster.worker.id, ' user_fio: ', the_user.user.fio);
+      });
+    });
+
+    socket.on('disconnect', function(){
+      if(the_user) {
+        redis_client.hdel( "users_online", "user_id:"+the_user.user.id+":"+"session_id:"+the_user.sessionid, function(dd, kk){
+          console.info('remove_user from socket = ', cluster.worker.id, ' user_fio: ', the_user.user.fio);
+        });
+      }
+    });
 
     socket.on('createNote', function(data) {
       socket.broadcast.emit('onNoteCreated', data);
