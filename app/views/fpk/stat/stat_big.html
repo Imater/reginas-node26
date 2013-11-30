@@ -1,103 +1,144 @@
 <div class="scrollable_div clients_big">
-
-	<h3>Аналитика по датам <b ng-if="fpk.manager_filter!=-1">(по менеджеру: {{fpk.jsShowManagerFilter()}})</b></h3>
-
-	<div class="row">
-	  <div class="col-md-4">
-	    <div class="input-group input-group-sm">
-    	  <span class="input-group-addon">Начальная дата:</span>
-      	  <input type="text" class="form-control" datepicker2 ng-model="fpk.d1"  placeholder="01.01.2013">
-    	</div>
+  <h3>
+    Аналитика по датам
+    <b ng-if="fpk.manager_filter!=-1">
+      (по менеджеру: {{fpk.jsShowManagerFilter()}})
+    </b>
+  </h3>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="input-group input-group-sm">
+        <span class="input-group-addon">
+          Начальная дата:
+        </span>
+        <input type="text" class="form-control" datepicker2 ng-model="fpk.d1" placeholder="01.01.2013">
       </div>
-
-	  <div class="col-md-4">
-	    <div class="input-group input-group-sm">
-    	  <span class="input-group-addon">Конечная дата:</span>
-      	  <input type="text" class="form-control" datepicker2 ng-model="fpk.d2"  placeholder="31.01.2013">
-    	</div>
-      </div>
-    </div> <!-- row -->
-    <br>
-    <ul class="nav nav-tabs top_tabs">
-
-      <li ng-class="{active:stat_big_view_switch=='all'}" ng-click="stat_big_view_switch='all'"><a>Все</a></li>
-
-      <li ng-class="{active:stat_big_view_switch=='zv'}" ng-click="stat_big_view_switch='zv'"><a>Звонки</a></li>
-
-      <li ng-class="{active:stat_big_view_switch=='vz'}" ng-click="stat_big_view_switch='vz'"><a>Визиты</a></li>
-
-      <li ng-class="{active:stat_big_view_switch=='tst'}"  ng-click="stat_big_view_switch='tst'"><a>Тесты</a></li>
-
-      <li ng-class="{active:stat_big_view_switch=='dg'}" ng-click="stat_big_view_switch='dg'"><a>Договора</a></li>
-
-      <li ng-class="{active:stat_big_view_switch=='vd'}" ng-click="stat_big_view_switch='vd'"><a>Выдачи</a></li>
-
-      <li ng-class="{active:stat_big_view_switch=='out'}"  ng-click="stat_big_view_switch='out'"><a>Расторжения</a></li>
-
-      <li ng-class="{active:stat_big_view_switch=='out_all'}"  ng-click="stat_big_view_switch='out_all'"><a>OUT</a></li>
-
-    </ul>
-    <br>
-    <div class="btn-group">
-      <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-        Группировать по: <b ng-if="group1=='model'">Модели</b><b ng-if="group1=='manager_id'">Менеджеру</b> <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" role="menu">
-        <li ng-click="group1 = 'model'; group2 = 'short'"><a>
-          Модели автомобиля  
-        </a></li>
-        <li ng-click="group1 = 'manager_id'; group2 = 'user_fio'"><a>
-          Менеджеру
-        </a></li>
-
-      </ul>
     </div>
-    &nbsp;&nbsp;
-    <button class="btn btn-success btn-sm" ng-click="show_days=!show_days"><span ng-if="!show_days">Показать</span><span ng-if="show_days">Скрыть</span> дни</button>
-    &nbsp;&nbsp;
-    <b style="color:#888">Можете включить "Фильтр" по одному менеджеру</b>
-
-
-    <div id="two_tables">
-      <table id="table_left">
+    <div class="col-md-4">
+      <div class="input-group input-group-sm">
+        <span class="input-group-addon">
+          Конечная дата:
+        </span>
+        <input type="text" class="form-control" datepicker2 ng-model="fpk.d2" placeholder="31.01.2013">
+      </div>
+    </div>
+  </div>
+  <!-- row -->
+  <br>
+  <ul class="nav nav-tabs top_tabs">
+    <li ng-class="{active:stat_big_view_switch=='all'}" ng-click="stat_big_view_switch='all'">
+      <a>Все</a>
+    </li>
+    <li ng-class="{active:stat_big_view_switch=='zv'}" ng-click="stat_big_view_switch='zv'">
+      <a>Звонки</a>
+    </li>
+    <li ng-class="{active:stat_big_view_switch=='vz'}" ng-click="stat_big_view_switch='vz'">
+      <a>Визиты</a>
+    </li>
+    <li ng-class="{active:stat_big_view_switch=='tst'}" ng-click="stat_big_view_switch='tst'">
+      <a>Тесты</a>
+    </li>
+    <li ng-class="{active:stat_big_view_switch=='dg'}" ng-click="stat_big_view_switch='dg'">
+      <a>Договора</a>
+    </li>
+    <li ng-class="{active:stat_big_view_switch=='vd'}" ng-click="stat_big_view_switch='vd'">
+      <a>Выдачи</a>
+    </li>
+    <li ng-class="{active:stat_big_view_switch=='out'}" ng-click="stat_big_view_switch='out'">
+      <a>Расторжения</a>
+    </li>
+    <li ng-class="{active:stat_big_view_switch=='out_all'}" ng-click="stat_big_view_switch='out_all'">
+      <a>OUT</a>
+    </li>
+  </ul>
+  <br>
+  <div class="btn-group">
+    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+      Группировать по:
+      <b ng-if="group1=='model'">
+        Модели
+      </b>
+      <b ng-if="group1=='manager_id'">
+        Менеджеру
+      </b>
+      <span class="caret">
+      </span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li ng-click="group1 = 'model'; group2 = 'short'">
+        <a>
+          Модели автомобиля  
+        </a>
+      </li>
+      <li ng-click="group1 = 'manager_id'; group2 = 'user_fio'">
+        <a>
+          Менеджеру
+        </a>
+      </li>
+    </ul>
+  </div>
+  &nbsp;&nbsp;
+  <button class="btn btn-success btn-sm" ng-click="show_days=!show_days">
+    <span ng-if="!show_days">
+      Показать
+    </span>
+    <span ng-if="show_days">
+      Скрыть
+    </span>
+    дни
+  </button>
+  &nbsp;&nbsp;
+  <b style="color:#888">
+    Можете включить "Фильтр" по одному менеджеру
+  </b>
+  <div id="two_tables">
+    <table id="table_left">
+      <tr>
+        <th class="group_value">
+          Группа:
+          <br>
+          &nbsp;
+        </th>
+        <th>
+        </th>
+      </tr>
+      <tr ng-repeat="group_line in stat_big">
+        <td class="group_value">
+          <div class="gr_val">
+            {{group_line.group_value.split(':')[0]}}
+          </div>
+        </td>
+        <td>
+          <div class="gr_icon" ng-repeat="dt in do_types" ng-show="(stat_big_view_switch==dt.typ)||(stat_big_view_switch=='all')">
+            <span>
+              {{dt.tshort}}
+            </span>
+            <img ng-src="{{dt.img}}" class="dt" title="{{dt.title}}">
+          </div>
+        </td>
+      </tr>
+    </table>
+    <div id="table_right">
+      <table>
         <tr>
-          <th class="group_value">
-            Группа:<br>
-            &nbsp;
-          </th>
-          <th>
+          <th ng-repeat="top in col_dates" class="cnt header_dates" ng-bind-html="jsShowDate(top)"
+          ng-class="{'cnt_week':top.date.week, 'cnt_month': top.date.month}">
           </th>
         </tr>
         <tr ng-repeat="group_line in stat_big">
-          <td class="group_value">
-           <div class="gr_val">{{group_line.group_value.split(':')[0]}}</div>
-          </td>
-          <td>
-              <div class="gr_icon" ng-repeat="dt in do_types" ng-show="(stat_big_view_switch==dt.typ)||(stat_big_view_switch=='all')">
-                 <span>{{dt.tshort}}</span>
-                 <img ng-src="{{dt.img}}" class="dt" title="{{dt.title}}">               
+          <td ng-repeat="col_date in col_dates" class="cnt" ng-class="{'cnt_week':col_date.date.week, 'cnt_month': col_date.date.month}">
+            <b>
+              {{st = jsFindStat(group_line, col_date);null;}}
+            </b>
+            <span>
+              <div ng-repeat="dt in do_types | jsFilterDo:stat_big_view_switch" ng-click="fpk.jsShowClientIds(st[dt.typ][dt.typ].ids)">
+                <b title="{{st[dt.typ][dt.typ].models}}">
+                  {{st[dt.typ][dt.typ].cnt?st[dt.typ][dt.typ].cnt:"&nbsp;";}}
+                </b>
               </div>
+            </span>
           </td>
         </tr>
       </table>
-
-      <div id="table_right">
-      <table>
-      	<tr>
-      		<th ng-repeat="top in col_dates" class="cnt header_dates" ng-bind-html="jsShowDate(top)" ng-class="{'cnt_week':top.date.week, 'cnt_month': top.date.month}">
-      		</th>
-      	</tr>
-      	<tr ng-repeat="group_line in stat_big">
-      		<td ng-repeat="col_date in col_dates" class="cnt" ng-class="{'cnt_week':col_date.date.week, 'cnt_month': col_date.date.month}">
-            <b>{{st = jsFindStat(group_line, col_date);null;}}</b>
-            <span>
-              <div ng-repeat="dt in do_types | jsFilterDo:stat_big_view_switch" ng-click="fpk.jsShowClientIds(st[dt.typ][dt.typ].ids)">
-        			   <b title="{{st[dt.typ][dt.typ].models}}">{{st[dt.typ][dt.typ].cnt?st[dt.typ][dt.typ].cnt:"&nbsp;";}}</b>                 
-              </div>
-            </span>
-      		</td>
-      	</tr>
-      </table>
     </div>
-
-</div>
+  </div>

@@ -1,658 +1,1185 @@
 <div id="dover">
 	<table class="table_top">
-	<tr>
-		<td>
-			Номер доверенности
-		</td>
-		<td>
-			Дата выдачи
-		</td>
-		<td>
-			Срок действия
-		</td>
-		<td>
-			Должность и фамилия лица, которому выдана доверенность
-		</td>
-		<td>
-			Расписка в получении доверенности
-		</td>
-	</tr>
-
-	<tr>
-		<td>
-			1
-		</td>
-		<td>
-			2
-		</td>
-		<td>
-			3
-		</td>
-		<td class="table_wide">
-			4
-		</td>
-		<td>
-			5
-		</td>
-	</tr>
-
-	<tr>
-		<td>
-			{{dover.number}}
-		</td>
-		<td>
-			{{dover.date}}
-		</td>
-		<td>
-			{{dover.date}}
-		</td>
-		<td>
-			{{dover.manager_fio}}
-		</td>
-		<td>
-			
-		</td>
-	</tr>
-
+		<tr>
+			<td>
+				Номер доверенности
+			</td>
+			<td>
+				Дата выдачи
+			</td>
+			<td>
+				Срок действия
+			</td>
+			<td>
+				Должность и фамилия лица, которому выдана доверенность
+			</td>
+			<td>
+				Расписка в получении доверенности
+			</td>
+		</tr>
+		<tr>
+			<td>
+				1
+			</td>
+			<td>
+				2
+			</td>
+			<td>
+				3
+			</td>
+			<td class="table_wide">
+				4
+			</td>
+			<td>
+				5
+			</td>
+		</tr>
+		<tr>
+			<td>
+				{{dover.number}}
+			</td>
+			<td>
+				{{dover.date}}
+			</td>
+			<td>
+				{{dover.date}}
+			</td>
+			<td>
+				{{dover.manager_fio}}
+			</td>
+			<td>
+			</td>
+		</tr>
 	</table>
-
 	<table class="table_second">
-	<tr>
-		<th class="table_wide">
-			Поставщик
-		</th>
-		<th>
-			Номер и дата наряда (замещающего наряд документа) или извещения
-		</th>
-		<th>
-			Номер и дата документа, подтверждающего выполнение поручения
-		</th>
-	</tr>
-
-	<tr>
-		<td>
-			6
-		</td>
-		<td>
-			7
-		</td>
-		<td>
-			8
-		</td>
-	</tr>
-
-	<tr>
-		<td>
-		&nbsp;
-		</td>
-		<td>
-		&nbsp;
-		</td>
-		<td>
-		&nbsp;
-		</td>
-	</tr>
-
+		<tr>
+			<th class="table_wide">
+				Поставщик
+			</th>
+			<th>
+				Номер и дата наряда (замещающего наряд документа) или извещения
+			</th>
+			<th>
+				Номер и дата документа, подтверждающего выполнение поручения
+			</th>
+		</tr>
+		<tr>
+			<td>
+				6
+			</td>
+			<td>
+				7
+			</td>
+			<td>
+				8
+			</td>
+		</tr>
+		<tr>
+			<td>
+				&nbsp;
+			</td>
+			<td>
+				&nbsp;
+			</td>
+			<td>
+				&nbsp;
+			</td>
+		</tr>
 	</table>
-	<center><i>линия отреза</i></center>
+	<center>
+		<i>
+			линия отреза
+		</i>
+	</center>
 	<hr>
 	<div class="dover_title pull-right">
-	Типовая межотраслевая форма № М-2<br>
-	Утверждена постановлением Госкомстата России от 30.10.97 №71а
+		Типовая межотраслевая форма № М-2
+		<br>
+		Утверждена постановлением Госкомстата России от 30.10.97 №71а
 	</div>
-
 	<div class="okud">
-		<div>Коды</div>
-		<div><span class="left_label">Форма по ОКУД</span>0315001</div>
-		<div><span class="left_label">Форма по ОКПО</span>99272689</div>
+		<div>
+			Коды
+		</div>
+		<div>
+			<span class="left_label">
+				Форма по ОКУД
+			</span>
+			0315001
+		</div>
+		<div>
+			<span class="left_label">
+				Форма по ОКПО
+			</span>
+			99272689
+		</div>
 	</div>
-
 	<div class="organization">
 		<span>
-		Организация: <b>{{dover.organization}}</b>
+			Организация:
+			<b>
+				{{dover.organization}}
+			</b>
 		</span>
 	</div>
-
 	<div class="dover_title_main">
-		Доверенность № <b>{{dover.number}}</b>
-	</div>
-
-	<div class="table_date">
-		<div><span>Дата выдачи:</span> <b>{{dover.date}}</b></div>
-		<div><span>Действительна по:</span> <b>{{dover.date}}</b></div>
-	</div>
-
-	<div class="potrebitel">
+		Доверенность №
 		<b>
-		{{dover.organization}} р/c.{{dover.rs}} {{dover.bank}}
+			{{dover.number}}
 		</b>
 	</div>
-	<center><i>наименование потребителя и его адрес</i></center>
-
-	<div class="rs">Счёт №: р.с.{{dover.rs}} в банке {{dover.bank}}</div>
-	<center><i>наименование банка</i></center>
-
-	<div class="dover_man">Доверенность выдана (продавцу-консультанту): <b>{{dover.manager_fio}}</b></div>
-
-	<div class="dover_man">Паспорт: серия <b>{{dover.passport_seria}}</b> № <b>{{dover.passport_number}}</b></div>
-
-	<div class="dover_man">Кем выдан: <b>{{dover.passport_from}}</b></div>
-
-	<div class="dover_man">Дата выдачи: <b>{{dover.passport_date}}</b></div><br>
-
-	<div class="dover_man underline">На получение от: <span>&nbsp;</span></div>
-	<center><i>наименование поставщика</i></center>
-
-	<div class="dover_man underline">Материальных ценностей: <span>&nbsp;</span></div>
-	<center><i>наименование, номер и дата документа</i></center>
-
-
+	<div class="table_date">
+		<div>
+			<span>
+				Дата выдачи:
+			</span>
+			<b>
+				{{dover.date}}
+			</b>
+		</div>
+		<div>
+			<span>
+				Действительна по:
+			</span>
+			<b>
+				{{dover.date}}
+			</b>
+		</div>
+	</div>
+	<div class="potrebitel">
+		<b>
+			{{dover.organization}} р/c.{{dover.rs}} {{dover.bank}}
+		</b>
+	</div>
+	<center>
+		<i>
+			наименование потребителя и его адрес
+		</i>
+	</center>
+	<div class="rs">
+		Счёт №: р.с.{{dover.rs}} в банке {{dover.bank}}
+	</div>
+	<center>
+		<i>
+			наименование банка
+		</i>
+	</center>
+	<div class="dover_man">
+		Доверенность выдана (продавцу-консультанту):
+		<b>
+			{{dover.manager_fio}}
+		</b>
+	</div>
+	<div class="dover_man">
+		Паспорт: серия
+		<b>
+			{{dover.passport_seria}}
+		</b>
+		№
+		<b>
+			{{dover.passport_number}}
+		</b>
+	</div>
+	<div class="dover_man">
+		Кем выдан:
+		<b>
+			{{dover.passport_from}}
+		</b>
+	</div>
+	<div class="dover_man">
+		Дата выдачи:
+		<b>
+			{{dover.passport_date}}
+		</b>
+	</div>
+	<br>
+	<div class="dover_man underline">
+		На получение от:
+		<span>
+			&nbsp;
+		</span>
+	</div>
+	<center>
+		<i>
+			наименование поставщика
+		</i>
+	</center>
+	<div class="dover_man underline">
+		Материальных ценностей:
+		<span>
+			&nbsp;
+		</span>
+	</div>
+	<center>
+		<i>
+			наименование, номер и дата документа
+		</i>
+	</center>
 	<table class="table_main">
 		<tr>
 			<td>
-			Номер по порядку
+				Номер по порядку
 			</td>
 			<td>
-			Материальные ценности
+				Материальные ценности
 			</td>
 			<td>
-			Единица измерения
+				Единица измерения
 			</td>
 			<td>
-			Количество (прописью)
+				Количество (прописью)
 			</td>
 		</tr>
-
 		<tr>
 			<td>
-			1
+				1
 			</td>
 			<td>
-			2
+				2
 			</td>
 			<td>
-			3
+				3
 			</td>
 			<td>
-			4
+				4
 			</td>
 		</tr>
-
 		<tr>
 			<td>
-			1
+				1
 			</td>
 			<td>
-			Управление автомобилем {{dover.model}}, г/н: {{dover.gos}}, VIN: {{dover.vin}}
+				Управление автомобилем {{dover.model}}, г/н: {{dover.gos}}, VIN: {{dover.vin}}
 			</td>
 			<td>
-			шт
+				шт
 			</td>
 			<td>
-			1 (один)
+				1 (один)
 			</td>
 		</tr>
-
-
 	</table>
-
 	<br>
-
-	<div class="dover_man underline">Подпись лица получившего доверенность:<b></b>удостоверяем</div>
-
-	<center><i>подпись</i></center>
-
-	<div class="dover_man underline"><span>Руководитель:</span><b></b>{{dover.gd}}</div>
-
-	<center><i>подпись</i></center>
-
-	<div class="dover_man underline"><span>Главный бухгалтер:</span><b></b>{{dover.gb}}</div>
-
-	<center><i>подпись</i></center>
-
-	<div class="page_break"></div>
-	
-	<br><br>
-	<h6 class="pull-right">Приложение №1</h6>
+	<div class="dover_man underline">
+		Подпись лица получившего доверенность:
+		<b>
+		</b>
+		удостоверяем
+	</div>
+	<center>
+		<i>
+			подпись
+		</i>
+	</center>
+	<div class="dover_man underline">
+		<span>
+			Руководитель:
+		</span>
+		<b>
+		</b>
+		{{dover.gd}}
+	</div>
+	<center>
+		<i>
+			подпись
+		</i>
+	</center>
+	<div class="dover_man underline">
+		<span>
+			Главный бухгалтер:
+		</span>
+		<b>
+		</b>
+		{{dover.gb}}
+	</div>
+	<center>
+		<i>
+			подпись
+		</i>
+	</center>
+	<div class="page_break">
+	</div>
 	<br>
-<center><h5>Обязательство о соблюдении безопасности</h5></center>
-<h5><b class="pull-left">г. {{dover.city}}</b> <b class="pull-right">{{dover.date}}</b></h5>
-
-<br><br>
-<p>Я {{dover.client_fio}} дата рождения: {{dover.client_birthday}}, проживающий(-ая) по адресу: {{dover.client_adress}} принимая участие в тест-драйве автомобиля {{dover.model}} далее – тест-драйв, организатором которого является {{dover.organization}} (далее – Организатор) настоящим подтверждаю, что:	</p>
-1) до начала проведения тест-драйва был(-а) проинструктирован(-а) о правилах безопасности, которые необходимо соблюдать и о возможных последствиях нарушения этих правил;<br>
-2) в ходе проведения тест-драйва беру на себя всю ответственность за мою собственную безопасность и безопасность лиц, находящихся в автомобиле и на трассе и обязуюсь неукоснительно выполнять все требования инструкторов;	<br>
-3) участвую в тест-драйве по моей собственной воле, осознавая свою квалификацию и водительский опыт;	<br>
-4) имею действующее водительское удостоверение;	<br>
-5) не имею медицинских противопоказаний (головокружение, сердечная недостаточность, эпилепсия и пр.) для вождения автомобиля;	<br>
-6) накануне участия в тест-драйве (прохождения трассы) алкоголь и наркосодержащие вещества, лекарства и препараты, при приеме которых установлены противопоказания для вождения, не принимал(-а);<br>	
-7) отказываюсь от каких-либо возможных претензий, исков и иных требований, в том числе претензий и/или исков о возмещении вреда жизни и здоровью, морального ущерба к организатору тест-драйва и/или к сотрудникам организатора тест-драйва, которые могут возникнуть в результате невыполнения/ненадлежащего выполнения мной перечисленных выше обязательств, а также в результате каких-либо действий/бездействия с моей стороны, либо в результате любых действий/бездействия третьих лиц во время проведения тест - драйва, и иных подобных требований.	<br>
-8) При не соблюдении мною правил дорожного движения при управлении автомобилем несу полную материальную ответственность.	<br>
-9) даю согласие на обработку моих персональных данных путем ведения баз данных автоматизированным, механическим, ручным способом. Цель – участие в тест драйве, направления мне уведомлений, информационных сообщений, рекламных материалов необходимых при выборе автомобиля.
-Перечень персональных данных, на обработку которых дается согласие:
-Фамилия, имя, отчество, год, месяц, дата рождения, контактные телефоны, контактный адрес, контактный email адрес, модель и пробег автомобиля. Перечень действий с персональными данными, на совершение которых дается согласие, общее описание используемых оператором способов обработки:<br>
-сбор - получение персональных данных, накопление, хранение (в электронном виде и на бумажном носителе), уточнение (обновление, изменение), <br>
-уничтожение персональных данных — действия, в результате которых невозможно восстановить содержание персональных данных в информационной системе персональных данных или в результате которых уничтожаются материальные носители персональных данных. 
-При этом организатор тест драйва обязуется соблюдать конфиденциальность, а также обеспечить соблюдение ее уполномоченными лицами в отношении предоставленной информации в соответствии с настоящим согласием.<br>
-Порядок отзыва настоящего согласия по личному заявлению. Срок действия согласия - десять лет.	
-
-<br><br><br>						
-
-	<div class="dover_man underline"><span>Сопровождающее лицо:</span><b></b>{{dover.manager_fio}}</div>
-
-	<center><i>подпись</i></center>
-
-	<div class="dover_man underline"><span>Участник:</span><b></b>{{dover.client_fio}}</div>
-
-	<center><i>подпись</i></center>
-
-	<div class="page_break"></div>
-<br><br><br>
-
-<center><h5>СОГЛАСИЕ НА ОБРАБОТКУ ПЕРСОНАЛЬНЫХ ДАННЫХ</h5></center>
-Я, {{dover.client_fio}} (далее – Клиент), зарегистрированный по адресу:{{dover.client_adress}}, телефон: {{dover.client_phone}} адрес эл.почты: {{dover.client_email}}, документ, удостоверяющий личность: {{dover.client_license}}	
-свободно, своей волей и в своем интересе даю согласие на обработку следующих категорий моих персональных данных: <br>
-<p>	
-	фамилия, имя, отчество, адрес регистрации, номер паспорта, кем выдан, дата и место выдачи;
-	дата, номер и другие данные водительского удостоверения (категория, кем выдано, дата и место выдачи), 	
-	дата, время участия в тест-драйве, марка, модель, государственный номер автомобиля, на котором проводился тест-драйв с моим участием, 	
-	путем введения в базы данных автоматизированным, механическим, ручным способом.	
-	дилеру автомобилей марки {{dover.brand_name}} - {{dover.brand_title}} ({{dover.organization}}), далее — Дилер;	
-	импортеру автомобилей марки {{dover.brand_name}} в РФ - {{dover.brand_importer}} , далее — Импортер (адрес: {{dover.brand_adress}} ).	
-</p>
-с целью организации и проведения демонстрационных, тестовых поездок автомобилей {{dover.brand_name}} с целью направления мне уведомлений о новых предложениях, акциях, товарах и услугах Дилера и Импортера, а также исследования мнений об автомобиле, его эксплуатационных свойствах; сбора и обработки статистической информации и проведения маркетинговых исследований.	
-Перечень действий с персональными данными, на совершение которых дается согласие, общее описание используемых оператором способов обработки:	
-	сбор - получение персональных данных у Клиента его персональных данных;	
-	систематизация;	
-	накопление;	
-	хранение (в электронном виде и на бумажном носителе); 	
-	уточнение (обновление, изменение);	
-	распространение - действия, направленные на передачу персональных данных уполномоченным лицам и контрагентам Дилера, Импортера на обработку персональных данных;	
-	обезличивание - действия, в результате которых невозможно определить принадлежность персональных данных конкретному Клиенту;	
-	блокирование - временное прекращение сбора, систематизации, накопления, использования, распространения персональных данных, в том числе их передачи;	
-	уничтожение персональных данных - действия, в результате которых невозможно восстановить содержание персональных данных в информационной системе персональных данных или в результате которых уничтожаются материальные носители персональных данных.	
-При этом Дилер, Импортер обязуются соблюдать конфиденциальность, а также обеспечить соблюдение их уполномоченными лицами и контрагентами конфиденциальности в отношении предоставленной информации в соответствии с настоящим согласии.	
-											 
-Настоящее согласие дается на срок до 10.10.2024	
-Я уведомлен и согласен с тем, что указанное согласие может быть мной отозвано путем направления в письменной форме уведомления в адрес {{dover.organization}}, заказным почтовым отправлением с описью вложения	
-<br><br>
-											 
-	<div class="dover_man underline"><span>Подпись:</span><b></b></div>
-	<center><i>подпись</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>расшифровка</i></center>
-<br><br>
+	<br>
+	<h6 class="pull-right">
+		Приложение №1
+	</h6>
+	<br>
+	<center>
+		<h5>
+			Обязательство о соблюдении безопасности
+		</h5>
+	</center>
+	<h5>
+		<b class="pull-left">
+			г. {{dover.city}}
+		</b>
+		<b class="pull-right">
+			{{dover.date}}
+		</b>
+	</h5>
+	<br>
+	<br>
+	<p>
+		Я {{dover.client_fio}} дата рождения: {{dover.client_birthday}}, проживающий(-ая)
+		по адресу: {{dover.client_adress}} принимая участие в тест-драйве автомобиля {{dover.model}}
+		далее – тест-драйв, организатором которого является {{dover.organization}} (далее
+		– Организатор) настоящим подтверждаю, что:
+	</p>
+	1) до начала проведения тест-драйва был(-а) проинструктирован(-а) о правилах безопасности,
+	которые необходимо соблюдать и о возможных последствиях нарушения этих правил;
+	<br>
+	2) в ходе проведения тест-драйва беру на себя всю ответственность за мою собственную
+	безопасность и безопасность лиц, находящихся в автомобиле и на трассе и обязуюсь
+	неукоснительно выполнять все требования инструкторов;
+	<br>
+	3) участвую в тест-драйве по моей собственной воле, осознавая свою квалификацию
+	и водительский опыт;
+	<br>
+	4) имею действующее водительское удостоверение;
+	<br>
+	5) не имею медицинских противопоказаний (головокружение, сердечная недостаточность,
+	эпилепсия и пр.) для вождения автомобиля;
+	<br>
+	6) накануне участия в тест-драйве (прохождения трассы) алкоголь и наркосодержащие
+	вещества, лекарства и препараты, при приеме которых установлены противопоказания
+	для вождения, не принимал(-а);
+	<br>
+	7) отказываюсь от каких-либо возможных претензий, исков и иных требований, в том
+	числе претензий и/или исков о возмещении вреда жизни и здоровью, морального ущерба
+	к организатору тест-драйва и/или к сотрудникам организатора тест-драйва, которые
+	могут возникнуть в результате невыполнения/ненадлежащего выполнения мной перечисленных
+	выше обязательств, а также в результате каких-либо действий/бездействия с моей стороны,
+	либо в результате любых действий/бездействия третьих лиц во время проведения тест
+	- драйва, и иных подобных требований.
+	<br>
+	8) При не соблюдении мною правил дорожного движения при управлении автомобилем несу
+	полную материальную ответственность.
+	<br>
+	9) даю согласие на обработку моих персональных данных путем ведения баз данных автоматизированным,
+	механическим, ручным способом. Цель – участие в тест драйве, направления мне уведомлений,
+	информационных сообщений, рекламных материалов необходимых при выборе автомобиля.
+	Перечень персональных данных, на обработку которых дается согласие: Фамилия, имя,
+	отчество, год, месяц, дата рождения, контактные телефоны, контактный адрес, контактный
+	email адрес, модель и пробег автомобиля. Перечень действий с персональными данными,
+	на совершение которых дается согласие, общее описание используемых оператором способов
+	обработки:
+	<br>
+	сбор - получение персональных данных, накопление, хранение (в электронном виде и
+	на бумажном носителе), уточнение (обновление, изменение),
+	<br>
+	уничтожение персональных данных — действия, в результате которых невозможно восстановить
+	содержание персональных данных в информационной системе персональных данных или в
+	результате которых уничтожаются материальные носители персональных данных. При этом
+	организатор тест драйва обязуется соблюдать конфиденциальность, а также обеспечить
+	соблюдение ее уполномоченными лицами в отношении предоставленной информации в соответствии
+	с настоящим согласием.
+	<br>
+	Порядок отзыва настоящего согласия по личному заявлению. Срок действия согласия
+	- десять лет.
+	<br>
+	<br>
+	<br>
+	<div class="dover_man underline">
+		<span>
+			Сопровождающее лицо:
+		</span>
+		<b>
+		</b>
+		{{dover.manager_fio}}
+	</div>
+	<center>
+		<i>
+			подпись
+		</i>
+	</center>
+	<div class="dover_man underline">
+		<span>
+			Участник:
+		</span>
+		<b>
+		</b>
+		{{dover.client_fio}}
+	</div>
+	<center>
+		<i>
+			подпись
+		</i>
+	</center>
+	<div class="page_break">
+	</div>
+	<br>
+	<br>
+	<br>
+	<center>
+		<h5>
+			СОГЛАСИЕ НА ОБРАБОТКУ ПЕРСОНАЛЬНЫХ ДАННЫХ
+		</h5>
+	</center>
+	Я, {{dover.client_fio}} (далее – Клиент), зарегистрированный по адресу:{{dover.client_adress}},
+	телефон: {{dover.client_phone}} адрес эл.почты: {{dover.client_email}}, документ,
+	удостоверяющий личность: {{dover.client_license}} свободно, своей волей и в своем
+	интересе даю согласие на обработку следующих категорий моих персональных данных:
+	<br>
+	<p>
+		фамилия, имя, отчество, адрес регистрации, номер паспорта, кем выдан, дата и место
+		выдачи; дата, номер и другие данные водительского удостоверения (категория, кем выдано,
+		дата и место выдачи), дата, время участия в тест-драйве, марка, модель, государственный
+		номер автомобиля, на котором проводился тест-драйв с моим участием, путем введения
+		в базы данных автоматизированным, механическим, ручным способом. дилеру автомобилей
+		марки {{dover.brand_name}} - {{dover.brand_title}} ({{dover.organization}}), далее
+		— Дилер; импортеру автомобилей марки {{dover.brand_name}} в РФ - {{dover.brand_importer}}
+		, далее — Импортер (адрес: {{dover.brand_adress}} ).
+	</p>
+	с целью организации и проведения демонстрационных, тестовых поездок автомобилей
+	{{dover.brand_name}} с целью направления мне уведомлений о новых предложениях, акциях,
+	товарах и услугах Дилера и Импортера, а также исследования мнений об автомобиле,
+	его эксплуатационных свойствах; сбора и обработки статистической информации и проведения
+	маркетинговых исследований. Перечень действий с персональными данными, на совершение
+	которых дается согласие, общее описание используемых оператором способов обработки:
+	сбор - получение персональных данных у Клиента его персональных данных; систематизация;
+	накопление; хранение (в электронном виде и на бумажном носителе); уточнение (обновление,
+	изменение); распространение - действия, направленные на передачу персональных данных
+	уполномоченным лицам и контрагентам Дилера, Импортера на обработку персональных данных;
+	обезличивание - действия, в результате которых невозможно определить принадлежность
+	персональных данных конкретному Клиенту; блокирование - временное прекращение сбора,
+	систематизации, накопления, использования, распространения персональных данных, в
+	том числе их передачи; уничтожение персональных данных - действия, в результате которых
+	невозможно восстановить содержание персональных данных в информационной системе персональных
+	данных или в результате которых уничтожаются материальные носители персональных данных.
+	При этом Дилер, Импортер обязуются соблюдать конфиденциальность, а также обеспечить
+	соблюдение их уполномоченными лицами и контрагентами конфиденциальности в отношении
+	предоставленной информации в соответствии с настоящим согласии. Настоящее согласие
+	дается на срок до 10.10.2024 Я уведомлен и согласен с тем, что указанное согласие
+	может быть мной отозвано путем направления в письменной форме уведомления в адрес
+	{{dover.organization}}, заказным почтовым отправлением с описью вложения
+	<br>
+	<br>
+	<div class="dover_man underline">
+		<span>
+			Подпись:
+		</span>
+		<b>
+		</b>
+	</div>
+	<center>
+		<i>
+			подпись
+		</i>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<i>
+	расшифровка
+</i>
+</center>
 <br>
-											 
-			«__________»______________________ 20_______г	
-
-
-
-	<div class="page_break"></div>
-
-<br><br>
+<br>
+<br>
+«__________»______________________ 20_______г
+<div class="page_break">
+</div>
+<br>
+<br>
 <br>
 <table border="0" cellpadding="0" cellspacing="0">
 	<tbody>
 		<tr>
 			<td colspan="11" style="height:65px">
-			{{dover.organization}}
+				{{dover.organization}}
 			</td>
-			<td style="height:65px">&nbsp;</td>
+			<td style="height:65px">
+				&nbsp;
+			</td>
 		</tr>
 		<tr>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
 			<td style="height:15px">
-			<p>&nbsp;</p>
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				<p>
+					&nbsp;
+				</p>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="11" style="height:15px">
-			<p><h5>Разрешение на временный выезд товарного автомобиля</h5></p>
+				<p>
+					<h5>
+						Разрешение на временный выезд товарного автомобиля
+					</h5>
+				</p>
 			</td>
-			<td style="height:15px">&nbsp;</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
 		</tr>
 		<tr>
 			<td colspan="11" style="height:15px">
-			<p><strong>{{dover.date}}&nbsp;г.</strong></p>
+				<p>
+					<strong>
+						{{dover.date}}&nbsp;г.
+					</strong>
+				</p>
 			</td>
-			<td style="height:15px">&nbsp;</td>
-		</tr>
-		<tr>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
 			<td style="height:15px">
-			<p>&nbsp;</p>
+				&nbsp;
 			</td>
 		</tr>
 		<tr>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
 			<td style="height:15px">
-			<p>&nbsp;</p>
+				&nbsp;
 			</td>
-		</tr>
-		<tr>
-			<td colspan="2" style="height:17px">
-			<p>1. Марка (модель):</p>
-			</td>
-			<td colspan="9" style="height:17px">
-			<p>{{dover.model}}</p>
-			</td>
-			<td style="height:17px">&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="2" style="height:17px">
-			<p>2. VIN:</p>
-			</td>
-			<td colspan="9" style="height:17px">
-			<p>{{dover.vin}}</p>
-			</td>
-			<td style="height:17px">&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="2" style="height:17px">
-			<p>3. Цвет :</p>
-			</td>
-			<td colspan="9" style="height:17px">
-			<p>{{dover.color}}</p>
-			</td>
-			<td style="height:17px">&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="2" style="height:17px">
-			<p>4. Гос.рег.знак.:</p>
-			</td>
-			<td colspan="9" style="height:17px">
-			<p>{{dover.gos}}</p>
-			</td>
-			<td style="height:17px">&nbsp;</td>
-		</tr>
-		<tr>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
 			<td style="height:15px">
-			<p>&nbsp;</p>
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				<p>
+					&nbsp;
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				<p>
+					&nbsp;
+				</p>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2" style="height:17px">
-			<p>ФИО клиент:</p>
+				<p>
+					1. Марка (модель):
+				</p>
 			</td>
 			<td colspan="9" style="height:17px">
-			<p>{{dover.client_fio}}</p>
+				<p>
+					{{dover.model}}
+				</p>
 			</td>
-			<td style="height:17px">&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="2" style="height:17px">
-			<p>Паспорт:</p>
-			</td>
-			<td colspan="9" style="height:17px">
-			<p>{{dover.client_pass1}}</p>
-			</td>
-			<td style="height:17px">&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="2" style="height:17px">
-			<p>Выдан:</p>
-			</td>
-			<td colspan="9" style="height:17px">
-			<p>{{dover.client_pass2}}</p>
-			</td>
-			<td style="height:17px">&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="2" style="height:17px">
-			<p>Место жительства:</p>
-			</td>
-			<td colspan="9" style="height:17px">
-			<p>{{dover.client_adress}}</p>
-			</td>
-			<td style="height:17px">&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="2" style="height:17px">
-			<p>Водит. Удостов.:</p>
-			</td>
-			<td colspan="9" style="height:17px">{{dover.client_license}}&nbsp;</td>
-			<td style="height:17px">&nbsp;</td>
-		</tr>
-		<tr>
-			<td style="height:17px">&nbsp;</td>
-			<td style="height:17px">&nbsp;</td>
-			<td style="height:17px">&nbsp;</td>
-			<td style="height:17px">&nbsp;</td>
-			<td style="height:17px">&nbsp;</td>
-			<td style="height:17px">&nbsp;</td>
-			<td style="height:17px">&nbsp;</td>
-			<td style="height:17px">&nbsp;</td>
-			<td style="height:17px">&nbsp;</td>
-			<td style="height:17px">&nbsp;</td>
-			<td style="height:17px">&nbsp;</td>
 			<td style="height:17px">
-			<p>&nbsp;</p>
+				&nbsp;
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2" style="height:17px">
-			<p>ФИО Сопр. лица:</p>
+				<p>
+					2. VIN:
+				</p>
 			</td>
 			<td colspan="9" style="height:17px">
-			<p>{{dover.manager_fio}}</p>
+				<p>
+					{{dover.vin}}
+				</p>
 			</td>
-			<td style="height:17px">&nbsp;</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
 		</tr>
 		<tr>
 			<td colspan="2" style="height:17px">
-			<p>Паспорт:</p>
+				<p>
+					3. Цвет :
+				</p>
 			</td>
 			<td colspan="9" style="height:17px">
-			<p>{{dover.passport_seria}} № {{dover.passport_number}}</p>
+				<p>
+					{{dover.color}}
+				</p>
 			</td>
-			<td style="height:17px">&nbsp;</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
 		</tr>
 		<tr>
 			<td colspan="2" style="height:17px">
-			<p>Выдан:</p>
+				<p>
+					4. Гос.рег.знак.:
+				</p>
 			</td>
 			<td colspan="9" style="height:17px">
-			<p>{{dover.passport_from}}</p>
+				<p>
+					{{dover.gos}}
+				</p>
 			</td>
-			<td style="height:17px">&nbsp;</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
 		</tr>
 		<tr>
-			<td colspan="2" style="height:17px">
-			<p>Водит. Удостов.:</p>
-			</td>
-			<td colspan="9" style="height:17px">
-			<p>{{dover.manager_license}}</p>
-			</td>
-			<td style="height:17px">&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="2" style="height:17px">
-			<p>Сотовый:</p>
-			</td>
-			<td colspan="9" style="height:17px">
-			<p>{{dover.manager_phone}}</p>
-			</td>
-			<td style="height:17px">&nbsp;</td>
-		</tr>
-		<tr>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
 			<td style="height:15px">
-			<p>&nbsp;</p>
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				<p>
+					&nbsp;
+				</p>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2" style="height:17px">
-			<p>Время выезда:</p>
+				<p>
+					ФИО клиент:
+				</p>
 			</td>
 			<td colspan="9" style="height:17px">
-			<p>{{dover.test_time}}</p>
+				<p>
+					{{dover.client_fio}}
+				</p>
 			</td>
-			<td style="height:17px">&nbsp;</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
 		</tr>
 		<tr>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
+			<td colspan="2" style="height:17px">
+				<p>
+					Паспорт:
+				</p>
+			</td>
+			<td colspan="9" style="height:17px">
+				<p>
+					{{dover.client_pass1}}
+				</p>
+			</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="height:17px">
+				<p>
+					Выдан:
+				</p>
+			</td>
+			<td colspan="9" style="height:17px">
+				<p>
+					{{dover.client_pass2}}
+				</p>
+			</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="height:17px">
+				<p>
+					Место жительства:
+				</p>
+			</td>
+			<td colspan="9" style="height:17px">
+				<p>
+					{{dover.client_adress}}
+				</p>
+			</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="height:17px">
+				<p>
+					Водит. Удостов.:
+				</p>
+			</td>
+			<td colspan="9" style="height:17px">
+				{{dover.client_license}}&nbsp;
+			</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
+		</tr>
+		<tr>
+			<td style="height:17px">
+				&nbsp;
+			</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
+			<td style="height:17px">
+				<p>
+					&nbsp;
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="height:17px">
+				<p>
+					ФИО Сопр. лица:
+				</p>
+			</td>
+			<td colspan="9" style="height:17px">
+				<p>
+					{{dover.manager_fio}}
+				</p>
+			</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="height:17px">
+				<p>
+					Паспорт:
+				</p>
+			</td>
+			<td colspan="9" style="height:17px">
+				<p>
+					{{dover.passport_seria}} № {{dover.passport_number}}
+				</p>
+			</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="height:17px">
+				<p>
+					Выдан:
+				</p>
+			</td>
+			<td colspan="9" style="height:17px">
+				<p>
+					{{dover.passport_from}}
+				</p>
+			</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="height:17px">
+				<p>
+					Водит. Удостов.:
+				</p>
+			</td>
+			<td colspan="9" style="height:17px">
+				<p>
+					{{dover.manager_license}}
+				</p>
+			</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="height:17px">
+				<p>
+					Сотовый:
+				</p>
+			</td>
+			<td colspan="9" style="height:17px">
+				<p>
+					{{dover.manager_phone}}
+				</p>
+			</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
+		</tr>
+		<tr>
 			<td style="height:15px">
-			<p>&nbsp;</p>
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				<p>
+					&nbsp;
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="height:17px">
+				<p>
+					Время выезда:
+				</p>
+			</td>
+			<td colspan="9" style="height:17px">
+				<p>
+					{{dover.test_time}}
+				</p>
+			</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
+		</tr>
+		<tr>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				<p>
+					&nbsp;
+				</p>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="11" style="height:17px">
-			<p>Лицо разрешающее выезд__________________________</p>
+				<p>
+					Лицо разрешающее выезд__________________________
+				</p>
 			</td>
-			<td style="height:17px">&nbsp;</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
 		</tr>
 		<tr>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
 			<td style="height:15px">
-			<p>&nbsp;</p>
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				<p>
+					&nbsp;
+				</p>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="11" style="height:17px">
-			<p>Сопровождающее лицо____________________________</p>
+				<p>
+					Сопровождающее лицо____________________________
+				</p>
 			</td>
-			<td style="height:17px">&nbsp;</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
 		</tr>
 		<tr>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
 			<td style="height:15px">
-			<p>&nbsp;</p>
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				<p>
+					&nbsp;
+				</p>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="11" style="height:17px">
-			<p>Охрана___________________________________________</p>
+				<p>
+					Охрана___________________________________________
+				</p>
 			</td>
-			<td style="height:17px">&nbsp;</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
 		</tr>
 		<tr>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
-			<td style="height:15px">&nbsp;</td>
 			<td style="height:15px">
-			<p>&nbsp;</p>
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				&nbsp;
+			</td>
+			<td style="height:15px">
+				<p>
+					&nbsp;
+				</p>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="11" style="height:17px">
-			<p>При управлении автомобилем несу полную материальную ответственнось____________________</p>
+				<p>
+					При управлении автомобилем несу полную материальную ответственнось____________________
+				</p>
 			</td>
-			<td style="height:17px">&nbsp;</td>
+			<td style="height:17px">
+				&nbsp;
+			</td>
 		</tr>
 	</tbody>
 </table>
-
-<p>&nbsp;</p>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<p>
+	&nbsp;
+</p>
 </div>

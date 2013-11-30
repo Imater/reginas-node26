@@ -4,20 +4,68 @@
 		"selected_items":
 		[
 			[
+				"1_car",
+				"1_cars_portal"
+			],
+			[
+				"1_car_",
+				"1_cars_complectation"
+			],
+			[
+				"sea",
+				"searchtext"
+			],
+			[
+				"1_cars_",
+				"1_cars_complectation"
+			],
+			[
+				"over",
+				"overflow-y"
+			],
+			[
+				"inser",
+				"insert_id"
+			],
+			[
+				"comme",
+				"commercial_id"
+			],
+			[
+				"commer",
+				"commercial_id"
+			],
+			[
+				"start_find_",
+				"start_find_rings_d"
+			],
+			[
+				"start",
+				"start_find_rings"
+			],
+			[
+				"ove",
+				"overflow"
+			],
+			[
+				"font",
+				"font-weight"
+			],
+			[
+				"text",
+				"textarea	Tag"
+			],
+			[
+				"hostcheck",
+				"hostchecked"
+			],
+			[
 				"mar",
 				"margin-left"
 			],
 			[
-				"text",
-				"text-shadow"
-			],
-			[
 				"ng-bin",
 				"ng-bind-html	AngularJS"
-			],
-			[
-				"font",
-				"font-size"
 			],
 			[
 				"nor",
@@ -100,16 +148,8 @@
 				"remind_time"
 			],
 			[
-				"ove",
-				"overflow"
-			],
-			[
 				"background-",
 				"background-size"
-			],
-			[
-				"start",
-				"start_today"
 			],
 			[
 				"no",
@@ -126,10 +166,6 @@
 			[
 				"comm",
 				"commercial"
-			],
-			[
-				"comme",
-				"commercials"
 			],
 			[
 				"min",
@@ -316,10 +352,6 @@
 				"getCUPcars"
 			],
 			[
-				"over",
-				"overflow-x"
-			],
-			[
 				"bac",
 				"background-position"
 			],
@@ -482,38 +514,6 @@
 			[
 				"ng-",
 				"ng-change	AngularJS"
-			],
-			[
-				"fons",
-				"font-size"
-			],
-			[
-				"bor",
-				"border-bottom"
-			],
-			[
-				"ng-re",
-				"ng-repeat	AngularJS"
-			],
-			[
-				"padd",
-				"padding"
-			],
-			[
-				"te",
-				"text-align"
-			],
-			[
-				"panel_",
-				"panel_background"
-			],
-			[
-				"eve",
-				"eventName"
-			],
-			[
-				"this_",
-				"this_to_user_id"
 			]
 		]
 	},
@@ -523,7 +523,7 @@
 			"file": "server/server.js",
 			"settings":
 			{
-				"buffer_size": 149378,
+				"buffer_size": 175380,
 				"line_ending": "Unix"
 			}
 		},
@@ -547,15 +547,7 @@
 			"file": "app/styles/main.scss",
 			"settings":
 			{
-				"buffer_size": 74376,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/styles/import/_editor.scss",
-			"settings":
-			{
-				"buffer_size": 19,
+				"buffer_size": 78217,
 				"line_ending": "Unix"
 			}
 		},
@@ -584,10 +576,41 @@
 			}
 		},
 		{
+			"file": "app/views/com_doc.html",
+			"settings":
+			{
+				"buffer_size": 2749,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/views/dog_doc.html",
+			"settings":
+			{
+				"buffer_size": 31508,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/scripts/controllers/com-ctrl.js",
+			"settings":
+			{
+				"buffer_size": 918,
+				"line_ending": "Unix"
+			}
+		},
+		{
 			"file": "app/index.html",
 			"settings":
 			{
-				"buffer_size": 8176,
+				"buffer_size": 8291,
 				"line_ending": "Unix"
 			}
 		},
@@ -603,7 +626,7 @@
 			"file": "app/views/fpk/stat/stat_big.html",
 			"settings":
 			{
-				"buffer_size": 2074,
+				"buffer_size": 4196,
 				"line_ending": "Unix"
 			}
 		},
@@ -611,7 +634,7 @@
 			"file": "app/scripts/controllers/stat_big_ctrl.js",
 			"settings":
 			{
-				"buffer_size": 1167,
+				"buffer_size": 7091,
 				"line_ending": "Unix"
 			}
 		},
@@ -644,7 +667,7 @@
 			"file": "app/styles/print.scss",
 			"settings":
 			{
-				"buffer_size": 1078,
+				"buffer_size": 1077,
 				"line_ending": "Unix"
 			}
 		},
@@ -652,8 +675,17 @@
 			"file": "app/scripts/app.js",
 			"settings":
 			{
-				"buffer_size": 40049,
+				"buffer_size": 41670,
 				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/scripts/tinycon.js",
+			"settings":
+			{
+				"buffer_size": 6585,
+				"line_ending": "Unix",
+				"name": "/*!"
 			}
 		},
 		{
@@ -665,18 +697,13 @@
 			}
 		},
 		{
-			"file": "app/views/fpk/stat_main.html",
-			"settings":
-			{
-				"buffer_size": 46,
-				"line_ending": "Unix"
-			}
-		},
-		{
+			"contents": "myApp.controller('statMainCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment) {\n\n 	$scope.fpk.leftmenu = { active:8,\n                items : [\n                  {id:10, title:\"Холдинг\", href: \"/fpk/st/statistic\", segment: \"s1.st.statistic\"},\n//                  {id:11, title:\"Подробная таблица\", href: \"/fpk/st/stat_table\", segment: \"s1.st.stat_table\"},\n                  {id:12, title:\"Ежедневный отчёт\", href: \"/fpk/st/stat_day\", segment: \"s1.st.stat_day\"},\n                  {id:13, title:\"Аналитика по датам\", href: \"/fpk/st/stat_big\", segment: \"s1.st.stat_big\"}\n                ]\n\n                };\n\n                var a = 33;\n                  var ds = 329038;\n\n\n});",
 			"file": "app/scripts/controllers/stat_main.js",
+			"file_size": 717,
+			"file_write_time": 130294422970000000,
 			"settings":
 			{
-				"buffer_size": 661,
+				"buffer_size": 727,
 				"line_ending": "Unix"
 			}
 		},
@@ -685,14 +712,6 @@
 			"settings":
 			{
 				"buffer_size": 4384,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/bower_components/angular/new/angular-elastic.js",
-			"settings":
-			{
-				"buffer_size": 6761,
 				"line_ending": "Unix"
 			}
 		},
@@ -708,7 +727,7 @@
 			"file": "app/views/fpk/admin_cup.html",
 			"settings":
 			{
-				"buffer_size": 18951,
+				"buffer_size": 20616,
 				"line_ending": "Unix"
 			}
 		},
@@ -716,7 +735,7 @@
 			"file": "app/scripts/controllers/admin_cup.js",
 			"settings":
 			{
-				"buffer_size": 6529,
+				"buffer_size": 6996,
 				"line_ending": "Unix"
 			}
 		},
@@ -724,7 +743,7 @@
 			"file": "app/views/fpk/reiting.html",
 			"settings":
 			{
-				"buffer_size": 2114,
+				"buffer_size": 2278,
 				"line_ending": "Unix",
 				"name": "<h1>Рейтинг менеджеров</h1>"
 			}
@@ -734,22 +753,6 @@
 			"settings":
 			{
 				"buffer_size": 1278,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/views/fpk/stat/stat_table.html",
-			"settings":
-			{
-				"buffer_size": 1470,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/scripts/controllers/stat_table.js",
-			"settings":
-			{
-				"buffer_size": 683,
 				"line_ending": "Unix"
 			}
 		},
@@ -811,14 +814,6 @@
 			}
 		},
 		{
-			"file": "app/views/fpk/settings/tests.html",
-			"settings":
-			{
-				"buffer_size": 3072,
-				"line_ending": "Unix"
-			}
-		},
-		{
 			"file": "app/scripts/controllers/settings-tests.js",
 			"settings":
 			{
@@ -843,6 +838,14 @@
 			}
 		},
 		{
+			"file": "app/views/fpk/settings/tests.html",
+			"settings":
+			{
+				"buffer_size": 3099,
+				"line_ending": "Unix"
+			}
+		},
+		{
 			"file": "app/scripts/controllers/settings.js",
 			"settings":
 			{
@@ -862,7 +865,7 @@
 			"file": "app/scripts/controllers/fpk-stat.js",
 			"settings":
 			{
-				"buffer_size": 4564,
+				"buffer_size": 4970,
 				"line_ending": "Unix"
 			}
 		},
@@ -887,7 +890,7 @@
 			"file": "app/views/fpk.html",
 			"settings":
 			{
-				"buffer_size": 15914,
+				"buffer_size": 19228,
 				"line_ending": "Unix"
 			}
 		},
@@ -895,7 +898,7 @@
 			"file": "app/scripts/controllers/fpk.js",
 			"settings":
 			{
-				"buffer_size": 61100,
+				"buffer_size": 83786,
 				"line_ending": "Unix"
 			}
 		},
@@ -935,7 +938,7 @@
 			"file": "app/views/client_list.html",
 			"settings":
 			{
-				"buffer_size": 38554,
+				"buffer_size": 60315,
 				"line_ending": "Unix"
 			}
 		},
@@ -951,23 +954,7 @@
 			"file": "app/scripts/controllers/clients.js",
 			"settings":
 			{
-				"buffer_size": 17654,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/Applications/MAMP/htdocs/fpk/fpk-reginas/db2.php",
-			"settings":
-			{
-				"buffer_size": 777,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/Applications/MAMP/htdocs/fpk/fpk-reginas/db.php",
-			"settings":
-			{
-				"buffer_size": 40765,
+				"buffer_size": 19917,
 				"line_ending": "Unix"
 			}
 		},
@@ -1023,7 +1010,7 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 289.0,
+		"height": 313.0,
 		"selected_items":
 		[
 			[
@@ -1032,14 +1019,18 @@
 			],
 			[
 				"Snippet: ",
-				"Snippet: |currency"
+				"Snippet: Get Elements"
+			],
+			[
+				"Package Contro",
+				"Package Control: Install Package"
 			],
 			[
 				"pa",
 				"Package Control: Install Package"
 			]
 		],
-		"width": 449.0
+		"width": 579.0
 	},
 	"console":
 	{
@@ -1062,6 +1053,22 @@
 	},
 	"file_history":
 	[
+		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/Alignment/Default (OSX).sublime-keymap",
+		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/Alignment/Base File.sublime-settings",
+		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/User/EsFormatter.sublime-settings",
+		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/EsFormatter/EsFormatter.sublime-settings",
+		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/User/Default (OSX).sublime-keymap",
+		"/Users/iBook/Desktop/Склад 2711.csv",
+		"/Users/iBook/Desktop/Книга4.csv",
+		"/Users/iBook/Desktop/Книга5.csv",
+		"/Users/iBook/Desktop/Склад.csv",
+		"/Users/iBook/Reginas-fpk/app/bower_components/angular/new/angular-elastic.js",
+		"/Users/iBook/Reginas-fpk/app/views/fpk/stat_main.html",
+		"/Applications/MAMP/htdocs/fpk/fpk-reginas/db.php",
+		"/Applications/MAMP/htdocs/fpk/fpk-reginas/db2.php",
+		"/Users/iBook/Reginas-fpk/app/scripts/controllers/stat_table.js",
+		"/Users/iBook/Reginas-fpk/app/views/fpk/stat/stat_table.html",
+		"/Users/iBook/Reginas-fpk/app/styles/import/_editor.scss",
 		"/Users/iBook/Reginas-fpk/dist/scripts/plugins.js",
 		"/Users/iBook/Reginas-fpk/server/isProduction.js",
 		"/Users/iBook/Reginas-fpk/Gruntfile.js",
@@ -1117,7 +1124,6 @@
 		"/Applications/MAMP/htdocs/fpk/4tree/js/js_regallkeys.js",
 		"/Users/iBook/Reginas-fpk/app/bower_components/angular/new/angular-scroll.js",
 		"/Users/iBook/Reginas-fpk/app/bower_components/angular/new/restangular.js",
-		"/Users/iBook/Reginas-fpk/app/bower_components/angular/new/angular-elastic.js",
 		"/Users/iBook/4tree/app/styles/main.scss",
 		"/Users/iBook/Reginas-fpk/app/bower_components/bootstrap-datetimepicker-0.0.11/js/bootstrap-datetimepicker.js",
 		"/Users/iBook/Reginas-fpk/app/bower_components/bootstrap-datetimepicker-0.0.11/css/bootstrap-datetimepicker.min.css",
@@ -1174,22 +1180,7 @@
 		"/Users/iBook/4tree/app/styles/main1.scss",
 		"/Users/iBook/4tree/app/styles/import/_editor.scss",
 		"/Users/iBook/4tree/app/styles/main.css",
-		"/Users/iBook/4tree/app/sass/screen.scss",
-		"/Users/iBook/4tree/app/styles/_editor.scss",
-		"/Users/iBook/4tree/app/styles/scss/main.scss",
-		"/Users/iBook/4tree/package.json",
-		"/Users/iBook/4tree/app/robots.txt",
-		"/Applications/MAMP/htdocs/fpk/4tree/node/angularjs-collab-board/public/index.html",
-		"/Users/iBook/yo/app/package.json",
-		"/Users/iBook/yo/app/bower_components/dotdotdot-1.6.3/index.html",
-		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/User/snipet1",
-		"/Applications/MAMP/htdocs/fpk/4tree/index.php",
-		"/Applications/MAMP/htdocs/fpk/4tree/my_first_page.php",
-		"/Applications/MAMP/htdocs/fpk/4tree/node/angularjs-collab-board/app.js",
-		"/Users/iBook/yo/app/favicon.ico",
-		"/Users/iBook/yo/dist/index.html",
-		"/Applications/MAMP/htdocs/fpk/4tree/node/angularjs-collab-board/public/js/collab-board.js",
-		"/Users/iBook/yo/app/views/main.html"
+		"/Users/iBook/4tree/app/sass/screen.scss"
 	],
 	"find":
 	{
@@ -1208,134 +1199,134 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"'app'",
-			"app",
-			"jsGetManagerCupAdminReport",
-			"saveDo",
-			"/do",
-			"attent",
-			"24",
-			"do_typ",
-			"group",
-			"user_gr",
-			"создания",
-			"nicedat",
-			"do.readonly",
-			"Удалить",
-			"datetime",
-			"reiting_",
-			"jsShowManagerFilter",
-			"manager_filter",
-			"filter",
-			"darken",
-			"left_pan",
-			"loadUserInfo",
-			"jsGetReiting",
-			"jsCheckDublicate",
-			"jsDublicate",
-			"updateclie",
-			"jsCheckDublicate",
-			"byid",
-			"updateclie",
-			"saveclient",
+			"jsClearCacheByBrand",
+			"clearcach",
+			"getCach",
+			"brand_id:\"cup\"",
+			"loadJsonCup",
+			"loadStatCup",
+			"/cup",
+			"loadJsonCup",
+			"heade",
+			"loadJsonCup",
+			"cup",
+			"favic",
+			"jsupdateclient",
+			"updatecli",
+			"commercial_select",
+			"2),",
+			"Edd",
+			"getDo",
+			"findCalendar",
+			"checkdub",
+			"setTimeo",
+			".click",
+			"паспорт",
+			"dogdoc",
+			"Распечатать",
+			"loadComDoc",
+			"com_doc",
+			".click",
+			"Отменить",
+			"	д",
+			"	д	д	д	д	д	д",
+			"getAut",
+			"1_cars_complectation",
+			"canedit",
+			".body",
+			"compl",
+			"\"POST\"",
+			"getAutocompleteCompl",
 			"getAutocomplete",
-			"dublicate",
-			"Не указан",
-			"Не указан vin",
-			"dubtitle",
-			"dif",
-			"nicedatetime",
-			"dublica",
-			"dublicat",
-			"logo",
-			"findAllClients",
-			"n correct_dates",
-			"correct_dates",
-			"findAllClients",
-			"correct_dates",
-			"findAllClients",
-			"correct_dates",
-			"jsCheckDublicate",
-			"dosave",
-			"saveclie",
-			"attention",
-			"no_na_sum",
-			"jsGetReiting",
-			"need_push",
-			"dist",
-			"out_reason",
-			"script",
-			"static",
-			"/app",
-			"app/",
-			"app",
-			"'app'",
-			"redactor_too",
-			"913",
-			"bower_components/redactor913/redactor/redactor-multi.angular.js",
-			"multi",
-			"statCtrl",
-			"news",
-			"dropdown-menu",
-			"mongo",
-			"jsUpdateClient",
-			"updateClient",
-			"jsUpdateClient",
-			"out_reason",
-			"do_butto",
-			"исходя",
-			"date",
-			"split(",
-			"nids",
-			"ids",
-			"jsdate",
-			"alert",
-			"selectab",
-			"one_cli",
-			"findAllAdminIds",
+			"autocom",
+			"filter",
+			"Комплектац",
+			"getCarByVin",
 			"findAllClientsIds",
 			"getClientIds",
 			"ids",
-			"Добавить",
-			"jsShow",
-			"jsGetManagerCupAdminReport",
-			"admin_cup",
-			"_big",
-			"console",
-			"jsStatBig1",
-			"contacts",
-			"Нет",
-			"fpk.",
-			"experi",
-			"group",
-			"experim",
-			"Подробный ежедневный",
-			"Выполнит",
+			"show_one",
+			"client_car",
+			"model",
+			"saveadm",
+			"updatecli",
+			"ids",
+			"jsOpen",
+			"$scope.fpk.the_user",
+			"user.id",
+			"loadstat",
+			"jsCheckToken",
+			"jsAddDoToClient",
 			"adddo",
-			"newdo",
-			"добавит",
-			"newdo",
+			"jsAddDoToClient",
+			"inser",
+			"saveAdmin",
+			"getadmin",
+			"fio",
+			"client.fio",
+			"fio",
+			"phone",
+			"Vin",
+			"клиент:",
+			"dubli",
+			"dublica",
+			"na",
+			"jsUpdateClient",
+			"jsDelDo",
+			"checked",
+			"searchString",
 			"adddo",
-			"clone",
-			"isFun",
-			"checktoke",
-			"oauth2server",
-			"token",
-			"icon2",
-			"cup",
-			"Регинас",
-			"регинас",
+			"jsUpdateClient",
+			"updateClientRings",
+			"updateClient",
+			"loadStat",
+			"/stat",
+			"getstat",
+			"setTim",
+			"brand_adr",
+			"loadTestDoc",
+			"test",
+			"car_",
+			"placeholder",
+			"test",
+			"do_types",
+			"checkTo",
+			"console.info",
+			"\"!\"",
+			"manager_filter =",
+			"del =",
+			"loadStatCupCars",
+			"/cars",
+			"cars",
+			"test",
+			"findAllClients",
+			"filter",
+			"setCach",
+			"getCach",
+			"jsStatBig3",
+			"stat_big3",
+			"getCache({brand_id:\"do_admin:",
+			"jsGetManagerCupAdmin",
+			"setCach",
+			"header",
+			"jsClearCacheByBrand",
+			"jsClearCach",
+			"saveAd",
+			"admin",
+			"setCach",
+			"getcach",
+			"jsGetManagerCupAdmin",
+			"removecli",
+			"jsUpdate",
+			"setCach",
+			"findAllClients",
+			"/client",
+			"setCach",
+			"getCache({brand_id:\"do:\"",
 			"updateclie",
-			"correct_da",
-			"checkSMS",
-			"setIn",
-			"new Date",
-			"-5",
-			"Регинас",
-			"socketme",
-			"5.79.218",
-			"inside",
-			"updateclie"
+			"getDo",
+			"mydo.man",
+			"jsGroupExp"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1343,6 +1334,9 @@
 		"regex": false,
 		"replace_history":
 		[
+			"6),",
+			"",
+			"по одному менеджеру",
 			"vd",
 			"global.stat_cache",
 			"'13'",
@@ -1402,7 +1396,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 10,
 			"sheets":
 			[
 				{
@@ -1411,7 +1405,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 149378,
+						"buffer_size": 175380,
 						"regions":
 						{
 							"mark":
@@ -1427,8 +1421,8 @@
 						"selection":
 						[
 							[
-								0,
-								5229
+								4955,
+								4955
 							]
 						],
 						"settings":
@@ -1440,7 +1434,7 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 3036.0,
+						"translation.y": 3440.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1508,15 +1502,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 74376,
+						"buffer_size": 78217,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								44314,
-								44314
+								69985,
+								69985
 							]
 						],
 						"settings":
@@ -1526,40 +1520,13 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 28736.0,
+						"translation.y": 47249.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 4,
-					"file": "app/styles/import/_editor.scss",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 19,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Syntax Highlighting for Sass/Syntaxes/SCSS.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
 					"file": "app/robots.txt",
 					"semi_transient": false,
 					"settings":
@@ -1586,7 +1553,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 5,
 					"file": "server/rest-api.js",
 					"semi_transient": false,
 					"settings":
@@ -1598,8 +1565,8 @@
 						"selection":
 						[
 							[
-								2368,
-								2368
+								94,
+								106
 							]
 						],
 						"settings":
@@ -1609,13 +1576,13 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 509.0,
+						"translation.y": 635.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 6,
 					"file": "app/views/--------.js",
 					"semi_transient": false,
 					"settings":
@@ -1642,20 +1609,130 @@
 					"type": "text"
 				},
 				{
-					"buffer": 8,
-					"file": "app/index.html",
+					"buffer": 7,
+					"file": "app/views/com_doc.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8176,
+						"buffer_size": 2749,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								8043,
-								8043
+								275,
+								275
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "app/views/dog_doc.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 31508,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								284,
+								284
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "app/scripts/controllers/com-ctrl.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 918,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								911,
+								911
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "app/index.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8291,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								959,
+								959
 							]
 						],
 						"settings":
@@ -1666,13 +1743,13 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 2291.0,
+						"translation.y": 27.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 9,
+					"buffer": 12,
 					"file": "app/bower_components/redactor917/redactor/redactor-multi.angular.js",
 					"semi_transient": false,
 					"settings":
@@ -1702,20 +1779,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 13,
 					"file": "app/views/fpk/stat/stat_big.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2074,
+						"buffer_size": 4196,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								30,
-								30
+								3759,
+								3769
 							]
 						],
 						"settings":
@@ -1731,26 +1808,26 @@
 					"type": "text"
 				},
 				{
-					"buffer": 11,
+					"buffer": 14,
 					"file": "app/scripts/controllers/stat_big_ctrl.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1167,
+						"buffer_size": 7091,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								229,
-								229
+								5765,
+								5769
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
+							"tab_size": 2,
 							"translate_tabs_to_spaces": true,
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
@@ -1761,7 +1838,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 12,
+					"buffer": 15,
 					"file": "app/scripts/the_diller.js",
 					"semi_transient": false,
 					"settings":
@@ -1790,7 +1867,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 13,
+					"buffer": 16,
 					"file": "app/views/test_doc.html",
 					"semi_transient": false,
 					"settings":
@@ -1802,8 +1879,8 @@
 						"selection":
 						[
 							[
-								3874,
-								3889
+								2161,
+								2391
 							]
 						],
 						"settings":
@@ -1813,13 +1890,13 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 3593.0,
+						"translation.y": 2035.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 14,
+					"buffer": 17,
 					"file": "app/scripts/controllers/test-ctrl.js",
 					"semi_transient": false,
 					"settings":
@@ -1847,20 +1924,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 15,
+					"buffer": 18,
 					"file": "app/styles/print.scss",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1078,
+						"buffer_size": 1077,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								266,
-								266
+								1077,
+								1077
 							]
 						],
 						"settings":
@@ -1869,26 +1946,26 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 815.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 16,
+					"buffer": 19,
 					"file": "app/scripts/app.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 40049,
+						"buffer_size": 41670,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								14872,
-								14853
+								2711,
+								2711
 							]
 						],
 						"settings":
@@ -1899,13 +1976,42 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 7482.0,
+						"translation.y": 720.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 17,
+					"buffer": 20,
+					"file": "app/scripts/tinycon.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6585,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6585,
+								6585
+							]
+						],
+						"settings":
+						{
+							"auto_name": "/*!",
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 4019.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 21,
 					"file": "app/scripts/controllers/news.js",
 					"semi_transient": false,
 					"settings":
@@ -1917,8 +2023,8 @@
 						"selection":
 						[
 							[
-								631,
-								631
+								614,
+								614
 							]
 						],
 						"settings":
@@ -1932,47 +2038,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 18,
-					"file": "app/views/fpk/stat_main.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 46,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								37,
-								37
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 19,
+					"buffer": 22,
 					"file": "app/scripts/controllers/stat_main.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 661,
+						"buffer_size": 727,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								529,
-								529
+								724,
+								727
 							]
 						],
 						"settings":
@@ -1987,7 +2066,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 20,
+					"buffer": 23,
 					"file": "app/scripts/controllers/login.js",
 					"semi_transient": false,
 					"settings":
@@ -2016,36 +2095,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 21,
-					"file": "app/bower_components/angular/new/angular-elastic.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6761,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 22,
+					"buffer": 24,
 					"file": "app/scripts/controllers/socket-service.js",
 					"semi_transient": false,
 					"settings":
@@ -2057,8 +2107,8 @@
 						"selection":
 						[
 							[
-								726,
-								726
+								0,
+								1707
 							]
 						],
 						"settings":
@@ -2068,26 +2118,26 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 229.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 23,
+					"buffer": 25,
 					"file": "app/views/fpk/admin_cup.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 18951,
+						"buffer_size": 20616,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								13316,
-								13316
+								16896,
+								16896
 							]
 						],
 						"settings":
@@ -2096,26 +2146,26 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 4980.0,
+						"translation.y": 6041.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 24,
+					"buffer": 26,
 					"file": "app/scripts/controllers/admin_cup.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6529,
+						"buffer_size": 6996,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6075,
-								6079
+								2347,
+								2347
 							]
 						],
 						"settings":
@@ -2126,26 +2176,26 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 2867.0,
+						"translation.y": 804.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 25,
+					"buffer": 27,
 					"file": "app/views/fpk/reiting.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2114,
+						"buffer_size": 2278,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2016,
-								2016
+								142,
+								142
 							]
 						],
 						"settings":
@@ -2155,13 +2205,13 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 277.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 26,
+					"buffer": 28,
 					"file": "app/scripts/controllers/reiting.js",
 					"semi_transient": false,
 					"settings":
@@ -2173,8 +2223,8 @@
 						"selection":
 						[
 							[
-								1272,
-								1112
+								684,
+								694
 							]
 						],
 						"settings":
@@ -2182,62 +2232,6 @@
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true,
-							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
-						},
-						"translation.x": 0.0,
-						"translation.y": 213.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 27,
-					"file": "app/views/fpk/stat/stat_table.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1470,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1117,
-								1117
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 28,
-					"file": "app/scripts/controllers/stat_table.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 683,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								152,
-								152
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false,
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
@@ -2447,34 +2441,6 @@
 				},
 				{
 					"buffer": 36,
-					"file": "app/views/fpk/settings/tests.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3072,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								473,
-								473
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 37,
 					"file": "app/scripts/controllers/settings-tests.js",
 					"semi_transient": false,
 					"settings":
@@ -2486,8 +2452,8 @@
 						"selection":
 						[
 							[
-								970,
-								970
+								267,
+								267
 							]
 						],
 						"settings":
@@ -2498,13 +2464,13 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 349.0,
+						"translation.y": 689.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 38,
+					"buffer": 37,
 					"file": "app/views/fpk/settings/organizations.html",
 					"semi_transient": false,
 					"settings":
@@ -2532,7 +2498,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 39,
+					"buffer": 38,
 					"file": "app/scripts/controllers/organizations-ctrl.js",
 					"semi_transient": false,
 					"settings":
@@ -2557,6 +2523,42 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 163.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 39,
+					"file": "app/views/fpk/settings/tests.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3099,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								544,
+								544
+							],
+							[
+								599,
+								599
+							],
+							[
+								889,
+								889
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -2604,8 +2606,8 @@
 						"selection":
 						[
 							[
-								47,
-								610
+								4235,
+								4235
 							]
 						],
 						"settings":
@@ -2615,7 +2617,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 563.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -2626,15 +2628,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4564,
+						"buffer_size": 4970,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								626,
-								626
+								2976,
+								2976
 							]
 						],
 						"settings":
@@ -2710,15 +2712,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 15914,
+						"buffer_size": 19228,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3014,
-								3014
+								13106,
+								13106
 							]
 						],
 						"settings":
@@ -2731,7 +2733,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 624.0,
+						"translation.y": 4575.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -2742,26 +2744,26 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 61100,
+						"buffer_size": 83786,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								41012,
-								41108
+								37405,
+								37407
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true,
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 23882.0,
+						"translation.y": 20711.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -2884,15 +2886,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 38554,
+						"buffer_size": 60315,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								35058,
-								35058
+								24535,
+								24535
 							]
 						],
 						"settings":
@@ -2902,7 +2904,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 10722.0,
+						"translation.y": 7350.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -2920,8 +2922,8 @@
 						"selection":
 						[
 							[
-								24,
-								40
+								654,
+								656
 							]
 						],
 						"settings":
@@ -2942,15 +2944,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 17654,
+						"buffer_size": 19917,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2406,
-								2411
+								1815,
+								1815
 							]
 						],
 						"settings":
@@ -2961,69 +2963,13 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 1110.0,
+						"translation.y": 605.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 54,
-					"file": "/Applications/MAMP/htdocs/fpk/fpk-reginas/db2.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 777,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								518,
-								519
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 55,
-					"file": "/Applications/MAMP/htdocs/fpk/fpk-reginas/db.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 40765,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								16867,
-								16867
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 11658.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 56,
 					"file": "app/views/fpk/calendar.html",
 					"semi_transient": false,
 					"settings":
@@ -3050,7 +2996,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 57,
+					"buffer": 55,
 					"file": "app/scripts/controllers/calendar.js",
 					"semi_transient": false,
 					"settings":
@@ -3062,8 +3008,8 @@
 						"selection":
 						[
 							[
-								4684,
-								4693
+								1470,
+								1470
 							]
 						],
 						"settings":
@@ -3074,13 +3020,13 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 1981.0,
+						"translation.y": 741.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 58,
+					"buffer": 56,
 					"file": "app/views/user/reg.html",
 					"semi_transient": false,
 					"settings":
@@ -3092,8 +3038,8 @@
 						"selection":
 						[
 							[
-								108,
-								108
+								1776,
+								1794
 							]
 						],
 						"settings":
@@ -3103,13 +3049,13 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 501.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 59,
+					"buffer": 57,
 					"file": "app/views/user.html",
 					"semi_transient": false,
 					"settings":
@@ -3138,7 +3084,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 60,
+					"buffer": 58,
 					"file": "app/views/user/login.html",
 					"semi_transient": false,
 					"settings":
@@ -3165,7 +3111,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 61,
+					"buffer": 59,
 					"file": "app/scripts/controllers/login-ctrl.js",
 					"semi_transient": false,
 					"settings":
@@ -3177,8 +3123,8 @@
 						"selection":
 						[
 							[
-								418,
-								418
+								0,
+								3143
 							]
 						],
 						"settings":
@@ -3189,7 +3135,7 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1651.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -3273,9 +3219,9 @@
 	"settings":
 	{
 	},
-	"show_minimap": true,
+	"show_minimap": false,
 	"show_open_files": true,
-	"show_tabs": true,
+	"show_tabs": false,
 	"side_bar_visible": true,
 	"side_bar_width": 160.0,
 	"status_bar_visible": false,
