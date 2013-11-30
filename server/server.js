@@ -205,6 +205,14 @@ function delCache(myarg) {
   return dfd.promise();
 }
 
+
+var clear_cup_cache = _.throttle(function(){ 
+      delCache({brand_id: "cup"}).done(function(err, result){
+      });
+}, 5000);
+
+
+
 function jsClearCacheByBrand(brand_id) {
 
       //redis_client.del({})
@@ -214,9 +222,7 @@ function jsClearCacheByBrand(brand_id) {
 
       //global.collection.remove({type:"loadStat", brand: brand_id}, function(err, data){
       //});
-
-      delCache({brand_id: "cup"}).done(function(err, result){
-      });
+      clear_cup_cache();
 
 
       delCache({brand_id:"do_admin:"+brand_id});
@@ -529,6 +535,7 @@ exports.getDo = function(request,response) {
   getCache({brand_id:"do:"+brand_id, cache_id:cache_id}).done(function(err, the_cache){
  
   if(the_cache) {
+    response.setHeader("FROM_CACHE");      
     response.send(the_cache.mydata);
     return true;
   }
@@ -931,6 +938,7 @@ exports.findAllClients = function(request, response) {
   getCache({brand_id:"do:"+brand_id, cache_id:cache_id}).done(function(err, the_cache){
 
     if(the_cache) {
+      response.setHeader("FROM_CACHE");      
       response.send(the_cache.mydata);
       return true;
     }
@@ -1170,6 +1178,7 @@ exports.loadStat = function(request, response) {
   getCache({brand_id:brand_id, cache_id:cache_id}).done(function(err, the_cache){
 
 	  if( the_cache ) {
+      response.setHeader("FROM_CACHE");      
 	    response.send( the_cache.mydata ); //статистика кешируется нижняя и левая
 	  } else {
 
@@ -1313,6 +1322,7 @@ exports.jsGetReiting = function(request, response) {
   getCache({brand_id:"do:"+brand_id, cache_id:cache_id}).done(function(err, the_cache){
 
     if(the_cache) {
+      response.setHeader("FROM_CACHE");            
       response.send(the_cache.mydata);
       return true;
     }
@@ -1497,6 +1507,7 @@ exports.jsGetManagerCupAdmin = function(request, response) {
   getCache({brand_id:"do_admin:"+brand_id, cache_id:cache_id}).done(function(err, the_cache){
  
   if(the_cache) {
+    response.setHeader("FROM_CACHE");      
     response.send(the_cache.mydata);
     return true;
   }
@@ -1659,6 +1670,7 @@ exports.jsGetManagerCupAdminReport = function(request, response) {
   getCache({brand_id:"do_admin:"+brand_id, cache_id:cache_id}).done(function(err, the_cache){
  
   if(the_cache) {
+    response.setHeader("FROM_CACHE");      
     response.send(the_cache.mydata);
     return true;
   }
@@ -2871,11 +2883,12 @@ exports.loadStatCup = function(request, response) {
   getCache({brand_id:"cup", cache_id:cache_id}).done(function(err, the_cache){
 
 	  if( the_cache ) {
+      response.setHeader("FROM_CACHE_CUP");      
 	    response.send( the_cache["mydata"] ); //статистика кешируется нижняя и левая
 	    //console.info("info_from_cache_CUP", cache_id);
 	    //console.info("Stat from cache "+cache_id+", brand = ", brand_id,global.stat_cache);
 	  } else {
-
+      response.setHeader("NOT_FROM_CACHE_CUP");      
 
 	  pool.query('SELECT * FROM `1_plan` WHERE `month` = "'+today_month+'"', function (err, plans, fields) {
 	      //console.info(plans);
@@ -3348,42 +3361,6 @@ function jsUpdateClient(client_id, no_push) {
           need_analyse = false;
         }
 
-        if( need_analyse ) {
-            $.each(rings, function(i, ring){
-  //              console.info(ring.dif, the_client[0].fio, i, ring.text, ring.vd, ring.date2);
-                if(ring.dif<15) {
-                  rings_ok.r1 = true;
-                } else if( (ring.dif>=15)&&(ring.dif<60) ) {                  
-                  rings_ok.r2 = true;
-                } else if( (ring.dif>=60)&&(ring.dif<400) )  {
-                  rings_ok.r3 = true;
-                }
-            });            
-
-            if(rings_ok.r1&&rings_ok.r2&&rings_ok.r3) {
-            } else if(start_find_rings) {
-              //добавляем недостающие звонки
-              console.info("bad - - - - - - - - - - - - - - - -", the_client[0].fio);                                  
-              var start_find_rings_d = frommysql( start_find_rings );
-              var today_sqldate = tomysql( new Date() );
-              if(!rings_ok.r1) {
-                jsAddRingDays(2, the_client[0], start_find_rings_d, today_sqldate);
-              }
-              if(!rings_ok.r2) {
-                jsAddRingDays(30, the_client[0], start_find_rings_d, today_sqldate);
-              }
-              if(!rings_ok.r3) {
-                jsAddRingDays(365, the_client[0], start_find_rings_d, today_sqldate);
-              }
-              setTimeout(function(){
-                jsUpdateClient(the_client[0].id, "dont_push_to_socket");
-                console.info("second_update");
-              },550);
-
-
-            }
-
-        }
 
         //////////////////////////////////////////////////////
 
@@ -3409,6 +3386,47 @@ function jsUpdateClient(client_id, no_push) {
           if( new_val != the_client[0][key] ) {
             if( (['zv','vz','tst','dg','vd','out','hostchecked'].indexOf(key)!=-1) && (!no_push) ) {
               need_push = true;
+
+              //анализ следующих звонков, только если изменились ключевые даты
+              if( need_analyse ) {
+                  $.each(rings, function(i, ring){
+        //              console.info(ring.dif, the_client[0].fio, i, ring.text, ring.vd, ring.date2);
+                      if(ring.dif<15) {
+                        rings_ok.r1 = true;
+                      } else if( (ring.dif>=15)&&(ring.dif<60) ) {                  
+                        rings_ok.r2 = true;
+                      } else if( (ring.dif>=60)&&(ring.dif<400) )  {
+                        rings_ok.r3 = true;
+                      }
+                  });            
+
+                  if(rings_ok.r1&&rings_ok.r2&&rings_ok.r3) {
+                  } else if(start_find_rings) {
+                    //добавляем недостающие звонки
+                    console.info("bad - - - - - - - - - - - - - - - -", the_client[0].fio);                                  
+                    var start_find_rings_d = frommysql( start_find_rings );
+                    var today_sqldate = tomysql( new Date() );
+                    if(!rings_ok.r1) {
+                      jsAddRingDays(2, the_client[0], start_find_rings_d, today_sqldate);
+                    }
+                    if(!rings_ok.r2) {
+                      jsAddRingDays(30, the_client[0], start_find_rings_d, today_sqldate);
+                    }
+                    if(!rings_ok.r3) {
+                      jsAddRingDays(365, the_client[0], start_find_rings_d, today_sqldate);
+                    }
+                    setTimeout(function(){
+                      jsUpdateClient(the_client[0].id, "dont_push_to_socket");
+                      console.info("second_update");
+                    },550);
+
+
+                  }
+
+              }
+
+
+
             }
           };
         });
@@ -3850,6 +3868,7 @@ exports.loadStatTable = function(request, response) {
   getCache({brand_id:"cup", cache_id:cache_id}).done(function(err, the_cache){
 
 	  if( the_cache ) {
+      response.setHeader("FROM_CACHE");      
 	    response.send( the_cache["mydata"] ); //статистика кешируется нижняя и левая
 	    //console.info("info_from_cache_CUP_GRAPH!!!", cache_id);
 	    //console.info("Stat from cache "+cache_id+", brand = ", brand_id,global.stat_cache);
@@ -4192,11 +4211,13 @@ exports.loadJsonCup = function(request, response) {
   getCache({brand_id:"cup", cache_id:cache_id}).done(function(err, the_cache){
 
 	  if( the_cache ) {
+      response.setHeader("FROM_CACHE");      
 	    response.send( the_cache["mydata"] ); //статистика кешируется нижняя и левая
 	    //console.info("info_from_cache graph json", cache_id);
 	    //console.info("Stat from cache "+cache_id+", brand = ", brand_id,global.stat_cache);
 	  } else {
 
+      response.setHeader("NOT_FROM_CACHE");      
 
     //console.info(brand);
 
@@ -4541,6 +4562,7 @@ exports.jsStatBig3 = function(request, response) {
   getCache({brand_id:"do:"+brand_id, cache_id:cache_id}).done(function(err, the_cache){
  
   if(the_cache) {
+    response.setHeader("FROM_CACHE");      
     response.send(the_cache.mydata);
     return true;
   }
