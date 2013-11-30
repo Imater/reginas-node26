@@ -20,6 +20,7 @@ if (cluster.isMaster) {
       publisher  = redis.createClient();
 
   publisher.del("users_online");
+  publisher.del("users_online_fio");
 
 
   subscriber.on('error', function(e) {
@@ -457,6 +458,10 @@ var MongoClient = require('mongodb').MongoClient, format = require('util').forma
     socket.on('add_user', function( user_info ){
       if(!user_info.user) { return true; }
       the_user = user_info;
+
+      redis_client.hset( "users_online_fio", "user_id:"+the_user.user.fio+":"+"session_id:"+the_user.sessionid+":"+tomysql(new Date()), JSON.stringify(the_user), function(dd, kk){
+      });
+
       
       redis_client.hset( "users_online", "user_id:"+the_user.user.id+":"+"session_id:"+the_user.sessionid, JSON.stringify(the_user), function(dd, kk){
         console.info('add_user to socket = ', cluster.worker.id, ' user_fio: ', the_user.user.fio);
