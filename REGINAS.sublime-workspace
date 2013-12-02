@@ -951,7 +951,7 @@
 			"file": "app/views/client_list.html",
 			"settings":
 			{
-				"buffer_size": 60315,
+				"buffer_size": 60288,
 				"line_ending": "Unix"
 			}
 		},
@@ -1216,6 +1216,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"Регинас",
 			"users_online_fio",
 			"users_online",
 			"hset",
@@ -1342,8 +1343,7 @@
 			"checkTo",
 			"console.info",
 			"\"!\"",
-			"manager_filter =",
-			"del ="
+			"manager_filter ="
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1413,7 +1413,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 9,
 			"sheets":
 			[
 				{
@@ -1748,8 +1748,8 @@
 						"selection":
 						[
 							[
-								284,
-								284
+								454,
+								455
 							]
 						],
 						"settings":
@@ -2962,15 +2962,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 60315,
+						"buffer_size": 60288,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								24535,
-								24535
+								24506,
+								24506
 							]
 						],
 						"settings":
@@ -2980,7 +2980,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 7350.0,
+						"translation.y": 7125.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
