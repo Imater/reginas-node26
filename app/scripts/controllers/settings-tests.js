@@ -42,6 +42,12 @@ $scope.jsDeleteTest = function(test) {
   }
  }
 
+ $scope.jsFilterTest = function() {
+  var result = _.filter($scope.fpk.tests, function(test) {
+    return test.brand == $scope.fpk.brand;
+  });
+  return result;
+ }
 
  $scope.jsAddNewModel = function() {
   myApi.newModel($scope).then(function( answer ){
