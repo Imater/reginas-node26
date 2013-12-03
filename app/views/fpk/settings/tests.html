@@ -29,6 +29,12 @@
 		              </ul>
 		            </div>                              
 		        </div>
+
+				<div class="col-md-4">
+				Отображать: {{test.hide}}
+					<a class="btn btn-xs btn-primary pull-right" ng-if="!test.hide" ng-click="test.hide=1;jsSaveTest(test)">Скрыть для менеджеров</a>
+					<a class="btn btn-xs btn-warning pull-right" ng-if="test.hide" ng-click="test.hide=0;jsSaveTest(test)">Отображать менеджерам</a>
+		        </div>
 		    </div>
 		    <div class="row">
 

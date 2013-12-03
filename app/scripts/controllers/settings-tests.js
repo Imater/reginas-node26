@@ -24,6 +24,8 @@ myApp.controller('settingsTestsCtrl', function ($scope, $resource, $rootScope, $
   console.info("save_test", test);
   myApi.jsSaveTest($scope, test).then(function(){
     console.info("saved!");
+    alert("Данные успешно сохранены");
+    $scope.jsRefreshModels();
   });
  }
 
