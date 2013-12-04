@@ -11,8 +11,8 @@ myApp.controller('statCtrl', function($scope, $resource, $rootScope, $location, 
 		var user_group = $scope.fpk.the_user.user_group;
 		var can_edit = (user_group == 1) || (user_group == 2) || (user_group == 10);
 		if (can_edit || ((brand.id == $scope.fpk.brand) && ($scope.fpk.the_user.rights[0].can_edit_all_client)) ) {
-			brand.cup.plan = prompt("Введите кол-во товарных автомобилей на складе:", brand.cup.plan);
-			if(brand.cup.plan>0) {
+			var plan = prompt("Введите кол-во товарных автомобилей на складе:", brand.cup.plan);
+			if(parseInt(plan)>0) {
 				$http({
 					url: '/api/v1/set_cars',
 					method: "GET",
@@ -22,6 +22,7 @@ myApp.controller('statCtrl', function($scope, $resource, $rootScope, $location, 
 						amount: brand.cup.plan
 					}
 				}).then(function(result) {
+					brand.cup.plan = plan;
 					alert("Данные успешно сохранены");
 				});
 			}
