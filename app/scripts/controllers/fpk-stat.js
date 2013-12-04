@@ -8,8 +8,10 @@ myApp.controller('statCtrl', function($scope, $resource, $rootScope, $location, 
 	}, 10);
 	//	$scope.chartConfig = {"options":{"chart":{"type":"areaspline"},"plotOptions":{"series":{"stacking":""}}},"series":[{"name":"Договора","data":[1,2,4,7,3,5,6,7,8,9,5,1,3,4,5],"id":"series-0"}],"title":{"text":"Hello"},"credits":{"enabled":true},"loading":false};
 	$scope.jsCarsEnterClick = function(brand) {
-		if ((brand.id == $scope.fpk.brand) && ($scope.fpk.the_user.rights[0].can_edit_all_client)) {
-			brand.cup.plan = prompt("Введите кол-во товарных автомобилей на складе:");
+		var user_group = $scope.fpk.the_user.user_group;
+		var can_edit = (user_group == 1) || (user_group == 2) || (user_group == 10);
+		if (can_edit || ((brand.id == $scope.fpk.brand) && ($scope.fpk.the_user.rights[0].can_edit_all_client)) ) {
+			brand.cup.plan = prompt("Введите кол-во товарных автомобилей на складе:", brand.cup.plan);
 			$http({
 				url: '/api/v1/set_cars',
 				method: "GET",
@@ -19,7 +21,7 @@ myApp.controller('statCtrl', function($scope, $resource, $rootScope, $location, 
 					amount: brand.cup.plan
 				}
 			}).then(function(result) {
-				alert("Данные успешно сохранены");
+				//alert("Данные успешно сохранены");
 			});
 		} else {
 			alert("Данные по кол-ву автомобилей на складе может менять только руководитель, старший менеджер или диспонент. Также, вы должны переключиться в тот бренд, в котором меняете кол-во.");
