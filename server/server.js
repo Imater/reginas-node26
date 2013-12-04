@@ -1934,7 +1934,7 @@ exports.jsGetManagerCupAdminReport = function(request, response) {
     cache_id: cache_id
   }).done(function(err, the_cache) {
 
-    if (the_cache) {
+    if (false&&the_cache) {
       response.setHeader("FROM_CACHE");
       response.send(the_cache.mydata);
       return true;
