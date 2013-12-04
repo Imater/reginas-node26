@@ -4195,6 +4195,10 @@ return dfd.promise();
 var jsCheckDublicate = function(client) {
     var dfd = $.Deferred();
     var dublicates = [];
+    if(!client) {
+      dfd.resolve();
+      return dfd.promise();
+    }
 
     var phones = "'" + (client.phone1 ? client.phone1 : "!!!") + "', '" + (client.phone2 ? client.phone2 : "!!!") + "', '" + (client.phone3 ? client.phone3 : "!!!") + "', '" + (client.phone4 ? client.phone4 : "!!!") + "'";
     var vin = client.vin;
