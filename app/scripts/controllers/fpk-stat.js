@@ -17,7 +17,7 @@ myApp.controller('statCtrl', function($scope, $resource, $rootScope, $location, 
 					url: '/api/v1/set_cars',
 					method: "GET",
 					params: {
-						brand: $scope.fpk.brand,
+						brand: brand.id,
 						today: $scope.fpk.today_date,
 						amount: brand.cup.plan
 					}
