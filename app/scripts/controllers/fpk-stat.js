@@ -12,17 +12,19 @@ myApp.controller('statCtrl', function($scope, $resource, $rootScope, $location, 
 		var can_edit = (user_group == 1) || (user_group == 2) || (user_group == 10);
 		if (can_edit || ((brand.id == $scope.fpk.brand) && ($scope.fpk.the_user.rights[0].can_edit_all_client)) ) {
 			brand.cup.plan = prompt("Введите кол-во товарных автомобилей на складе:", brand.cup.plan);
-			$http({
-				url: '/api/v1/set_cars',
-				method: "GET",
-				params: {
-					brand: $scope.fpk.brand,
-					today: $scope.fpk.today_date,
-					amount: brand.cup.plan
-				}
-			}).then(function(result) {
-				//alert("Данные успешно сохранены");
-			});
+			if(brand.cup.plan>0) {
+				$http({
+					url: '/api/v1/set_cars',
+					method: "GET",
+					params: {
+						brand: $scope.fpk.brand,
+						today: $scope.fpk.today_date,
+						amount: brand.cup.plan
+					}
+				}).then(function(result) {
+					alert("Данные успешно сохранены");
+				});
+			}
 		} else {
 			alert("Данные по кол-ву автомобилей на складе может менять только руководитель, старший менеджер или диспонент. Также, вы должны переключиться в тот бренд, в котором меняете кол-во.");
 		}
