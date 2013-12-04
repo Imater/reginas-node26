@@ -1470,14 +1470,21 @@ body {
       #statistics table tr .cup_plan img {
         opacity: 0.1; }
       #statistics table tr .cup_plan_b {
+        cursor: pointer;
         color: #888;
-        display: none;
-        text-align: right; }
+        text-align: left; }
+        #statistics table tr .cup_plan_b span {
+          font-size: 10px; }
+        #statistics table tr .cup_plan_b img {
+          width: 12px;
+          margin: 0px 4px; }
+      #statistics table tr .cup_plan_b:hover {
+        color: #000; }
       #statistics table tr .first_td {
         padding-left: 5px;
         cursor: pointer; }
       #statistics table tr .last_td {
-        padding-left: 15px;
+        padding-left: 0px;
         padding-right: 0px; }
         #statistics table tr .last_td b {
           text-align: center;

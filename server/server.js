@@ -753,7 +753,7 @@ String.prototype.translit = (function(){
 
     var sr = ("%" + search + "%");
 
-    pool.query('SELECT * FROM `1_clients` WHERE id IN ' + ids + ' OR (brand = ? AND `out`="0000-00-00 00:00:00" AND ' + '(fio like ? OR ' + 'phone1 like ? OR ' + 'phone2 like ? OR ' + 'phone3 like ? OR ' + 'phone4 like ? OR ' + 'vin like ? OR ' + 'comment like ? OR ' + 'adress like ?' + ')) LIMIT 2000', [brand, sr, sr, sr, sr, sr, sr, sr, sr], function(err, rows, fields) {
+    pool.query('SELECT * FROM `1_clients` WHERE id IN ' + ids + ' OR (brand = ? AND ' + '(fio like ? OR ' + 'phone1 like ? OR ' + 'phone2 like ? OR ' + 'phone3 like ? OR ' + 'phone4 like ? OR ' + 'vin like ? OR ' + 'comment like ? OR ' + 'adress like ?' + ')) LIMIT 2000', [brand, sr, sr, sr, sr, sr, sr, sr, sr], function(err, rows, fields) {
       rows = correct_dates(rows);
       //console.info(err);
       response.send(rows);
@@ -1375,6 +1375,7 @@ exports.loadStat = function(request, response) {
       });
 
       var result = [];
+
       dfdArray.push(jsLoadStatSMS("dg", brand_id, today, result));
       dfdArray.push(jsLoadStatSMS("vd", brand_id, today, result));
       dfdArray.push(jsLoadStatSMS("vd_plan", brand_id, today, result));
@@ -3525,7 +3526,7 @@ exports.saveAdmin = function(request, response) {
           cache_id: cache_id
         }).done(function(err, the_cache) {
 
-          if (the_cache) {
+          if (false&&the_cache) {
             response.setHeader("FROM_CACHE_CUP");
             response.send(the_cache["mydata"]); //статистика кешируется нижняя и левая
             //console.info("info_from_cache_CUP", cache_id);
@@ -3533,7 +3534,7 @@ exports.saveAdmin = function(request, response) {
           } else {
             response.setHeader("NOT_FROM_CACHE_CUP");
 
-            pool.query('SELECT * FROM `1_plan` WHERE `month` = "' + today_month + '"', function(err, plans, fields) {
+            pool.query('SELECT * FROM `1_plan` WHERE brand = "'+brand_id+'" AND `month` = "' + today + '"', function(err, plans, fields) {
               //console.info(plans);
               pool.query('SELECT * FROM `1_brands` ORDER by brand_group, title', function(err, brands, fields) {
                 if (brands.length > 5) {
@@ -5691,6 +5692,28 @@ exports.jsStatBig1 = function(request, response) {
 }
 
 
+exports.setCars = function(request, response) {
+  var month = request.query.today;
+  var amount = request.query.amount;
+  var brand_id = request.query.brand;
+  pool.query('SELECT count(*) cnt FROM `1_plan` WHERE brand = ? AND month = ?', [brand_id, month], function(err, rows, fields) {
+    if(rows[0].cnt) {
+      pool.query('UPDATE `1_plan` SET plan = ? WHERE brand = ? AND month = ?', [amount, brand_id, month], function(err, rows, fields) {
+        response.send(true);
+        return true;
+      });
+    } else {
+      pool.query('INSERT INTO `1_plan` SET plan = ?, brand = ?, month = ?', [amount, brand_id, month], function(err, rows, fields) {
+        response.send(true);
+        return true;
+      });
+    }
+//    response.send(rows);
+  });
+
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////////////
 ////////
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -5811,6 +5834,7 @@ app.post('/api/v1/do', database.newDo);
 
 app.post('/api/v1/user/new', database.regNewUser);
 
+app.get('/api/v1/set_cars', database.setCars);
 
 app.get('/api/v1/message', database.findAllMessages);
 app.get('/api/v1/message/:id', database.findMessageById);
