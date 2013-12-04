@@ -3534,7 +3534,7 @@ exports.saveAdmin = function(request, response) {
           } else {
             response.setHeader("NOT_FROM_CACHE_CUP");
 
-            pool.query('SELECT * FROM `1_plan` WHERE brand = "'+brand_id+'" AND `month` = "' + today + '"', function(err, plans, fields) {
+            pool.query('SELECT * FROM `1_plan` WHERE `month` = "' + today + '"', function(err, plans, fields) {
               //console.info(plans);
               pool.query('SELECT * FROM `1_brands` ORDER by brand_group, title', function(err, brands, fields) {
                 if (brands.length > 5) {
