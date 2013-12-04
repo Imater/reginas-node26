@@ -32,7 +32,7 @@
             </td>
         	<td class="cup_icon"><i>Тесты:</i><img src="images/do_type/1test-drive.png"></td>
         	<td ng-class="{active:(cup_selected == brand.id+'tst')}" title="Тестдрайвы за день (за месяц)" ng-click="loadCupCar(brand.id, 'tst', brand.id+'tst')"><b color-change="brand.cup.test">{{brand.cup.test}} ({{brand.cup.test_month}})</b></td>
-        	<td ng-click="jsCarsEnterClick(brand)" title="Кол-во товарных автомобилей в наличии (кликните, чтобы изменить данные на сегодня)" class="cup_plan_b"><img src="images/do_type/1cars.png"><span ng-if="brand.id>0">{{brand.cup.plan}}</span></td>
+        	<td ng-click="jsCarsEnterClick(brand)" title="Кол-во товарных автомобилей в наличии с учётом клиентских, но без учёта тестовых(кликните, чтобы изменить данные на сегодня)" class="cup_plan_b"><img src="images/do_type/1cars.png"><span ng-if="brand.id>0">{{brand.cup.plan}}</span></td>
         	<td ng-class="{active:(cup_selected == brand.id+'prognoz')}" ng-click="loadCupCar(brand.id, 'prognoz', brand.id+'prognoz')" class="last_td" title="Прогноз выдач = {{brand.cup.vidacha_month}} выдано + {{brand.cup.prognoz_5}} высокая вероятность + {{brand.cup.prognoz_4}} средняя + {{brand.cup.prognoz_3}} маленькая вероятность"><i>Прогноз:</i><img src="images/do_type/1vidacha.png"><b> {{brand.cup.prognoz_5 + brand.cup.prognoz_4 + brand.cup.prognoz_3 + brand.cup.vidacha_month}}</b></td>
         </tr>
         </table>
