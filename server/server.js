@@ -489,14 +489,14 @@ String.prototype.translit = (function(){
       the_user = user_info;
       
       redis_client.hset( "users_online", "user_id:"+the_user.user.id+":"+"session_id:"+the_user.sessionid, JSON.stringify(the_user), function(dd, kk){
-        console.info('add_user to socket = ', cluster.worker.id, ' user_fio: ', the_user.user.fio);
+        //console.info('add_user to socket = ', cluster.worker.id, ' user_fio: ', the_user.user.fio);
       });
     });
 
     socket.on('disconnect', function(){
       if(the_user) {
         redis_client.hdel( "users_online", "user_id:"+the_user.user.id+":"+"session_id:"+the_user.sessionid, function(dd, kk){
-          console.info('remove_user from socket = ', cluster.worker.id, ' user_fio: ', the_user.user.fio);
+          //console.info('remove_user from socket = ', cluster.worker.id, ' user_fio: ', the_user.user.fio);
         });
       }
     });
