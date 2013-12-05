@@ -19,7 +19,7 @@ myApp.controller('statCtrl', function($scope, $resource, $rootScope, $location, 
 					params: {
 						brand: brand.id,
 						today: $scope.fpk.today_date,
-						amount: brand.cup.plan
+						amount: parseInt(plan)
 					}
 				}).then(function(result) {
 					brand.cup.plan = plan;
