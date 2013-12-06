@@ -658,6 +658,7 @@ myApp.filter('slice', function () {
 myApp.filter('onlyManager', function () {
     return function (managers, isTrue) {
         var answer = _.filter(managers, function (el) {
+            if(el.user_group == 8) return false;
             if (isTrue && (el.user_group == 6 || el.user_group == 5)) return true;
             if (!isTrue && el.user_group != 6 && el.user_group != 5) return true;
         })
