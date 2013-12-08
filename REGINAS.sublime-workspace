@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"font-",
+				"font-weight"
+			],
+			[
+				"font",
+				"font-weight"
+			],
+			[
 				"toSql",
 				"tomysql"
 			],
@@ -54,10 +62,6 @@
 			[
 				"ove",
 				"overflow"
-			],
-			[
-				"font",
-				"font-weight"
 			],
 			[
 				"text",
@@ -166,10 +170,6 @@
 			[
 				"max",
 				"max-width"
-			],
-			[
-				"font-",
-				"font-size"
 			],
 			[
 				"comm",
@@ -523,23 +523,7 @@
 			"file": "server/server.js",
 			"settings":
 			{
-				"buffer_size": 190637,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/Users/iBook/Library/Application Support/Sublime Text 3/Packages/User/CodeFormatter.sublime-settings",
-			"settings":
-			{
-				"buffer_size": 717,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/Users/iBook/Library/Application Support/Sublime Text 3/Packages/CodeFormatter/CodeFormatter.sublime-settings",
-			"settings":
-			{
-				"buffer_size": 6744,
+				"buffer_size": 191336,
 				"line_ending": "Unix"
 			}
 		},
@@ -563,7 +547,7 @@
 			"file": "app/styles/main.scss",
 			"settings":
 			{
-				"buffer_size": 78217,
+				"buffer_size": 78512,
 				"line_ending": "Unix"
 			}
 		},
@@ -827,14 +811,6 @@
 			}
 		},
 		{
-			"file": "app/scripts/controllers/settings-tests.js",
-			"settings":
-			{
-				"buffer_size": 2257,
-				"line_ending": "Unix"
-			}
-		},
-		{
 			"file": "app/views/fpk/settings/organizations.html",
 			"settings":
 			{
@@ -854,7 +830,15 @@
 			"file": "app/views/fpk/settings/tests.html",
 			"settings":
 			{
-				"buffer_size": 3099,
+				"buffer_size": 3462,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/scripts/controllers/settings-tests.js",
+			"settings":
+			{
+				"buffer_size": 2490,
 				"line_ending": "Unix"
 			}
 		},
@@ -870,7 +854,7 @@
 			"file": "app/views/fpk/stat.html",
 			"settings":
 			{
-				"buffer_size": 4960,
+				"buffer_size": 5169,
 				"line_ending": "Unix"
 			}
 		},
@@ -878,7 +862,7 @@
 			"file": "app/scripts/controllers/fpk-stat.js",
 			"settings":
 			{
-				"buffer_size": 4970,
+				"buffer_size": 5733,
 				"line_ending": "Unix"
 			}
 		},
@@ -911,7 +895,7 @@
 			"file": "app/scripts/controllers/fpk.js",
 			"settings":
 			{
-				"buffer_size": 84001,
+				"buffer_size": 84050,
 				"line_ending": "Unix"
 			}
 		},
@@ -1070,6 +1054,10 @@
 	},
 	"file_history":
 	[
+		"/Users/iBook/couchdb-tunnel.pl",
+		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/CodeFormatter/CodeFormatter.sublime-settings",
+		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/User/CodeFormatter.sublime-settings",
+		"/Users/iBook/Desktop/parseDate.js",
 		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/Alignment/Default (OSX).sublime-keymap",
 		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/Alignment/Base File.sublime-settings",
 		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/User/EsFormatter.sublime-settings",
@@ -1193,11 +1181,7 @@
 		"/Users/iBook/4tree/test/spec/controllers/main.js",
 		"/Users/iBook/yo/Gruntfile.js",
 		"/Users/iBook/4tree/Gruntfile.js",
-		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
-		"/Users/iBook/4tree/app/styles/main1.scss",
-		"/Users/iBook/4tree/app/styles/import/_editor.scss",
-		"/Users/iBook/4tree/app/styles/main.css",
-		"/Users/iBook/4tree/app/sass/screen.scss"
+		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/Default/Preferences.sublime-settings"
 	],
 	"find":
 	{
@@ -1216,6 +1200,33 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"22",
+			"onlyManager",
+			"plans",
+			"1_plan",
+			"jsGetManagerCupAdminReport",
+			"user_gr",
+			"clear_ca",
+			"plans",
+			"1_plan",
+			"searchString",
+			"cup_plan_b",
+			"cup",
+			"getStat",
+			"loadStat",
+			"v1/stat",
+			"nextWeekDay",
+			"завтра",
+			"jsTestFilter",
+			"test",
+			"1_test",
+			"checkSMS",
+			"sendsms",
+			"hset",
+			"redis.",
+			"controller",
+			"Main",
+			"database",
 			"Регинас",
 			"users_online_fio",
 			"users_online",
@@ -1316,34 +1327,7 @@
 			"client.fio",
 			"fio",
 			"phone",
-			"Vin",
-			"клиент:",
-			"dubli",
-			"dublica",
-			"na",
-			"jsUpdateClient",
-			"jsDelDo",
-			"checked",
-			"searchString",
-			"adddo",
-			"jsUpdateClient",
-			"updateClientRings",
-			"updateClient",
-			"loadStat",
-			"/stat",
-			"getstat",
-			"setTim",
-			"brand_adr",
-			"loadTestDoc",
-			"test",
-			"car_",
-			"placeholder",
-			"test",
-			"do_types",
-			"checkTo",
-			"console.info",
-			"\"!\"",
-			"manager_filter ="
+			"Vin"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1413,7 +1397,7 @@
 	"groups":
 	[
 		{
-			"selected": 9,
+			"selected": 19,
 			"sheets":
 			[
 				{
@@ -1422,7 +1406,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 190637,
+						"buffer_size": 191336,
 						"regions":
 						{
 							"mark":
@@ -1438,8 +1422,8 @@
 						"selection":
 						[
 							[
-								13646,
-								13646
+								153175,
+								153175
 							]
 						],
 						"settings":
@@ -1451,69 +1435,13 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 8317.0,
+						"translation.y": 87157.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "/Users/iBook/Library/Application Support/Sublime Text 3/Packages/User/CodeFormatter.sublime-settings",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 717,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								685,
-								685
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JSON.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "/Users/iBook/Library/Application Support/Sublime Text 3/Packages/CodeFormatter/CodeFormatter.sublime-settings",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6744,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2179,
-								1486
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JSON.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
 					"file": "Gruntfile.js",
 					"semi_transient": false,
 					"settings":
@@ -1543,7 +1471,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 2,
 					"file": "server/isProduction.js",
 					"semi_transient": false,
 					"settings":
@@ -1570,20 +1498,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 3,
 					"file": "app/styles/main.scss",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 78217,
+						"buffer_size": 78512,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								69985,
-								69985
+								57038,
+								57038
 							]
 						],
 						"settings":
@@ -1593,13 +1521,13 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 47249.0,
+						"translation.y": 36627.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 4,
 					"file": "app/robots.txt",
 					"semi_transient": false,
 					"settings":
@@ -1626,7 +1554,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 5,
 					"file": "server/rest-api.js",
 					"semi_transient": false,
 					"settings":
@@ -1655,7 +1583,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 6,
 					"file": "app/views/--------.js",
 					"semi_transient": false,
 					"settings":
@@ -1682,7 +1610,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 9,
+					"buffer": 7,
 					"file": "app/views/com_doc.html",
 					"semi_transient": false,
 					"settings":
@@ -1710,7 +1638,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 8,
 					"semi_transient": false,
 					"settings":
 					{
@@ -1736,7 +1664,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 11,
+					"buffer": 9,
 					"file": "app/views/dog_doc.html",
 					"semi_transient": false,
 					"settings":
@@ -1764,7 +1692,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 12,
+					"buffer": 10,
 					"file": "app/scripts/controllers/com-ctrl.js",
 					"semi_transient": false,
 					"settings":
@@ -1777,7 +1705,7 @@
 						[
 							[
 								0,
-								918
+								144
 							]
 						],
 						"settings":
@@ -1794,7 +1722,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 13,
+					"buffer": 11,
 					"file": "app/index.html",
 					"semi_transient": false,
 					"settings":
@@ -1806,8 +1734,8 @@
 						"selection":
 						[
 							[
-								1551,
-								1551
+								665,
+								665
 							]
 						],
 						"settings":
@@ -1818,13 +1746,13 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 168.0,
+						"translation.y": 171.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 14,
+					"buffer": 12,
 					"file": "app/bower_components/redactor917/redactor/redactor-multi.angular.js",
 					"semi_transient": false,
 					"settings":
@@ -1854,7 +1782,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 15,
+					"buffer": 13,
 					"file": "app/views/fpk/stat/stat_big.html",
 					"semi_transient": false,
 					"settings":
@@ -1877,13 +1805,13 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1776.0,
+						"translation.y": 298.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 16,
+					"buffer": 14,
 					"file": "app/scripts/controllers/stat_big_ctrl.js",
 					"semi_transient": false,
 					"settings":
@@ -1913,7 +1841,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 17,
+					"buffer": 15,
 					"file": "app/scripts/the_diller.js",
 					"semi_transient": false,
 					"settings":
@@ -1942,7 +1870,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 18,
+					"buffer": 16,
 					"file": "app/views/test_doc.html",
 					"semi_transient": false,
 					"settings":
@@ -1971,7 +1899,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 19,
+					"buffer": 17,
 					"file": "app/scripts/controllers/test-ctrl.js",
 					"semi_transient": false,
 					"settings":
@@ -2000,7 +1928,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 20,
+					"buffer": 18,
 					"file": "app/styles/print.scss",
 					"semi_transient": false,
 					"settings":
@@ -2028,7 +1956,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 21,
+					"buffer": 19,
 					"file": "app/scripts/app.js",
 					"semi_transient": false,
 					"settings":
@@ -2040,8 +1968,8 @@
 						"selection":
 						[
 							[
-								13023,
-								13023
+								448,
+								448
 							]
 						],
 						"settings":
@@ -2052,13 +1980,13 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 6030.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 22,
+					"buffer": 20,
 					"file": "app/scripts/tinycon.js",
 					"semi_transient": false,
 					"settings":
@@ -2087,7 +2015,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 23,
+					"buffer": 21,
 					"file": "app/scripts/controllers/news.js",
 					"semi_transient": false,
 					"settings":
@@ -2114,7 +2042,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 24,
+					"buffer": 22,
 					"file": "app/scripts/controllers/stat_main.js",
 					"semi_transient": false,
 					"settings":
@@ -2142,7 +2070,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 25,
+					"buffer": 23,
 					"file": "app/scripts/controllers/login.js",
 					"semi_transient": false,
 					"settings":
@@ -2171,7 +2099,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 26,
+					"buffer": 24,
 					"file": "app/scripts/controllers/socket-service.js",
 					"semi_transient": false,
 					"settings":
@@ -2200,7 +2128,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 27,
+					"buffer": 25,
 					"file": "app/views/fpk/admin_cup.html",
 					"semi_transient": false,
 					"settings":
@@ -2228,7 +2156,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 28,
+					"buffer": 26,
 					"file": "app/scripts/controllers/admin_cup.js",
 					"semi_transient": false,
 					"settings":
@@ -2258,7 +2186,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 29,
+					"buffer": 27,
 					"file": "app/views/fpk/reiting.html",
 					"semi_transient": false,
 					"settings":
@@ -2287,7 +2215,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 30,
+					"buffer": 28,
 					"file": "app/scripts/controllers/reiting.js",
 					"semi_transient": false,
 					"settings":
@@ -2317,7 +2245,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 31,
+					"buffer": 29,
 					"file": "app/views/fpk/stat/stat_all_day.html",
 					"semi_transient": false,
 					"settings":
@@ -2345,7 +2273,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 32,
+					"buffer": 30,
 					"file": "app/scripts/controllers/stat_all_day.js",
 					"semi_transient": false,
 					"settings":
@@ -2374,7 +2302,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 33,
+					"buffer": 31,
 					"file": "app/scripts/controllers/stat_big.js",
 					"semi_transient": false,
 					"settings":
@@ -2403,7 +2331,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 34,
+					"buffer": 32,
 					"file": "app/views/fpk/stat/stat_day.html",
 					"semi_transient": false,
 					"settings":
@@ -2431,7 +2359,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 35,
+					"buffer": 33,
 					"file": "app/scripts/controllers/stat_day.js",
 					"semi_transient": false,
 					"settings":
@@ -2461,7 +2389,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 36,
+					"buffer": 34,
 					"file": "app/views/fpk/settings.html",
 					"semi_transient": false,
 					"settings":
@@ -2488,7 +2416,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 37,
+					"buffer": 35,
 					"file": "app/views/fpk/settings/models.html",
 					"semi_transient": false,
 					"settings":
@@ -2516,37 +2444,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 38,
-					"file": "app/scripts/controllers/settings-tests.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2257,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								267,
-								267
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true,
-							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
-						},
-						"translation.x": 0.0,
-						"translation.y": 689.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 39,
+					"buffer": 36,
 					"file": "app/views/fpk/settings/organizations.html",
 					"semi_transient": false,
 					"settings":
@@ -2574,7 +2472,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 40,
+					"buffer": 37,
 					"file": "app/scripts/controllers/organizations-ctrl.js",
 					"semi_transient": false,
 					"settings":
@@ -2604,28 +2502,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 41,
+					"buffer": 38,
 					"file": "app/views/fpk/settings/tests.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3099,
+						"buffer_size": 3462,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								544,
-								544
-							],
-							[
-								599,
-								599
-							],
-							[
-								889,
-								889
+								1412,
+								1412
 							]
 						],
 						"settings":
@@ -2634,13 +2524,43 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
+						"translation.y": 263.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 39,
+					"file": "app/scripts/controllers/settings-tests.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2490,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								768,
+								768
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true,
+							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
+						},
+						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 42,
+					"buffer": 40,
 					"file": "app/scripts/controllers/settings.js",
 					"semi_transient": false,
 					"settings":
@@ -2670,20 +2590,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 43,
+					"buffer": 41,
 					"file": "app/views/fpk/stat.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4960,
+						"buffer_size": 5169,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4235,
-								4235
+								3777,
+								3777
 							]
 						],
 						"settings":
@@ -2693,26 +2613,26 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 563.0,
+						"translation.y": 664.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 44,
+					"buffer": 42,
 					"file": "app/scripts/controllers/fpk-stat.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4970,
+						"buffer_size": 5733,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2976,
-								2976
+								1130,
+								1130
 							]
 						],
 						"settings":
@@ -2722,13 +2642,13 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 121.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 45,
+					"buffer": 43,
 					"file": "app/views/fpk/news.html",
 					"semi_transient": false,
 					"settings":
@@ -2755,7 +2675,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 46,
+					"buffer": 44,
 					"file": "app/json.json",
 					"semi_transient": false,
 					"settings":
@@ -2783,7 +2703,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 47,
+					"buffer": 45,
 					"file": "app/views/fpk.html",
 					"semi_transient": false,
 					"settings":
@@ -2795,8 +2715,8 @@
 						"selection":
 						[
 							[
-								1865,
-								1865
+								3317,
+								3328
 							]
 						],
 						"settings":
@@ -2809,26 +2729,26 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 291.0,
+						"translation.y": 619.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 48,
+					"buffer": 46,
 					"file": "app/scripts/controllers/fpk.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 84001,
+						"buffer_size": 84050,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								13156,
-								13156
+								21465,
+								21465
 							]
 						],
 						"settings":
@@ -2839,13 +2759,13 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 6418.0,
+						"translation.y": 11665.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 49,
+					"buffer": 47,
 					"file": "/Applications/MAMP/htdocs/oauth2/server.php",
 					"semi_transient": false,
 					"settings":
@@ -2872,7 +2792,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 50,
+					"buffer": 48,
 					"file": "/Applications/MAMP/htdocs/oauth2/oauth.php",
 					"semi_transient": false,
 					"settings":
@@ -2901,7 +2821,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 51,
+					"buffer": 49,
 					"file": "/Applications/MAMP/htdocs/oauth2/token.php",
 					"semi_transient": false,
 					"settings":
@@ -2928,7 +2848,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 52,
+					"buffer": 50,
 					"file": "/Applications/MAMP/htdocs/oauth2/oauth2-server-php/src/OAuth2/Server.php",
 					"semi_transient": false,
 					"settings":
@@ -2957,7 +2877,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 53,
+					"buffer": 51,
 					"file": "app/views/client_list.html",
 					"semi_transient": false,
 					"settings":
@@ -2969,8 +2889,8 @@
 						"selection":
 						[
 							[
-								24506,
-								24506
+								44367,
+								44379
 							]
 						],
 						"settings":
@@ -2980,13 +2900,13 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 7125.0,
+						"translation.y": 12934.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 54,
+					"buffer": 52,
 					"file": "app/views/fpk/clients.html",
 					"semi_transient": false,
 					"settings":
@@ -3015,7 +2935,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 55,
+					"buffer": 53,
 					"file": "app/scripts/controllers/clients.js",
 					"semi_transient": false,
 					"settings":
@@ -3027,8 +2947,8 @@
 						"selection":
 						[
 							[
-								1815,
-								1815
+								10457,
+								10507
 							]
 						],
 						"settings":
@@ -3039,13 +2959,13 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 605.0,
+						"translation.y": 5452.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 56,
+					"buffer": 54,
 					"file": "app/views/fpk/calendar.html",
 					"semi_transient": false,
 					"settings":
@@ -3072,7 +2992,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 57,
+					"buffer": 55,
 					"file": "app/scripts/controllers/calendar.js",
 					"semi_transient": false,
 					"settings":
@@ -3102,7 +3022,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 58,
+					"buffer": 56,
 					"file": "app/views/user/reg.html",
 					"semi_transient": false,
 					"settings":
@@ -3131,7 +3051,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 59,
+					"buffer": 57,
 					"file": "app/views/user.html",
 					"semi_transient": false,
 					"settings":
@@ -3160,7 +3080,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 60,
+					"buffer": 58,
 					"file": "app/views/user/login.html",
 					"semi_transient": false,
 					"settings":
@@ -3187,7 +3107,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 61,
+					"buffer": 59,
 					"file": "app/scripts/controllers/login-ctrl.js",
 					"semi_transient": false,
 					"settings":

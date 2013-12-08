@@ -66,7 +66,6 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
 
 
 
-
  $scope.myPagingFunction = function() {
           console.info("page_function");
           var query = $scope.fpk.clients_query;
@@ -166,6 +165,13 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment, $http) {
         
 
 */
+
+         $scope.jsChangeCarCost = function(mydo) {
+            if( $scope.fpk.the_user.user_group!=6 ) {
+              mydo.manager_id = $scope.fpk.the_user.id;
+            }
+         }
+
         
         $scope.jsShowRemind = function(mydo) {
           var answer = "выкл";

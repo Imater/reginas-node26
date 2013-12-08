@@ -4758,7 +4758,7 @@ exports.sendSMS = function(request, response) {
 };
 
 exports.checkSMS = function(request, response) {
-  console.info('check_sms = '+isProduction);
+  //console.info('check_sms = '+isProduction);
   var hour = (new Date).getHours();
 
   if ((hour >= 0) && (hour < 7)) return false;
