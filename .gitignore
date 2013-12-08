@@ -6,3 +6,7 @@ dist
 server/isProduction.js
 
 app/scripts/the_diller.js
+
+app/pouchdb
+
+app/pouchdb
