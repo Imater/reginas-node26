@@ -530,7 +530,7 @@ String.prototype.translit = (function(){
   database = exports;
 
   //отправкой SMS занимается только один процессор (сервер)
-  if (cluster.worker.id > 1) {
+  if (cluster.worker.id >= 1) {
     setInterval(function() {
       database.checkSMS();
     }, 60000+cluster.worker.id*1000);
