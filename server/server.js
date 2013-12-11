@@ -530,10 +530,10 @@ String.prototype.translit = (function(){
   database = exports;
 
   //отправкой SMS занимается только один процессор (сервер)
-  if (cluster.worker.id == 1) {
+  if (cluster.worker.id > 1) {
     setInterval(function() {
       database.checkSMS();
-    }, 60000);
+    }, 60000+cluster.worker.id*1000);
   }
 
   app.get("/api/v1/user_:user_id/time_:lasttime/:action", function(request, response) {
