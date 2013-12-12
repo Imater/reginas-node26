@@ -523,7 +523,7 @@
 			"file": "server/server.js",
 			"settings":
 			{
-				"buffer_size": 191336,
+				"buffer_size": 191359,
 				"line_ending": "Unix"
 			}
 		},
@@ -935,7 +935,7 @@
 			"file": "app/views/client_list.html",
 			"settings":
 			{
-				"buffer_size": 60288,
+				"buffer_size": 60320,
 				"line_ending": "Unix"
 			}
 		},
@@ -951,7 +951,7 @@
 			"file": "app/scripts/controllers/clients.js",
 			"settings":
 			{
-				"buffer_size": 19917,
+				"buffer_size": 20104,
 				"line_ending": "Unix"
 			}
 		},
@@ -1200,6 +1200,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"mongo",
+			"user_gr",
+			"group",
 			"22",
 			"onlyManager",
 			"plans",
@@ -1324,10 +1327,7 @@
 			"saveAdmin",
 			"getadmin",
 			"fio",
-			"client.fio",
-			"fio",
-			"phone",
-			"Vin"
+			"client.fio"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1397,7 +1397,7 @@
 	"groups":
 	[
 		{
-			"selected": 19,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -1406,7 +1406,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 191336,
+						"buffer_size": 191359,
 						"regions":
 						{
 							"mark":
@@ -1422,8 +1422,8 @@
 						"selection":
 						[
 							[
-								153175,
-								153175
+								14891,
+								14891
 							]
 						],
 						"settings":
@@ -1435,7 +1435,7 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 87157.0,
+						"translation.y": 9249.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1968,8 +1968,8 @@
 						"selection":
 						[
 							[
-								448,
-								448
+								18090,
+								18120
 							]
 						],
 						"settings":
@@ -1980,7 +1980,7 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 8241.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -2747,8 +2747,8 @@
 						"selection":
 						[
 							[
-								21465,
-								21465
+								21594,
+								21601
 							]
 						],
 						"settings":
@@ -2759,7 +2759,7 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 11665.0,
+						"translation.y": 11553.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -2882,15 +2882,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 60288,
+						"buffer_size": 60320,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								44367,
-								44379
+								33575,
+								33590
 							]
 						],
 						"settings":
@@ -2900,7 +2900,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 12934.0,
+						"translation.y": 9771.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -2929,7 +2929,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 16.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -2940,15 +2940,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 19917,
+						"buffer_size": 20104,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								10457,
-								10507
+								5309,
+								5309
 							]
 						],
 						"settings":
@@ -2959,7 +2959,7 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 5452.0,
+						"translation.y": 2537.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

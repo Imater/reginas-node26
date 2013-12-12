@@ -341,9 +341,14 @@ var MongoClient = require('mongodb').MongoClient, format = require('util').forma
         });
       } else if (msg.message_type == "loadstat") {
         //global.report.loadstat();
-        io.sockets.emit('loadstat', {
-          brand: msg.brand
-        });
+              try {
+                io.sockets.emit('loadstat', {
+                  brand: msg.brand
+                });
+              } catch (error) {
+                console.info("error sending loadstat "+error);
+              }
+
       } else if (msg.message_type == "chat") {
         //global.report.sendMessage( msg.chat ); //отправка алерта
         io.sockets.emit('sendmessage', {
