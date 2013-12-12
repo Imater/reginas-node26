@@ -3880,6 +3880,8 @@ exports.saveAdmin = function(request, response) {
         pool.query('SELECT * FROM `1_do` WHERE client=? ORDER by date2', [client_id], function(err, client_do, fields) {
           client_do = correct_dates(client_do, "no_zero_dates");
 
+          if(!the_client[0]) return true;
+
           var answer = {
             zv: "0000-00-00 00:00:00",
             vz: "0000-00-00 00:00:00",
