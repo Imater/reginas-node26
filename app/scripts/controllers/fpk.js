@@ -705,12 +705,31 @@ myApp.directive('datepicker', function () {
                 });
             });
             scope.$watch("fpk.today_date", function () {
-                element.datepicker('setDate', scope.fpk.today_date);
+                element.datepicker('setDate', scope.fpk.today_date);                
+                var days = getFirstLastDayMonth( scope.fpk.today_date );
+                scope.fpk.d1 = days.first_day;
+                scope.fpk.d2 = days.last_day;
+                console.info(days, scope.fpk.d1);
             });
             scope.$on('$destroy', function () {});
         }
     }
 });
+
+function getFirstLastDayMonth(today) {
+    var today_date = fromMysql(today+" 00:00:00");
+    today_date.setDate(1);
+    var first_day = toMysql(today_date);
+    
+    var dd = new Date( today_date.setMonth( today_date.getMonth()+1 ) );
+    dd.setDate(0);
+    var last_day = toMysql(dd);
+    
+    var d1 = first_day.split(" ")[0].split("-");
+    var d2 = last_day.split(" ")[0].split("-");
+
+    return {first_day: d1[2]+"."+d1[1]+"."+d1[0], last_day: d2[2]+"."+d2[1]+"."+d2[0] }
+}
 
 myApp.directive('slideToggle', function () {
     return {
@@ -1629,7 +1648,9 @@ myApp.factory('myApi', function ($http, $q, oAuth2) {
                     params: {
                         token: token,
                         brand: $scope.fpk.brand,
-                        today_date: $scope.fpk.today_date
+                        today_date: $scope.fpk.today_date,
+                        d1: $scope.fpk.d1,
+                        d2: $scope.fpk.d2
                     }
                 }).then(function (result) {
                     dfd.resolve(result.data);

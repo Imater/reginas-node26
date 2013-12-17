@@ -11,8 +11,33 @@
                   <li ng-class="{active:stat_view_switch==4}" ng-click="stat_view_switch=4"><a>По менеджерам</a></li>
 
                 </ul>	
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="input-group input-group-sm">
+        <span class="input-group-addon">
+          Начальная дата:
+        </span>
+        <input type="text" class="form-control" datepicker2 ng-model="fpk.d1" placeholder="01.01.2013">
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="input-group input-group-sm">
+        <span class="input-group-addon">
+          Конечная дата:
+        </span>
+        <input type="text" class="form-control" datepicker2 ng-model="fpk.d2" placeholder="31.01.2013">
+      </div>
+    </div>
+
+    <div class="col-md-4">
         <a class="pull-right" ng-click="getCUPtable();fpk.jsLoadStat();">Обновить (данные на {{fpk.stat_load_time}})</a>
-        <br><br>
+    </div>
+
+
+  </div>
+
+        
         <table>
         <tr ng-repeat="brand in cup" ng-class="{needgroup:( (cup[$index].brand_group)!=(cup[$index-1].brand_group)), is_sum:(brand.id<0)}">
         	<td ng-click="jsSelectBrand(brand.id)" class="first_td"><img style="width:32px;" title="{{brand.title}}" ng-src="images/logos/{{brand.logo}}">

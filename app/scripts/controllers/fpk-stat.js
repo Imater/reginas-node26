@@ -9,7 +9,7 @@ myApp.controller('statCtrl', function($scope, $resource, $rootScope, $location, 
 	//	$scope.chartConfig = {"options":{"chart":{"type":"areaspline"},"plotOptions":{"series":{"stacking":""}}},"series":[{"name":"Договора","data":[1,2,4,7,3,5,6,7,8,9,5,1,3,4,5],"id":"series-0"}],"title":{"text":"Hello"},"credits":{"enabled":true},"loading":false};
 	$scope.jsCarsEnterClick = function(brand) {
 		var user_group = $scope.fpk.the_user.user_group;
-		var can_edit = (user_group == 1) || (user_group == 2) || (user_group == 10);
+		var can_edit = (user_group == 1) || (user_group == 2) || (user_group == 10) || (user_group == 3);
 		if (can_edit || ((brand.id == $scope.fpk.brand) && ($scope.fpk.the_user.rights[0].can_edit_all_client)) ) {
 			var plan = prompt("Введите кол-во товарных автомобилей на складе:", brand.cup.plan);
 			if(parseInt(plan)>0) {
@@ -177,6 +177,14 @@ myApp.controller('statCtrl', function($scope, $resource, $rootScope, $location, 
 	$scope.$watch('fpk.today_date', function(val, newVal) {
 		if (val != newVal) $scope.getCUPtable();
 		$scope.LoadJsonByDay();
+	});
+	$scope.$watch('fpk.d1', function(val, newVal) {
+		if (val != newVal) $scope.getCUPtable();
+			$scope.getCUPtable();
+	});
+	$scope.$watch('fpk.d2', function(val, newVal) {
+		if (val != newVal) $scope.getCUPtable();
+			$scope.getCUPtable();
 	});
 	$scope.$watch('fpk.brand', function(val, newVal) {
 		$scope.LoadJsonByDay();

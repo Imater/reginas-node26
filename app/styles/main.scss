@@ -1862,7 +1862,14 @@ background-color: none !important;
     color: #000 !important;
 }
 
+#ui-datepicker-div {
+    box-shadow: 3px 5px 10px #000;
+    border: 10px solid #000;
+    border-radius: 0px;
+}
+
 #statistics {
+
     color: #EEE;
     padding: 10px;
         overflow: auto;
@@ -1873,7 +1880,21 @@ background-color: none !important;
         top:$header_height;
         bottom:0px;
         padding-bottom: 50px;
-
+    .input-group-sm {
+        height: 20px;
+        input {
+            background: #000;
+            border: #000;
+            color: #FFF;
+            font-weight: bold;
+            border-left: 1px solid #222;
+        }
+    }
+    .input-group-addon {
+        color: #888;
+        border-color: #000;
+        background: #000;
+    }
     .top_tabs {
         a {
             height: 2.3em;

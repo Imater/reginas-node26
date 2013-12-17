@@ -1359,6 +1359,11 @@ body {
   border: none !important;
   color: #000 !important; }
 
+#ui-datepicker-div {
+  box-shadow: 3px 5px 10px #000;
+  border: 10px solid #000;
+  border-radius: 0px; }
+
 #statistics {
   color: #EEE;
   padding: 10px;
@@ -1370,6 +1375,18 @@ body {
   top: 36px;
   bottom: 0px;
   padding-bottom: 50px; }
+  #statistics .input-group-sm {
+    height: 20px; }
+    #statistics .input-group-sm input {
+      background: #000;
+      border: #000;
+      color: #FFF;
+      font-weight: bold;
+      border-left: 1px solid #222; }
+  #statistics .input-group-addon {
+    color: #888;
+    border-color: #000;
+    background: #000; }
   #statistics .top_tabs a {
     height: 2.3em;
     padding: 3px 10px;
