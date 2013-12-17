@@ -1880,20 +1880,22 @@ background-color: none !important;
         top:$header_height;
         bottom:0px;
         padding-bottom: 50px;
-    .input-group-sm {
-        height: 20px;
-        input {
-            background: #000;
-            border: #000;
-            color: #FFF;
-            font-weight: bold;
-            border-left: 1px solid #222;
+    .top_dates {
+        .input-group-sm {
+            height: 20px;
+            input {
+                background: #000;
+                border: #000;
+                color: #FFF;
+                font-weight: bold;
+                border-left: 1px solid #222;
+            }
         }
-    }
-    .input-group-addon {
-        color: #888;
-        border-color: #000;
-        background: #000;
+        .input-group-addon {
+            color: #888;
+            border-color: #000;
+            background: #000;
+        }
     }
     .top_tabs {
         a {

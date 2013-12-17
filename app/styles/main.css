@@ -1375,15 +1375,15 @@ body {
   top: 36px;
   bottom: 0px;
   padding-bottom: 50px; }
-  #statistics .input-group-sm {
+  #statistics .top_dates .input-group-sm {
     height: 20px; }
-    #statistics .input-group-sm input {
+    #statistics .top_dates .input-group-sm input {
       background: #000;
       border: #000;
       color: #FFF;
       font-weight: bold;
       border-left: 1px solid #222; }
-  #statistics .input-group-addon {
+  #statistics .top_dates .input-group-addon {
     color: #888;
     border-color: #000;
     background: #000; }
