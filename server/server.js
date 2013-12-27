@@ -571,7 +571,9 @@ String.prototype.translit = (function(){
           dfd.resolve(parseInt(rows[0].user_id));
 
           if (rows[0].user_id) {
-            pool.query('UPDATE 1_users SET lastvizit = NOW() WHERE id= "' + rows[0].user_id + '"', function(err, rows, fields) {});
+            if(parseInt(Math.random()*5)==3) {
+              pool.query('UPDATE 1_users SET lastvizit = NOW() WHERE id= "' + rows[0].user_id + '"', function(err, rows, fields) {});
+            }
           }
 
         } else {

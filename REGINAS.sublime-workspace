@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"max",
+				"max-height"
+			],
+			[
+				"fir",
+				"first_day"
+			],
+			[
+				"border-left",
+				"border-left-color"
+			],
+			[
 				"font-",
 				"font-weight"
 			],
@@ -166,10 +178,6 @@
 			[
 				"no",
 				"nowrap"
-			],
-			[
-				"max",
-				"max-width"
 			],
 			[
 				"comm",
@@ -506,14 +514,6 @@
 			[
 				"$lo",
 				"$locationProvider"
-			],
-			[
-				"backgr",
-				"background-position"
-			],
-			[
-				"ng-bi",
-				"ng-bind-html	AngularJS"
 			]
 		]
 	},
@@ -523,7 +523,7 @@
 			"file": "server/server.js",
 			"settings":
 			{
-				"buffer_size": 191359,
+				"buffer_size": 191976,
 				"line_ending": "Unix"
 			}
 		},
@@ -547,7 +547,7 @@
 			"file": "app/styles/main.scss",
 			"settings":
 			{
-				"buffer_size": 78512,
+				"buffer_size": 79093,
 				"line_ending": "Unix"
 			}
 		},
@@ -854,7 +854,7 @@
 			"file": "app/views/fpk/stat.html",
 			"settings":
 			{
-				"buffer_size": 5169,
+				"buffer_size": 5812,
 				"line_ending": "Unix"
 			}
 		},
@@ -862,8 +862,18 @@
 			"file": "app/scripts/controllers/fpk-stat.js",
 			"settings":
 			{
-				"buffer_size": 5733,
+				"buffer_size": 5998,
 				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "Searching 3532 files for \"fpk.d1\"\n\n/Users/iBook/Reginas-fpk/app/scripts/controllers/stat_big_ctrl.js:\n   13    $scope.group2 = \"short\";\n   14  \n   15:   $scope.fpk.d1 = normal_date(new Date((new Date()).getTime() - 65 * 24 * 60 * 60 * 1000));\n   16    $scope.fpk.d2 = normal_date(new Date((new Date()).getTime() + 25 * 24 * 60 * 60 * 1000));\n   17  \n   ..\n   67            brand: $scope.fpk.brand,\n   68            today: $scope.fpk.today_date,\n   69:           d1: $scope.fpk.d1,\n   70            d2: $scope.fpk.d2,\n   71            group1: $scope.group1,\n   ..\n   90    jsLoadBig($scope);\n   91  \n   92:   $scope.$watchCollection(\"[fpk.d2, fpk.d1, fpk.today_date, fpk.brand, show_days, group1, fpk.manager_filter]\", function(Val, newVal) {\n   93      if (Val != newVal) {\n   94        jsLoadBig($scope);\n   ..\n  112      }\n  113      var col_dates = [];\n  114:     var _d1 = $scope.fpk.d1;\n  115      var _d2 = $scope.fpk.d2;\n  116  \n\n/Users/iBook/Reginas-fpk/app/views/fpk/stat.html:\n   19            Начальная дата:\n   20          </span>\n   21:         <input type=\"text\" class=\"form-control\" datepicker2 ng-model=\"fpk.d1\" placeholder=\"01.01.2013\">\n   22        </div>\n   23      </div>\n\n/Users/iBook/Reginas-fpk/app/views/fpk/stat/stat_big.html:\n   12            Начальная дата:\n   13          </span>\n   14:         <input type=\"text\" class=\"form-control\" datepicker2 ng-model=\"fpk.d1\" placeholder=\"01.01.2013\">\n   15        </div>\n   16      </div>\n\n/Users/iBook/Reginas-fpk/app/scripts/controllers/stat_big_ctrl.js:\n   13    $scope.group2 = \"short\";\n   14  \n   15:   $scope.fpk.d1 = normal_date(new Date((new Date()).getTime() - 65 * 24 * 60 * 60 * 1000));\n   16    $scope.fpk.d2 = normal_date(new Date((new Date()).getTime() + 25 * 24 * 60 * 60 * 1000));\n   17  \n   ..\n   67            brand: $scope.fpk.brand,\n   68            today: $scope.fpk.today_date,\n   69:           d1: $scope.fpk.d1,\n   70            d2: $scope.fpk.d2,\n   71            group1: $scope.group1,\n   ..\n   90    jsLoadBig($scope);\n   91  \n   92:   $scope.$watchCollection(\"[fpk.d2, fpk.d1, fpk.today_date, fpk.brand, show_days, group1, fpk.manager_filter]\", function(Val, newVal) {\n   93      if (Val != newVal) {\n   94        jsLoadBig($scope);\n   ..\n  112      }\n  113      var col_dates = [];\n  114:     var _d1 = $scope.fpk.d1;\n  115      var _d2 = $scope.fpk.d2;\n  116  \n\n/Users/iBook/Reginas-fpk/app/views/fpk/stat.html:\n   19            Начальная дата:\n   20          </span>\n   21:         <input type=\"text\" class=\"form-control\" datepicker2 ng-model=\"fpk.d1\" placeholder=\"01.01.2013\">\n   22        </div>\n   23      </div>\n\n/Users/iBook/Reginas-fpk/app/views/fpk/stat/stat_big.html:\n   12            Начальная дата:\n   13          </span>\n   14:         <input type=\"text\" class=\"form-control\" datepicker2 ng-model=\"fpk.d1\" placeholder=\"01.01.2013\">\n   15        </div>\n   16      </div>\n\n/Users/iBook/Reginas-fpk/dist/scripts/controllers/stat_big_ctrl.js:\n    2  	$scope.stat_big_view_switch='dg';\n    3  \n    4: 	$scope.fpk.d1 = \"30.10.2013\";\n    5  	$scope.fpk.d2 = \"30.11.2013\";\n    6  \n    .\n    8      var jsLoadBig = function($scope) {\n    9        var dfd = $q.defer();\n   10:         $http({url:'/api/v1/stat_big1',method: \"GET\", params: { brand: $scope.fpk.brand, today: $scope.fpk.today_date, d1:$scope.fpk.d1, d2:$scope.fpk.d2}}).then(function(result){\n   11          	$scope.stat_big = result.data.answers;\n   12          	$scope.stat_top = result.data.top;\n   ..\n   20      jsLoadBig($scope);\n   21  \n   22:     $scope.$watchCollection(\"[fpk.d2, fpk.d1, fpk.today_date, fpk.user_filter, fpk.brand]\", function(Val, newVal){\n   23      	if(Val != newVal) {\n   24  		    jsLoadBig($scope);\n\n/Users/iBook/Reginas-fpk/dist/views/fpk/stat/stat_big.html:\n    7  	    <div class=\"input-group input-group-sm\">\n    8      	  <span class=\"input-group-addon\">Начальная дата:</span>\n    9:       	  <input type=\"text\" class=\"form-control\" datepicker2 ng-model=\"fpk.d1\"  placeholder=\"01.01.2013\">\n   10      	</div>\n   11        </div>\n\n16 matches across 8 files\n\n\nSearching 3532 files for \"fpk.d1\"\n\n/Users/iBook/Reginas-fpk/app/scripts/controllers/stat_big_ctrl.js:\n   13    $scope.group2 = \"short\";\n   14  \n   15:   $scope.fpk.d1 = normal_date(new Date((new Date()).getTime() - 65 * 24 * 60 * 60 * 1000));\n   16    $scope.fpk.d2 = normal_date(new Date((new Date()).getTime() + 25 * 24 * 60 * 60 * 1000));\n   17  \n   ..\n   67            brand: $scope.fpk.brand,\n   68            today: $scope.fpk.today_date,\n   69:           d1: $scope.fpk.d1,\n   70            d2: $scope.fpk.d2,\n   71            group1: $scope.group1,\n   ..\n   90    jsLoadBig($scope);\n   91  \n   92:   $scope.$watchCollection(\"[fpk.d2, fpk.d1, fpk.today_date, fpk.brand, show_days, group1, fpk.manager_filter]\", function(Val, newVal) {\n   93      if (Val != newVal) {\n   94        jsLoadBig($scope);\n   ..\n  112      }\n  113      var col_dates = [];\n  114:     var _d1 = $scope.fpk.d1;\n  115      var _d2 = $scope.fpk.d2;\n  116  \n\n/Users/iBook/Reginas-fpk/app/views/fpk/stat.html:\n   19            Начальная дата:\n   20          </span>\n   21:         <input type=\"text\" class=\"form-control\" datepicker2 ng-model=\"fpk.d1\" placeholder=\"01.01.2013\">\n   22        </div>\n   23      </div>\n\n/Users/iBook/Reginas-fpk/app/views/fpk/stat/stat_big.html:\n   12            Начальная дата:\n   13          </span>\n   14:         <input type=\"text\" class=\"form-control\" datepicker2 ng-model=\"fpk.d1\" placeholder=\"01.01.2013\">\n   15        </div>\n   16      </div>\n\n/Users/iBook/Reginas-fpk/app/scripts/controllers/stat_big_ctrl.js:\n   13    $scope.group2 = \"short\";\n   14  \n   15:   $scope.fpk.d1 = normal_date(new Date((new Date()).getTime() - 65 * 24 * 60 * 60 * 1000));\n   16    $scope.fpk.d2 = normal_date(new Date((new Date()).getTime() + 25 * 24 * 60 * 60 * 1000));\n   17  \n   ..\n   67            brand: $scope.fpk.brand,\n   68            today: $scope.fpk.today_date,\n   69:           d1: $scope.fpk.d1,\n   70            d2: $scope.fpk.d2,\n   71            group1: $scope.group1,\n   ..\n   90    jsLoadBig($scope);\n   91  \n   92:   $scope.$watchCollection(\"[fpk.d2, fpk.d1, fpk.today_date, fpk.brand, show_days, group1, fpk.manager_filter]\", function(Val, newVal) {\n   93      if (Val != newVal) {\n   94        jsLoadBig($scope);\n   ..\n  112      }\n  113      var col_dates = [];\n  114:     var _d1 = $scope.fpk.d1;\n  115      var _d2 = $scope.fpk.d2;\n  116  \n\n/Users/iBook/Reginas-fpk/app/views/fpk/stat.html:\n   19            Начальная дата:\n   20          </span>\n   21:         <input type=\"text\" class=\"form-control\" datepicker2 ng-model=\"fpk.d1\" placeholder=\"01.01.2013\">\n   22        </div>\n   23      </div>\n\n/Users/iBook/Reginas-fpk/app/views/fpk/stat/stat_big.html:\n   12            Начальная дата:\n   13          </span>\n   14:         <input type=\"text\" class=\"form-control\" datepicker2 ng-model=\"fpk.d1\" placeholder=\"01.01.2013\">\n   15        </div>\n   16      </div>\n\n/Users/iBook/Reginas-fpk/dist/scripts/controllers/stat_big_ctrl.js:\n    2  	$scope.stat_big_view_switch='dg';\n    3  \n    4: 	$scope.fpk.d1 = \"30.10.2013\";\n    5  	$scope.fpk.d2 = \"30.11.2013\";\n    6  \n    .\n    8      var jsLoadBig = function($scope) {\n    9        var dfd = $q.defer();\n   10:         $http({url:'/api/v1/stat_big1',method: \"GET\", params: { brand: $scope.fpk.brand, today: $scope.fpk.today_date, d1:$scope.fpk.d1, d2:$scope.fpk.d2}}).then(function(result){\n   11          	$scope.stat_big = result.data.answers;\n   12          	$scope.stat_top = result.data.top;\n   ..\n   20      jsLoadBig($scope);\n   21  \n   22:     $scope.$watchCollection(\"[fpk.d2, fpk.d1, fpk.today_date, fpk.user_filter, fpk.brand]\", function(Val, newVal){\n   23      	if(Val != newVal) {\n   24  		    jsLoadBig($scope);\n\n/Users/iBook/Reginas-fpk/dist/views/fpk/stat/stat_big.html:\n    7  	    <div class=\"input-group input-group-sm\">\n    8      	  <span class=\"input-group-addon\">Начальная дата:</span>\n    9:       	  <input type=\"text\" class=\"form-control\" datepicker2 ng-model=\"fpk.d1\"  placeholder=\"01.01.2013\">\n   10      	</div>\n   11        </div>\n\n16 matches across 8 files\n\n\nSearching 3532 files for \"jqOpt\"\n\n/Users/iBook/Reginas-fpk/app/scripts/controllers/clients.js:\n  400      link: function($scope, element, attrs) {\n  401        // configure options\n  402:       var passedOptions = $scope.$eval(attrs.jqOptions);\n  403        \n  404        // defaults\n\n/Users/iBook/Reginas-fpk/app/scripts/controllers/clients.js:\n  400      link: function($scope, element, attrs) {\n  401        // configure options\n  402:       var passedOptions = $scope.$eval(attrs.jqOptions);\n  403        \n  404        // defaults\n\n/Users/iBook/Reginas-fpk/dist/scripts/controllers/clients.js:\n  304      link: function($scope, element, attrs) {\n  305        // configure options\n  306:       var passedOptions = $scope.$eval(attrs.jqOptions);\n  307        \n  308        // defaults\n\n3 matches across 3 files\n",
+			"settings":
+			{
+				"buffer_size": 8927,
+				"line_ending": "Unix",
+				"name": "Find Results",
+				"scratch": true
 			}
 		},
 		{
@@ -895,7 +905,7 @@
 			"file": "app/scripts/controllers/fpk.js",
 			"settings":
 			{
-				"buffer_size": 84050,
+				"buffer_size": 84849,
 				"line_ending": "Unix"
 			}
 		},
@@ -1200,6 +1210,21 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"jqOpt",
+			"jq",
+			"slide",
+			"collapse",
+			"[\"-\"]",
+			"can",
+			"setcar",
+			"getCUPtable",
+			"loadStatCup",
+			"getCUP",
+			"datetoday",
+			"date",
+			"fpk.d1",
+			"send",
+			"try",
 			"mongo",
 			"user_gr",
 			"group",
@@ -1312,22 +1337,7 @@
 			"show_one",
 			"client_car",
 			"model",
-			"saveadm",
-			"updatecli",
-			"ids",
-			"jsOpen",
-			"$scope.fpk.the_user",
-			"user.id",
-			"loadstat",
-			"jsCheckToken",
-			"jsAddDoToClient",
-			"adddo",
-			"jsAddDoToClient",
-			"inser",
-			"saveAdmin",
-			"getadmin",
-			"fio",
-			"client.fio"
+			"saveadm"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1397,7 +1407,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 50,
 			"sheets":
 			[
 				{
@@ -1406,7 +1416,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 191359,
+						"buffer_size": 191976,
 						"regions":
 						{
 							"mark":
@@ -1422,8 +1432,8 @@
 						"selection":
 						[
 							[
-								14891,
-								14891
+								182527,
+								182533
 							]
 						],
 						"settings":
@@ -1435,9 +1445,10 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 9249.0,
+						"translation.y": 104968.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
@@ -1468,6 +1479,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
@@ -1495,6 +1507,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
@@ -1503,15 +1516,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 78512,
+						"buffer_size": 79093,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								57038,
-								57038
+								70265,
+								70265
 							]
 						],
 						"settings":
@@ -1521,9 +1534,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 36627.0,
+						"translation.y": 47203.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
@@ -1551,6 +1565,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
@@ -1580,6 +1595,7 @@
 						"translation.y": 635.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
@@ -1607,6 +1623,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
@@ -1635,6 +1652,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
@@ -1661,6 +1679,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 14,
 					"type": "text"
 				},
 				{
@@ -1689,6 +1708,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
@@ -1719,6 +1739,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
@@ -1734,8 +1755,8 @@
 						"selection":
 						[
 							[
-								665,
-								665
+								1075,
+								1075
 							]
 						],
 						"settings":
@@ -1746,9 +1767,10 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 171.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
@@ -1779,6 +1801,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 18,
 					"type": "text"
 				},
 				{
@@ -1794,8 +1817,8 @@
 						"selection":
 						[
 							[
-								4426,
-								4426
+								776,
+								776
 							]
 						],
 						"settings":
@@ -1805,9 +1828,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 298.0,
+						"translation.y": 609.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 19,
 					"type": "text"
 				},
 				{
@@ -1823,8 +1847,8 @@
 						"selection":
 						[
 							[
-								841,
-								841
+								504,
+								504
 							]
 						],
 						"settings":
@@ -1835,9 +1859,10 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 3684.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 20,
 					"type": "text"
 				},
 				{
@@ -1867,6 +1892,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 21,
 					"type": "text"
 				},
 				{
@@ -1896,6 +1922,7 @@
 						"translation.y": 3507.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 22,
 					"type": "text"
 				},
 				{
@@ -1925,6 +1952,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 23,
 					"type": "text"
 				},
 				{
@@ -1953,6 +1981,7 @@
 						"translation.y": 815.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 24,
 					"type": "text"
 				},
 				{
@@ -1968,8 +1997,8 @@
 						"selection":
 						[
 							[
-								18090,
-								18120
+								20125,
+								20125
 							]
 						],
 						"settings":
@@ -1980,9 +2009,10 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 8241.0,
+						"translation.y": 9771.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
@@ -2012,6 +2042,7 @@
 						"translation.y": 4019.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 25,
 					"type": "text"
 				},
 				{
@@ -2039,6 +2070,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 26,
 					"type": "text"
 				},
 				{
@@ -2067,6 +2099,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 27,
 					"type": "text"
 				},
 				{
@@ -2096,6 +2129,7 @@
 						"translation.y": 2568.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 28,
 					"type": "text"
 				},
 				{
@@ -2125,6 +2159,7 @@
 						"translation.y": 229.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 29,
 					"type": "text"
 				},
 				{
@@ -2153,6 +2188,7 @@
 						"translation.y": 6041.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 30,
 					"type": "text"
 				},
 				{
@@ -2183,6 +2219,7 @@
 						"translation.y": 804.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 31,
 					"type": "text"
 				},
 				{
@@ -2212,6 +2249,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 32,
 					"type": "text"
 				},
 				{
@@ -2242,6 +2280,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 33,
 					"type": "text"
 				},
 				{
@@ -2270,6 +2309,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 34,
 					"type": "text"
 				},
 				{
@@ -2299,6 +2339,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 35,
 					"type": "text"
 				},
 				{
@@ -2328,6 +2369,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 36,
 					"type": "text"
 				},
 				{
@@ -2356,6 +2398,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 37,
 					"type": "text"
 				},
 				{
@@ -2386,6 +2429,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 38,
 					"type": "text"
 				},
 				{
@@ -2413,6 +2457,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 39,
 					"type": "text"
 				},
 				{
@@ -2441,6 +2486,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 40,
 					"type": "text"
 				},
 				{
@@ -2469,6 +2515,7 @@
 						"translation.y": 950.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 41,
 					"type": "text"
 				},
 				{
@@ -2499,6 +2546,7 @@
 						"translation.y": 163.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 42,
 					"type": "text"
 				},
 				{
@@ -2527,6 +2575,7 @@
 						"translation.y": 263.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 43,
 					"type": "text"
 				},
 				{
@@ -2557,6 +2606,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 44,
 					"type": "text"
 				},
 				{
@@ -2587,6 +2637,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 45,
 					"type": "text"
 				},
 				{
@@ -2595,27 +2646,28 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5169,
+						"buffer_size": 5812,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3777,
-								3777
+								638,
+								638
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 4,
+							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 664.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 46,
 					"type": "text"
 				},
 				{
@@ -2624,15 +2676,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5733,
+						"buffer_size": 5998,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1130,
-								1130
+								753,
+								753
 							]
 						],
 						"settings":
@@ -2642,13 +2694,196 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 121.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 47,
 					"type": "text"
 				},
 				{
 					"buffer": 43,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8927,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										160,
+										166
+									],
+									[
+										473,
+										479
+									],
+									[
+										642,
+										648
+									],
+									[
+										884,
+										890
+									],
+									[
+										1120,
+										1126
+									],
+									[
+										1385,
+										1391
+									],
+									[
+										1583,
+										1589
+									],
+									[
+										1896,
+										1902
+									],
+									[
+										2065,
+										2071
+									],
+									[
+										2307,
+										2313
+									],
+									[
+										2543,
+										2549
+									],
+									[
+										2808,
+										2814
+									],
+									[
+										3014,
+										3020
+									],
+									[
+										3306,
+										3312
+									],
+									[
+										3552,
+										3558
+									],
+									[
+										3954,
+										3960
+									],
+									[
+										4217,
+										4223
+									],
+									[
+										4530,
+										4536
+									],
+									[
+										4699,
+										4705
+									],
+									[
+										4941,
+										4947
+									],
+									[
+										5177,
+										5183
+									],
+									[
+										5442,
+										5448
+									],
+									[
+										5640,
+										5646
+									],
+									[
+										5953,
+										5959
+									],
+									[
+										6122,
+										6128
+									],
+									[
+										6364,
+										6370
+									],
+									[
+										6600,
+										6606
+									],
+									[
+										6865,
+										6871
+									],
+									[
+										7071,
+										7077
+									],
+									[
+										7363,
+										7369
+									],
+									[
+										7609,
+										7615
+									],
+									[
+										8011,
+										8017
+									],
+									[
+										8347,
+										8352
+									],
+									[
+										8598,
+										8603
+									],
+									[
+										8850,
+										8855
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								8927,
+								8927
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"line_numbers": false,
+							"output_tag": 3,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 4032.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 44,
 					"file": "app/views/fpk/news.html",
 					"semi_transient": false,
 					"settings":
@@ -2672,10 +2907,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 48,
 					"type": "text"
 				},
 				{
-					"buffer": 44,
+					"buffer": 45,
 					"file": "app/json.json",
 					"semi_transient": false,
 					"settings":
@@ -2700,10 +2936,11 @@
 						"translation.y": 1.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 49,
 					"type": "text"
 				},
 				{
-					"buffer": 45,
+					"buffer": 46,
 					"file": "app/views/fpk.html",
 					"semi_transient": false,
 					"settings":
@@ -2732,23 +2969,24 @@
 						"translation.y": 619.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 50,
 					"type": "text"
 				},
 				{
-					"buffer": 46,
+					"buffer": 47,
 					"file": "app/scripts/controllers/fpk.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 84050,
+						"buffer_size": 84849,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								21594,
-								21601
+								4537,
+								8153
 							]
 						],
 						"settings":
@@ -2759,13 +2997,14 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 11553.0,
+						"translation.y": 3667.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 47,
+					"buffer": 48,
 					"file": "/Applications/MAMP/htdocs/oauth2/server.php",
 					"semi_transient": false,
 					"settings":
@@ -2789,10 +3028,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 51,
 					"type": "text"
 				},
 				{
-					"buffer": 48,
+					"buffer": 49,
 					"file": "/Applications/MAMP/htdocs/oauth2/oauth.php",
 					"semi_transient": false,
 					"settings":
@@ -2818,10 +3058,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 52,
 					"type": "text"
 				},
 				{
-					"buffer": 49,
+					"buffer": 50,
 					"file": "/Applications/MAMP/htdocs/oauth2/token.php",
 					"semi_transient": false,
 					"settings":
@@ -2845,10 +3086,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 50,
+					"buffer": 51,
 					"file": "/Applications/MAMP/htdocs/oauth2/oauth2-server-php/src/OAuth2/Server.php",
 					"semi_transient": false,
 					"settings":
@@ -2874,10 +3116,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 53,
 					"type": "text"
 				},
 				{
-					"buffer": 51,
+					"buffer": 52,
 					"file": "app/views/client_list.html",
 					"semi_transient": false,
 					"settings":
@@ -2889,8 +3132,8 @@
 						"selection":
 						[
 							[
-								33575,
-								33590
+								6221,
+								6334
 							]
 						],
 						"settings":
@@ -2900,13 +3143,14 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 9771.0,
+						"translation.y": 1329.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
-					"buffer": 52,
+					"buffer": 53,
 					"file": "app/views/fpk/clients.html",
 					"semi_transient": false,
 					"settings":
@@ -2932,10 +3176,11 @@
 						"translation.y": 16.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 54,
 					"type": "text"
 				},
 				{
-					"buffer": 53,
+					"buffer": 54,
 					"file": "app/scripts/controllers/clients.js",
 					"semi_transient": false,
 					"settings":
@@ -2947,8 +3192,8 @@
 						"selection":
 						[
 							[
-								5309,
-								5309
+								13108,
+								14491
 							]
 						],
 						"settings":
@@ -2959,13 +3204,14 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 2537.0,
+						"translation.y": 7266.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 54,
+					"buffer": 55,
 					"file": "app/views/fpk/calendar.html",
 					"semi_transient": false,
 					"settings":
@@ -2989,10 +3235,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 55,
 					"type": "text"
 				},
 				{
-					"buffer": 55,
+					"buffer": 56,
 					"file": "app/scripts/controllers/calendar.js",
 					"semi_transient": false,
 					"settings":
@@ -3019,10 +3266,11 @@
 						"translation.y": 741.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 56,
 					"type": "text"
 				},
 				{
-					"buffer": 56,
+					"buffer": 57,
 					"file": "app/views/user/reg.html",
 					"semi_transient": false,
 					"settings":
@@ -3048,10 +3296,11 @@
 						"translation.y": 501.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 57,
 					"type": "text"
 				},
 				{
-					"buffer": 57,
+					"buffer": 58,
 					"file": "app/views/user.html",
 					"semi_transient": false,
 					"settings":
@@ -3077,10 +3326,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 58,
 					"type": "text"
 				},
 				{
-					"buffer": 58,
+					"buffer": 59,
 					"file": "app/views/user/login.html",
 					"semi_transient": false,
 					"settings":
@@ -3104,10 +3354,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 59,
 					"type": "text"
 				},
 				{
-					"buffer": 59,
+					"buffer": 60,
 					"file": "app/scripts/controllers/login-ctrl.js",
 					"semi_transient": false,
 					"settings":
@@ -3134,6 +3385,7 @@
 						"translation.y": 1651.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 60,
 					"type": "text"
 				}
 			]
@@ -3170,6 +3422,10 @@
 		]
 	},
 	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
 	"output.unsaved_changes":
 	{
 		"height": 112.0
