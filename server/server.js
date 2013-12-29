@@ -4201,7 +4201,7 @@ exports.saveAdmin = function(request, response) {
                   brand: the_client[0].brand
                 });
 
-              }, 85);
+              }, 888);
             }
 
           });
