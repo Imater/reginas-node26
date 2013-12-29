@@ -3522,6 +3522,12 @@ exports.saveAdmin = function(request, response) {
        }
 
        exports.loadStatCup = function(request, response) {
+
+        var howfast1 = jsNow();
+        var howfast2 = jsNow();
+        var howfast3 = jsNow();
+        var howfast4 = jsNow();
+
         var today = request.query.today_date;
         var today_date = today ? today : "2013-07-16";
         var today_month = today_date.substr(0, 7);
@@ -3535,7 +3541,7 @@ exports.saveAdmin = function(request, response) {
         d2 = d2.split(".");
         d2 = d2[2]+"-"+d2[1]+"-"+d2[0]+" 23:59:59";
 
-        console.info("d = ", d1, d2);
+        //console.info("d = ", d1, d2);
 
         var brand_id = request.query.brand;
         var cache_id = md5(JSON.stringify(request.query) + brand_id);
@@ -3546,7 +3552,7 @@ exports.saveAdmin = function(request, response) {
           cache_id: cache_id
         }).done(function(err, the_cache) {
 
-          if (the_cache) {
+          if (the_cache&&false) {
             response.setHeader("FROM_CACHE_CUP");
             response.send(the_cache["mydata"]); //статистика кешируется нижняя и левая
             //console.info("info_from_cache_CUP", cache_id);
@@ -3557,6 +3563,7 @@ exports.saveAdmin = function(request, response) {
             pool.query('SELECT * FROM `1_plan` WHERE `month` = "' + today + '"', function(err, plans, fields) {
               //console.info(plans);
               pool.query('SELECT * FROM `1_brands` ORDER by brand_group, title', function(err, brands, fields) {
+
                 if (brands.length > 5) {
                   brands.push({
                     id: -1,
@@ -3656,9 +3663,16 @@ exports.saveAdmin = function(request, response) {
 
                 pool.query('SELECT * FROM 1_doadmin WHERE date1 BETWEEN ? AND ?', [d1,d2], function(err, do_admin, fields) {
                   do_admin = correct_dates(do_admin);
-                  pool.query('SELECT id, brand, zv, vz, tst, dg, vd, `out`, icon2 FROM `1_clients` WHERE' + ' (zv BETWEEN "' + d1 + '" AND "'+d2+'") OR (vz BETWEEN "' + d1 + '" AND "'+d2+'") OR (tst BETWEEN "' + d1 + '" AND "'+d2+'") OR (dg BETWEEN "' + d1 + '" AND "'+d2+'") OR (vd BETWEEN "' + d1 + '" AND "'+d2+'") OR (`out` BETWEEN "' + d1 + '" AND "'+d2+'") OR (icon2 > 2 AND vd = "0000-00-00 00:00:00")', function(err, cars, fields) {
+                  console.time("clients");
+
+                  var clients_query = 'SELECT id, brand, zv, vz, tst, dg, vd, `out`, icon2 FROM `1_clients` WHERE' + ' (zv1 BETWEEN "' + d1 + '" AND "'+d2+'") OR (vz1 BETWEEN "' + d1 + '" AND "'+d2+'") OR (tst1 BETWEEN "' + d1 + '" AND "'+d2+'") OR (dg1 BETWEEN "' + d1 + '" AND "'+d2+'") OR (vd1 BETWEEN "' + d1 + '" AND "'+d2+'") OR (`out1` BETWEEN "' + d1 + '" AND "'+d2+'") OR (icon2 > 2 AND vd = "0000-00-00 00:00:00")';
+
+                  pool.query(clients_query, function(err, cars, fields) {
+                  console.timeEnd("clients");
+                  console.info(clients_query);
 
                     pool.query('SELECT 1_clients.*, 1_do.brand brand, 1_do.manager_id manager_id2, 1_do.date2 tst, 1_test.model_id tstmodel FROM `1_do` LEFT JOIN 1_clients ON 1_do.client=1_clients.id LEFT JOIN 1_test ON 1_do.test_model_id = 1_test.id WHERE (1_do.date2 BETWEEN "' + d1 + '" AND "'+d2+'") AND 1_do.checked !="0000-00-00 00:00:00" AND 1_do.type="Тест-драйв" ', function(err, cars_tst, fields) {
+
 
 
                       cars = correct_dates(cars, "zero_date");
@@ -3749,6 +3763,12 @@ exports.saveAdmin = function(request, response) {
   });
 
   answer = {
+    howfast: {
+      howfast1:(jsNow() - howfast1),
+      howfast2:(jsNow() - howfast2),
+      howfast3:(jsNow() - howfast3),
+      howfast4:(jsNow() - howfast4)
+    },
     brands: brands,
     cars: ""
   };
@@ -3904,6 +3924,12 @@ exports.saveAdmin = function(request, response) {
             dg: "0000-00-00 00:00:00",
             vd: "0000-00-00 00:00:00",
             out: "0000-00-00 00:00:00",
+            zv1: "0000-00-00",
+            vz1: "0000-00-00",
+            tst1: "0000-00-00",
+            dg1: "0000-00-00",
+            vd1: "0000-00-00",
+            out1: "0000-00-00",
             bu: "0000-00-00 00:00:00",
             na_id: "",
             na_date: "0000-00-00 00:00:00",
@@ -4132,6 +4158,13 @@ exports.saveAdmin = function(request, response) {
           if (answer.attention != '') {
             need_push = true;
           }
+
+          answer.zv1 = answer.zv.split(" ")[0];
+          answer.vz1 = answer.vz.split(" ")[0];
+          answer.tst1 = answer.tst.split(" ")[0];
+          answer.dg1 = answer.dg.split(" ")[0];
+          answer.vd1 = answer.vd.split(" ")[0];
+          answer.out1 = answer.out.split(" ")[0];
 
           query = "UPDATE 1_clients SET ? WHERE id = '" + client_id + "'";
 
