@@ -3552,7 +3552,7 @@ exports.saveAdmin = function(request, response) {
           cache_id: cache_id
         }).done(function(err, the_cache) {
 
-          if (the_cache&&false) {
+          if (the_cache&&true) {
             response.setHeader("FROM_CACHE_CUP");
             response.send(the_cache["mydata"]); //статистика кешируется нижняя и левая
             //console.info("info_from_cache_CUP", cache_id);
