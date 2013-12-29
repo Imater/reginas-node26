@@ -922,7 +922,15 @@ String.prototype.translit = (function(){
  }
 
  global.correct_dates = function(rows, no_zero_dates) {
-  var fields = ['date', 'zv', 'vz', 'tst', 'dg', 'vd', 'out', 'checked', 'changed', 'created', 'date1', 'date2', 'hostcheck', 'remind', 'na_date', 'now_time', 'remind_time', '_date2', 'hostchecked'];
+  var fields = [];
+  var fields1 = ['date', 'zv', 'vz', 'tst', 'dg', 'vd', 'out', 'checked', 'changed', 'created', 'date1', 'date2', 'hostcheck', 'remind', 'na_date', 'now_time', 'remind_time', '_date2', 'hostchecked'];
+
+  if(rows.length) {
+    $.each(rows[0], function(i, el){
+      if(fields1.indexOf(i)!=-1) fields.push(i);
+    });
+  }
+
 
   if (!rows) return rows;
 
@@ -946,6 +954,8 @@ String.prototype.translit = (function(){
           el[field] = tomysql(el[field]);
         }
 
+      } else {
+        fields
       }
     });
   });
@@ -1247,7 +1257,6 @@ exports.findClientDoType = function(request, response) {
 
 exports.loadStat = function(request, response) {
 
-
   //var filter = request.query.filters ? JSON.parse(request.query.filters):{};
   var filter = {
     active: 1,
@@ -1350,7 +1359,7 @@ exports.loadStat = function(request, response) {
     cache_id: cache_id
   }).done(function(err, the_cache) {
 
-    if (the_cache) {
+    if (the_cache&&true) {
       response.setHeader("FROM_CACHE");
       response.send(the_cache.mydata); //статистика кешируется нижняя и левая
     } else {
@@ -1513,14 +1522,15 @@ var jsLoadStatSMS = function(type, brand_id, today, result) {
       };
 
       if (type == "out") {
-        var insert_sql = ' dg != "0000-00-00 00:00:00" AND';
+        var insert_sql = ' dg1 != "0000-00-00" AND';
       } else {
         var insert_sql = ' ';
       }
 
-      myquery = "SELECT count(*) cnt FROM `1_clients` WHERE " + insert_sql + " `" + type + "` LIKE '" + today_month + "%' AND brand = ? ";
+      myquery = "SELECT count(*) cnt FROM `1_clients` WHERE " + insert_sql + " (`" + type + "1` BETWEEN '" + today_month + "-01' AND '" + today_month + "-31') AND brand = ? ";
+
       pool.query(myquery, [brand_id], function(err, rows_month, fields) {
-        myquery = "SELECT count(*) cnt FROM `1_clients` WHERE " + insert_sql + " `" + type + "` LIKE '" + today + "%' AND brand = ? ";
+        myquery = "SELECT count(*) cnt FROM `1_clients` WHERE " + insert_sql + " `" + type + "1` = '" + today + "' AND brand = ? ";
         pool.query(myquery, [brand_id], function(err, rows_day, fields) {
           val["month"] = rows_month[0].cnt;
           val["day"] = rows_day[0].cnt;
@@ -3114,6 +3124,7 @@ exports.newAdmin = function(request, response) {
       type: do_type,
       manager_id: manager_id,
       date1: today_datetime,
+      date11: today_datetime,
       brand: brand
 
     };
@@ -3187,6 +3198,7 @@ exports.saveAdmin = function(request, response) {
        }
        }
 
+       if(changes.date1) changes.date11 = changes.date1;
 
        query = "UPDATE 1_doadmin SET ? WHERE id = '" + mydo_id + "'";
 
@@ -3661,17 +3673,18 @@ exports.saveAdmin = function(request, response) {
 
                 }
 
-                pool.query('SELECT * FROM 1_doadmin WHERE date1 BETWEEN ? AND ?', [d1,d2], function(err, do_admin, fields) {
-                  do_admin = correct_dates(do_admin);
-                  console.time("clients");
+                var dd1 = d1.split(" ")[0];
+                var dd2 = d2.split(" ")[0];
 
-                  var clients_query = 'SELECT id, brand, zv, vz, tst, dg, vd, `out`, icon2 FROM `1_clients` WHERE' + ' (zv1 BETWEEN "' + d1 + '" AND "'+d2+'") OR (vz1 BETWEEN "' + d1 + '" AND "'+d2+'") OR (tst1 BETWEEN "' + d1 + '" AND "'+d2+'") OR (dg1 BETWEEN "' + d1 + '" AND "'+d2+'") OR (vd1 BETWEEN "' + d1 + '" AND "'+d2+'") OR (`out1` BETWEEN "' + d1 + '" AND "'+d2+'") OR (icon2 > 2 AND vd = "0000-00-00 00:00:00")';
+                pool.query('SELECT brand, type, manager_id, model, date1 FROM 1_doadmin WHERE date11 BETWEEN ? AND ?', [dd1,dd2], function(err, do_admin, fields) {
+                  do_admin = correct_dates(do_admin);
+
+                  var clients_query = 'SELECT id, brand, zv, vz, tst, dg, vd, `out`, icon2 FROM `1_clients` WHERE' + ' (zv1 BETWEEN "' + dd1 + '" AND "'+dd2+'") OR (vz1 BETWEEN "' + dd1 + '" AND "'+dd2+'") OR (tst1 BETWEEN "' + dd1 + '" AND "'+dd2+'") OR (dg1 BETWEEN "' + dd1 + '" AND "'+dd2+'") OR (vd1 BETWEEN "' + dd1 + '" AND "'+dd2+'") OR (`out1` BETWEEN "' + dd1 + '" AND "'+dd2+'") OR (icon2 > 2 AND vd1 = "0000-00-00")';
 
                   pool.query(clients_query, function(err, cars, fields) {
-                  console.timeEnd("clients");
-                  console.info(clients_query);
 
-                    pool.query('SELECT 1_clients.*, 1_do.brand brand, 1_do.manager_id manager_id2, 1_do.date2 tst, 1_test.model_id tstmodel FROM `1_do` LEFT JOIN 1_clients ON 1_do.client=1_clients.id LEFT JOIN 1_test ON 1_do.test_model_id = 1_test.id WHERE (1_do.date2 BETWEEN "' + d1 + '" AND "'+d2+'") AND 1_do.checked !="0000-00-00 00:00:00" AND 1_do.type="Тест-драйв" ', function(err, cars_tst, fields) {
+                    var clients_test_query = 'SELECT 1_do.brand brand, 1_do.manager_id manager_id2, 1_do.date2 tst, 1_test.model_id tstmodel FROM `1_do` LEFT JOIN 1_clients ON 1_do.client=1_clients.id LEFT JOIN 1_test ON 1_do.test_model_id = 1_test.id WHERE (1_do.date2 BETWEEN "' + d1 + '" AND "'+d2+'") AND 1_do.checked !="0000-00-00 00:00:00" AND 1_do.type="Тест-драйв" ';
+                    pool.query(clients_test_query, function(err, cars_tst, fields) {
 
 
 
@@ -4954,7 +4967,6 @@ function jsSendMail(title, text) {
 
 
 exports.loadJsonCup = function(request, response) {
-
   var brand = request.query.brand;
   var brand_id = request.query.brand;
 
@@ -4966,7 +4978,7 @@ exports.loadJsonCup = function(request, response) {
     cache_id: cache_id
   }).done(function(err, the_cache) {
 
-    if (the_cache) {
+    if (the_cache&&true) {
       response.setHeader("FROM_CACHE");
       response.send(the_cache["mydata"]); //статистика кешируется нижняя и левая
       //console.info("info_from_cache graph json", cache_id);
@@ -4988,7 +5000,7 @@ exports.loadJsonCup = function(request, response) {
 
       if (brand < 0) sql_insert = "AND 1_brands.brand_group = " + (-brand);
 
-      var query = "SELECT dg, vd, `out` FROM 1_clients LEFT JOIN 1_brands ON 1_clients.brand = 1_brands.id WHERE (dg!='0000-00-00 00:00:00' OR `out`!='0000-00-00 00:00:00' OR vd!='0000-00-00 00:00:00') " + sql_insert;
+      var query = "SELECT dg, vd, `out` FROM 1_clients LEFT JOIN 1_brands ON 1_clients.brand = 1_brands.id WHERE (dg1!='0000-00-00' OR `out1`!='0000-00-00' OR vd1!='0000-00-00') " + sql_insert;
       pool.query(query, function(err, clients, fields) {
 
         clients = correct_dates(clients, 'no_zero_dates');
