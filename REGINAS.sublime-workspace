@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"cliets_te",
+				"clients_test_query"
+			],
+			[
+				"clients_test",
+				"clients_test_query"
+			],
+			[
+				"clients",
+				"clients_query"
+			],
+			[
 				"max",
 				"max-height"
 			],
@@ -502,18 +514,6 @@
 			[
 				"ini",
 				"inline-block"
-			],
-			[
-				"$rout",
-				"$routeParams"
-			],
-			[
-				"se",
-				"search_string"
-			],
-			[
-				"$lo",
-				"$locationProvider"
 			]
 		]
 	},
@@ -523,7 +523,7 @@
 			"file": "server/server.js",
 			"settings":
 			{
-				"buffer_size": 191976,
+				"buffer_size": 193345,
 				"line_ending": "Unix"
 			}
 		},
@@ -1210,6 +1210,23 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"loadstat",
+			"d1 = ",
+			"loadStat =",
+			"loadStat",
+			"/stat",
+			"loadJsonCup",
+			"loadStatCup",
+			"updateclient",
+			"correct_dates",
+			"loadStatCup",
+			"1_doadmin",
+			"date1",
+			"loadStatCup",
+			"?",
+			"checksms",
+			"d =",
+			"remote",
 			"jqOpt",
 			"jq",
 			"slide",
@@ -1320,24 +1337,7 @@
 			"	д",
 			"	д	д	д	д	д	д",
 			"getAut",
-			"1_cars_complectation",
-			"canedit",
-			".body",
-			"compl",
-			"\"POST\"",
-			"getAutocompleteCompl",
-			"getAutocomplete",
-			"autocom",
-			"filter",
-			"Комплектац",
-			"getCarByVin",
-			"findAllClientsIds",
-			"getClientIds",
-			"ids",
-			"show_one",
-			"client_car",
-			"model",
-			"saveadm"
+			"1_cars_complectation"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1345,6 +1345,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"\"8952503049%\"",
 			"6),",
 			"",
 			"по одному менеджеру",
@@ -1407,7 +1408,7 @@
 	"groups":
 	[
 		{
-			"selected": 50,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -1416,7 +1417,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 191976,
+						"buffer_size": 193345,
 						"regions":
 						{
 							"mark":
@@ -1432,8 +1433,8 @@
 						"selection":
 						[
 							[
-								182527,
-								182533
+								136254,
+								136254
 							]
 						],
 						"settings":
@@ -1445,10 +1446,10 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 104968.0,
+						"translation.y": 76756.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
@@ -1537,7 +1538,7 @@
 						"translation.y": 47203.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
@@ -2012,7 +2013,7 @@
 						"translation.y": 9771.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
@@ -2879,7 +2880,7 @@
 						"translation.y": 4032.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
@@ -3000,7 +3001,7 @@
 						"translation.y": 3667.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -3086,7 +3087,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -3146,7 +3147,7 @@
 						"translation.y": 1329.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
@@ -3207,7 +3208,7 @@
 						"translation.y": 7266.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
