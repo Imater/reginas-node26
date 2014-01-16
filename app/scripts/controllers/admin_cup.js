@@ -31,20 +31,20 @@ myApp.controller('adminCtrl', function ($scope, $resource, $rootScope, $location
     $scope.jsEffectMonth = function(model) {
         //model.zv_manager_month+model.vz_manager_month
         //model.zv_month model.zv_month
-        if(model.vz_month == 0) return '';
-        return parseInt(100*(model.zv_manager_month+model.vz_manager_month)/(model.vz_month))+"%";
+        if( (model.vz_month+model.zv_month) == 0) return '';
+        return parseInt(100*(model.zv_manager_month+model.vz_manager_month)/(model.vz_month+model.zv_month))+"%";
     }
 
     $scope.jsEffectDayTest = function(model) {
-        if(model.vz_manager == 0) return '';
-        return parseInt(100*(model.tst_manager)/(model.vz_manager))+"%";
+        if(model.vz == 0) return '';
+        return parseInt(100*(model.tst_manager)/(model.vz))+"%";
     }
 
     $scope.jsEffectMonthTest = function(model) {
         //model.zv_manager_month+model.vz_manager_month
 
-        if(model.vz_manager_month == 0) return '';
-        return parseInt(100*(model.tst_manager_month)/(model.vz_manager_month))+"%";
+        if(model.vz_month == 0) return '';
+        return parseInt(100*(model.tst_manager_month)/(model.vz_month))+"%";
     }
 
     $scope.jsEffectDayDg = function(model) {
@@ -55,8 +55,8 @@ myApp.controller('adminCtrl', function ($scope, $resource, $rootScope, $location
     $scope.jsEffectMonthDg = function(model) {
         //model.zv_manager_month+model.vz_manager_month
         //+model.zv_month
-        if(model.vz_month == 0) return '';
-        return parseInt(100*(model.dg_month)/(model.vz_month))+"%";
+        if(model.vz_month+model.zv_month == 0) return '';
+        return parseInt(100*(model.dg_month)/(model.vz_month+model.zv_month))+"%";
     }
 
     $scope.jsEffectDayVd = function(model) {
@@ -67,8 +67,8 @@ myApp.controller('adminCtrl', function ($scope, $resource, $rootScope, $location
     $scope.jsEffectMonthVd = function(model) {
         //model.zv_manager_month+model.vz_manager_month
         //model.zv_month
-        if(model.vz_month == 0) return '';
-        return parseInt(100*(model.vd_month)/(model.vz_month))+"%";
+        if(model.vz_month+model.zv_month == 0) return '';
+        return parseInt(100*(model.vd_month)/(model.vz_month+model.zv_month))+"%";
     }
 
     $scope.jsDoTypeText = function(type) {

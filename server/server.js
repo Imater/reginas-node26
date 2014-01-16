@@ -5994,7 +5994,7 @@ exports.findAllContinents = function(request, cb) {
 
 };
 
-server.listen( global.node_port );
+server.listen( global.node_port ); //8888
 
 var Imap = require('imap'),
   inspect = require('util').inspect;

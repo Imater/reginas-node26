@@ -523,7 +523,7 @@
 			"file": "server/server.js",
 			"settings":
 			{
-				"buffer_size": 193345,
+				"buffer_size": 193359,
 				"line_ending": "Unix"
 			}
 		},
@@ -1210,6 +1210,12 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"setCache",
+			"redis",
+			"8888",
+			"global.h",
+			"global.",
+			"8888",
 			"loadstat",
 			"d1 = ",
 			"loadStat =",
@@ -1331,13 +1337,7 @@
 			"dogdoc",
 			"Распечатать",
 			"loadComDoc",
-			"com_doc",
-			".click",
-			"Отменить",
-			"	д",
-			"	д	д	д	д	д	д",
-			"getAut",
-			"1_cars_complectation"
+			"com_doc"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1408,7 +1408,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 3,
 			"sheets":
 			[
 				{
@@ -1417,7 +1417,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 193345,
+						"buffer_size": 193359,
 						"regions":
 						{
 							"mark":
@@ -1433,8 +1433,8 @@
 						"selection":
 						[
 							[
-								136254,
-								136254
+								45420,
+								45440
 							]
 						],
 						"settings":
@@ -1446,10 +1446,10 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 76756.0,
+						"translation.y": 29110.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -1535,10 +1535,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 47203.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
@@ -2013,7 +2013,7 @@
 						"translation.y": 9771.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
@@ -2880,7 +2880,7 @@
 						"translation.y": 4032.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
@@ -3001,7 +3001,7 @@
 						"translation.y": 3667.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
@@ -3087,7 +3087,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -3147,7 +3147,7 @@
 						"translation.y": 1329.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
@@ -3208,7 +3208,7 @@
 						"translation.y": 7266.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
