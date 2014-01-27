@@ -6,6 +6,14 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
 
  $scope.fpk.today_date = toMysql( (new Date()) ).substr(0,10);
 
+ $scope.fpk.news = [
+    {date2:"2014-01-27 13:00:00", title: "Опубликованы скидки на Февраль"},
+    {date2:"2014-01-13 13:00:00", title: "Цены на новый X-Trail"},
+    {date2:"2013-01-16 13:00:00", title: "Не забывайте каждый день заряжать один автомобиль"},
+    {date2:"2013-01-11 13:00:00", title: "В субботу будет собрание в 8 утра"}
+
+ ]
+
  $scope.fpk.leftmenu = { active:1,
                 items : [
                   {id:0, title:"В работе", group_by: "manager_id", 

@@ -919,7 +919,7 @@ body {
 
 #cards_search {
   position: absolute;
-  top: 11px;
+  margin-top: -58px !important;
   right: 0px;
   width: 20em; }
   #cards_search input {
@@ -2305,3 +2305,28 @@ li.needgroup {
   .one_car th {
     font-weight: normal;
     text-align: right; }
+
+.news_headers h3 {
+  color: #ffff66;
+  font-size: 14px;
+  margin-bottom: 5px;
+  padding-bottom: 0px; }
+.news_headers ul {
+  margin: 0px;
+  padding: 0px;
+  margin-right: 10px;
+  margin-bottom: 20px; }
+  .news_headers ul li {
+    cursor: pointer;
+    padding-left: 10px;
+    min-height: 30px;
+    background: #ffff66;
+    border-top: 1px solid #ffff90;
+    border-bottom: 1px solid #c0c340; }
+    .news_headers ul li .datemini {
+      opacity: 0.6; }
+    .news_headers ul li .title {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 5px 15px; }

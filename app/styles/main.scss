@@ -1255,7 +1255,7 @@ height: 100%;
 
 #cards_search {
     position: absolute;
-    top: 11px;
+    margin-top: -58px !important;
     right: 0px;
     width: 20em;
     input {
@@ -3092,3 +3092,35 @@ li.needgroup {
     }
 }
 
+
+.news_headers {
+    h3 {
+        color: #ffff66;
+        font-size: 14px;
+        margin-bottom: 5px;
+        padding-bottom: 0px;
+    }
+    ul {
+        margin: 0px;
+        padding: 0px;
+        margin-right: 10px;
+        margin-bottom: 20px;
+        li {
+            cursor: pointer;
+            padding-left: 10px;
+            min-height: 30px;
+            background: #ffff66;
+            border-top: 1px solid #ffff90;
+            border-bottom: 1px solid #c0c340;
+            .datemini {
+                opacity: 0.6;
+            }
+            .title {
+                display: inline-block;
+                font-size: 12px;
+                font-weight: bold;
+                padding: 5px 15px;
+            }
+        }
+    }
+}

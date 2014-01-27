@@ -523,7 +523,7 @@
 			"file": "server/server.js",
 			"settings":
 			{
-				"buffer_size": 193359,
+				"buffer_size": 193366,
 				"line_ending": "Unix"
 			}
 		},
@@ -610,7 +610,7 @@
 			"file": "app/index.html",
 			"settings":
 			{
-				"buffer_size": 8291,
+				"buffer_size": 8329,
 				"line_ending": "Unix"
 			}
 		},
@@ -642,7 +642,7 @@
 			"file": "app/scripts/the_diller.js",
 			"settings":
 			{
-				"buffer_size": 483,
+				"buffer_size": 541,
 				"line_ending": "Unix"
 			}
 		},
@@ -725,14 +725,6 @@
 			"settings":
 			{
 				"buffer_size": 20616,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/scripts/controllers/admin_cup.js",
-			"settings":
-			{
-				"buffer_size": 6996,
 				"line_ending": "Unix"
 			}
 		},
@@ -1012,6 +1004,14 @@
 				"buffer_size": 3143,
 				"line_ending": "Unix"
 			}
+		},
+		{
+			"file": "app/scripts/controllers/admin_cup.js",
+			"settings":
+			{
+				"buffer_size": 7057,
+				"line_ending": "Unix"
+			}
 		}
 	],
 	"build_system": "",
@@ -1064,6 +1064,7 @@
 	},
 	"file_history":
 	[
+		"/Users/iBook/Reginas-fpk/app/scripts/controllers/admin_cup.js",
 		"/Users/iBook/couchdb-tunnel.pl",
 		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/CodeFormatter/CodeFormatter.sublime-settings",
 		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/User/CodeFormatter.sublime-settings",
@@ -1190,8 +1191,7 @@
 		"/Users/iBook/4tree/app/i18nextWT-0.1.1/index.html",
 		"/Users/iBook/4tree/test/spec/controllers/main.js",
 		"/Users/iBook/yo/Gruntfile.js",
-		"/Users/iBook/4tree/Gruntfile.js",
-		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/Default/Preferences.sublime-settings"
+		"/Users/iBook/4tree/Gruntfile.js"
 	],
 	"find":
 	{
@@ -1210,6 +1210,14 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"myApi",
+			"factor",
+			"myApi",
+			"service",
+			"servi",
+			"4444",
+			"8888",
+			"port",
 			"setCache",
 			"redis",
 			"8888",
@@ -1329,15 +1337,7 @@
 			"2),",
 			"Edd",
 			"getDo",
-			"findCalendar",
-			"checkdub",
-			"setTimeo",
-			".click",
-			"паспорт",
-			"dogdoc",
-			"Распечатать",
-			"loadComDoc",
-			"com_doc"
+			"findCalendar"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1408,7 +1408,7 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 46,
 			"sheets":
 			[
 				{
@@ -1417,7 +1417,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 193359,
+						"buffer_size": 193366,
 						"regions":
 						{
 							"mark":
@@ -1433,8 +1433,8 @@
 						"selection":
 						[
 							[
-								45420,
-								45440
+								192141,
+								192141
 							]
 						],
 						"settings":
@@ -1446,10 +1446,10 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 29110.0,
+						"translation.y": 109110.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
@@ -1480,7 +1480,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
@@ -1508,7 +1508,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
@@ -1538,7 +1538,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
@@ -1566,7 +1566,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 14,
 					"type": "text"
 				},
 				{
@@ -1596,7 +1596,7 @@
 						"translation.y": 635.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
@@ -1624,7 +1624,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
@@ -1653,7 +1653,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
@@ -1680,7 +1680,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 14,
+					"stack_index": 18,
 					"type": "text"
 				},
 				{
@@ -1709,7 +1709,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 15,
+					"stack_index": 19,
 					"type": "text"
 				},
 				{
@@ -1740,7 +1740,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 16,
+					"stack_index": 20,
 					"type": "text"
 				},
 				{
@@ -1749,15 +1749,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8291,
+						"buffer_size": 8329,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1075,
-								1075
+								1845,
+								1848
 							]
 						],
 						"settings":
@@ -1768,10 +1768,10 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 461.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 17,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
@@ -1802,7 +1802,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 18,
+					"stack_index": 21,
 					"type": "text"
 				},
 				{
@@ -1832,7 +1832,7 @@
 						"translation.y": 609.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 19,
+					"stack_index": 22,
 					"type": "text"
 				},
 				{
@@ -1863,7 +1863,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 20,
+					"stack_index": 23,
 					"type": "text"
 				},
 				{
@@ -1872,15 +1872,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 483,
+						"buffer_size": 541,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								436,
-								436
+								495,
+								495
 							]
 						],
 						"settings":
@@ -1893,7 +1893,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 21,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
@@ -1923,7 +1923,7 @@
 						"translation.y": 3507.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 22,
+					"stack_index": 24,
 					"type": "text"
 				},
 				{
@@ -1953,7 +1953,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 23,
+					"stack_index": 25,
 					"type": "text"
 				},
 				{
@@ -1982,7 +1982,7 @@
 						"translation.y": 815.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 24,
+					"stack_index": 26,
 					"type": "text"
 				},
 				{
@@ -1998,8 +1998,8 @@
 						"selection":
 						[
 							[
-								20125,
-								20125
+								8029,
+								8033
 							]
 						],
 						"settings":
@@ -2010,10 +2010,10 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 9771.0,
+						"translation.y": 3611.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -2043,7 +2043,7 @@
 						"translation.y": 4019.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 25,
+					"stack_index": 27,
 					"type": "text"
 				},
 				{
@@ -2071,7 +2071,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 26,
+					"stack_index": 28,
 					"type": "text"
 				},
 				{
@@ -2100,7 +2100,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 27,
+					"stack_index": 29,
 					"type": "text"
 				},
 				{
@@ -2130,7 +2130,7 @@
 						"translation.y": 2568.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 28,
+					"stack_index": 30,
 					"type": "text"
 				},
 				{
@@ -2160,7 +2160,7 @@
 						"translation.y": 229.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 29,
+					"stack_index": 31,
 					"type": "text"
 				},
 				{
@@ -2176,8 +2176,8 @@
 						"selection":
 						[
 							[
-								16896,
-								16896
+								5426,
+								5439
 							]
 						],
 						"settings":
@@ -2186,45 +2186,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 6041.0,
+						"translation.y": 1882.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 30,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
 					"buffer": 26,
-					"file": "app/scripts/controllers/admin_cup.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6996,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2347,
-								2347
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true,
-							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
-						},
-						"translation.x": 0.0,
-						"translation.y": 804.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 31,
-					"type": "text"
-				},
-				{
-					"buffer": 27,
 					"file": "app/views/fpk/reiting.html",
 					"semi_transient": false,
 					"settings":
@@ -2254,7 +2223,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 28,
+					"buffer": 27,
 					"file": "app/scripts/controllers/reiting.js",
 					"semi_transient": false,
 					"settings":
@@ -2285,7 +2254,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 29,
+					"buffer": 28,
 					"file": "app/views/fpk/stat/stat_all_day.html",
 					"semi_transient": false,
 					"settings":
@@ -2314,7 +2283,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 30,
+					"buffer": 29,
 					"file": "app/scripts/controllers/stat_all_day.js",
 					"semi_transient": false,
 					"settings":
@@ -2344,7 +2313,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 31,
+					"buffer": 30,
 					"file": "app/scripts/controllers/stat_big.js",
 					"semi_transient": false,
 					"settings":
@@ -2374,7 +2343,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 32,
+					"buffer": 31,
 					"file": "app/views/fpk/stat/stat_day.html",
 					"semi_transient": false,
 					"settings":
@@ -2403,7 +2372,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 33,
+					"buffer": 32,
 					"file": "app/scripts/controllers/stat_day.js",
 					"semi_transient": false,
 					"settings":
@@ -2434,7 +2403,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 34,
+					"buffer": 33,
 					"file": "app/views/fpk/settings.html",
 					"semi_transient": false,
 					"settings":
@@ -2462,7 +2431,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 35,
+					"buffer": 34,
 					"file": "app/views/fpk/settings/models.html",
 					"semi_transient": false,
 					"settings":
@@ -2491,7 +2460,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 36,
+					"buffer": 35,
 					"file": "app/views/fpk/settings/organizations.html",
 					"semi_transient": false,
 					"settings":
@@ -2520,7 +2489,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 37,
+					"buffer": 36,
 					"file": "app/scripts/controllers/organizations-ctrl.js",
 					"semi_transient": false,
 					"settings":
@@ -2551,7 +2520,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 38,
+					"buffer": 37,
 					"file": "app/views/fpk/settings/tests.html",
 					"semi_transient": false,
 					"settings":
@@ -2580,7 +2549,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 39,
+					"buffer": 38,
 					"file": "app/scripts/controllers/settings-tests.js",
 					"semi_transient": false,
 					"settings":
@@ -2611,7 +2580,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 40,
+					"buffer": 39,
 					"file": "app/scripts/controllers/settings.js",
 					"semi_transient": false,
 					"settings":
@@ -2642,7 +2611,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 41,
+					"buffer": 40,
 					"file": "app/views/fpk/stat.html",
 					"semi_transient": false,
 					"settings":
@@ -2672,7 +2641,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 42,
+					"buffer": 41,
 					"file": "app/scripts/controllers/fpk-stat.js",
 					"semi_transient": false,
 					"settings":
@@ -2702,7 +2671,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 43,
+					"buffer": 42,
 					"semi_transient": false,
 					"settings":
 					{
@@ -2880,11 +2849,11 @@
 						"translation.y": 4032.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
-					"buffer": 44,
+					"buffer": 43,
 					"file": "app/views/fpk/news.html",
 					"semi_transient": false,
 					"settings":
@@ -2912,7 +2881,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 45,
+					"buffer": 44,
 					"file": "app/json.json",
 					"semi_transient": false,
 					"settings":
@@ -2941,7 +2910,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 46,
+					"buffer": 45,
 					"file": "app/views/fpk.html",
 					"semi_transient": false,
 					"settings":
@@ -2974,7 +2943,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 47,
+					"buffer": 46,
 					"file": "app/scripts/controllers/fpk.js",
 					"semi_transient": false,
 					"settings":
@@ -2986,8 +2955,8 @@
 						"selection":
 						[
 							[
-								4537,
-								8153
+								24720,
+								24725
 							]
 						],
 						"settings":
@@ -2998,14 +2967,14 @@
 							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
 						},
 						"translation.x": 0.0,
-						"translation.y": 3667.0,
+						"translation.y": 13825.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 48,
+					"buffer": 47,
 					"file": "/Applications/MAMP/htdocs/oauth2/server.php",
 					"semi_transient": false,
 					"settings":
@@ -3033,7 +3002,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 49,
+					"buffer": 48,
 					"file": "/Applications/MAMP/htdocs/oauth2/oauth.php",
 					"semi_transient": false,
 					"settings":
@@ -3063,7 +3032,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 50,
+					"buffer": 49,
 					"file": "/Applications/MAMP/htdocs/oauth2/token.php",
 					"semi_transient": false,
 					"settings":
@@ -3087,11 +3056,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
-					"buffer": 51,
+					"buffer": 50,
 					"file": "/Applications/MAMP/htdocs/oauth2/oauth2-server-php/src/OAuth2/Server.php",
 					"semi_transient": false,
 					"settings":
@@ -3121,7 +3090,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 52,
+					"buffer": 51,
 					"file": "app/views/client_list.html",
 					"semi_transient": false,
 					"settings":
@@ -3147,11 +3116,11 @@
 						"translation.y": 1329.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
-					"buffer": 53,
+					"buffer": 52,
 					"file": "app/views/fpk/clients.html",
 					"semi_transient": false,
 					"settings":
@@ -3181,7 +3150,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 54,
+					"buffer": 53,
 					"file": "app/scripts/controllers/clients.js",
 					"semi_transient": false,
 					"settings":
@@ -3208,11 +3177,11 @@
 						"translation.y": 7266.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
-					"buffer": 55,
+					"buffer": 54,
 					"file": "app/views/fpk/calendar.html",
 					"semi_transient": false,
 					"settings":
@@ -3240,7 +3209,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 56,
+					"buffer": 55,
 					"file": "app/scripts/controllers/calendar.js",
 					"semi_transient": false,
 					"settings":
@@ -3271,7 +3240,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 57,
+					"buffer": 56,
 					"file": "app/views/user/reg.html",
 					"semi_transient": false,
 					"settings":
@@ -3301,7 +3270,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 58,
+					"buffer": 57,
 					"file": "app/views/user.html",
 					"semi_transient": false,
 					"settings":
@@ -3331,7 +3300,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 59,
+					"buffer": 58,
 					"file": "app/views/user/login.html",
 					"semi_transient": false,
 					"settings":
@@ -3359,7 +3328,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 60,
+					"buffer": 59,
 					"file": "app/scripts/controllers/login-ctrl.js",
 					"semi_transient": false,
 					"settings":
@@ -3390,6 +3359,43 @@
 					"type": "text"
 				}
 			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 60,
+					"file": "app/scripts/controllers/admin_cup.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7057,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2309,
+								2309
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true,
+							"word_separators": "./\\\\()\\\"\\'-:,.;<>~!@#%^&*|+=[]{}`~?"
+						},
+						"translation.x": 0.0,
+						"translation.y": 854.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
+			]
 		}
 	],
 	"incremental_find":
@@ -3409,6 +3415,12 @@
 				0,
 				1,
 				1
+			],
+			[
+				0,
+				1,
+				1,
+				2
 			]
 		],
 		"cols":
@@ -3419,6 +3431,7 @@
 		"rows":
 		[
 			0.0,
+			0.517592292746,
 			1.0
 		]
 	},
@@ -3474,9 +3487,9 @@
 	},
 	"show_minimap": false,
 	"show_open_files": true,
-	"show_tabs": false,
+	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 160.0,
+	"side_bar_width": 191.0,
 	"status_bar_visible": false,
 	"template_settings":
 	{

@@ -18,6 +18,17 @@
 
                     </div>
 
+                    <div class="news_headers" ng-if="fpk.news">
+                      <h3>Новости:</h3>
+                      <ul>
+                        <li ng-repeat="news in fpk.news">
+                          
+                          <div class="datemini"  time-now="time_now" date-type="do" ng-model="news.date2" title="{{news.date2}}"></div>
+
+                          <span class="title">{{news.title}}</span>
+                        </li>
+                      </ul>
+                    </div>
 
                     <ul class="nav nav-tabs group_tabs">
                       <li ng-class="{active:(fpk.clientsgroupby=='manager_id')}" ng-click="jsSelectGroup('manager_id');"><a>Менеджер</a></li>
@@ -63,6 +74,8 @@
 
                 </div>
                 <div style="clear:both;"></div>
+
+
                 <!-- <button ng-click="myPagingFunction()">Load More...</button> -->
 
                   <div client-list="fpk.clients" time-now="time_now" my-attr="fpk.clients" my-distinct="clients" clients-by-distinct="fpk.clients_by_distinct"></div>
