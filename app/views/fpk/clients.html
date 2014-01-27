@@ -21,11 +21,13 @@
                     <div class="news_headers" ng-if="fpk.news">
                       <h3>Новости:</h3>
                       <ul>
-                        <li ng-repeat="news in fpk.news">
+                        <li ng-repeat="news in fpk.news" ng-click="news._visible = !news._visible">
                           
                           <div class="datemini"  time-now="time_now" date-type="do" ng-model="news.date2" title="{{news.date2}}"></div>
 
-                          <span class="title">{{news.title}}</span>
+                          <span class="title"  ng-click="news._visible != news._visible">{{news.title}}</span>
+                          <div class="news_content" ng-bind-html="news.text" jq-show-effect="news._visible == true" jq-options="{type:'slide', duration:200, delay:20, hideImmediately: false}">
+                          </div>
                         </li>
                       </ul>
                     </div>

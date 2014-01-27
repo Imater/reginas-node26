@@ -763,8 +763,26 @@ myApp.directive('onFinishRender', function ($timeout) {
     }
 });
 
+
 myApp.factory('myApi', function ($http, $q, oAuth2) {
     return {
+
+        jsLoadUnreadNews: function($scope) {
+            var dfd = $q.defer();
+            oAuth2.jsGetToken($scope).done(function (token) {
+                $http({
+                    url: '/api/v1/get_unread_news',
+                    method: "GET",
+                    params: {
+                        token: token,
+                        brand: $scope.fpk.brand
+                    }
+                }).then(function (result) {
+                    dfd.resolve(result.data);
+                });
+            });
+            return dfd.promise;
+        },
         jsLoadOrganizationsFromServer: function ($scope) {
             var dfd = $q.defer();
             oAuth2.jsGetToken($scope).done(function (token) {

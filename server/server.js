@@ -5786,6 +5786,18 @@ exports.setCars = function(request, response) {
 
 }
 
+exports.jsLoadUnreadNews = function(request, response) {
+  var brand_id = request.query.brand;
+  var user_id = 11;
+  var query = 'SELECT * FROM 1_news WHERE ((towho LIKE "%='+brand_id+'|%") OR (towho LIKE "%=*%") AND (whoread NOT LIKE "%|'+user_id+'|%")) ORDER by date2 DESC LIMIT 10';
+  console.info(query);
+
+  pool.query(query, function(err, news){
+    news = correct_dates(news);
+    response.send(news);
+  });
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////
 ////////
@@ -5868,6 +5880,9 @@ app.get('/api/v1/stat', database.loadStat);
 app.get('/api/v1/stat/all', database.loadStatAll);
 app.get('/api/v1/stat/cup', database.loadStatCup);
 app.get('/api/v1/stat/cup/cars', database.loadStatCupCars);
+
+app.get('/api/v1/get_unread_news', database.jsLoadUnreadNews);
+
 
 app.get('/api/v1/stat/admin_cup/managers', database.jsGetManagerCupAdmin);
 app.get('/api/v1/stat/admin_cup/managers_report', database.jsGetManagerCupAdminReport);

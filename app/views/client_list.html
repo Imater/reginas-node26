@@ -51,7 +51,7 @@
                            <div ng-if="client.out_reason.length&&client.out_reason.length>9" class="out_reason">{{client.out_reason}}</div>
                            <div ng-if="((fpk.leftmenu.active==6)||(fpk.leftmenu.active==7))&&(client.attention)" class="out_reason"><i>{{client.attention}}</i></div>
                         </div>      
-                        <div ng-if="client._visible == true" class="client_inside selectable" jq-show-effect="client._visible == true" jq-options="{type:'slide', duration:200, delay:200, hideImmediately: true}" style="display:none;">
+                        <div ng-if="client._visible == true" class="client_inside selectable" jq-show-effect="client._visible == true" jq-options="{type:'slide', duration:200, delay:2, hideImmediately: true}" style="display:none;">
                           <div class="client_info" ng-click="jsEditClient(client)">
                             <div class="client_plan">
                               Желание клиента: <img ng-click="jsPlanRotate(client,'icon');$event.stopPropagation();" ng-src="images/progress/progres-{{client.icon}}.gif"><br>
@@ -70,7 +70,7 @@
                             <font color="#999697">Дата создания: {{client.date | nicedatetime}}</font>
                             <font color="#999697" ng-if="client.hostchecked_id"><br>Проверен руководителем: {{client.hostchecked_id}} - {{client.hostchecked | nicedatetime}}</font>
                           </div>
-                          <div ng-if="client._edit == true" class="client_edit" jq-show-effect="client._edit == true" jq-options="{type:'slide', duration:200, delay:200, hideImmediately: true}">
+                          <div ng-if="client._edit == true" class="client_edit" jq-show-effect="client._edit == true" jq-options="{type:'slide', duration:200, delay:2, hideImmediately: true}">
                             
                             <div class="row">
                             
@@ -337,7 +337,7 @@
 
                               </div>
                               
-                              <div ng-if="do._visible == true" jq-show-effect="do._visible == true" jq-options="{type:'slide', duration:150, delay:200, hideImmediately: true}" class="do_edit" style="display:none;">
+                              <div ng-if="do._visible == true" jq-show-effect="do._visible == true" jq-options="{type:'slide', duration:150, delay:20, hideImmediately: true}" class="do_edit" style="display:none;">
 
                                 <div>
                                     <div class="row">
