@@ -10,3 +10,5 @@ app/scripts/the_diller.js
 app/pouchdb
 
 app/pouchdb
+
+app/bower_components

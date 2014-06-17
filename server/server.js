@@ -1043,6 +1043,14 @@ String.prototype.translit = (function(){
 
  }
 
+ exports.findAllUsers = function(request, response) {
+    var myquery = 'SELECT * FROM `1_users` WHERE brand = 7';
+    pool.query(myquery, function(err, rows, fields) {
+      response.send(rows);  
+    });
+    
+ }
+
 
  exports.findAllClients = function(request, response) {
 
@@ -5841,6 +5849,9 @@ app.get('/api/v1/client_ids', database.findAllClientsIds);
 app.get('/api/v1/admin_ids', database.findAllAdminIds);
 
 app.get('/api/v1/json/cup', database.loadJsonCup);
+
+app.get('/api/v1/users', database.findAllUsers);
+
 
 app.get('/api/v1/client', database.findAllClients);
 app.get('/api/v1/client/:id', database.findClient);

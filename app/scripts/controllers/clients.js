@@ -1,14 +1,10 @@
 //#fpk/clients
 
-
-myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment, $timeout, $sce) {
+myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment, $timeout) {
 
  $scope.$routeSegment = $routeSegment;
 
  $scope.fpk.today_date = toMysql( (new Date()) ).substr(0,10);
-
- $scope.fpk.news = [
- ]
 
  $scope.fpk.leftmenu = { active:1,
                 items : [
@@ -33,16 +29,6 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
                   ]
                 };
 
-    $scope.jsGetUnreadNews = function(){
-      myApi.jsLoadUnreadNews($scope).then(function(result){
-        console.info(result);
-        $.each(result, function(i, el){
-          if(el.text) el.text = $sce.trustAsHtml(el.text);
-        });
-        $scope.fpk.news = result;
-      });
-    }
-
 
     if(($scope.fpk.the_user)&&($scope.fpk.the_user.rights[0].can_hostcheck)) {
         $scope.fpk.leftmenu.items.push( {id:6, title:"<i class='icon-record'></i> Ждут проверки", group_by: "manager_id", 
@@ -63,7 +49,6 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
         $scope.fpk.jsSelectLeftMenu($scope.fpk.leftmenu.items[1], 1);
       }
 
-      $scope.jsGetUnreadNews();
 
   });
 
@@ -136,6 +121,7 @@ myApp.controller('clientsCtrl', function ($scope, $resource, $rootScope, $locati
 
 myApp.directive("clientList", function ($compile, myApi, $routeSegment, $http) {
   return {
+//    template: '{{local_clients}} {{local_clients.length}} hi!', 
     templateUrl: 'views/client_list.html',
     restrict: 'A',
     scope: {
@@ -149,6 +135,36 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment, $http) {
         $scope.fpk = $scope.$parent.fpk;
         $scope.$routeSegment = $routeSegment;
 
+//       $scope.time_now = fpkCtrl.get_time_now();
+
+/*        $scope.models = $scope.$parent.models;
+        $scope.models_array = $scope.$parent.models_array;
+        $scope.car_status = $scope.$parent.car_status;
+        $scope.car_status_array = $scope.$parent.car_status_array //глобальные статусы
+        $scope.commercials = $scope.$parent.commercials;
+        $scope.jsFindInArray = $scope.$parent.jsFindInArray;
+        //$scope.clients_distincts //= $scope.$parent.clients_distincts;
+
+//        $scope.clients_by_distinct = $scope.$parent.clients_by_distinct;
+
+        $scope.do_types = $scope.$parent.do_types;
+        $scope.do_types_array = $scope.$parent.do_types_array;
+        $scope.jsFioShort = $scope.$parent.jsFioShort;
+
+        $scope.credit_managers = $scope.$parent.credit_managers;
+        $scope.managers = $scope.$parent.managers;
+
+        $scope.jsOnOffDateParser = $scope.$parent.jsOnOffDateParser;
+
+        $scope.jsLoadStat = $scope.$parent.jsLoadStat;
+        $scope.jsRefreshDo = $scope.$parent.jsRefreshDo;
+        $scope.stat = $scope.$parent.stat;
+        $scope.brand = $scope.$parent.brand;
+        $scope.manager_filter = $scope.$parent.manager_filter;
+
+        
+
+*/
 
          $scope.jsChangeCarCost = function(mydo) {
             if( $scope.fpk.the_user.user_group!=6 ) {
@@ -204,9 +220,7 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment, $http) {
                 if(value.rows.affectedRows>0) {
                   $scope.fpk.jsRefreshClients();
                 }
-                else {
-                  alert("Не могу удилить клиента. Лучше поставьте ему OUT.");
-                }
+                else alert("Не могу удилить клиента. Лучше поставьте ему OUT.");
               }); 
           }
 
@@ -248,6 +262,29 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment, $http) {
         }
 
 
+        $scope.jsOpenClient = function(client) {
+          console.info("open_client = ", $scope.fpk.the_user.rights[0].brands, client.brand );
+
+          if( !$scope.fpk.jsCanShowBrand(client.brand) ) {
+            alert('У вас недостаточно прав, чтобы открывать клиентов чужого бренда');
+            return false;
+          }
+
+          if(!client.do) {
+
+            myApi.getDo($scope, client.id).then(function(value){
+              client._visible = true;
+              client.do = value;
+            });
+
+
+          } else {
+              client._visible = !client._visible;
+/*            $("li[myid="+client.id+"] .client_inside").slideToggle(200);
+*/        } 
+
+          
+        }
 
         $scope.jsEditClient = function(client) {
           if($scope.fpk.jsCanEditClient(client)) {
@@ -274,7 +311,7 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment, $http) {
                       if(el.code == searchtext) mydo.car_equipment = el.options;
                     });
                 });
-        }
+        };
 
         $scope.jsSaveComplectation = function(mydo) {
             if(!$scope.fpk.the_user.rights[0].can_edit_all_client) {
@@ -346,30 +383,9 @@ myApp.directive("clientList", function ($compile, myApi, $routeSegment, $http) {
           console.info(do_type_title,client_id);
           return false;
         }
-  
-        $scope.jsOpenClient = function(client) {
-          console.info("open_client = ", $scope.fpk.the_user.rights[0].brands, client.brand );
-
-          if( !$scope.fpk.jsCanShowBrand(client.brand) ) {
-            alert('У вас недостаточно прав, чтобы открывать клиентов чужого бренда');
-            return false;
-          }
-
-          if(!client.do) {
-
-            myApi.getDo($scope, client.id).then(function(value){
-              client._visible = true;
-              client.do = value;
-            });
 
 
-          } else {
-              client._visible = !client._visible;
-          } 
-
-          
-        }
-
+      
     }
   }
 
