@@ -765,6 +765,23 @@ myApp.directive('onFinishRender', function ($timeout) {
 
 myApp.factory('myApi', function ($http, $q, oAuth2) {
     return {
+        jsLoadUsersFromServerForSettings: function($scope) {
+          var dfd = $q.defer();
+          oAuth2.jsGetToken($scope).done(function (token) {
+            $http({
+              url: '/api/v1/users',
+              method: "GET",
+              params: {
+                token: token,
+                brand: $scope.fpk.brand
+              }
+            }).then(function (result) {
+              dfd.resolve(result.data);
+            });
+          });
+          return dfd.promise;
+
+        },
         jsLoadOrganizationsFromServer: function ($scope) {
             var dfd = $q.defer();
             oAuth2.jsGetToken($scope).done(function (token) {
@@ -1712,19 +1729,20 @@ myApp.factory('myApi', function ($http, $q, oAuth2) {
         loadUserInfo: function ($scope) {
             var dfd = $q.defer();
             oAuth2.jsGetToken($scope).done(function (token) {
-                $http({
-                    url: '/api/v1/user/info',
-                    method: "GET",
-                    isArray: true,
-                    params: {
-                        token: token,
-                        brand: $scope.fpk.brand
-                    }
-                }).then(function (result) {
-                    dfd.resolve(result.data);
-                });
+              $http({
+                url: '/api/v1/user/info',
+                method: "GET",
+                isArray: true,
+                params: {
+                  token: token,
+                  brand: $scope.fpk.brand
+                }
+              }).error(function () {
+                alert('Попросите своего руководителя (отдела продаж или директора) активировать ваш аккаунт в "настройках пользователей"');
+              }).then(function (result) {
+                dfd.resolve(result.data);
+              });
             });
-
             return dfd.promise;
 
         }

@@ -997,9 +997,9 @@ body {
     border: 1px solid #c3cfb8; }
   #myfullcalendar .event_did {
     background: #ffffde !important;
-    color: #000 !important;
-    border: 1px solid #c8cc82 !important;
-    opacity: 0.5 !important; }
+    color: #000  !important;
+    border: 1px solid #c8cc82  !important;
+    opacity: 0.5  !important; }
     #myfullcalendar .event_did .fc-event-title {
       text-decoration: line-through !important; }
   #myfullcalendar .event_not_did.event_past {
@@ -2293,6 +2293,75 @@ li.needgroup {
         padding: 1px;
         max-width: 70%;
         font-size: 11px; }
+
+.settings_users .users_settings {
+  font-size: 11px;
+  background: #FFF;
+  color: #344; }
+  .settings_users .users_settings tr.active {
+    background: #d0e6ff; }
+  .settings_users .users_settings tr.retired {
+    color: #AAA !important; }
+  .settings_users .users_settings th {
+    text-align: center;
+    background: #EEE; }
+  .settings_users .users_settings td, .settings_users .users_settings th {
+    border-bottom: 1px solid #EEE;
+    padding: 2px 10px; }
+    .settings_users .users_settings td.black, .settings_users .users_settings th.black {
+      background: #000;
+      color: #EEE;
+      border-color: transparent; }
+    .settings_users .users_settings td.center, .settings_users .users_settings th.center {
+      text-align: center; }
+    .settings_users .users_settings td .need_activate, .settings_users .users_settings th .need_activate {
+      background: #ffd2c7;
+      padding: 5px;
+      text-align: center;
+      border-radius: 5px; }
+    .settings_users .users_settings td .activated, .settings_users .users_settings th .activated {
+      background: #c8ffc8;
+      padding: 5px;
+      text-align: center;
+      border-radius: 5px; }
+    .settings_users .users_settings td .datemini, .settings_users .users_settings th .datemini {
+      border-radius: 0px;
+      border: none; }
+  .settings_users .users_settings .edit_user_div {
+    position: absolute;
+    min-height: 200px;
+    width: 480px;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    left: 20px;
+    margin-top: 5px;
+    background: #4d577f;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+    border: 1px solid #000;
+    padding: 0 20px; }
+    .settings_users .users_settings .edit_user_div .btn_save {
+      padding: 20px 0;
+      padding-top: 50px; }
+    .settings_users .users_settings .edit_user_div .job_name {
+      padding: 20px 0;
+      width: 250px; }
+    .settings_users .users_settings .edit_user_div .btn_panel {
+      position: absolute;
+      right: 20px;
+      padding: 20px 0;
+      text-align: right; }
+    .settings_users .users_settings .edit_user_div .fio {
+      padding-top: 30px;
+      font-size: 14px; }
+      .settings_users .users_settings .edit_user_div .fio input {
+        width: 100%;
+        padding: 5px; }
+    .settings_users .users_settings .edit_user_div .email {
+      font-size: 14px; }
+      .settings_users .users_settings .edit_user_div .email input {
+        width: 100%;
+        padding: 5px; }
 
 .one_car {
   background: #FFF;

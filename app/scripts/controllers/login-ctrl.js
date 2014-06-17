@@ -76,7 +76,7 @@ myApp.controller('loginCtrl', function ($scope, $resource, $rootScope, $location
 
  $scope.jsRegNew = function() {
  	myApi.regNewUser($scope).then(function(answer){
-    alert("Вы успешно зарегистрировались. Теперь вводите пароль и входите.");
+    alert("Вы успешно зарегистрировались. Обратитесь к руководителю для активации.");
     window.location.hash = "#/user/login";
   });
  };
@@ -94,7 +94,7 @@ myApp.controller('loginCtrl', function ($scope, $resource, $rootScope, $location
         
         console.info(answer);
     }).fail(function(){
-      bootstrap_alert.warning("Пароль или логин содержат ошибку"); 
+      bootstrap_alert.warning("Пароль или логин содержат ошибку");
     });
 
  };

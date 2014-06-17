@@ -568,7 +568,16 @@ String.prototype.translit = (function(){
       pool.query('SELECT *, NOW() FROM `oauth_access_tokens` WHERE access_token = ? AND expires >= DATE_ADD(NOW(), INTERVAL 0 HOUR) ', [token], function(err, rows, fields) {
 
         if (rows && rows.length && rows[0] && rows[0].user_id) {
-          dfd.resolve(parseInt(rows[0].user_id));
+          pool.query('SELECT active, user_group FROM `1_users` WHERE id = ? AND user_group!=8 AND active=0', [rows[0].user_id], function(err, rows2, fields) {
+            if(rows2&&rows2.length)
+              dfd.resolve(parseInt(rows[0].user_id));
+            else {
+              dfd.fail("Token invalid");
+              response.send(401);
+              console.info("Token invalid");
+            }
+          });
+
 
           if (rows[0].user_id) {
             if(parseInt(Math.random()*5)==3) {
@@ -923,7 +932,7 @@ String.prototype.translit = (function(){
 
  global.correct_dates = function(rows, no_zero_dates) {
   var fields = [];
-  var fields1 = ['date', 'zv', 'vz', 'tst', 'dg', 'vd', 'out', 'checked', 'changed', 'created', 'date1', 'date2', 'hostcheck', 'remind', 'na_date', 'now_time', 'remind_time', '_date2', 'hostchecked'];
+  var fields1 = ['date', 'zv', 'vz', 'tst', 'dg', 'vd', 'out', 'checked', 'changed', 'created', 'date1', 'date2', 'hostcheck', 'remind', 'na_date', 'now_time', 'remind_time', '_date2', 'hostchecked', 'lastvizit'];
 
   if(rows.length) {
     $.each(rows[0], function(i, el){
@@ -1041,18 +1050,39 @@ String.prototype.translit = (function(){
     });
   });
 
- }
+ };
 
  exports.findAllUsers = function(request, response) {
-    var myquery = 'SELECT * FROM `1_users` WHERE brand = 7';
-    pool.query(myquery, function(err, rows, fields) {
-      response.send(rows);  
+   //hex_md5($scope.reg_user.email.toLowerCase()+'990990')
+    jsCheckToken(request.query.token, response).done(function(user_id) {
+      var brand = request.query.brand;
+      var myquery = 'SELECT id, email, fio, lastvizit, brand, user_group, phone, brands, active FROM `1_users` WHERE brand = ? ORDER BY user_group LIMIT 1000';
+      pool.query(myquery, [brand], function (err, rows, fields) {
+        rows = correct_dates(rows);
+        response.send(rows);
+      });
     });
     
- }
+ };
+
+  exports.saveUserFromSettings = function(request, response) {
+    //hex_md5($scope.reg_user.email.toLowerCase()+'990990')
+    jsCheckToken(request.query.token, response).done(function(user_id) {
+      user = JSON.parse(request.query.user);
+      user.md5email = md5(user.email.toLowerCase()+'990990');
+      console.info('SAVING...', request.query.user);
+      var myquery = 'UPDATE 1_users SET ? WHERE id = ' + user.id;
+      console.info('q = ',myquery);
+      pool.query(myquery, [user], function (err, rows, fields) {
+        response.send(err);
+      });
+
+    });
+
+  };
 
 
- exports.findAllClients = function(request, response) {
+  exports.findAllClients = function(request, response) {
 
   var filter = request.query.filter ? JSON.parse(request.query.filter) : {};
   var brand_id = filter.brand;
@@ -1346,7 +1376,7 @@ exports.loadStat = function(request, response) {
       filter: {
         need_check_attention: true
       }
-    },
+    }
 
     ]
   };
@@ -2671,7 +2701,7 @@ exports.loadStatAllDay = function(request, response) {
     }, {
       title: "Итого",
       plan_month: 167
-    }, ],
+    } ],
     vd_month: [{
       title: "CBU",
       vd: 19,
@@ -4351,7 +4381,7 @@ exports.regNewUser = function(request, response) {
         md5email: reg_user.md5email,
         password: reg_user.password,
         brand: reg_user.brand,
-        active: 0,
+        active: 1,
         md5password: reg_user.password,
         phone: reg_user.phone
 
@@ -5851,6 +5881,8 @@ app.get('/api/v1/admin_ids', database.findAllAdminIds);
 app.get('/api/v1/json/cup', database.loadJsonCup);
 
 app.get('/api/v1/users', database.findAllUsers);
+app.post('/api/v1/users', database.saveUserFromSettings);
+
 
 
 app.get('/api/v1/client', database.findAllClients);

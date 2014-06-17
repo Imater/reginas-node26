@@ -55,6 +55,7 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
             .when('/fpk/settings', 's1.settings')
             .when('/fpk/settings/models', 's1.settings.models')
             .when('/fpk/settings/tests', 's1.settings.tests')
+            .when('/fpk/settings/users', 's1.settings.users')
             .when('/fpk/settings/organizations', 's1.settings.organizations')
             .segment('test_doc', {
                 templateUrl: 'views/test_doc.html',
@@ -136,7 +137,11 @@ angular.module('fpkApp', ["ngResource", "ngSanitize", "ngRoute", 'ui.redactor', 
             .segment('tests', {
                 templateUrl: 'views/fpk/settings/tests.html',
                 controller: 'settingsTestsCtrl'
-            })            
+            })
+            .segment('users', {
+              templateUrl: 'views/fpk/settings/users.html',
+              controller: 'settingsUsersCtrl'
+            })
             .segment('organizations', {
                 templateUrl: 'views/fpk/settings/organizations.html',
                 controller: 'organizationsTestsCtrl'

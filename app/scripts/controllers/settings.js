@@ -11,6 +11,73 @@ _.intersectionObjects = _.intersect = function(array) {
     });
   };
 
+myApp.controller('settingsUsersCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment, $timeout, oAuth2, $http) {
+
+  $scope.set_users = {selected_index: -1, show: false};
+
+  $scope.jsCloseUserSettings = function(){
+      $timeout(function(){
+        $scope.set_users.show = false;
+        $scope.jsRefreshUsers();
+      }, 50);
+  }
+
+  $scope.jsSaveUser = function(user){
+    oAuth2.jsGetToken($scope).done(function (token) {
+      $http({
+        url: '/api/v1/users',
+        method: "POST",
+        isArray: true,
+        params: {
+          token: token,
+          manager: $scope.fpk.manager_filter,
+          brand: $scope.fpk.brand,
+          user: user
+        }
+      }).then(function (result) {
+        $scope.jsCloseUserSettings();
+        $scope.jsRefreshUsers();
+      });
+    });
+
+
+  }
+
+  $scope.fpk.leftmenu = { active: 13,
+    items: [
+      {id: 10, title: "Модели", href: "/fpk/settings/models", segment: "s1.settings.models"},
+      {id: 11, title: "Тестовые автомобили", href: "/fpk/settings/tests", segment: "s1.settings.tests"},
+      {id: 12, title: "Юр.лица Холдинга", href: "/fpk/settings/organizations", segment: "s1.settings.organizations"},
+      {id: 13, title: "Пользователи", href: "/fpk/settings/users", segment: "s1.settings.users"}
+    ]
+
+  };
+
+  $scope.user_groups = _.filter($scope.fpk.users_groups, function(el){
+    return (el.id > 3) && (el.show == 1)
+  });
+
+  $scope.getNameOfUserGroup = _.memoize( function(id){
+    found = _.find($scope.fpk.users_groups, function(el){
+      return el.id == id
+    })
+    return found
+  });
+
+  $scope.jsRefreshUsers = function(){
+    myApi.jsLoadUsersFromServerForSettings($scope).then( function(users){
+      $scope.users = users
+    });
+  };
+  $scope.jsRefreshUsers();
+
+  $scope.$watch('fpk.brand',function(){
+    $scope.jsRefreshUsers();
+  });
+
+});
+
+
 myApp.controller('settingsCtrl', function ($scope, $resource, $rootScope, $location, socket, $routeParams,  myApi, $routeSegment, $timeout) {
 
 
@@ -19,7 +86,7 @@ myApp.controller('settingsCtrl', function ($scope, $resource, $rootScope, $locat
                 items : [
                   {id:10, title:"Модели", href: "/fpk/settings/models", segment: "s1.settings.models"},
                   {id:11, title:"Тестовые автомобили", href: "/fpk/settings/tests", segment: "s1.settings.tests"},
-                  {id:12, title:"Юр.лица Холдинга", href: "/fpk/settings/organizations", segment: "s1.settings.organizations"}
+                  {id:12, title:"Юр.лица Холдинга", href: "/fpk/settings/organizations", segment: "s1.settings.organizations"},
                 ]
 
                 };

@@ -3077,6 +3077,99 @@ li.needgroup {
     }
 }
 
+.settings_users {
+  .users_settings {
+    font-size: 11px;
+    background: #FFF;
+    color: #344;
+    tr {
+      &.active {
+        background: #d0e6ff;
+      }
+      &.retired {
+        color: #AAA !important;
+      }
+    }
+    th {
+      text-align: center;
+      background: #EEE;
+    }
+    td, th {
+      &.black {
+        background: #000;
+        color: #EEE;
+        border-color: transparent;
+      }
+      &.center {
+        text-align: center;
+      }
+      border-bottom: 1px solid #EEE;
+      padding: 2px 10px;
+      .need_activate {
+        background: #ffd2c7;
+        padding: 5px;
+        text-align: center;
+        border-radius: 5px;
+      }
+      .activated {
+        background: #c8ffc8;
+        padding: 5px;
+        text-align: center;
+        border-radius: 5px;
+      }
+      .datemini {
+        border-radius: 0px;
+        border: none;
+      }
+    }
+    .edit_user_div {
+      position: absolute;
+      min-height: 200px;
+      width: 480px;
+      border-bottom-right-radius: 10px;
+      border-top-right-radius: 10px;
+      border-bottom-left-radius: 10px;
+      left: 20px;
+      margin-top: 5px;
+      background: #4d577f;
+      box-shadow: 5px 5px 5px rgba(0,0,0,0.5);
+      border: 1px solid #000;
+      padding: 0 20px;
+      .btn_save {
+        padding: 20px 0;
+        padding-top: 50px ;
+      }
+      .job_name {
+        padding: 20px 0;
+        width: 250px;
+      }
+      .btn_panel {
+        position: absolute;
+        right: 20px;
+        padding: 20px 0;
+        text-align: right;
+      }
+      .fio {
+        padding-top: 30px;
+        font-size: 14px;
+        input {
+          width: 100%;
+          padding: 5px;
+        }
+      }
+      .email {
+        font-size: 14px;
+        input {
+          width: 100%;
+          padding: 5px;
+        }
+      }
+    }
+
+  }
+}
+
+
 .one_car {
     background: #FFF;
     font-size: 14px;

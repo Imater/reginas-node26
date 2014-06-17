@@ -1,0 +1,72 @@
+<div class="scrollable_div settings_users">
+    <h3>Пользователи</h3>
+    <table class="users_settings">
+        <tr>
+            <th>ФИО</th>
+            <th>Должность</th>
+            <th>Email</th>
+            <th>Активирован</th>
+            <th class="black">Последний визит</th>
+        </tr>
+        <tr ng-repeat="user in users" ng-class="{retired:(user.user_group==8), active:(user.id==set_users.selected_index)}"
+            ng-click="set_users.selected_index = user.id;set_users.show=true">
+            <td>{{user.fio}}
+                <div class="edit_user_div" ng-if="(set_users.show)&&user.id==set_users.selected_index">
+                    <div class="btn_panel">
+                        <a ng-if="user.user_group!=8&&user.active!=0"
+                             ng-click="user.active=0"
+                             class="btn btn-sm btn-success">Активировать пользователя
+                        </a>
+                        <a ng-if="user.user_group!=8&&user.active==0"
+                             ng-click="user.active=1"
+                             class="btn btn-sm btn-warning">Отключить пользователя
+                        </a>
+                    </div>
+                    <div class="job_name">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                                {{getNameOfUserGroup(user.user_group).title}} <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li role="presentation" class="dropdown-header">Должность:</li>
+                                <li ng-repeat="(key, group) in user_groups"
+                                    ng-click="user.user_group=group.id">
+                                    <a>{{group.title}}</a>
+                                </li>
+                            </ul>
+                        </div><!-- /btn-group -->
+                    </div>
+                    <div class="fio">
+                        <input ng-model="user.fio" placeholder="ФИО">
+                    </div>
+                    <br>
+                    <div class="email">
+                        <input ng-model="user.email" placeholder="email">
+                    </div>
+                    <br>
+                    <div class="email">
+                        <input ng-model="user.phone" placeholder="Телефон">
+                    </div>
+                    <div class="btn_save">
+                        <div class="btn btn-success"
+                             ng-click="jsSaveUser(user)">Сохранить</div>
+                        <div ng-click="jsCloseUserSettings()"
+                             class="btn btn-default pull-right">Отменить</div>
+                    </div>
+                </div>
+            </td>
+            <td>{{getNameOfUserGroup(user.user_group).title}}</td>
+            <td>{{user.email}}</td>
+            <td class="center">
+                <div class="activated" ng-if="user.user_group!=8&&user.active==0">Активирован</div>
+                <div class="need_activate" ng-if="user.user_group!=8&&user.active!=0">Отключен</div>
+                <div ng-if="user.user_group==8">Отключен</div>
+            </td>
+            <td class="black">
+                <div class="datemini"  time-now="time_now" date-type="do" ng-model="user.lastvizit" title="{{user.lastvizit}}"></div>
+            </td>
+        </tr>
+    </table>
+
+
+</div>
