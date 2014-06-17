@@ -54,7 +54,8 @@ myApp.controller('settingsUsersCtrl', function ($scope, $resource, $rootScope, $
   };
 
   $scope.user_groups = _.filter($scope.fpk.users_groups, function(el){
-    return (el.id > 3) && (el.show == 1)
+    console.info('US = ',$scope.fpk.the_user)
+    return (el.id > 3) && (el.show == 1) || ($scope.fpk.the_user.user_group==1) || ($scope.fpk.the_user.user_group==2) || ($scope.fpk.the_user.user_group==10)
   });
 
   $scope.getNameOfUserGroup = _.memoize( function(id){
