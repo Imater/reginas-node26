@@ -1,4 +1,4 @@
-
 angular-route-segment
-
 bower_components/ui-calendar
+.idea
+*.sublime-workspace
